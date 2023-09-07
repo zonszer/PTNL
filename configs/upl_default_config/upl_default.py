@@ -55,6 +55,8 @@ _C.INPUT.RGS_P = 0.2
 # Gaussian blur
 _C.INPUT.GB_P = 0.5  # propability of applying this operation
 _C.INPUT.GB_K = 21  # kernel size (should be an odd number)
+_C.INPUT.RRCROP_SCALE = (0.08, 1.0)
+
 
 ###########################
 # Dataset
@@ -127,6 +129,12 @@ _C.DATALOADER.TEST.BATCH_SIZE = 32
 
 _C.DATALOADER.OPEN_SETTING = False
 
+_C.DATALOADER.TRAIN_X.SHUFFLE = True
+_C.DATALOADER.TEST.SHUFFLE = False
+
+_C.DATALOADER.VAL = CN()
+_C.DATALOADER.VAL.SHUFFLE = False
+_C.DATALOADER.VAL.BATCH_SIZE = 50
 ###########################
 # Model
 ###########################

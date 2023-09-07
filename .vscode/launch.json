@@ -1,0 +1,99 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "upl_train.py-caltech101-rn50--",
+            "type": "python",
+            "request": "launch",
+            "program": "upl_train.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+              "CUDA_VISIBLE_DEVICES": "1"
+            },
+            "args": [
+              "--root=./data",
+              "--seed=2",
+              "--trainer=UPLTrainer",
+              "--dataset-config-file=configs/datasets/sscaltech101.yaml",
+              "--config-file=configs/trainers/UPLTrainer/rn50_ep50.yaml",     //↓ 记得改别的后也改output-dir
+              "--output-dir=./output/sscaltech101/UPLTrainer/rn50_ep50_16shots_EQULE_True_end_rn50_random_init/nctx16_cscFalse_ctpend_fp2/seed22",
+              "--num-fp=2",
+              "TRAINER.UPLTrainer.N_CTX",
+              "16",
+              "TRAINER.UPLTrainer.CSC",
+              "False",
+              "TRAINER.UPLTrainer.CLASS_TOKEN_POSITION",
+              "end",
+              "DATASET.NUM_SHOTS",
+              "16",
+              "DATASET.CLASS_EQULE",
+              "True"
+            ]
+          },
+        {
+            "name": "upl_train.py-caltech101-rn101",
+            "type": "python",
+            "request": "launch",
+            "program": "upl_train.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+              "CUDA_VISIBLE_DEVICES": "0"
+            },
+            "args": [
+              "--root=./data",
+              "--seed=2",
+              "--trainer=UPLTrainer",
+              "--dataset-config-file=configs/datasets/sscaltech101.yaml",
+              "--config-file=configs/trainers/UPLTrainer/rn101_ep50.yaml",
+              "--output-dir=./output/sscaltech101/UPLTrainer/rn101_ep50_16shots_EQULE_True_end_rn101_random_init/nctx16_cscFalse_ctpend_fp2/seed2",
+              "--num-fp=2",
+              "TRAINER.UPLTrainer.N_CTX",
+              "16",
+              "TRAINER.UPLTrainer.CSC",
+              "False",
+              "TRAINER.UPLTrainer.CLASS_TOKEN_POSITION",
+              "end",
+              "DATASET.NUM_SHOTS",
+              "16",
+              "DATASET.CLASS_EQULE",
+              "True"
+            ]
+          },
+
+        {
+        "name": "get_info.py-rn50",
+        "type": "python",
+        "request": "launch",
+        "program": "get_info.py",
+        "console": "integratedTerminal",
+        "justMyCode": false,
+        "env": {
+            "CUDA_VISIBLE_DEVICES": "1"
+        },
+        "args": [
+            "--root=./data",
+            "--seed=1",
+            "--trainer=UPLTrainer",
+            "--dataset-config-file=configs/datasets/ssucf101.yaml",   //
+            "--config-file=configs/trainers/UPLTrainer/anay_rn50.yaml",
+            "--output-dir=./output/ssucf101/UPLTrainer/anay_rn50_16shots_random_init/nctx16_cscFalse_ctpend-1/seed1",
+            "--tag=-1",
+            "TRAINER.UPLTrainer.N_CTX",
+            "16",
+            "TRAINER.UPLTrainer.CSC",
+            "False",
+            "TRAINER.UPLTrainer.CLASS_TOKEN_POSITION",
+            "end",
+            "DATASET.NUM_SHOTS",
+            "16"
+        ]
+        }
+          
+          
+    ]
+}

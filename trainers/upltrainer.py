@@ -268,7 +268,7 @@ class CustomCLIP(nn.Module):
         temp = CUSTOM_TEMPLATES[self.cfg.DATASET.NAME]
         prompts = [temp.format(c.replace("_", " ")) for c in self.classnames]
         prompts = torch.cat([clip.tokenize(p) for p in prompts])
-        prompts = prompts.to(device)
+        prompts = prompts.to(device)    #shape=torch.Size([100, 77])
         with torch.no_grad():
             text_features = self.clip.encode_text(prompts)
             text_features = text_features / text_features.norm(dim=-1, keepdim=True)
@@ -570,7 +570,7 @@ class UPLTrainer(TrainerX):
         from tqdm import tqdm
         for batch_idx, batch in tqdm(enumerate(data_loader)):
             input, label, impath = self.parse_batch_test_with_impath(batch)
-            if trainer_list is None or len(trainer_list)==1:
+            if trainer_list is None or len(trainer_list)==1:    #output is model logits
                 output, image_features, text_features = self.model.zero_shot_forward(input, self.device)
             else:
                 # ensemble
@@ -579,13 +579,13 @@ class UPLTrainer(TrainerX):
             outputs.append(output)
             image_features_list.append(image_features)
             img_paths.append(impath)
-        sstrain_outputs = torch.cat(outputs, dim=0)
-        sstrain_img_paths = np.concatenate(img_paths, axis=0)
-        image_features = torch.cat(image_features_list, axis=0)
+        sstrain_outputs = torch.cat(outputs, dim=0)         #torch.Size([4128, 100])
+        sstrain_img_paths = np.concatenate(img_paths, axis=0)   #(4128,)
+        image_features = torch.cat(image_features_list, axis=0) #torch.Size([4128, 1024])
         # text_features = torch.cat(text_features, axis=0)
         print('image_features', image_features.shape)
-        print('text_features', text_features.shape)
-        predict_label_dict, _ = select_top_k_similarity_per_class(sstrain_outputs, sstrain_img_paths, -1, image_features, True)
+        print('text_features', text_features.shape)             #↓ outputs, img_paths, K=1, image_features=None, is_softmax=True
+        predict_label_dict, _ = select_top_k_similarity_per_class(sstrain_outputs, sstrain_img_paths, -1, image_features, True)     #选择每个类别visual emb和text emb最相似的K个样本，对每个样本取预测的vector，最后加到info dict中（k>=0时）。 对每个样本取预测的vector，然后加到所有训练样本的info dict中（k=-1时）
         save_outputs(self.train_loader_x, self, predict_label_dict, self.cfg.DATASET.NAME, text_features, backbone_name=self.cfg.MODEL.BACKBONE.NAME)
         caculate_noise_rate_analyze(predict_label_dict, train_loader=self.train_loader_x, trainer=self)
         return predict_label_dict

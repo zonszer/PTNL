@@ -148,7 +148,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--resume',
         type=str,
-        default='',
+        default='False',
         help='checkpoint directory (from which the training resumes)'
     )
     parser.add_argument(

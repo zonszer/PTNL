@@ -92,17 +92,17 @@ def select_top_k_similarity_per_class(outputs, img_paths, K=1, image_features=No
         outputs = torch.nn.Softmax(dim=1)(outputs)
     output_m = outputs.cpu().detach().numpy()
     output_ori = outputs.cpu().detach()
-    output_m_max = output_m.max(axis=1)
-    output_m_max_id = np.argsort(-output_m_max)
+    output_m_max = output_m.max(axis=1)         # Find the maximum value along the axis 1 (per class)
+    output_m_max_id = np.argsort(-output_m_max) #! shape is (4128,) ->Sort the indices of the maximum values in descending order (sort in rows)
     output_m = output_m[output_m_max_id]
     img_paths = img_paths[output_m_max_id]
     output_m_max = output_m_max[output_m_max_id]
     output_ori = output_ori[output_m_max_id]
-    ids = (-output_m).argsort()[:, 0]
+    ids = (-output_m).argsort()[:, 0]       #! 取每一行中 对应类的prob 的最大值 的序号（argsort()返回的是idx） TOOrg
 
     if image_features is not None:
         image_features = image_features.cpu().detach()
-        image_features = image_features[output_m_max_id]
+        image_features = image_features[output_m_max_id]  # Reorder the image features based on the max values of per class
 
     predict_label_dict = {}
     predict_conf_dict = {}
@@ -159,13 +159,13 @@ def select_top_k_similarity_per_class_with_noisy_label(img_paths, K=1, random_se
         tp_gt_all_img_index_dict = {}
         fp_gt_all_img_index_dict = {}
         fp_gt_all_img_index_list = []
-        for id in tqdm(list(set(ids))):
+        for id in tqdm(list(set(ids))):     #对100类loop
             # noisy lebels - fix candidates for 16 shot samples
-            split = int(math.ceil((len(gt_class_label_dict[id]) * (0.5))))
+            split = int(math.ceil((len(gt_class_label_dict[id]) * (0.5))))      #109
             # noisy lebels - fix candidates for 16 shot samples
             gt_class_img_index = []
-            for img in list(gt_class_label_dict[id]):
-                gt_class_img_index.append(img_paths_dict[img])
+            for img in list(gt_class_label_dict[id]):               #len = 218
+                gt_class_img_index.append(img_paths_dict[img])      #len = 218
             # if num_fp == 0:
             #     tp_gt_all_img_index_dict[id] = gt_class_img_index[:]
             # else:
@@ -175,26 +175,26 @@ def select_top_k_similarity_per_class_with_noisy_label(img_paths, K=1, random_se
         fp_gt_all_img_index_set = set(fp_gt_all_img_index_list)
         # noisy lebels - split data into TP and FP sets
 
-        for id in tqdm(list(set(ids))):
+        for id in tqdm(list(set(ids))): ##对100类loop
             gt_class_img_index = []
-            for img in list(gt_class_label_dict[id]):
+            for img in list(gt_class_label_dict[id]):       #len = 218
                 gt_class_img_index.append(img_paths_dict[img])
             # noisy lebels - randomly draw FP samples with their indice
-            gt_class_img_index = tp_gt_all_img_index_dict[id]
-            fp_ids_set = fp_gt_all_img_index_set.difference(gt_class_img_index, fp_gt_all_img_index_dict[id], fp_ids_chosen)
+            gt_class_img_index = tp_gt_all_img_index_dict[id]   #len=109
+            fp_ids_set = fp_gt_all_img_index_set.difference(gt_class_img_index, fp_gt_all_img_index_dict[id], fp_ids_chosen)    #2052 - 109*2 - 0 = XX
             fp_ids = random.choices(list(fp_ids_set), k=num_fp)
             fp_ids_chosen.update(fp_ids)
             # noisy lebels - randomly draw FP samples with their indice
-            img_paths_class = img_paths[gt_class_img_index]
+            img_paths_class = img_paths[gt_class_img_index] #len=109
             if K >= 0:
                 if len(img_paths_class) < K:
                     is_replace=True
                 else:
                     is_replace=False
-                K_array = rng.choice(len(img_paths_class), size=K, replace=is_replace)
-                img_paths_class = img_paths_class[K_array]
+                K_array = rng.choice(len(img_paths_class), size=K, replace=is_replace)  #(16,)      #TOorg
+                img_paths_class = img_paths_class[K_array]     
                 # noisy lebels - dilute with FP samples
-                for i in range(num_fp):
+                for i in range(num_fp):     #16 loop        #Q: 这不是全替换为fp了吗
                     img_paths_class[i] = img_paths[fp_ids][i]
                 # noisy lebels - - dilute with FP samples
                 print('---',id)
@@ -364,7 +364,7 @@ def save_outputs(train_loader, trainer, predict_label_dict, dataset_name, text_f
     backbone_name = backbone_name.replace('/', '-')
     gt_pred_label_dict = {}
     for batch_idx, batch in enumerate(train_loader):
-        input, label, impath = trainer.parse_batch_test_with_impath(batch)
+        input, label, impath = trainer.parse_batch_test_with_impath(batch)  
         for l, ip in zip(label, impath):
             l = l.item()
             ip = './data/' + ip.split('/data/')[1]
@@ -406,8 +406,8 @@ def save_outputs(train_loader, trainer, predict_label_dict, dataset_name, text_f
             idx += 1
         v_distance_dict[label] = v_distance_dict_per_class
 
-    v_features = torch.vstack(v_features)
-    logits_tensor = torch.vstack(logits_list)
+    v_features = torch.vstack(v_features)   #shape=torch.Size([4128, 1024])
+    logits_tensor = torch.vstack(logits_list)       #torch.Size([4128, 100])
 
     if not os.path.exists('./analyze_results/{}{}/'.format(backbone_name, tag)):
         os.makedirs('./analyze_results/{}{}/'.format(backbone_name, tag))
@@ -418,7 +418,7 @@ def save_outputs(train_loader, trainer, predict_label_dict, dataset_name, text_f
 
 
     with open("./analyze_results/{}{}/{}{}.json".format(backbone_name, tag, dataset_name, seed), "w") as outfile:
-        json.dump(v_distance_dict, outfile)
+        json.dump(v_distance_dict, outfile) #train data的每个类别中(按gt分), model预测的图片的emb和avg_emb的距离
 
 
 

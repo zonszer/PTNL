@@ -145,11 +145,11 @@ class UPLDatasetBase(DatasetBase):
 
         print(f"Reading split from {filepath}")
         split = read_json(filepath)
-        if predict_label_dict is not None:
+        if predict_label_dict is not None:      #len=1592
             train = _convert(split["train"])
         else:
             train = _convert_no_label(split["train"])
-        return train
+        return train    #len=1592
 
 
     def add_label(self, predict_label_dict, dataset_name):
