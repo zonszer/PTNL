@@ -24,6 +24,7 @@ from dassl.utils import (
 )
 from dassl.optim import build_optimizer, build_lr_scheduler
 from dassl.data import DataManager
+from copy import deepcopy
 
 from clip import clip
 from clip.simple_tokenizer import SimpleTokenizer as _Tokenizer
@@ -32,10 +33,13 @@ from datasets.data_manager import UPLDataManager
 from evaluation.evaluator import UPLClassification
 from .hhzsclip import ZeroshotCLIP
 from .utils import (select_top_k_similarity_per_class, caculate_noise_rate, save_outputs,
-select_top_k_similarity, select_top_by_value, caculate_noise_rate_analyze, select_top_k_similarity_per_class_with_noisy_label)
+select_top_k_similarity, select_top_by_value, caculate_noise_rate_analyze, 
+select_top_k_similarity_per_class_with_noisy_label,
+add_partial_labels,
+)
 
 _tokenizer = _Tokenizer()
-from trainers.loss import GeneralizedCrossEntropy
+from trainers.loss import GeneralizedCrossEntropy, PLL_loss
 
 
 CUSTOM_TEMPLATES = {
@@ -287,10 +291,18 @@ class CustomCLIP(nn.Module):
 class UPLTrainer(TrainerX):
     def __init__(self, cfg):
         super().__init__(cfg)
-        self.GCE_loss = GeneralizedCrossEntropy(q=0.5)
+        # self.GCE_loss = GeneralizedCrossEntropy(q=0.5)
         self.gt_label_dict = self.get_gt_label(cfg)
+
     def check_cfg(self, cfg):
         assert cfg.TRAINER.UPLTrainer.PREC in ["fp16", "fp32", "amp"]
+
+    def build_loss(self):
+        if self.cfg.TRAINER.LOSS_TYPE == '':
+            criterion = torch.nn.CrossEntropyLoss()
+        else:
+            criterion = PLL_loss(type=self.cfg.TRAINER.LOSS_TYPE, PartialY=deepcopy(self.partialY))
+        self.criterion = criterion
 
     def build_model(self):
         cfg = self.cfg
@@ -365,7 +377,7 @@ class UPLTrainer(TrainerX):
     def forward_backward(self, batch):
         gt_label_list = []
         _, _, impath = self.parse_batch_test_with_impath(batch)
-        image, label = self.parse_batch_train(batch)
+        image, label, index = self.parse_batch_train(batch)     #When PLL: labels_true == self.labels_true[index]
         for ip in impath:
             ip = './data/' + ip.split('/data/')[1]
             gt_label = self.gt_label_dict[ip]
@@ -384,7 +396,7 @@ class UPLTrainer(TrainerX):
         else:
             output, image_features, text_features = self.model(image)
             # loss = self.GCE_loss(output, label)
-            loss = F.cross_entropy(output, label)
+            loss = self.criterion(output, label, index)
             self.model_backward_and_update(loss)
 
         loss_summary = {
@@ -400,9 +412,10 @@ class UPLTrainer(TrainerX):
     def parse_batch_train(self, batch):
         input = batch["img"]
         label = batch["label"]
+        index = batch["index"]
         input = input.to(self.device)
         label = label.to(self.device)
-        return input, label
+        return input, label, index
 
     def load_model(self, directory, epoch=None):
         if not directory:
@@ -564,6 +577,7 @@ class UPLTrainer(TrainerX):
         self.evaluator.reset()
 
         data_loader = self.train_loader_sstrain
+        # data_loader = self.test_loader
         outputs = []
         image_features_list = []
         img_paths = []
@@ -586,8 +600,10 @@ class UPLTrainer(TrainerX):
         print('image_features', image_features.shape)
         print('text_features', text_features.shape)             #↓ outputs, img_paths, K=1, image_features=None, is_softmax=True
         predict_label_dict, _ = select_top_k_similarity_per_class(sstrain_outputs, sstrain_img_paths, -1, image_features, True)     #选择每个类别visual emb和text emb最相似的K个样本，对每个样本取预测的vector，最后加到info dict中（k>=0时）。 对每个样本取预测的vector，然后加到所有训练样本的info dict中（k=-1时）
-        save_outputs(self.train_loader_x, self, predict_label_dict, self.cfg.DATASET.NAME, text_features, backbone_name=self.cfg.MODEL.BACKBONE.NAME)
+        if data_loader is self.train_loader_sstrain:
+            save_outputs(self.train_loader_x, self, predict_label_dict, self.cfg.DATASET.NAME, text_features, backbone_name=self.cfg.MODEL.BACKBONE.NAME)
         caculate_noise_rate_analyze(predict_label_dict, train_loader=self.train_loader_x, trainer=self)
+        # caculate_noise_rate_analyze(predict_label_dict, train_loader=self.test_loader, trainer=self)
         return predict_label_dict
 
 
@@ -617,6 +633,11 @@ class UPLTrainer(TrainerX):
                                                                                 random_seed=self.cfg.SEED, 
                                                                                 gt_label_dict=self.gt_label_dict,
                                                                                 num_fp=self.cfg.TRAINER.UPLTrainer.NUM_FP)
+        if self.cfg.TRAINER.PLL.USE_PLL:
+            predict_label_dict, partialY, labels_true = add_partial_labels(label_dict=predict_label_dict,
+                                                     partial_rate=self.cfg.TRAINER.PLL.PARTIAL_RATE)
+            self.partialY = partialY
+            self.labels_true = torch.tensor(labels_true)
         return predict_label_dict 
 
     @torch.no_grad()

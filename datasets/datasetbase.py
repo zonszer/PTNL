@@ -131,7 +131,7 @@ class UPLDatasetBase(DatasetBase):
                 impath = os.path.join(path_prefix, impath)
                 sub_impath = './data/' + impath.split('/data/')[1]
                 if sub_impath in predict_label_dict:
-                    item = Datum(impath=impath, label=predict_label_dict[sub_impath], classname=self._lab2cname[predict_label_dict[sub_impath]])
+                    item = Datum(impath=impath, label=predict_label_dict[sub_impath])   #classname=self._lab2cname[predict_label_dict[sub_impath]]
                     out.append(item)
             return out
 

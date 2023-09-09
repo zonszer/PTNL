@@ -12,6 +12,98 @@ if torch.cuda.is_available():
 else:
     device = torch.device('cpu')
 
+
+class PLL_loss(nn.Module):
+    def __init__(self, type=None, PartialY=None,
+                 eps=1e-6):
+        super(PLL_loss, self).__init__()
+        self.eps = eps
+        self.losstype = type
+        self.device = device
+        self.softmax = nn.Softmax(dim=1)
+        #PLL items: 
+        if type == 'rc':
+            self.confidence = self.init_confidence(PartialY)
+            self.num = 0
+        if type == 'gce':
+            self.q = 0.7
+
+    def init_confidence(self, PartialY):
+        tempY = PartialY.sum(dim=1, keepdim=True).repeat(1, PartialY.shape[1])   #repeat train_givenY.shape[1] times in dim 1
+        confidence = PartialY.float()/tempY
+        confidence = confidence.to(self.device)
+        return confidence
+    
+    def forward(self, *args):
+        """"
+        x: outputs logits
+        y: targets (multi-label binarized vector)
+        """
+        if self.losstype == 'cc':
+            loss = self.forward_cc(*args)
+        elif self.losstype == 'ce':
+            loss = self.forward_ce(*args)
+        elif self.losstype == 'gce':
+            loss = self.forward_gce(*args)
+        elif self.losstype == 'rc':
+            loss = self.forward_rc(*args)
+        else:
+            raise ValueError
+        return loss
+
+    def forward_gce(self, x, y, index):
+        """y is shape of (batch_size, num_classes (0 ~ 1.))"""
+        p = F.softmax(x, dim=1)      #outputs are logits
+        # Create a tensor filled with a very small number to represent 'masked' positions
+        masked_p = p.new_full(p.size(), float('-inf'))
+        # Apply the mask
+        masked_p[y.bool()] = p[y.bool()] + self.eps         #TOorg : 这行代码保证矩阵对应位置的赋值
+        # Adjust masked positions to avoid undefined gradients by adding epsilon
+        masked_p[y.bool()] = (1 - masked_p[y.bool()] ** self.q) / self.q
+        masked_p[~y.bool()] = self.eps  #TOorg : 类似torch.nonzero
+        loss = (masked_p.sum(dim=1) / y.sum(dim=1)).mean()
+        return loss
+    
+    def forward_cc(self, x, y, index):
+        sm_outputs = F.softmax(x, dim=1)      #outputs are logits
+        final_outputs = sm_outputs * y
+        average_loss = - torch.log(final_outputs.sum(dim=1) / y.sum(dim=1)).mean()     #NOTE: add y.sum(dim=1)
+        return average_loss
+    
+    def forward_ce(self, x, y, index):
+        sm_outputs = F.log_softmax(x, dim=1)
+        final_outputs = sm_outputs * y
+        average_loss = - (final_outputs.sum(dim=1) / y.sum(dim=1)).mean()  #NOTE: add y.sum(dim=1)
+        return average_loss
+    
+    def forward_rc(self, x, y, index):
+        logsm_outputs = F.log_softmax(x, dim=1)         #x is the model ouputs
+        final_outputs = logsm_outputs * self.confidence[index, :]
+        average_loss = - ((final_outputs).sum(dim=1)).mean()    #final_outputs=torch.Size([256, 10]) -> Q: why use negative? A:  
+        self.confidence_update(self.confidence, x, y, index)
+        return average_loss     
+
+    def forward_rc_(self, x, y, index):
+        logsm_outputs = F.softmax(x, dim=1)         #x is the model ouputs
+        final_outputs = logsm_outputs * self.confidence[index, :]
+        average_loss = - torch.log((final_outputs).sum(dim=1) / y.sum(dim=1)).mean()    #final_outputs=torch.Size([256, 10]) -> Q: why use negative? A:  
+        self.confidence_update(self.confidence, x, y, index)
+        return average_loss     
+
+    def confidence_update(self, confidence, batch_outputs, batchY, batch_index):
+        with torch.no_grad():
+            temp_un_conf = F.softmax(batch_outputs, dim=1)
+            confidence[batch_index, :] = temp_un_conf * batchY # un_confidence stores the weight of each example
+            #weight[batch_index] = 1.0/confidence[batch_index, :].sum(dim=1)
+            base_value = confidence.sum(dim=1).unsqueeze(1).repeat(1, confidence.shape[1])
+            self.confidence = confidence/base_value  # use maticx for element-wise division
+
+            if self.num % 100 == 0:
+                torch.save(self.confidence, f'analyze_result_temp/confidence_RC-{self.num}_init.pt')
+                # torch.load('analyze_result_temp/confidence_RC-0.pt')
+            self.num += 1
+
+
 class GeneralizedCrossEntropy(nn.Module):
     """Computes the generalized cross-entropy loss, from `
     "Generalized Cross Entropy Loss for Training Deep Neural Networks with Noisy Labels"
@@ -33,6 +125,7 @@ class GeneralizedCrossEntropy(nn.Module):
         self.softmax = nn.Softmax(dim=1)
 
     def forward(self, input: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
+        '''target.shape is (batch_size,)'''
         p = self.softmax(input)
         p = p[torch.arange(p.shape[0]), target]
         # Avoid undefined gradient for p == 0 by adding epsilon

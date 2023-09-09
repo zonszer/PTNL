@@ -293,6 +293,15 @@ _C.TRAINER.FIXMATCH.STRONG_TRANSFORMS = ()
 
 _C.TRAINER.ENSEMBLE_NUM = 1
 
+# PLL cfg:
+_C.TRAINER.PLL = CN()
+_C.TRAINER.PLL.USE_PLL = False  # whether to use PLL
+_C.TRAINER.PLL.PARTIAL_RATE = 0.1  # how many data to use for PLL
+
+# loss:
+_C.TRAINER.LOSS_TYPE = ''
+# _C.TRAINER.PLL.STRONG_TRANSFORMS = ()
+
 
 def get_cfg_default():
 	return _C.clone()

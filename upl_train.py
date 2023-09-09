@@ -68,6 +68,10 @@ def reset_cfg(cfg, args):
     if args.head:
         cfg.MODEL.HEAD.NAME = args.head
 
+    if args.loss_type:
+        cfg.TRAINER.LOSS_TYPE = args.loss_type
+
+
 
 def extend_cfg(cfg, args):
     """
@@ -103,7 +107,7 @@ def setup_cfg(args):
     if args.config_file:
         cfg.merge_from_file(args.config_file)
 
-    # 3. hh config
+    # 3. hh config (X)
     if args.hh_config_file:
         cfg.merge_from_file(args.hh_config_file)
 
@@ -140,10 +144,11 @@ def main(args):
         trainer_list.append(trainer)
 
         predict_label_dict = trainer.load_from_exist_file(file_path='./analyze_results', 
-        model_names=cfg.MODEL.PSEUDO_LABEL_MODELS)
+                                                model_names=cfg.MODEL.PSEUDO_LABEL_MODELS)
 
         trainer.dm.update_ssdateloader(predict_label_dict)
         trainer.train_loader_sstrain = trainer.dm.train_loader_sstrain
+        trainer.build_loss()
         trainer.sstrain_with_id(model_id=i)
 
 if __name__ == '__main__':
@@ -206,6 +211,12 @@ if __name__ == '__main__':
         type=str,
         default='',
         help='load model from this directory for eval-only mode'
+    )
+    parser.add_argument(
+        '--loss_type',
+        type=str,
+        default='',
+        help='loss type in training (PLL)'
     )
     parser.add_argument(
         '--load-epoch',

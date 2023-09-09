@@ -2,3 +2,4 @@ analysis_results_test/*
 analyze_results/*
 output/*
 *.pyc
+*.pt

@@ -194,7 +194,7 @@ def select_top_k_similarity_per_class_with_noisy_label(img_paths, K=1, random_se
                 K_array = rng.choice(len(img_paths_class), size=K, replace=is_replace)  #(16,)      #TOorg
                 img_paths_class = img_paths_class[K_array]     
                 # noisy lebels - dilute with FP samples
-                for i in range(num_fp):     #16 loop        #Q: 这不是全替换为fp了吗
+                for i in range(num_fp):     #16 loop        
                     img_paths_class[i] = img_paths[fp_ids][i]
                 # noisy lebels - - dilute with FP samples
                 print('---',id)
@@ -221,6 +221,41 @@ def select_top_k_similarity_per_class_with_noisy_label(img_paths, K=1, random_se
         print('GT dict is missing')
         pdb.set_trace()
     return predict_label_dict
+
+def generate_uniform_cv_candidate_labels(train_labels: torch.int64, partial_rate=0.1):
+    assert train_labels.dim() == 1 or train_labels.dim() == 0, 'train_labels should be a 1D tensor'
+    if torch.min(train_labels) > 1:
+        raise RuntimeError('testError')
+    elif torch.min(train_labels) == 1:
+        train_labels = train_labels - 1
+
+    K = int(torch.max(train_labels) - torch.min(train_labels) + 1)
+    n = train_labels.shape[0]
+
+    partialY = torch.zeros(n, K)
+    partialY[torch.arange(n), train_labels] = 1.0
+    transition_matrix =  np.eye(K)
+    transition_matrix[np.where(~np.eye(transition_matrix.shape[0],dtype=bool))] = partial_rate
+    print(transition_matrix)
+
+    random_n = np.random.uniform(0, 1, size=(n, K))
+
+    for j in range(n):  # for each instance
+        partialY[j, :] = torch.from_numpy((random_n[j, :] < transition_matrix[train_labels[j], :]) * 1)  #1表示被masked，0表示不被masked的
+        # partialY[j, :] = torch.from_numpy((random_n[j, :] < transition_matrix[train_labels[j], :]) * 1) * partialY[j, :]  #???
+
+    print("Finish Generating Candidate Label Sets!\n")
+    return partialY
+
+def add_partial_labels(label_dict, partial_rate=0.1):
+    ipath = list(label_dict.keys())
+    true_labels = list(label_dict.values())
+    partialY = generate_uniform_cv_candidate_labels(torch.tensor(true_labels, dtype=torch.int64), partial_rate)
+    new_dict = {}
+    for i in range(len(label_dict)):
+        new_dict[ipath[i]] = partialY[i]
+    return new_dict, partialY, true_labels
+
 
 
 def select_by_conf(outputs, img_paths, K=1, conf_threshold=None, is_softmax=True):
