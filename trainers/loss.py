@@ -52,7 +52,7 @@ class PLL_loss(nn.Module):
         return loss
 
     def forward_gce(self, x, y, index):
-        """y is shape of (batch_size, num_classes (0 ~ 1.))"""
+        """y is shape of (batch_size, num_classes (0 ~ 1.)), one-hot vector"""
         p = F.softmax(x, dim=1)      #outputs are logits
         # Create a tensor filled with a very small number to represent 'masked' positions
         masked_p = p.new_full(p.size(), float('-inf'))

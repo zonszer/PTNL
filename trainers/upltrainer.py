@@ -301,7 +301,10 @@ class UPLTrainer(TrainerX):
         if self.cfg.TRAINER.LOSS_TYPE == '':
             criterion = torch.nn.CrossEntropyLoss()
         else:
-            criterion = PLL_loss(type=self.cfg.TRAINER.LOSS_TYPE, PartialY=deepcopy(self.partialY))
+            if hasattr(self, 'partialY'):
+                criterion = PLL_loss(type=self.cfg.TRAINER.LOSS_TYPE, PartialY=deepcopy(self.partialY))
+            else:
+                criterion = PLL_loss(type=self.cfg.TRAINER.LOSS_TYPE)
         self.criterion = criterion
 
     def build_model(self):

@@ -166,6 +166,34 @@
             "16"
         ]
         },
+        {
+        "name": "get_info.py-rn50-ssoxford_pets",
+        "type": "python",
+        "request": "launch",
+        "program": "get_info.py",
+        "console": "integratedTerminal",
+        "justMyCode": false,
+        "env": {
+            "CUDA_VISIBLE_DEVICES": "2"
+        },
+        "args": [
+            "--root=./data",
+            "--seed=1",
+            "--trainer=UPLTrainer",
+            "--dataset-config-file=configs/datasets/ssoxford_pets.yaml",   //
+            "--config-file=configs/trainers/UPLTrainer/anay_rn50.yaml",
+            "--output-dir=./output/ssoxford_pets/UPLTrainer/anay_rn50_16shots_random_init/nctx16_cscFalse_ctpend-1/seed1",
+            "--tag=-1",
+            "TRAINER.UPLTrainer.N_CTX",
+            "16",
+            "TRAINER.UPLTrainer.CSC",
+            "False",
+            "TRAINER.UPLTrainer.CLASS_TOKEN_POSITION",
+            "end",
+            "DATASET.NUM_SHOTS",
+            "16"
+        ]
+        },
 
         {
           "name": "upl_test.py-RN50-sscaltech101",
