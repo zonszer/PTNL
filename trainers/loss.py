@@ -57,10 +57,10 @@ class PLL_loss(nn.Module):
         # Create a tensor filled with a very small number to represent 'masked' positions
         masked_p = p.new_full(p.size(), float('-inf'))
         # Apply the mask
-        masked_p[y.bool()] = p[y.bool()] + self.eps         #TOorg : 这行代码保证矩阵对应位置的赋值
+        masked_p[y.bool()] = p[y.bool()] + self.eps         
         # Adjust masked positions to avoid undefined gradients by adding epsilon
         masked_p[y.bool()] = (1 - masked_p[y.bool()] ** self.q) / self.q
-        masked_p[~y.bool()] = self.eps  #TOorg : 类似torch.nonzero
+        masked_p[~y.bool()] = self.eps 
         loss = (masked_p.sum(dim=1) / y.sum(dim=1)).mean()
         return loss
     

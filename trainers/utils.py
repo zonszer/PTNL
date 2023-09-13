@@ -98,7 +98,7 @@ def select_top_k_similarity_per_class(outputs, img_paths, K=1, image_features=No
     img_paths = img_paths[output_m_max_id]
     output_m_max = output_m_max[output_m_max_id]
     output_ori = output_ori[output_m_max_id]
-    ids = (-output_m).argsort()[:, 0]       #! 取每一行中 对应类的prob 的最大值 的序号（argsort()返回的是idx） TOOrg
+    ids = (-output_m).argsort()[:, 0]       #! 取每一行中 对应类的prob 的最大值 的序号（argsort()返回的是idx） 
 
     if image_features is not None:
         image_features = image_features.cpu().detach()
@@ -191,7 +191,7 @@ def select_top_k_similarity_per_class_with_noisy_label(img_paths, K=1, random_se
                     is_replace=True
                 else:
                     is_replace=False
-                K_array = rng.choice(len(img_paths_class), size=K, replace=is_replace)  #(16,)      #TOorg
+                K_array = rng.choice(len(img_paths_class), size=K, replace=is_replace)  #(16,)      #
                 img_paths_class = img_paths_class[K_array]     
                 # noisy lebels - dilute with FP samples
                 for i in range(num_fp):     #16 loop        
