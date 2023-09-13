@@ -3,3 +3,5 @@ analyze_results/*
 output/*
 *.pyc
 *.pt
+
+data/

@@ -38,7 +38,7 @@ _MODELS = {
 }
 
 
-def _download(url: str, root: str = os.path.expanduser("/media/zjh/本地磁盘/projects7.12/DualCoOp/cache_temp")):
+def _download(url: str, root: str = os.path.expanduser("/mnt/disk2/zjh/projects7.12/DualCoOp/cache_temp")):
     os.makedirs(root, exist_ok=True)
     filename = os.path.basename(url)
 
