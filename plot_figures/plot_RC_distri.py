@@ -13,13 +13,26 @@ all_data_no_true = []
 all_data_true = []
 path = '../analyze_result_temp'
 
+#+++++++=========== figure1
 # Step 2: Get list of files
-files_no_true = sorted(glob.glob(path+ '/confidence_RC-*.pt'), key=lambda x: int(re.search('(\d+)', x).group()))
-files_true = sorted(glob.glob(path+ '/confidence_RC-*_true.pt'), key=lambda x: int(re.search('(\d+)', x).group()))
+# files_no_true = sorted(glob.glob(path+ '/confidence_RC-*.pt'), key=lambda x: int(re.search('(\d+)', x).group()))
+# files_true = sorted(glob.glob(path+ '/confidence_RC-*_true.pt'), key=lambda x: int(re.search('(\d+)', x).group()))
 
+# # Filter the list of files to only include those that end with a number followed by '.pt'
+# files_no_true = [f for f in files_no_true if re.search(r'confidence_RC-\d+\.pt$', f)]
+#+++++++=========== figure2
+# files_no_true = sorted(glob.glob(path + '/outputs_CC_PLL05-*.pt'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
+# files_true = sorted(glob.glob(path + '/labels_CC_PLL05-*.pt'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
 
-# Filter the list of files to only include those that end with a number followed by '.pt'
-files_no_true = [f for f in files_no_true if re.search(r'confidence_RC-\d+\.pt$', f)]
+#+++++++=========== figure3 -> forward_rc_()
+files_no_true = sorted(glob.glob(path + '/outputs_RC&cc_PLL05-*.pt'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
+files_true = sorted(glob.glob(path + '/labels_RC&cc_PLL05-*.pt'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
+
+#+++++++=========== figure4 -> forward_rc(+CC) new()
+# files_no_true = sorted(glob.glob(path + '/outputs_RC&cc2_PLL05-*.pt'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
+# files_true = sorted(glob.glob(path + '/labels_RC&cc2_PLL05-*.pt'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
+# files_no_true = files_no_true[1:]
+# files_true = files_true[1:]
 
 # Step 3: Load data from files into their respective lists
 stack_list = []
@@ -51,8 +64,9 @@ from mpl_toolkits.mplot3d import Axes3D
 ##============set params:
 dataset_class_names = ['face', 'leopard', 'motorbike', 'accordion', 'airplane', 'anchor', 'ant', 'barrel', 'bass', 'beaver', 'binocular', 'bonsai', 'brain', 'brontosaurus', 'buddha', 'butterfly', 'camera', 'cannon', 'car_side', 'ceiling_fan', 'cellphone', 'chair', 'chandelier', 'cougar_body', 'cougar_face', 'crab', 'crayfish', 'crocodile', 'crocodile_head', 'cup', 'dalmatian', 'dollar_bill', 'dolphin', 'dragonfly', 'electric_guitar', 'elephant', 'emu', 'euphonium', 'ewer', 'ferry', 'flamingo', 'flamingo_head', 'garfield', 'gerenuk', 'gramophone', 'grand_piano', 'hawksbill', 'headphone', 'hedgehog', 'helicopter', 'ibis', 'inline_skate', 'joshua_tree', 'kangaroo', 'ketch', 'lamp', 'laptop', 'llama', 'lobster', 'lotus', 'mandolin', 'mayfly', 'menorah', 'metronome', 'minaret', 'nautilus', 'octopus', 'okapi', 'pagoda', 'panda', 'pigeon', 'pizza', 'platypus', 'pyramid', 'revolver', 'rhino', 'rooster', 'saxophone', 'schooner', 'scissors', 'scorpion', 'sea_horse', 'snoopy', 'soccer_ball', 'stapler', 'starfish', 'stegosaurus', 'stop_sign', 'strawberry', 'sunflower', 'tick', 'trilobite', 'umbrella', 'watch', 'water_lilly', 'wheelchair', 'wild_cat', 'windsor_chair', 'wrench', 'yin_yang']
 sub_figure_num = 9
-figure_type = 'flamingo'
+figure_type = 'binocular'
 pos_loop = True
+np.random.seed(0)
 ##============set params:
 
 # prepare the index and data of the shown figures:
@@ -61,11 +75,16 @@ dataset_class_names = np.array(dataset_class_names)
 print(f'type_idx is {type_idx}->{figure_type}')
 ##===========1. random sample：
 # Find the indices of the figures that satisfy the condition
-valid_indices = np.where(all_data_bool[:, :, type_idx])[0]
+valid_indices = np.where(all_data_bool[:, 0, type_idx])[0]
 
 # Randomly select sub_figure_num indices
-selected_indices = np.random.choice(valid_indices, size=sub_figure_num, replace=False)
-
+if valid_indices.shape[0] >= sub_figure_num:
+    selected_indices = np.random.choice(valid_indices, size=sub_figure_num, replace=False)
+else:
+    selected_indices = np.random.choice(valid_indices, size=valid_indices.shape[0], replace=False)
+    sub_figure_num = valid_indices.shape[0]
+print(f'valid_indices is {valid_indices}')
+print(f'selected_indices is {selected_indices}')
 # Select the corresponding figures
 data = all_data_no_true[selected_indices]
 data_taget_label_idx = all_data_bool[selected_indices]
@@ -111,7 +130,7 @@ for i in range(num_figures):
 
     # Plot true target class variation:
     true_z = data[data_taget_label_idx].reshape(sub_figure_num, -1)[i]
-    ax.plot([0]*num_epochs, np.arange(num_epochs), true_z, color='g', linewidth=3, linestyle='--')
+    ax.plot([0]*num_epochs, np.arange(num_epochs), true_z, color='g', linewidth=2, linestyle='--')
 
     ax.set_xlabel('Target Classes')
     ax.set_ylabel('Epochs')
@@ -124,6 +143,6 @@ for i in range(num_figures):
 
 plt.tight_layout()
 # # plt.show()
-plt.savefig(f'RC_distri-{figure_type}.svg')
+plt.savefig(f'RC+CC_2_distri-{figure_type}.svg')
 
 # %%

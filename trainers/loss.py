@@ -15,16 +15,18 @@ else:
 
 class PLL_loss(nn.Module):
     def __init__(self, type=None, PartialY=None,
-                 eps=1e-6):
+                 eps=1e-6, beta=None):
         super(PLL_loss, self).__init__()
         self.eps = eps
         self.losstype = type
         self.device = device
         self.softmax = nn.Softmax(dim=1)
         #PLL items: 
-        if type == 'rc':
+        self.num = 0
+        if 'rc' in type:
             self.confidence = self.init_confidence(PartialY)
-            self.num = 0
+            if type == 'rc+':
+                self.beta = beta
         if type == 'gce':
             self.q = 0.7
 
@@ -61,22 +63,22 @@ class PLL_loss(nn.Module):
         # Adjust masked positions to avoid undefined gradients by adding epsilon
         masked_p[y.bool()] = (1 - masked_p[y.bool()] ** self.q) / self.q
         masked_p[~y.bool()] = self.eps 
-        loss = (masked_p.sum(dim=1) / y.sum(dim=1)).mean()
+        loss = (masked_p.sum(dim=1) ).mean()
         return loss
     
     def forward_cc(self, x, y, index):
         sm_outputs = F.softmax(x, dim=1)      #outputs are logits
         final_outputs = sm_outputs * y
-        average_loss = - torch.log(final_outputs.sum(dim=1) / y.sum(dim=1)).mean()     #NOTE: add y.sum(dim=1)
+        average_loss = - torch.log(final_outputs.sum(dim=1) ).mean()     #NOTE: add y.sum(dim=1)
         return average_loss
     
     def forward_ce(self, x, y, index):
         sm_outputs = F.log_softmax(x, dim=1)
         final_outputs = sm_outputs * y
-        average_loss = - (final_outputs.sum(dim=1) / y.sum(dim=1)).mean()  #NOTE: add y.sum(dim=1)
+        average_loss = - (final_outputs.sum(dim=1) ).mean()  #NOTE: add y.sum(dim=1)
         return average_loss
     
-    def forward_rc(self, x, y, index):
+    def forward_rc_t(self, x, y, index):
         logsm_outputs = F.log_softmax(x, dim=1)         #x is the model ouputs
         final_outputs = logsm_outputs * self.confidence[index, :]
         average_loss = - ((final_outputs).sum(dim=1)).mean()    #final_outputs=torch.Size([256, 10]) -> Q: why use negative? A:  
@@ -86,7 +88,18 @@ class PLL_loss(nn.Module):
     def forward_rc_(self, x, y, index):
         logsm_outputs = F.softmax(x, dim=1)         #x is the model ouputs
         final_outputs = logsm_outputs * self.confidence[index, :]
-        average_loss = - torch.log((final_outputs).sum(dim=1) / y.sum(dim=1)).mean()    #final_outputs=torch.Size([256, 10]) -> Q: why use negative? A:  
+        average_loss = - torch.log((final_outputs).sum(dim=1) ).mean()    #final_outputs=torch.Size([256, 10]) -> Q: why use negative? A:  
+        self.confidence_update(self.confidence, x, y, index)
+        return average_loss 
+        
+    def forward_rc_plus(self, x, y, index, beta=0.1):
+        logsm_outputs = F.softmax(x, dim=1)         #x is the model ouputs
+        logsm_outputs_ce = F.log_softmax(x, dim=1)         #x is the model ouputs
+        final_outputs = logsm_outputs * y
+        final_outputs_ce = logsm_outputs_ce * self.confidence[index, :]
+        average_loss = - ( torch.log((final_outputs).sum(dim=1)) + 
+                                beta*(final_outputs_ce).sum(dim=1)  
+                          ).mean()    #final_outputs=torch.Size([256, 10]) -> Q: why use negative? A:  
         self.confidence_update(self.confidence, x, y, index)
         return average_loss     
 
@@ -98,10 +111,18 @@ class PLL_loss(nn.Module):
             base_value = confidence.sum(dim=1).unsqueeze(1).repeat(1, confidence.shape[1])
             self.confidence = confidence/base_value  # use maticx for element-wise division
 
-            if self.num % 100 == 0:
-                torch.save(self.confidence, f'analyze_result_temp/confidence_RC-{self.num}_init.pt')
-                # torch.load('analyze_result_temp/confidence_RC-0.pt')
-            self.num += 1
+    def log_conf(self, all_logits=None, all_labels=None):
+        log_id = 'PLL05'
+        if self.num % 2 == 0:
+            print(f'save logits -> losstype: {self.losstype}, save id: {self.num}')
+            if self.losstype == 'rc--':
+                torch.save(self.confidence, f'analyze_result_temp/confidence_{self.losstype.upper()}_{log_id}-{self.num}.pt')
+            elif all_logits != None:
+                all_logits = F.softmax(all_logits, dim=1)    
+                all_labels = F.one_hot(all_labels)
+                torch.save(all_logits,  f'analyze_result_temp/outputs_{self.losstype.upper()}&cc2_{log_id}-{self.num}.pt')
+                torch.save(all_labels,  f'analyze_result_temp/labels_{self.losstype.upper()}&cc2_{log_id}-{self.num}.pt')
+        self.num += 1
 
 
 class GeneralizedCrossEntropy(nn.Module):

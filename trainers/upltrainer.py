@@ -391,7 +391,8 @@ class UPLTrainer(TrainerX):
             with autocast():
                 output, image_features, text_features = self.model(image)
                 # loss = F.cross_entropy(output, label, self.class_weights)
-                loss = F.cross_entropy(output, label)
+                # loss = F.cross_entropy(output, label)
+                loss = self.criterion(output, label, index)
             self.optim.zero_grad()
             self.scaler.scale(loss).backward()
             self.scaler.step(self.optim)
@@ -550,6 +551,8 @@ class UPLTrainer(TrainerX):
             outputs_all.append(output)
             label_all.append(label)
         results = self.evaluator.evaluate()
+        # if True or log_conf == True:
+        #     self.criterion.log_conf(all_logits=torch.cat(outputs_all, dim=0), all_labels=torch.cat(label_all, dim=0))
         if split in ['all', 'train', 'test', 'novel', 'base']:
             if len(outputs_all) != 0:
                 outputs_all = torch.cat(outputs_all, dim=0)

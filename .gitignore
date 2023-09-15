@@ -3,5 +3,8 @@ analyze_results/*
 output/*
 *.pyc
 *.pt
+*.svg
+
+terminal_orders.txt
 
 data/
