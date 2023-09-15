@@ -3,6 +3,7 @@ analyze_results/*
 *.pyc
 *.pt
 *.svg
+*.tar
 
 terminal_orders.txt
 

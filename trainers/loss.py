@@ -75,15 +75,15 @@ class PLL_loss(nn.Module):
         # Create a tensor filled with a very small number to represent 'masked' positions
         masked_p = p.new_full(p.size(), float('-inf'))
 
-        p = p.float()                                               #HACK solution here
-        masked_p = masked_p * self.confidence[index, :]       #NOTE add multiple conf here    
+        # p = p.float()                                               #HACK solution here
+        # masked_p = masked_p * self.confidence[index, :]       #NOTE add multiple conf here    
 
         # Apply the mask
         masked_p[y.bool()] = p[y.bool()] + self.eps      
         # Adjust masked positions to avoid undefined gradients by adding epsilon
-        masked_p[y.bool()] = (1 - masked_p[y.bool()] ** self.q) / self.q                #NOTE add multiple conf here   
+        masked_p[y.bool()] = (1 - masked_p[y.bool()] ** self.q) / self.q        
         masked_p[~y.bool()] = self.eps 
-        loss = masked_p.sum(dim=1)
+        loss = (masked_p * self.confidence[index, :]).sum(dim=1)    #NOTE add multiple conf here   
         return loss
     
     def forward_cc(self, x, y, index):
@@ -102,29 +102,35 @@ class PLL_loss(nn.Module):
         logsm_outputs = F.log_softmax(x, dim=1)         #x is the model ouputs
         final_outputs = logsm_outputs * self.confidence[index, :]
         loss = - (final_outputs).sum(dim=1)    #final_outputs=torch.Size([256, 10]) -> Q: why use negative? A:  
-        self.confidence_update(self.confidence, x, y, index)
+        self.update_confidence(self.confidence, x, y, index)
         return loss     
 
     def forward_rc_(self, x, y, index):
         logsm_outputs = F.softmax(x, dim=1)         #x is the model ouputs
         final_outputs = logsm_outputs * self.confidence[index, :]
         loss = - torch.log((final_outputs).sum(dim=1))    #final_outputs=torch.Size([256, 10]) -> Q: why use negative? A:  
-        self.confidence_update(self.confidence, x, y, index)
+        self.update_confidence(self.confidence, x, y, index)
         return loss 
         
+    def update_partial_labels(self, y, conf_matrix, index):
+        # conf_matrix[index, :].max(dim=1)
+        # conf_matrix.shape[1]
+        return y * conf_matrix[index, :]
+
     def forward_rc_plus(self, x, y, index):
         logsm_outputs = F.softmax(x, dim=1)         #x is the model ouputs
-        final_outputs = logsm_outputs * y
+        y_new = self.update_partial_labels(y, self.confidence, index)
+        final_outputs = logsm_outputs * y_new
 
         conf_loss = self.get_conf_loss(x, y, index, type=self.cfg.CONF_LOSS_TYPE)
 
         loss = (-torch.log((final_outputs).sum(dim=1)) + 
                     self.beta*conf_loss
                     )    
-        self.confidence_update(self.confidence, x, y, index)
+        self.update_confidence(self.confidence, x, y, index)
         return loss     
 
-    def get_conf_loss(self, x, y, index, type='rc'):
+    def get_conf_loss(self, x, y, index, type=None):
         if type=='rc':
             conf_loss = self.forward_rc(x, y, index)
         elif type=='ce':
@@ -138,7 +144,7 @@ class PLL_loss(nn.Module):
         return conf_loss
 
 
-    def confidence_update(self, confidence, batch_outputs, batchY, batch_index):
+    def update_confidence(self, confidence, batch_outputs, batchY, batch_index):
         with torch.no_grad():
             temp_un_conf = F.softmax(batch_outputs, dim=1)
             confidence[batch_index, :] = temp_un_conf * batchY # un_confidence stores the weight of each example
