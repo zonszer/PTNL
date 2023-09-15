@@ -15,18 +15,19 @@ else:
 
 class PLL_loss(nn.Module):
     def __init__(self, type=None, PartialY=None,
-                 eps=1e-6, beta=None):
+                 eps=1e-6, cfg=None):
         super(PLL_loss, self).__init__()
         self.eps = eps
         self.losstype = type
         self.device = device
         self.softmax = nn.Softmax(dim=1)
+        self.cfg = cfg
         #PLL items: 
         self.num = 0
         if 'rc' in type:
             self.confidence = self.init_confidence(PartialY)
             if type == 'rc+':
-                self.beta = beta
+                self.beta = self.cfg.BETA
         if type == 'gce':
             self.q = 0.7
 
@@ -49,9 +50,11 @@ class PLL_loss(nn.Module):
             loss = self.forward_gce(*args)
         elif self.losstype == 'rc':
             loss = self.forward_rc(*args)
+        elif self.losstype == 'rc+':
+            loss = self.forward_rc_plus(*args)
         else:
             raise ValueError
-        return loss
+        return loss.mean()
 
     def forward_gce(self, x, y, index):
         """y is shape of (batch_size, num_classes (0 ~ 1.)), one-hot vector"""
@@ -63,45 +66,58 @@ class PLL_loss(nn.Module):
         # Adjust masked positions to avoid undefined gradients by adding epsilon
         masked_p[y.bool()] = (1 - masked_p[y.bool()] ** self.q) / self.q
         masked_p[~y.bool()] = self.eps 
-        loss = (masked_p.sum(dim=1) ).mean()
+        loss = masked_p.sum(dim=1)
         return loss
     
     def forward_cc(self, x, y, index):
         sm_outputs = F.softmax(x, dim=1)      #outputs are logits
         final_outputs = sm_outputs * y
-        average_loss = - torch.log(final_outputs.sum(dim=1) ).mean()     #NOTE: add y.sum(dim=1)
-        return average_loss
+        loss = - torch.log(final_outputs.sum(dim=1))    #NOTE: add y.sum(dim=1)
+        return loss
     
     def forward_ce(self, x, y, index):
         sm_outputs = F.log_softmax(x, dim=1)
         final_outputs = sm_outputs * y
-        average_loss = - (final_outputs.sum(dim=1) ).mean()  #NOTE: add y.sum(dim=1)
-        return average_loss
+        loss = - final_outputs.sum(dim=1)  #NOTE: add y.sum(dim=1)
+        return loss
     
-    def forward_rc_t(self, x, y, index):
+    def forward_rc(self, x, y, index):
         logsm_outputs = F.log_softmax(x, dim=1)         #x is the model ouputs
         final_outputs = logsm_outputs * self.confidence[index, :]
-        average_loss = - ((final_outputs).sum(dim=1)).mean()    #final_outputs=torch.Size([256, 10]) -> Q: why use negative? A:  
+        loss = - (final_outputs).sum(dim=1)    #final_outputs=torch.Size([256, 10]) -> Q: why use negative? A:  
         self.confidence_update(self.confidence, x, y, index)
-        return average_loss     
+        return loss     
 
     def forward_rc_(self, x, y, index):
         logsm_outputs = F.softmax(x, dim=1)         #x is the model ouputs
         final_outputs = logsm_outputs * self.confidence[index, :]
-        average_loss = - torch.log((final_outputs).sum(dim=1) ).mean()    #final_outputs=torch.Size([256, 10]) -> Q: why use negative? A:  
+        loss = - torch.log((final_outputs).sum(dim=1))    #final_outputs=torch.Size([256, 10]) -> Q: why use negative? A:  
         self.confidence_update(self.confidence, x, y, index)
-        return average_loss 
+        return loss 
         
-    def forward_rc_plus(self, x, y, index, beta=0.1):
+    def forward_rc_plus(self, x, y, index):
         logsm_outputs = F.softmax(x, dim=1)         #x is the model ouputs
-        logsm_outputs_ce = F.log_softmax(x, dim=1)         #x is the model ouputs
         final_outputs = logsm_outputs * y
-        final_outputs_ce = logsm_outputs_ce * self.confidence[index, :]
-        average_loss = - ( torch.log((final_outputs).sum(dim=1)) + 
-                                beta*(final_outputs_ce).sum(dim=1)  
-                          ).mean()    #final_outputs=torch.Size([256, 10]) -> Q: why use negative? A:  
+
+        conf_loss = self.get_conf_loss(x, y, index, type=self.cfg.CONF_LOSS_TYPE)
+
+        loss = (-torch.log((final_outputs).sum(dim=1)) + 
+                    self.beta*conf_loss
+                    )    
         self.confidence_update(self.confidence, x, y, index)
-        return average_loss     
+        return loss     
+
+    def get_conf_loss(self, x, y, index, type='rc'):
+        if type=='rc':
+            conf_loss = self.forward_rc(x, y, index)
+        elif type=='ce':
+            conf_loss = self.forward_ce(x, y, index)
+        elif type=='gce':
+            conf_loss = self.forward_gce(x, y, index)
+        else:
+            raise ValueError('conf_loss type not supported')
+        return conf_loss
+
 
     def confidence_update(self, confidence, batch_outputs, batchY, batch_index):
         with torch.no_grad():
