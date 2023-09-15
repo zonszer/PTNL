@@ -24,11 +24,11 @@ class PLL_loss(nn.Module):
         self.cfg = cfg
         #PLL items: 
         self.num = 0
-        if 'rc' in type:
+        if 'rc' in type or 'rc' in self.cfg.CONF_LOSS_TYPE:
             self.confidence = self.init_confidence(PartialY)
             if type == 'rc+':
                 self.beta = self.cfg.BETA
-        if type == 'gce':
+        if 'gce' in type or 'gce' in self.cfg.CONF_LOSS_TYPE:
             self.q = 0.7
 
     def init_confidence(self, PartialY):
@@ -65,6 +65,23 @@ class PLL_loss(nn.Module):
         masked_p[y.bool()] = p[y.bool()] + self.eps         
         # Adjust masked positions to avoid undefined gradients by adding epsilon
         masked_p[y.bool()] = (1 - masked_p[y.bool()] ** self.q) / self.q
+        masked_p[~y.bool()] = self.eps 
+        loss = masked_p.sum(dim=1)
+        return loss
+    
+    def forward_gce_rc(self, x, y, index):
+        """y is shape of (batch_size, num_classes (0 ~ 1.)), one-hot vector"""
+        p = F.softmax(x, dim=1)      #outputs are logits
+        # Create a tensor filled with a very small number to represent 'masked' positions
+        masked_p = p.new_full(p.size(), float('-inf'))
+
+        p = p.float()                                               #HACK solution here
+        masked_p = masked_p * self.confidence[index, :]       #NOTE add multiple conf here    
+
+        # Apply the mask
+        masked_p[y.bool()] = p[y.bool()] + self.eps      
+        # Adjust masked positions to avoid undefined gradients by adding epsilon
+        masked_p[y.bool()] = (1 - masked_p[y.bool()] ** self.q) / self.q                #NOTE add multiple conf here   
         masked_p[~y.bool()] = self.eps 
         loss = masked_p.sum(dim=1)
         return loss
@@ -114,6 +131,8 @@ class PLL_loss(nn.Module):
             conf_loss = self.forward_ce(x, y, index)
         elif type=='gce':
             conf_loss = self.forward_gce(x, y, index)
+        elif type=='gce_rc':
+            conf_loss = self.forward_gce_rc(x, y, index)
         else:
             raise ValueError('conf_loss type not supported')
         return conf_loss
