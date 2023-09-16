@@ -5,6 +5,7 @@ analyze_results/*
 *.svg
 *.tar
 
+output/
 terminal_orders.txt
 
 data/
