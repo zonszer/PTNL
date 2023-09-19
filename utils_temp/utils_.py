@@ -10,6 +10,7 @@ from glob import glob
 import csv
 import torch
 from typing import List
+import os
 
 def restore_pic(x):
     """
@@ -55,13 +56,26 @@ def write_dict_to_csv(data: dict, file_path):
         writer.writerow(data)
 
 def become_deterministic(seed=0):
+    # seed init.
     random.seed(seed)
     np.random.seed(seed)
-    torch.cuda.manual_seed_all(seed)
-    torch.cuda.manual_seed(seed)
+    os.environ['PYTHONHASHSEED'] = str(seed)
+
+    # torch seed init.
     torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
+    # torch.backends.cudnn.enabled = False # train speed is slower after enabling this opts.
+
+    # https://pytorch.org/docs/stable/generated/torch.use_deterministic_algorithms.html
+    os.environ['CUBLAS_WORKSPACE_CONFIG'] = ':16:8'
+
+    # avoiding nondeterministic algorithms (see https://pytorch.org/docs/stable/notes/randomness.html)
+    torch.use_deterministic_algorithms(True)
+
 
 def dict_add(dictionary: dict, key, value, acc='list'):
     """

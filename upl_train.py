@@ -6,6 +6,7 @@ import os
 from dassl.utils import setup_logger, set_random_seed, collect_env_info
 from configs.upl_default_config.upl_default import get_cfg_default
 from dassl.engine import build_trainer
+from utils_temp.utils_ import become_deterministic
 
 # custom
 import datasets.oxford_pets
@@ -126,7 +127,8 @@ def main(args):
     cfg = setup_cfg(args)
     if cfg.SEED >= 0:
         print('Setting fixed seed: {}'.format(cfg.SEED))
-        set_random_seed(cfg.SEED)
+        # set_random_seed(cfg.SEED)
+        become_deterministic(cfg.SEED)
     setup_logger(cfg.OUTPUT_DIR)
 
     if torch.cuda.is_available() and cfg.USE_CUDA:

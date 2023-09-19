@@ -8,6 +8,7 @@ import datetime
 import numpy as np
 from tqdm import tqdm
 import json
+from dassl.utils import read_json, write_json
 
 import torch
 import torch.nn as nn
@@ -28,7 +29,7 @@ from copy import deepcopy
 
 from clip import clip
 from clip.simple_tokenizer import SimpleTokenizer as _Tokenizer
-
+    
 from datasets.data_manager import UPLDataManager
 from evaluation.evaluator import UPLClassification
 from .hhzsclip import ZeroshotCLIP
@@ -38,6 +39,7 @@ select_top_k_similarity_per_class_with_noisy_label,
 add_partial_labels,
 )
 
+from utils_temp.utils_ import dict_add
 _tokenizer = _Tokenizer()
 from trainers.loss import GeneralizedCrossEntropy, PLL_loss
 
@@ -104,13 +106,13 @@ class TextEncoder(nn.Module):
         x = x.permute(1, 0, 2)  # NLD -> LND
         x = self.transformer(x)
         x = x.permute(1, 0, 2)  # LND -> NLD
-        x = self.ln_final(x).type(self.dtype)
+        x = self.ln_final(x).type(self.dtype)       #x.shape=torch.Size([100, 77, 512])
 
         # x.shape = [batch_size, n_ctx, transformer.width]
         # take features from the eot embedding (eot_token is the highest number in each sequence)
-        x = x[torch.arange(x.shape[0]), tokenized_prompts.argmax(dim=-1)] @ self.text_projection
+        x = x[torch.arange(x.shape[0]), tokenized_prompts.argmax(dim=-1)] @ self.text_projection    #proj.shape=torch.Size([512, 1024])
 
-        return x
+        return x    #shape=torch.Size([100, 1024])
 
 
 class PromptLearner(nn.Module):
@@ -163,8 +165,9 @@ class PromptLearner(nn.Module):
         # These token vectors will be saved when in save_model(),
         # but they should be ignored in load_model() as we want to use
         # those computed using the current class names
-        self.register_buffer("token_prefix", embedding[:, :1, :])  # SOS
-        self.register_buffer("token_suffix", embedding[:, 1 + n_ctx :, :])  # CLS, EOS
+        self.register_buffer("token_prefix", embedding[:, :1, :])  # SOS    #上面prompt_prefix的作用只是用来创建相应的token_prefix和token_suffix
+
+        self.register_buffer("token_suffix", embedding[:, 1 + n_ctx :, :])  # CLS and EOS
 
         self.n_cls = n_cls
         self.n_ctx = n_ctx
@@ -253,11 +256,11 @@ class CustomCLIP(nn.Module):
         self.cfg = cfg
 
     def forward(self, image):
-        image_features = self.image_encoder(image.type(self.dtype))
+        image_features = self.image_encoder(image.type(self.dtype)) #torch.Size([32, 1024])
 
-        prompts = self.prompt_learner()
+        prompts = self.prompt_learner()      # compose prompt according to the position
         tokenized_prompts = self.tokenized_prompts
-        text_features = self.text_encoder(prompts, tokenized_prompts)
+        text_features = self.text_encoder(prompts, tokenized_prompts)   #torch.Size([100, 1024])
 
         image_features = image_features / image_features.norm(dim=-1, keepdim=True)
         text_features = text_features / text_features.norm(dim=-1, keepdim=True)
@@ -404,6 +407,16 @@ class UPLTrainer(TrainerX):
             loss = self.criterion(output, label, index)
             self.model_backward_and_update(loss)
 
+        # gradients compare:
+        if self.criterion.num % 2 == 0:
+            grad_ratios_dict = self.compare_gradients(image, index, label, gt_label)
+            for key, value in grad_ratios_dict.items():
+                # assert len(grad_ratios_dict[key]) == 1
+                if not hasattr(self, 'grad_ratios_dict'):
+                    self.grad_ratios_dict = {}
+                for i in range(len(grad_ratios_dict[key])):
+                    dict_add(self.grad_ratios_dict, key, value[i])
+
         loss_summary = {
             "loss": loss.item(),
             "acc": compute_accuracy(output, gt_label)[0].item(),
@@ -413,6 +426,74 @@ class UPLTrainer(TrainerX):
             self.update_lr()
 
         return loss_summary
+
+    def compare_gradients(self, image, index, label, gt_label):
+        def seprate_partial_labels(label, gt_label):
+            gt_label = gt_label.long()
+            gt_label_onehot = torch.zeros_like(label)
+            other_label = deepcopy(label)
+            for i in range(label.shape[0]): #label is shape of (bs, classes) on-hot metrix
+                gt_label_onehot[i, gt_label[i]] = 1.
+                other_label[i, gt_label[i]] = 0.
+            return gt_label_onehot, other_label
+        
+        gt_label_onehot, other_label = seprate_partial_labels(label, gt_label)
+        ratios = {}
+
+        # 1. Calculate the forward pass for the gt_labels
+        # HACK this func assert loss_type == 'cc'
+        output, image_features, text_features = self.model(image)
+        if hasattr(self.criterion, 'confidence'):
+            conf_tmp = deepcopy(self.criterion.confidence)
+        loss = self.criterion(output, gt_label_onehot, index)
+        if hasattr(self.criterion, 'confidence'):
+            self.criterion.confidence = conf_tmp
+
+        if not torch.isfinite(loss).all():
+            return ratios
+        # Zero any existing gradients first
+        self.model_zero_grad()
+        self.model_backward(loss)
+        names = self.get_model_names()  
+
+        grad_gt = {}
+        for name in names:
+            # Fetch the gradients of the parameters
+            grad_gt[name] = [param.grad.clone() for param in self._models[name].parameters()]
+        
+        # Reset gradients in the model parameters
+        self.model_zero_grad()
+
+        # 2. Repeat the process for non-gt labels and calculate the ratio
+        output, i_features, t_features = self.model(image)
+        if hasattr(self.criterion, 'confidence'):
+            conf_tmp = deepcopy(self.criterion.confidence)
+        loss = self.criterion(output, other_label, index)
+        if hasattr(self.criterion, 'confidence'):
+            self.criterion.confidence = conf_tmp
+        
+        if not torch.isfinite(loss).all():
+            return ratios
+        # Zero any existing gradients first
+        self.model_backward(loss)
+        names = self.get_model_names()  
+
+        grad_non_gt = {}
+        for name in names:
+            # Fetch the gradients of the parameters
+            grad_non_gt[name] = [param.grad.clone() for param in self._models[name].parameters()]
+        
+        # Reset gradients in the model parameters
+        self.model_zero_grad()
+        
+        for name in names:
+            ratio_list = []
+            for grad_gt_param, grad_non_gt_param in zip(grad_gt[name], grad_non_gt[name]):
+                if grad_gt_param is not None and grad_non_gt_param is not None:
+                    ratio = torch.norm(grad_non_gt_param) / torch.norm(grad_gt_param)
+                    ratio_list.append(ratio.item())
+            ratios[name] = ratio_list
+        return ratios
 
     def parse_batch_train(self, batch):
         input = batch["img"]
@@ -552,8 +633,17 @@ class UPLTrainer(TrainerX):
             outputs_all.append(output)
             label_all.append(label)
         results = self.evaluator.evaluate()
-        # if True or log_conf == True:
-        #     self.criterion.log_conf(all_logits=torch.cat(outputs_all, dim=0), all_labels=torch.cat(label_all, dim=0))
+        if True or log_conf == True:
+            self.criterion.log_conf(all_logits=torch.cat(outputs_all, dim=0), all_labels=torch.cat(label_all, dim=0))
+        if split == 'test':
+            # 1. save class_acc_sumlist:
+            filename = f'analyze_result_temp/class_acc_sumlist/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.criterion.cfg.PARTIAL_RATE}_{self.criterion.losstype}.json'
+            with open(filename, "w") as file:
+                json.dump(self.evaluator.class_acc_sumlist, file)
+            # 2. save grad_ratios_dict:
+            filename = f'analyze_result_temp/grad_ratios_dict/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.criterion.cfg.PARTIAL_RATE}_{self.criterion.losstype}.json'
+            with open(filename, "w") as file:
+                json.dump(self.grad_ratios_dict, file)
         if split in ['all', 'train', 'test', 'novel', 'base']:
             if len(outputs_all) != 0:
                 outputs_all = torch.cat(outputs_all, dim=0)
@@ -625,7 +715,7 @@ class UPLTrainer(TrainerX):
                 logits += torch.load(logist_path)
 
             info_path = os.path.join(model_path, '{}.json'.format(self.cfg.DATASET.NAME))
-            info = json.load(open(info_path))
+            info = json.load(open(info_path))       
             items = []
             for c in info:
                 for img_path in info[c]:

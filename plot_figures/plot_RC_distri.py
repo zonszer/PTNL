@@ -7,34 +7,68 @@ import torch
 import joypy
 import pandas as pd
 import matplotlib.pyplot as plt
+import datetime
+import numpy as np
 
+current_time = datetime.datetime.now()
+current_time = current_time.strftime("%m%d-%H_%M_%S")
 # Step 1: Prepare separate lists
 all_data_no_true = []
 all_data_true = []
-path = '../analyze_result_temp'
+path = '../analyze_result_temp/logits&labels'
 
-#+++++++=========== figure1
+#+++++++=========== figure1, dataset is train
 # Step 2: Get list of files
 # files_no_true = sorted(glob.glob(path+ '/confidence_RC-*.pt'), key=lambda x: int(re.search('(\d+)', x).group()))
 # files_true = sorted(glob.glob(path+ '/confidence_RC-*_true.pt'), key=lambda x: int(re.search('(\d+)', x).group()))
 
 # # Filter the list of files to only include those that end with a number followed by '.pt'
 # files_no_true = [f for f in files_no_true if re.search(r'confidence_RC-\d+\.pt$', f)]
-#+++++++=========== figure2
+# fig_id = 'RC'
+#+++++++=========== figure2, -> PLL05-cc, dataset is val
 # files_no_true = sorted(glob.glob(path + '/outputs_CC_PLL05-*.pt'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
 # files_true = sorted(glob.glob(path + '/labels_CC_PLL05-*.pt'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
+# fig_id = 'CC_PLL05'
 
-#+++++++=========== figure3 -> forward_rc_()
-files_no_true = sorted(glob.glob(path + '/outputs_RC&cc_PLL05-*.pt'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
-files_true = sorted(glob.glob(path + '/labels_RC&cc_PLL05-*.pt'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
+#+++++++=========== figure3 -> forward_rc_(), dataset is val
+# files_no_true = sorted(glob.glob(path + '/outputs_RC&cc_PLL05-*.pt'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
+# files_true = sorted(glob.glob(path + '/labels_RC&cc_PLL05-*.pt'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
+# fig_id = 'RC+CC_1'
 
-#+++++++=========== figure4 -> forward_rc(+CC) new()
+#+++++++=========== figure4 -> forward_rc(+CC) new(), dataset is val
 # files_no_true = sorted(glob.glob(path + '/outputs_RC&cc2_PLL05-*.pt'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
 # files_true = sorted(glob.glob(path + '/labels_RC&cc2_PLL05-*.pt'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
 # files_no_true = files_no_true[1:]
 # files_true = files_true[1:]
+# fig_id = 'RC+CC_2'
+
+#+++++++=========== figure5, dataset is val -> ce PLL00     #NOTE 记得需要每次手动改一下最后一个.pt name -> _test
+# files_no_true = sorted(glob.glob(path + '/outputs_CE_PLL00-*.pt'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
+# files_true = sorted(glob.glob(path + '/labels_CE_PLL00-*.pt'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
+# fig_id = 'ce_PLL00'
+
+#+++++++=========== figure6, -> PLL05-ce, dataset is val
+# files_no_true = sorted(glob.glob(path + '/outputs_CE_PLL0.5-*.pt'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
+# files_true = sorted(glob.glob(path + '/labels_CE_PLL0.5-*.pt'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
+# fig_id = 'CE_PLL05'
+
+# #+++++++=========== figure7, -> PLL05-rc, dataset is val
+files_no_true = sorted(glob.glob(path + '/outputs_RC_PLL0.5-*.pt'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
+files_true = sorted(glob.glob(path + '/labels_RC_PLL0.5-*.pt'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
+fig_id = 'RC_PLL05-logits'
+
+
+##============set params:
+dataset_class_names = ['face', 'leopard', 'motorbike', 'accordion', 'airplane', 'anchor', 'ant', 'barrel', 'bass', 'beaver', 'binocular', 'bonsai', 'brain', 'brontosaurus', 'buddha', 'butterfly', 'camera', 'cannon', 'car_side', 'ceiling_fan', 'cellphone', 'chair', 'chandelier', 'cougar_body', 'cougar_face', 'crab', 'crayfish', 'crocodile', 'crocodile_head', 'cup', 'dalmatian', 'dollar_bill', 'dolphin', 'dragonfly', 'electric_guitar', 'elephant', 'emu', 'euphonium', 'ewer', 'ferry', 'flamingo', 'flamingo_head', 'garfield', 'gerenuk', 'gramophone', 'grand_piano', 'hawksbill', 'headphone', 'hedgehog', 'helicopter', 'ibis', 'inline_skate', 'joshua_tree', 'kangaroo', 'ketch', 'lamp', 'laptop', 'llama', 'lobster', 'lotus', 'mandolin', 'mayfly', 'menorah', 'metronome', 'minaret', 'nautilus', 'octopus', 'okapi', 'pagoda', 'panda', 'pigeon', 'pizza', 'platypus', 'pyramid', 'revolver', 'rhino', 'rooster', 'saxophone', 'schooner', 'scissors', 'scorpion', 'sea_horse', 'snoopy', 'soccer_ball', 'stapler', 'starfish', 'stegosaurus', 'stop_sign', 'strawberry', 'sunflower', 'tick', 'trilobite', 'umbrella', 'watch', 'water_lilly', 'wheelchair', 'wild_cat', 'windsor_chair', 'wrench', 'yin_yang']
+sub_figure_num = 9
+figure_type = 'wrench'      #anchor wrench
+pos_loop = True
+np.random.seed(0)
+##============set params:
 
 # Step 3: Load data from files into their respective lists
+print(f'files_no_true is {files_no_true} \n')
+print(f'files_true is {files_true} \n')
 stack_list = []
 for file in files_no_true:
     tensor = torch.load(file)    # Load tensor from file
@@ -52,22 +86,12 @@ all_data_bool = all_data.bool()
 
 all_data_no_true = all_data_no_true.cpu().numpy()
 all_data_bool = all_data_bool.cpu().numpy()
-print(f'files_no_true is {files_no_true}')
-print(f'files_true is {files_true}')
+
 print(f'all_data_no_true.shape is {all_data_no_true.shape}')
 
 # %%
-import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-
-##============set params:
-dataset_class_names = ['face', 'leopard', 'motorbike', 'accordion', 'airplane', 'anchor', 'ant', 'barrel', 'bass', 'beaver', 'binocular', 'bonsai', 'brain', 'brontosaurus', 'buddha', 'butterfly', 'camera', 'cannon', 'car_side', 'ceiling_fan', 'cellphone', 'chair', 'chandelier', 'cougar_body', 'cougar_face', 'crab', 'crayfish', 'crocodile', 'crocodile_head', 'cup', 'dalmatian', 'dollar_bill', 'dolphin', 'dragonfly', 'electric_guitar', 'elephant', 'emu', 'euphonium', 'ewer', 'ferry', 'flamingo', 'flamingo_head', 'garfield', 'gerenuk', 'gramophone', 'grand_piano', 'hawksbill', 'headphone', 'hedgehog', 'helicopter', 'ibis', 'inline_skate', 'joshua_tree', 'kangaroo', 'ketch', 'lamp', 'laptop', 'llama', 'lobster', 'lotus', 'mandolin', 'mayfly', 'menorah', 'metronome', 'minaret', 'nautilus', 'octopus', 'okapi', 'pagoda', 'panda', 'pigeon', 'pizza', 'platypus', 'pyramid', 'revolver', 'rhino', 'rooster', 'saxophone', 'schooner', 'scissors', 'scorpion', 'sea_horse', 'snoopy', 'soccer_ball', 'stapler', 'starfish', 'stegosaurus', 'stop_sign', 'strawberry', 'sunflower', 'tick', 'trilobite', 'umbrella', 'watch', 'water_lilly', 'wheelchair', 'wild_cat', 'windsor_chair', 'wrench', 'yin_yang']
-sub_figure_num = 9
-figure_type = 'binocular'
-pos_loop = True
-np.random.seed(0)
-##============set params:
 
 # prepare the index and data of the shown figures:
 type_idx = dataset_class_names.index(figure_type)
@@ -143,6 +167,6 @@ for i in range(num_figures):
 
 plt.tight_layout()
 # # plt.show()
-plt.savefig(f'RC+CC_2_distri-{figure_type}.svg')
+plt.savefig(f'{fig_id}_distri-{figure_type}_{current_time}.svg')
 
 # %%

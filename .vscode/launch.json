@@ -22,7 +22,7 @@
               "--config-file=configs/trainers/UPLTrainer/rn50_ep50.yaml",     //↓ 记得改别的后也改output-dir
               "--output-dir=./output/sscaltech101/UPLTrainer/rn50_ep50_16shots_EQULE_True_end_rn50_random_init/nctx16_cscFalse_ctpend_fp0/seed22",
               "--num-fp=0",
-              "--loss_type=rc+",
+              "--loss_type=rc",
               "TRAINER.UPLTrainer.N_CTX",
               "16",
               "TRAINER.UPLTrainer.CSC",
@@ -36,17 +36,62 @@
               "TRAINER.PLL.USE_PLL",
               "True",
               "TRAINER.PLL.PARTIAL_RATE",
-              "0.5",
-              "TRAINER.PLL.BETA",
-              "0.1",
-              "TRAINER.PLL.CONF_LOSS_TYPE",
-              "rc",
-              "TRAINER.UPLTrainer.CTX_INIT",
-              "a photo of a "
+              "0.3",
+              "TEST.FINAL_MODEL",
+              "best_val",
+              // "TRAINER.PLL.BETA",
+              // "0.1",
+              // "TRAINER.PLL.CONF_LOSS_TYPE",
+              // "rc",
+              // "TRAINER.UPLTrainer.CTX_INIT",
+              // "a photo of a "
             ]
           },
-        {
-            "name": "upl_train.py-caltech101-rn50-GCE",
+
+          {
+            "name": "upl_train-rc+GCE_rc.py",
+            "type": "python",
+            "request": "launch",
+            "program": "upl_train.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+              "CUDA_VISIBLE_DEVICES": "1"
+            },
+            "args": [
+              "--root=./data",
+              "--seed=2",
+              "--trainer=UPLTrainer",
+              "--dataset-config-file=configs/datasets/sscaltech101.yaml",
+              "--config-file=configs/trainers/UPLTrainer/rn50_ep50.yaml",
+              "--output-dir=./output/sscaltech101/UPLTrainer/debug_4plot/nctx16_cscFalse_ctpend_fp0_PLL05-rc+gce_rc_4log_grad/seed2",
+              "--num-fp=0",
+              "--loss_type=rc+",
+              "TRAINER.UPLTrainer.N_CTX",
+              "16",
+              "TRAINER.UPLTrainer.CSC",
+              "False",
+              "TRAINER.UPLTrainer.CLASS_TOKEN_POSITION",
+              "end",
+              "DATASET.NUM_SHOTS",
+              "16",
+              "DATASET.CLASS_EQULE" ,
+              "True",
+              "TRAINER.PLL.USE_PLL" ,
+              "True",
+              "TRAINER.PLL.PARTIAL_RATE" ,
+              "0.5",
+              "TRAINER.PLL.CONF_LOSS_TYPE", 
+              "gce_rc",
+              "TRAINER.PLL.BETA" ,
+              "0.1",
+              "TEST.FINAL_MODEL" ,
+              "best_val",
+            ]
+          },
+          
+          {
+            "name": "upl_train.py-ssucf101-rn50-RC-newClassesTest",
             "type": "python",
             "request": "launch",
             "program": "upl_train.py",
@@ -57,13 +102,13 @@
             },
             "args": [
               "--root=./data",
-              "--seed=22",
+              "--seed=1",
               "--trainer=UPLTrainer",
-              "--dataset-config-file=configs/datasets/sscaltech101.yaml",
-              "--config-file=configs/trainers/UPLTrainer/rn50_ep50.yaml",     //↓ 记得改别的后也改output-dir
-              "--output-dir=./output/sscaltech101/UPLTrainer/rn50_ep50_16shots_EQULE_True_end_rn50_random_init/nctx16_cscFalse_ctpend_fp0/debug_rubbish",
+              "--dataset-config-file=configs/datasets/ssucf101.yaml",
+              "--config-file=configs/trainers/UPLTrainer/rn50_ep50.yaml",
+              "--output-dir=./output/ssucf101/UPLTrainer/rn50_ep50_16shots_EQULE_True_09-16_00-21-37/nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc/seed1",
               "--num-fp=0",
-              "--loss_type=gce",
+              "--loss_type=rc",
               "TRAINER.UPLTrainer.N_CTX",
               "16",
               "TRAINER.UPLTrainer.CSC",
@@ -77,9 +122,82 @@
               "TRAINER.PLL.USE_PLL",
               "True",
               "TRAINER.PLL.PARTIAL_RATE",
-              "0.5",
-              "TRAINER.UPLTrainer.CTX_INIT",
-              "a photo of a"
+              "0.3"
+            ]
+          },
+          
+          
+        {
+          "name": "upl_train.py-caltech101-rn50-GCE",
+          "type": "python",
+          "request": "launch",
+          "program": "upl_train.py",
+          "console": "integratedTerminal",
+          "justMyCode": false,
+          "env": {
+            "CUDA_VISIBLE_DEVICES": "0"
+          },
+          "args": [
+            "--root=./data",
+            "--seed=22",
+            "--trainer=UPLTrainer",
+            "--dataset-config-file=configs/datasets/sscaltech101.yaml",
+            "--config-file=configs/trainers/UPLTrainer/rn50_ep50.yaml",     //↓ 记得改别的后也改output-dir
+            "--output-dir=./output/sscaltech101/UPLTrainer/rn50_ep50_16shots_EQULE_True_end_rn50_random_init/nctx16_cscFalse_ctpend_fp0/debug_rubbish",
+            "--num-fp=0",
+            "--loss_type=gce",
+            "TRAINER.UPLTrainer.N_CTX",
+            "16",
+            "TRAINER.UPLTrainer.CSC",
+            "False",
+            "TRAINER.UPLTrainer.CLASS_TOKEN_POSITION",
+            "end",
+            "DATASET.NUM_SHOTS",
+            "16",
+            "DATASET.CLASS_EQULE",
+            "True",
+            "TRAINER.PLL.USE_PLL",
+            "True",
+            "TRAINER.PLL.PARTIAL_RATE",
+            "0.5",
+            "TRAINER.UPLTrainer.CTX_INIT",
+            "a photo of a"
+          ]
+        },
+
+        {
+          "name": "upl_train.py-caltech101-rn50-cc",
+          "type": "python",
+          "request": "launch",
+          "program": "upl_train.py",
+          "console": "integratedTerminal",
+          "justMyCode": false,
+          "env": {
+            "CUDA_VISIBLE_DEVICES": "0"
+          },
+          "args": [
+            "--root=./data",
+            "--seed=22",
+            "--trainer=UPLTrainer",
+            "--dataset-config-file=configs/datasets/sscaltech101.yaml",
+            "--config-file=configs/trainers/UPLTrainer/rn50_ep50.yaml",     //↓ 记得改别的后也改output-dir
+            "--output-dir=./output/sscaltech101/UPLTrainer/rn50_ep50_16shots_EQULE_True_end_rn50_random_init/nctx16_cscFalse_ctpend_fp0/debug_rubbish",
+            "--num-fp=0",
+            "--loss_type=cc",
+            "TRAINER.UPLTrainer.N_CTX",
+            "16",
+            "TRAINER.UPLTrainer.CSC",
+            "False",
+            "TRAINER.UPLTrainer.CLASS_TOKEN_POSITION",
+            "end",
+            "DATASET.NUM_SHOTS",
+            "16",
+            "DATASET.CLASS_EQULE",
+            "True",
+            "TRAINER.PLL.USE_PLL",
+            "True",
+            "TRAINER.PLL.PARTIAL_RATE",
+            "0.5",
             ]
           },
         {

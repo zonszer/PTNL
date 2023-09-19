@@ -126,13 +126,17 @@ class UPLDatasetBase(DatasetBase):
     def read_sstrain_data(self, filepath, path_prefix, predict_label_dict=None):
 
         def _convert(items):
-            out = []
+            all_imgs = []
             for impath, _, _ in items:
                 impath = os.path.join(path_prefix, impath)
                 sub_impath = './data/' + impath.split('/data/')[1]
-                if sub_impath in predict_label_dict:
-                    item = Datum(impath=impath, label=predict_label_dict[sub_impath])   #classname=self._lab2cname[predict_label_dict[sub_impath]]
-                    out.append(item)
+                all_imgs.append(sub_impath)
+            out = []
+            missing_keys = [key for key in predict_label_dict.keys() if key not in all_imgs]
+            assert not missing_keys, f"execute check: These keys were not found in items: {missing_keys}"
+            for k, v in predict_label_dict.items():        # TOorg 就是这里：导致predict_label_dict按items里面的顺序重新排序了
+                item = Datum(impath=k, label=v)   #classname=self._lab2cname[predict_label_dict[sub_impath]]
+                out.append(item)
             return out
 
         def _convert_no_label(items):

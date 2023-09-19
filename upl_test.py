@@ -10,6 +10,7 @@ import numpy as np
 from dassl.utils import setup_logger, set_random_seed, collect_env_info
 from configs.upl_default_config.upl_default import get_cfg_default
 from dassl.engine import build_trainer
+from utils_temp.utils_ import become_deterministic
 
 # custom
 import datasets.oxford_pets
@@ -126,45 +127,44 @@ def main(args):
     cfg = setup_cfg(args)
     if cfg.SEED >= 0:
         print('Setting fixed seed: {}'.format(cfg.SEED))
-        set_random_seed(cfg.SEED)
+        # set_random_seed(cfg.SEED)
+        become_deterministic(cfg.SEED)
     setup_logger(cfg.OUTPUT_DIR)
 
     if torch.cuda.is_available() and cfg.USE_CUDA:
-        torch.backends.cudnn.benchmark = True
+            torch.backends.cudnn.benchmark = True  # Enable CUDA benchmarking for faster training
 
-    print_args(args, cfg)
-    print('Collecting env info ...')
-    print('** System info **\n{}\n'.format(collect_env_info()))
+    print_args(args, cfg)  # Print the provided arguments and configuration
+    print('Collecting env info ...')  # Print a message indicating the collection of environment information
+    print('** System info **\n{}\n'.format(collect_env_info()))  # Print the collected environment information
 
-    trainer_list = []
+    trainer_list = []  # List to store the trainers
     for i in range(int(cfg.TRAINER.ENSEMBLE_NUM)):
-        trainer = build_trainer(cfg)
+        trainer = build_trainer(cfg)  # Build a trainer based on the configuration
         if args.model_dir:
-            trainer.load_model_by_id(args.model_dir, epoch=args.load_epoch, model_id=i)
-        trainer_list.append(trainer)
+            trainer.load_model_by_id(args.model_dir, epoch=args.load_epoch, model_id=i)  # Load a model from the specified directory
+        trainer_list.append(trainer)  # Add the trainer to the list
 
-
-        prob_end = []
-        results_dict = {}
-        for SHOTS in [4]:
-            print('SHOTS:', SHOTS, '\n\n\n\n\n')
-            for seed in range(1, 5):
+        prob_end = []  # List to store probabilities
+        results_dict = {}  # Dictionary to store results
+        for SHOTS in [4]:  # Iterate over the specified number of shots
+            print('SHOTS:', SHOTS, '\n\n\n\n\n')  # Print the number of shots
+            for seed in range(1, 5):  # Iterate over the specified range of seeds
                 try:
-                    prob = torch.load('./analysis_results_test/{}/{}/fp{}/50_{}_{}_random_initend/test_logits.pt'.format(args.tag, cfg.DATASET.NAME, args.num_fp, seed, SHOTS))
-                    prob_end.append(prob)
+                    prob = torch.load('./analysis_results_test/{}/{}/fp{}/50_{}_{}_random_initend/test_logits.pt'.format(args.tag, cfg.DATASET.NAME, args.num_fp, seed, SHOTS))  # Load the probabilities from a file
+                    prob_end.append(prob)  # Add the probabilities to the list
                 except:
-                    print('loss')
+                    print('loss')  # Print a message indicating a loss occurred
 
-            print(len(prob_end), ' shots ensemble')
-            prob_test = sum(prob_end) / len(prob_end)
-            results_end = trainer_list[0].test_with_existing_logits(prob_test)
+            print(len(prob_end), ' shots ensemble')  # Print the number of shots in the ensemble
+            prob_test = sum(prob_end) / len(prob_end)  # Calculate the average probability
+            results_end = trainer_list[0].test_with_existing_logits(prob_test)  # Test the model with the calculated probabilities
 
-            save_path = './analysis_results_test/{}/{}/fp{}/'.format(args.tag, cfg.DATASET.NAME, args.num_fp)
+            save_path = './analysis_results_test/{}/{}/fp{}/'.format(args.tag, cfg.DATASET.NAME, args.num_fp)  # Set the save path for the results
             with open(os.path.join(save_path, 'ensemble_accuracy_result.txt'), "w") as f:
-                print('ensemble: {:.2f}'.format((results_end['accuracy'])), file=f)
-            print('ensemble: {:.2f}'.format((results_end['accuracy'])))
-            results_dict[len(prob_end)] = results_end['accuracy']
-
+                print('ensemble: {:.2f}'.format((results_end['accuracy'])), file=f)  # Write the ensemble accuracy result to a file
+            print('ensemble: {:.2f}'.format((results_end['accuracy'])))  # Print the ensemble accuracy result
+            results_dict[len(prob_end)] = results_end['accuracy']  # Store the ensemble accuracy result in the dictionary
 
 
 if __name__ == '__main__':

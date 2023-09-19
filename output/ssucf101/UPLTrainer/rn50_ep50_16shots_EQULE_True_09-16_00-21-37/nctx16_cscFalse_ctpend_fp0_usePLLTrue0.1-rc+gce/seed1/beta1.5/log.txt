@@ -1,0 +1,2199 @@
+***************
+** Arguments **
+***************
+backbone: 
+config_file: configs/trainers/UPLTrainer/rn50_ep50.yaml
+dataset_config_file: configs/datasets/ssucf101.yaml
+eval_only: False
+head: 
+hh_config_file: 
+load_epoch: None
+loss_type: rc+
+model_dir: 
+no_train: False
+num_fp: 0
+opts: ['TRAINER.UPLTrainer.N_CTX', '16', 'TRAINER.UPLTrainer.CSC', 'False', 'TRAINER.UPLTrainer.CLASS_TOKEN_POSITION', 'end', 'DATASET.NUM_SHOTS', '16', 'DATASET.CLASS_EQULE', 'True', 'TRAINER.PLL.USE_PLL', 'True', 'TRAINER.PLL.PARTIAL_RATE', '0.1', 'TRAINER.PLL.CONF_LOSS_TYPE', 'gce', 'TRAINER.PLL.BETA', '1.5']
+output_dir: ./output/ssucf101/UPLTrainer/rn50_ep50_16shots_EQULE_True_09-16_00-21-37/nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+gce/seed1/beta1.5
+resume: 
+root: ./data
+seed: 1
+source_domains: None
+target_domains: None
+trainer: UPLTrainer
+transforms: None
+************
+** Config **
+************
+DATALOADER:
+  K_TRANSFORMS: 1
+  NUM_WORKERS: 8
+  OPEN_SETTING: False
+  RETURN_IMG0: False
+  TEST:
+    BATCH_SIZE: 100
+    SAMPLER: SequentialSampler
+    SHUFFLE: False
+  TRAIN_U:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAME_AS_X: True
+    SAMPLER: RandomSampler
+  TRAIN_X:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAMPLER: RandomSampler
+    SHUFFLE: True
+  VAL:
+    BATCH_SIZE: 50
+    SHUFFLE: False
+DATASET:
+  ALL_AS_UNLABELED: False
+  CIFAR_C_LEVEL: 1
+  CIFAR_C_TYPE: 
+  CLASS_EQULE: True
+  CONF_THRESHOLD: 0.9
+  IGNORE_FILE: 
+  IGNORE_NUM: 0
+  NAME: SSUCF101
+  NUM_LABELED: -1
+  NUM_SHOTS: 16
+  ROOT: ./data
+  SOURCE_DOMAINS: ()
+  STL10_FOLD: -1
+  TARGET_DOMAINS: ()
+  VAL_PERCENT: 0.1
+INPUT:
+  COLORJITTER_B: 0.4
+  COLORJITTER_C: 0.4
+  COLORJITTER_H: 0.1
+  COLORJITTER_S: 0.4
+  CROP_PADDING: 4
+  CUTOUT_LEN: 16
+  CUTOUT_N: 1
+  GB_K: 21
+  GB_P: 0.5
+  GN_MEAN: 0.0
+  GN_STD: 0.15
+  INTERPOLATION: bicubic
+  NO_TRANSFORM: False
+  PIXEL_MEAN: [0.48145466, 0.4578275, 0.40821073]
+  PIXEL_STD: [0.26862954, 0.26130258, 0.27577711]
+  RANDAUGMENT_M: 10
+  RANDAUGMENT_N: 2
+  RGS_P: 0.2
+  RRCROP_SCALE: (0.08, 1.0)
+  SIZE: (224, 224)
+  TRANSFORMS: ('random_resized_crop', 'random_flip', 'normalize')
+MODEL:
+  BACKBONE:
+    NAME: RN50
+    PRETRAINED: True
+  HEAD:
+    ACTIVATION: relu
+    BN: True
+    DROPOUT: 0.0
+    HIDDEN_LAYERS: ()
+    NAME: 
+  INIT_WEIGHTS: 
+  PSEUDO_LABEL_MODELS: ['RN50']
+OPTIM:
+  ADAM_BETA1: 0.9
+  ADAM_BETA2: 0.999
+  BASE_LR_MULT: 0.1
+  GAMMA: 0.1
+  LR: 0.002
+  LR_SCHEDULER: cosine
+  MAX_EPOCH: 50
+  MOMENTUM: 0.9
+  NAME: sgd
+  NEW_LAYERS: ()
+  RMSPROP_ALPHA: 0.99
+  SGD_DAMPNING: 0
+  SGD_NESTEROV: False
+  STAGED_LR: False
+  STEPSIZE: (-1,)
+  WARMUP_CONS_LR: 1e-05
+  WARMUP_EPOCH: 1
+  WARMUP_MIN_LR: 1e-05
+  WARMUP_RECOUNT: True
+  WARMUP_TYPE: constant
+  WEIGHT_DECAY: 0.0005
+OUTPUT_DIR: ./output/ssucf101/UPLTrainer/rn50_ep50_16shots_EQULE_True_09-16_00-21-37/nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+gce/seed1/beta1.5
+RESUME: 
+SEED: 1
+TEST:
+  Analyze_Result_Path: ./analysis_results_test/
+  COMPUTE_CMAT: False
+  EVALUATOR: UPLClassification
+  FINAL_MODEL: last_val
+  NO_TEST: False
+  PER_CLASS_RESULT: True
+  SPLIT: test
+TRAIN:
+  CHECKPOINT_FREQ: 0
+  COUNT_ITER: train_x
+  PRINT_FREQ: 5
+TRAINER:
+  CG:
+    ALPHA_D: 0.5
+    ALPHA_F: 0.5
+    EPS_D: 1.0
+    EPS_F: 1.0
+  DAEL:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DDAIG:
+    ALPHA: 0.5
+    CLAMP: False
+    CLAMP_MAX: 1.0
+    CLAMP_MIN: -1.0
+    G_ARCH: 
+    LMDA: 0.3
+    WARMUP: 0
+  ENSEMBLE_NUM: 1
+  ENTMIN:
+    LMDA: 0.001
+  FIXMATCH:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 1.0
+  LOSS_TYPE: rc+
+  M3SDA:
+    LMDA: 0.5
+    N_STEP_F: 4
+  MCD:
+    N_STEP_F: 4
+  MEANTEA:
+    EMA_ALPHA: 0.999
+    RAMPUP: 5
+    WEIGHT_U: 1.0
+  MIXMATCH:
+    MIXUP_BETA: 0.75
+    RAMPUP: 20000
+    TEMP: 2.0
+    WEIGHT_U: 100.0
+  MME:
+    LMDA: 0.1
+  NAME: UPLTrainer
+  PLL:
+    BETA: 1.5
+    CONF_LOSS_TYPE: gce
+    PARTIAL_RATE: 0.1
+    USE_PLL: True
+  SE:
+    CONF_THRE: 0.95
+    EMA_ALPHA: 0.999
+    RAMPUP: 300
+  UPLTrainer:
+    CLASS_TOKEN_POSITION: end
+    CSC: False
+    CTX_INIT: 
+    NUM_FP: 0
+    N_CTX: 16
+    PREC: fp16
+USE_CUDA: True
+VERBOSE: True
+VERSION: 1
+Collecting env info ...
+** System info **
+PyTorch version: 1.12.1+cu113
+Is debug build: False
+CUDA used to build PyTorch: 11.3
+ROCM used to build PyTorch: N/A
+
+OS: Ubuntu 22.04.2 LTS (x86_64)
+GCC version: (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+Clang version: Could not collect
+CMake version: version 3.22.1
+Libc version: glibc-2.35
+
+Python version: 3.9.17 | packaged by conda-forge | (main, Aug 10 2023, 07:02:31)  [GCC 12.3.0] (64-bit runtime)
+Python platform: Linux-5.19.0-38-generic-x86_64-with-glibc2.35
+Is CUDA available: True
+CUDA runtime version: 11.5.119
+GPU models and configuration: 
+GPU 0: NVIDIA A100-PCIE-40GB
+GPU 1: Tesla V100-PCIE-16GB
+GPU 2: Tesla V100-PCIE-16GB
+
+Nvidia driver version: Could not collect
+cuDNN version: Could not collect
+HIP runtime version: N/A
+MIOpen runtime version: N/A
+Is XNNPACK available: True
+
+Versions of relevant libraries:
+[pip3] numpy==1.24.3
+[pip3] torch==1.12.1+cu113
+[pip3] torchaudio==0.12.1+cu113
+[pip3] torchvision==0.13.1+cu113
+[conda] numpy                     1.24.3                   pypi_0    pypi
+[conda] torch                     1.12.1+cu113             pypi_0    pypi
+[conda] torchaudio                0.12.1+cu113             pypi_0    pypi
+[conda] torchvision               0.13.1+cu113             pypi_0    pypi
+        Pillow (10.0.0)
+
+Loading trainer: UPLTrainer
+Loading dataset: SSUCF101
+Reading split from /mnt/disk2/zjh/projects7.12/PTNL/data/ucf101/split_zhou_UCF101.json
+Reading split from /mnt/disk2/zjh/projects7.12/PTNL/data/ucf101/split_zhou_UCF101.json
+Building transform_train
++ random resized crop (size=(224, 224), scale=(0.08, 1.0))
++ random flip
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+* Using custom transform for testing
+---------  --------
+Dataset    SSUCF101
+# classes  101
+# train_x  7,639
+# val      1,898
+# test     3,783
+---------  --------
+* Using custom transform for testing
+Building transform_train
++ random resized crop (size=(224, 224), scale=(0.08, 1.0))
++ random flip
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+Loading CLIP (backbone: RN50)
+Building custom CLIP
+Initializing a generic context
+Initial context: "X X X X X X X X X X X X X X X X"
+Number of context words (tokens): 16
+Turning off gradients in both the image and the text encoder
+Loading evaluator: UPLClassification
+Loaded training GT labels from /mnt/disk2/zjh/projects7.12/PTNL/data/ucf101/SSUCF101_GTlabels.json
+--- 0
+['./data/ucf101/UCF-101-midframes/Apply_Eye_Makeup/v_ApplyEyeMakeup_g14_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Eye_Makeup/v_ApplyEyeMakeup_g23_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Eye_Makeup/v_ApplyEyeMakeup_g12_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Eye_Makeup/v_ApplyEyeMakeup_g19_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Eye_Makeup/v_ApplyEyeMakeup_g16_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Eye_Makeup/v_ApplyEyeMakeup_g15_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Eye_Makeup/v_ApplyEyeMakeup_g24_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Eye_Makeup/v_ApplyEyeMakeup_g20_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Eye_Makeup/v_ApplyEyeMakeup_g20_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Eye_Makeup/v_ApplyEyeMakeup_g17_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Eye_Makeup/v_ApplyEyeMakeup_g19_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Eye_Makeup/v_ApplyEyeMakeup_g13_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Eye_Makeup/v_ApplyEyeMakeup_g13_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Eye_Makeup/v_ApplyEyeMakeup_g21_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Eye_Makeup/v_ApplyEyeMakeup_g18_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Eye_Makeup/v_ApplyEyeMakeup_g21_c01.jpg']
+--- 1
+['./data/ucf101/UCF-101-midframes/Apply_Lipstick/v_ApplyLipstick_g21_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Lipstick/v_ApplyLipstick_g18_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Lipstick/v_ApplyLipstick_g10_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Lipstick/v_ApplyLipstick_g23_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Lipstick/v_ApplyLipstick_g18_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Lipstick/v_ApplyLipstick_g24_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Lipstick/v_ApplyLipstick_g10_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Lipstick/v_ApplyLipstick_g24_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Lipstick/v_ApplyLipstick_g22_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Lipstick/v_ApplyLipstick_g11_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Lipstick/v_ApplyLipstick_g24_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Lipstick/v_ApplyLipstick_g09_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Lipstick/v_ApplyLipstick_g09_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Lipstick/v_ApplyLipstick_g09_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Lipstick/v_ApplyLipstick_g20_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Apply_Lipstick/v_ApplyLipstick_g12_c04.jpg']
+--- 2
+['./data/ucf101/UCF-101-midframes/Archery/v_Archery_g24_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Archery/v_Archery_g11_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Archery/v_Archery_g25_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Archery/v_Archery_g14_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Archery/v_Archery_g21_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Archery/v_Archery_g18_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Archery/v_Archery_g13_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Archery/v_Archery_g20_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Archery/v_Archery_g10_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Archery/v_Archery_g13_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Archery/v_Archery_g16_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Archery/v_Archery_g20_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Archery/v_Archery_g25_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Archery/v_Archery_g22_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Archery/v_Archery_g10_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Archery/v_Archery_g24_c02.jpg']
+--- 3
+['./data/ucf101/UCF-101-midframes/Baby_Crawling/v_BabyCrawling_g20_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Baby_Crawling/v_BabyCrawling_g23_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Baby_Crawling/v_BabyCrawling_g15_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Baby_Crawling/v_BabyCrawling_g24_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Baby_Crawling/v_BabyCrawling_g19_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Baby_Crawling/v_BabyCrawling_g08_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Baby_Crawling/v_BabyCrawling_g15_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Baby_Crawling/v_BabyCrawling_g24_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Baby_Crawling/v_BabyCrawling_g09_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Baby_Crawling/v_BabyCrawling_g21_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Baby_Crawling/v_BabyCrawling_g12_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Baby_Crawling/v_BabyCrawling_g15_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Baby_Crawling/v_BabyCrawling_g10_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Baby_Crawling/v_BabyCrawling_g16_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Baby_Crawling/v_BabyCrawling_g09_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Baby_Crawling/v_BabyCrawling_g14_c01.jpg']
+--- 4
+['./data/ucf101/UCF-101-midframes/Balance_Beam/v_BalanceBeam_g25_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Balance_Beam/v_BalanceBeam_g24_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Balance_Beam/v_BalanceBeam_g17_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Balance_Beam/v_BalanceBeam_g21_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Balance_Beam/v_BalanceBeam_g11_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Balance_Beam/v_BalanceBeam_g23_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Balance_Beam/v_BalanceBeam_g16_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Balance_Beam/v_BalanceBeam_g09_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Balance_Beam/v_BalanceBeam_g21_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Balance_Beam/v_BalanceBeam_g10_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Balance_Beam/v_BalanceBeam_g19_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Balance_Beam/v_BalanceBeam_g23_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Balance_Beam/v_BalanceBeam_g18_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Balance_Beam/v_BalanceBeam_g25_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Balance_Beam/v_BalanceBeam_g24_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Balance_Beam/v_BalanceBeam_g19_c04.jpg']
+--- 5
+['./data/ucf101/UCF-101-midframes/Band_Marching/v_BandMarching_g11_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Band_Marching/v_BandMarching_g24_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Band_Marching/v_BandMarching_g13_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Band_Marching/v_BandMarching_g09_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Band_Marching/v_BandMarching_g19_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Band_Marching/v_BandMarching_g18_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Band_Marching/v_BandMarching_g14_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Band_Marching/v_BandMarching_g12_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Band_Marching/v_BandMarching_g20_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Band_Marching/v_BandMarching_g18_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Band_Marching/v_BandMarching_g19_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Band_Marching/v_BandMarching_g18_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Band_Marching/v_BandMarching_g11_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Band_Marching/v_BandMarching_g18_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Band_Marching/v_BandMarching_g14_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Band_Marching/v_BandMarching_g23_c01.jpg']
+--- 6
+['./data/ucf101/UCF-101-midframes/Baseball_Pitch/v_BaseballPitch_g22_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Baseball_Pitch/v_BaseballPitch_g16_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Baseball_Pitch/v_BaseballPitch_g18_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Baseball_Pitch/v_BaseballPitch_g22_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Baseball_Pitch/v_BaseballPitch_g18_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Baseball_Pitch/v_BaseballPitch_g15_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Baseball_Pitch/v_BaseballPitch_g24_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Baseball_Pitch/v_BaseballPitch_g15_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Baseball_Pitch/v_BaseballPitch_g14_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Baseball_Pitch/v_BaseballPitch_g08_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Baseball_Pitch/v_BaseballPitch_g09_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Baseball_Pitch/v_BaseballPitch_g22_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Baseball_Pitch/v_BaseballPitch_g25_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Baseball_Pitch/v_BaseballPitch_g09_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Baseball_Pitch/v_BaseballPitch_g18_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Baseball_Pitch/v_BaseballPitch_g14_c02.jpg']
+--- 7
+['./data/ucf101/UCF-101-midframes/Basketball/v_Basketball_g11_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball/v_Basketball_g10_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball/v_Basketball_g25_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball/v_Basketball_g23_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball/v_Basketball_g19_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball/v_Basketball_g24_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball/v_Basketball_g10_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball/v_Basketball_g21_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball/v_Basketball_g16_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball/v_Basketball_g14_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball/v_Basketball_g21_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball/v_Basketball_g10_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball/v_Basketball_g20_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball/v_Basketball_g22_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball/v_Basketball_g19_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball/v_Basketball_g20_c03.jpg']
+--- 8
+['./data/ucf101/UCF-101-midframes/Basketball_Dunk/v_BasketballDunk_g10_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball_Dunk/v_BasketballDunk_g24_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball_Dunk/v_BasketballDunk_g16_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball_Dunk/v_BasketballDunk_g09_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball_Dunk/v_BasketballDunk_g21_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball_Dunk/v_BasketballDunk_g08_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball_Dunk/v_BasketballDunk_g17_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball_Dunk/v_BasketballDunk_g10_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball_Dunk/v_BasketballDunk_g22_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball_Dunk/v_BasketballDunk_g08_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball_Dunk/v_BasketballDunk_g20_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball_Dunk/v_BasketballDunk_g13_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball_Dunk/v_BasketballDunk_g09_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball_Dunk/v_BasketballDunk_g19_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball_Dunk/v_BasketballDunk_g11_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Basketball_Dunk/v_BasketballDunk_g20_c02.jpg']
+--- 9
+['./data/ucf101/UCF-101-midframes/Bench_Press/v_BenchPress_g25_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Bench_Press/v_BenchPress_g13_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Bench_Press/v_BenchPress_g09_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Bench_Press/v_BenchPress_g13_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Bench_Press/v_BenchPress_g22_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Bench_Press/v_BenchPress_g18_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Bench_Press/v_BenchPress_g16_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Bench_Press/v_BenchPress_g19_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Bench_Press/v_BenchPress_g12_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Bench_Press/v_BenchPress_g14_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Bench_Press/v_BenchPress_g13_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Bench_Press/v_BenchPress_g15_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Bench_Press/v_BenchPress_g15_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Bench_Press/v_BenchPress_g14_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Bench_Press/v_BenchPress_g20_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Bench_Press/v_BenchPress_g17_c03.jpg']
+--- 10
+['./data/ucf101/UCF-101-midframes/Biking/v_Biking_g12_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Biking/v_Biking_g18_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Biking/v_Biking_g17_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Biking/v_Biking_g11_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Biking/v_Biking_g08_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Biking/v_Biking_g25_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Biking/v_Biking_g22_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Biking/v_Biking_g23_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Biking/v_Biking_g11_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Biking/v_Biking_g24_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Biking/v_Biking_g20_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Biking/v_Biking_g18_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Biking/v_Biking_g19_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Biking/v_Biking_g08_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Biking/v_Biking_g08_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Biking/v_Biking_g09_c03.jpg']
+--- 11
+['./data/ucf101/UCF-101-midframes/Billiards/v_Billiards_g11_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Billiards/v_Billiards_g21_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Billiards/v_Billiards_g11_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Billiards/v_Billiards_g17_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Billiards/v_Billiards_g15_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Billiards/v_Billiards_g19_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Billiards/v_Billiards_g15_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Billiards/v_Billiards_g20_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Billiards/v_Billiards_g24_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Billiards/v_Billiards_g12_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Billiards/v_Billiards_g19_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Billiards/v_Billiards_g15_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Billiards/v_Billiards_g11_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Billiards/v_Billiards_g13_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Billiards/v_Billiards_g23_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Billiards/v_Billiards_g18_c06.jpg']
+--- 12
+['./data/ucf101/UCF-101-midframes/Blow_Dry_Hair/v_BlowDryHair_g20_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Blow_Dry_Hair/v_BlowDryHair_g11_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Blow_Dry_Hair/v_BlowDryHair_g10_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Blow_Dry_Hair/v_BlowDryHair_g21_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Blow_Dry_Hair/v_BlowDryHair_g22_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Blow_Dry_Hair/v_BlowDryHair_g16_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Blow_Dry_Hair/v_BlowDryHair_g12_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Blow_Dry_Hair/v_BlowDryHair_g23_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Blow_Dry_Hair/v_BlowDryHair_g09_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Blow_Dry_Hair/v_BlowDryHair_g21_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Blow_Dry_Hair/v_BlowDryHair_g08_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Blow_Dry_Hair/v_BlowDryHair_g19_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Blow_Dry_Hair/v_BlowDryHair_g08_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Blow_Dry_Hair/v_BlowDryHair_g12_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Blow_Dry_Hair/v_BlowDryHair_g25_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Blow_Dry_Hair/v_BlowDryHair_g16_c02.jpg']
+--- 13
+['./data/ucf101/UCF-101-midframes/Blowing_Candles/v_BlowingCandles_g10_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Blowing_Candles/v_BlowingCandles_g25_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Blowing_Candles/v_BlowingCandles_g20_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Blowing_Candles/v_BlowingCandles_g15_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Blowing_Candles/v_BlowingCandles_g11_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Blowing_Candles/v_BlowingCandles_g20_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Blowing_Candles/v_BlowingCandles_g10_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Blowing_Candles/v_BlowingCandles_g22_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Blowing_Candles/v_BlowingCandles_g12_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Blowing_Candles/v_BlowingCandles_g21_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Blowing_Candles/v_BlowingCandles_g14_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Blowing_Candles/v_BlowingCandles_g25_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Blowing_Candles/v_BlowingCandles_g10_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Blowing_Candles/v_BlowingCandles_g15_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Blowing_Candles/v_BlowingCandles_g17_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Blowing_Candles/v_BlowingCandles_g22_c01.jpg']
+--- 14
+['./data/ucf101/UCF-101-midframes/Body_Weight_Squats/v_BodyWeightSquats_g24_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Body_Weight_Squats/v_BodyWeightSquats_g21_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Body_Weight_Squats/v_BodyWeightSquats_g09_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Body_Weight_Squats/v_BodyWeightSquats_g22_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Body_Weight_Squats/v_BodyWeightSquats_g14_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Body_Weight_Squats/v_BodyWeightSquats_g16_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Body_Weight_Squats/v_BodyWeightSquats_g16_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Body_Weight_Squats/v_BodyWeightSquats_g09_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Body_Weight_Squats/v_BodyWeightSquats_g22_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Body_Weight_Squats/v_BodyWeightSquats_g20_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Body_Weight_Squats/v_BodyWeightSquats_g18_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Body_Weight_Squats/v_BodyWeightSquats_g09_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Body_Weight_Squats/v_BodyWeightSquats_g16_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Body_Weight_Squats/v_BodyWeightSquats_g24_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Body_Weight_Squats/v_BodyWeightSquats_g25_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Body_Weight_Squats/v_BodyWeightSquats_g10_c02.jpg']
+--- 15
+['./data/ucf101/UCF-101-midframes/Bowling/v_Bowling_g16_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Bowling/v_Bowling_g22_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Bowling/v_Bowling_g19_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Bowling/v_Bowling_g23_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Bowling/v_Bowling_g17_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Bowling/v_Bowling_g08_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Bowling/v_Bowling_g24_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Bowling/v_Bowling_g18_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Bowling/v_Bowling_g13_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Bowling/v_Bowling_g11_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Bowling/v_Bowling_g09_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Bowling/v_Bowling_g17_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Bowling/v_Bowling_g10_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Bowling/v_Bowling_g24_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Bowling/v_Bowling_g25_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Bowling/v_Bowling_g24_c05.jpg']
+--- 16
+['./data/ucf101/UCF-101-midframes/Boxing_Punching_Bag/v_BoxingPunchingBag_g15_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Punching_Bag/v_BoxingPunchingBag_g13_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Punching_Bag/v_BoxingPunchingBag_g12_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Punching_Bag/v_BoxingPunchingBag_g23_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Punching_Bag/v_BoxingPunchingBag_g08_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Punching_Bag/v_BoxingPunchingBag_g14_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Punching_Bag/v_BoxingPunchingBag_g20_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Punching_Bag/v_BoxingPunchingBag_g09_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Punching_Bag/v_BoxingPunchingBag_g21_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Punching_Bag/v_BoxingPunchingBag_g14_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Punching_Bag/v_BoxingPunchingBag_g19_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Punching_Bag/v_BoxingPunchingBag_g12_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Punching_Bag/v_BoxingPunchingBag_g24_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Punching_Bag/v_BoxingPunchingBag_g22_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Punching_Bag/v_BoxingPunchingBag_g12_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Punching_Bag/v_BoxingPunchingBag_g08_c01.jpg']
+--- 17
+['./data/ucf101/UCF-101-midframes/Boxing_Speed_Bag/v_BoxingSpeedBag_g25_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Speed_Bag/v_BoxingSpeedBag_g16_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Speed_Bag/v_BoxingSpeedBag_g16_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Speed_Bag/v_BoxingSpeedBag_g12_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Speed_Bag/v_BoxingSpeedBag_g22_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Speed_Bag/v_BoxingSpeedBag_g18_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Speed_Bag/v_BoxingSpeedBag_g19_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Speed_Bag/v_BoxingSpeedBag_g15_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Speed_Bag/v_BoxingSpeedBag_g13_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Speed_Bag/v_BoxingSpeedBag_g14_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Speed_Bag/v_BoxingSpeedBag_g15_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Speed_Bag/v_BoxingSpeedBag_g25_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Speed_Bag/v_BoxingSpeedBag_g11_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Speed_Bag/v_BoxingSpeedBag_g17_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Speed_Bag/v_BoxingSpeedBag_g11_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Boxing_Speed_Bag/v_BoxingSpeedBag_g08_c05.jpg']
+--- 18
+['./data/ucf101/UCF-101-midframes/Breast_Stroke/v_BreastStroke_g18_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Breast_Stroke/v_BreastStroke_g16_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Breast_Stroke/v_BreastStroke_g24_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Breast_Stroke/v_BreastStroke_g25_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Breast_Stroke/v_BreastStroke_g25_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Breast_Stroke/v_BreastStroke_g21_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Breast_Stroke/v_BreastStroke_g11_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Breast_Stroke/v_BreastStroke_g22_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Breast_Stroke/v_BreastStroke_g16_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Breast_Stroke/v_BreastStroke_g22_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Breast_Stroke/v_BreastStroke_g09_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Breast_Stroke/v_BreastStroke_g10_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Breast_Stroke/v_BreastStroke_g17_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Breast_Stroke/v_BreastStroke_g17_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Breast_Stroke/v_BreastStroke_g09_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Breast_Stroke/v_BreastStroke_g13_c04.jpg']
+--- 19
+['./data/ucf101/UCF-101-midframes/Brushing_Teeth/v_BrushingTeeth_g24_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Brushing_Teeth/v_BrushingTeeth_g11_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Brushing_Teeth/v_BrushingTeeth_g19_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Brushing_Teeth/v_BrushingTeeth_g16_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Brushing_Teeth/v_BrushingTeeth_g17_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Brushing_Teeth/v_BrushingTeeth_g17_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Brushing_Teeth/v_BrushingTeeth_g15_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Brushing_Teeth/v_BrushingTeeth_g15_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Brushing_Teeth/v_BrushingTeeth_g13_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Brushing_Teeth/v_BrushingTeeth_g16_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Brushing_Teeth/v_BrushingTeeth_g24_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Brushing_Teeth/v_BrushingTeeth_g22_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Brushing_Teeth/v_BrushingTeeth_g24_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Brushing_Teeth/v_BrushingTeeth_g22_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Brushing_Teeth/v_BrushingTeeth_g10_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Brushing_Teeth/v_BrushingTeeth_g25_c04.jpg']
+--- 20
+['./data/ucf101/UCF-101-midframes/Clean_And_Jerk/v_CleanAndJerk_g18_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Clean_And_Jerk/v_CleanAndJerk_g10_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Clean_And_Jerk/v_CleanAndJerk_g13_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Clean_And_Jerk/v_CleanAndJerk_g19_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Clean_And_Jerk/v_CleanAndJerk_g20_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Clean_And_Jerk/v_CleanAndJerk_g18_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Clean_And_Jerk/v_CleanAndJerk_g13_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Clean_And_Jerk/v_CleanAndJerk_g17_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Clean_And_Jerk/v_CleanAndJerk_g12_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Clean_And_Jerk/v_CleanAndJerk_g23_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Clean_And_Jerk/v_CleanAndJerk_g12_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Clean_And_Jerk/v_CleanAndJerk_g09_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Clean_And_Jerk/v_CleanAndJerk_g22_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Clean_And_Jerk/v_CleanAndJerk_g11_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Clean_And_Jerk/v_CleanAndJerk_g12_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Clean_And_Jerk/v_CleanAndJerk_g24_c01.jpg']
+--- 21
+['./data/ucf101/UCF-101-midframes/Cliff_Diving/v_CliffDiving_g20_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Cliff_Diving/v_CliffDiving_g25_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Cliff_Diving/v_CliffDiving_g10_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Cliff_Diving/v_CliffDiving_g25_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Cliff_Diving/v_CliffDiving_g08_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Cliff_Diving/v_CliffDiving_g09_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Cliff_Diving/v_CliffDiving_g15_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Cliff_Diving/v_CliffDiving_g22_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Cliff_Diving/v_CliffDiving_g14_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Cliff_Diving/v_CliffDiving_g12_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Cliff_Diving/v_CliffDiving_g22_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Cliff_Diving/v_CliffDiving_g25_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Cliff_Diving/v_CliffDiving_g21_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Cliff_Diving/v_CliffDiving_g25_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Cliff_Diving/v_CliffDiving_g11_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Cliff_Diving/v_CliffDiving_g17_c04.jpg']
+--- 22
+['./data/ucf101/UCF-101-midframes/Cricket_Bowling/v_CricketBowling_g22_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Bowling/v_CricketBowling_g13_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Bowling/v_CricketBowling_g25_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Bowling/v_CricketBowling_g16_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Bowling/v_CricketBowling_g17_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Bowling/v_CricketBowling_g19_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Bowling/v_CricketBowling_g08_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Bowling/v_CricketBowling_g10_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Bowling/v_CricketBowling_g12_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Bowling/v_CricketBowling_g09_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Bowling/v_CricketBowling_g11_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Bowling/v_CricketBowling_g08_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Bowling/v_CricketBowling_g25_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Bowling/v_CricketBowling_g22_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Bowling/v_CricketBowling_g09_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Bowling/v_CricketBowling_g08_c04.jpg']
+--- 23
+['./data/ucf101/UCF-101-midframes/Cricket_Shot/v_CricketShot_g14_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Shot/v_CricketShot_g20_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Shot/v_CricketShot_g22_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Shot/v_CricketShot_g22_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Shot/v_CricketShot_g11_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Shot/v_CricketShot_g10_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Shot/v_CricketShot_g17_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Shot/v_CricketShot_g14_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Shot/v_CricketShot_g12_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Shot/v_CricketShot_g21_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Shot/v_CricketShot_g21_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Shot/v_CricketShot_g18_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Shot/v_CricketShot_g19_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Shot/v_CricketShot_g22_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Shot/v_CricketShot_g11_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Cricket_Shot/v_CricketShot_g17_c04.jpg']
+--- 24
+['./data/ucf101/UCF-101-midframes/Cutting_In_Kitchen/v_CuttingInKitchen_g12_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Cutting_In_Kitchen/v_CuttingInKitchen_g12_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Cutting_In_Kitchen/v_CuttingInKitchen_g08_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Cutting_In_Kitchen/v_CuttingInKitchen_g24_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Cutting_In_Kitchen/v_CuttingInKitchen_g16_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Cutting_In_Kitchen/v_CuttingInKitchen_g14_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Cutting_In_Kitchen/v_CuttingInKitchen_g21_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Cutting_In_Kitchen/v_CuttingInKitchen_g10_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Cutting_In_Kitchen/v_CuttingInKitchen_g18_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Cutting_In_Kitchen/v_CuttingInKitchen_g10_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Cutting_In_Kitchen/v_CuttingInKitchen_g12_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Cutting_In_Kitchen/v_CuttingInKitchen_g15_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Cutting_In_Kitchen/v_CuttingInKitchen_g13_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Cutting_In_Kitchen/v_CuttingInKitchen_g08_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Cutting_In_Kitchen/v_CuttingInKitchen_g19_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Cutting_In_Kitchen/v_CuttingInKitchen_g22_c04.jpg']
+--- 25
+['./data/ucf101/UCF-101-midframes/Diving/v_Diving_g12_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Diving/v_Diving_g25_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Diving/v_Diving_g22_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Diving/v_Diving_g15_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Diving/v_Diving_g12_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Diving/v_Diving_g17_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Diving/v_Diving_g11_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Diving/v_Diving_g22_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Diving/v_Diving_g18_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Diving/v_Diving_g19_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Diving/v_Diving_g18_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Diving/v_Diving_g21_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Diving/v_Diving_g24_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Diving/v_Diving_g17_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Diving/v_Diving_g20_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Diving/v_Diving_g24_c02.jpg']
+--- 26
+['./data/ucf101/UCF-101-midframes/Drumming/v_Drumming_g10_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Drumming/v_Drumming_g24_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Drumming/v_Drumming_g16_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Drumming/v_Drumming_g13_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Drumming/v_Drumming_g15_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Drumming/v_Drumming_g17_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Drumming/v_Drumming_g13_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Drumming/v_Drumming_g19_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Drumming/v_Drumming_g08_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Drumming/v_Drumming_g16_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Drumming/v_Drumming_g25_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Drumming/v_Drumming_g23_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Drumming/v_Drumming_g19_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Drumming/v_Drumming_g22_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Drumming/v_Drumming_g25_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Drumming/v_Drumming_g15_c03.jpg']
+--- 27
+['./data/ucf101/UCF-101-midframes/Fencing/v_Fencing_g17_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Fencing/v_Fencing_g15_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Fencing/v_Fencing_g13_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Fencing/v_Fencing_g08_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Fencing/v_Fencing_g10_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Fencing/v_Fencing_g09_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Fencing/v_Fencing_g19_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Fencing/v_Fencing_g24_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Fencing/v_Fencing_g21_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Fencing/v_Fencing_g21_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Fencing/v_Fencing_g19_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Fencing/v_Fencing_g12_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Fencing/v_Fencing_g17_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Fencing/v_Fencing_g21_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Fencing/v_Fencing_g09_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Fencing/v_Fencing_g11_c04.jpg']
+--- 28
+['./data/ucf101/UCF-101-midframes/Field_Hockey_Penalty/v_FieldHockeyPenalty_g21_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Field_Hockey_Penalty/v_FieldHockeyPenalty_g25_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Field_Hockey_Penalty/v_FieldHockeyPenalty_g09_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Field_Hockey_Penalty/v_FieldHockeyPenalty_g17_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Field_Hockey_Penalty/v_FieldHockeyPenalty_g14_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Field_Hockey_Penalty/v_FieldHockeyPenalty_g19_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Field_Hockey_Penalty/v_FieldHockeyPenalty_g10_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Field_Hockey_Penalty/v_FieldHockeyPenalty_g13_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Field_Hockey_Penalty/v_FieldHockeyPenalty_g22_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Field_Hockey_Penalty/v_FieldHockeyPenalty_g10_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Field_Hockey_Penalty/v_FieldHockeyPenalty_g15_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Field_Hockey_Penalty/v_FieldHockeyPenalty_g22_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Field_Hockey_Penalty/v_FieldHockeyPenalty_g15_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Field_Hockey_Penalty/v_FieldHockeyPenalty_g25_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Field_Hockey_Penalty/v_FieldHockeyPenalty_g10_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Field_Hockey_Penalty/v_FieldHockeyPenalty_g25_c02.jpg']
+--- 29
+['./data/ucf101/UCF-101-midframes/Floor_Gymnastics/v_FloorGymnastics_g15_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Floor_Gymnastics/v_FloorGymnastics_g24_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Floor_Gymnastics/v_FloorGymnastics_g17_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Floor_Gymnastics/v_FloorGymnastics_g12_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Floor_Gymnastics/v_FloorGymnastics_g18_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Floor_Gymnastics/v_FloorGymnastics_g09_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Floor_Gymnastics/v_FloorGymnastics_g08_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Floor_Gymnastics/v_FloorGymnastics_g09_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Floor_Gymnastics/v_FloorGymnastics_g11_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Floor_Gymnastics/v_FloorGymnastics_g08_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Floor_Gymnastics/v_FloorGymnastics_g17_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Floor_Gymnastics/v_FloorGymnastics_g15_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Floor_Gymnastics/v_FloorGymnastics_g14_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Floor_Gymnastics/v_FloorGymnastics_g20_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Floor_Gymnastics/v_FloorGymnastics_g17_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Floor_Gymnastics/v_FloorGymnastics_g24_c04.jpg']
+--- 30
+['./data/ucf101/UCF-101-midframes/Frisbee_Catch/v_FrisbeeCatch_g19_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Frisbee_Catch/v_FrisbeeCatch_g11_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Frisbee_Catch/v_FrisbeeCatch_g18_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Frisbee_Catch/v_FrisbeeCatch_g16_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Frisbee_Catch/v_FrisbeeCatch_g10_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Frisbee_Catch/v_FrisbeeCatch_g25_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Frisbee_Catch/v_FrisbeeCatch_g09_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Frisbee_Catch/v_FrisbeeCatch_g14_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Frisbee_Catch/v_FrisbeeCatch_g18_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Frisbee_Catch/v_FrisbeeCatch_g15_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Frisbee_Catch/v_FrisbeeCatch_g12_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Frisbee_Catch/v_FrisbeeCatch_g17_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Frisbee_Catch/v_FrisbeeCatch_g10_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Frisbee_Catch/v_FrisbeeCatch_g19_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Frisbee_Catch/v_FrisbeeCatch_g18_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Frisbee_Catch/v_FrisbeeCatch_g24_c01.jpg']
+--- 31
+['./data/ucf101/UCF-101-midframes/Front_Crawl/v_FrontCrawl_g09_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Front_Crawl/v_FrontCrawl_g19_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Front_Crawl/v_FrontCrawl_g20_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Front_Crawl/v_FrontCrawl_g08_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Front_Crawl/v_FrontCrawl_g14_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Front_Crawl/v_FrontCrawl_g21_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Front_Crawl/v_FrontCrawl_g22_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Front_Crawl/v_FrontCrawl_g25_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Front_Crawl/v_FrontCrawl_g12_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Front_Crawl/v_FrontCrawl_g23_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Front_Crawl/v_FrontCrawl_g08_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Front_Crawl/v_FrontCrawl_g11_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Front_Crawl/v_FrontCrawl_g21_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Front_Crawl/v_FrontCrawl_g12_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Front_Crawl/v_FrontCrawl_g18_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Front_Crawl/v_FrontCrawl_g19_c04.jpg']
+--- 32
+['./data/ucf101/UCF-101-midframes/Golf_Swing/v_GolfSwing_g18_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Golf_Swing/v_GolfSwing_g25_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Golf_Swing/v_GolfSwing_g24_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Golf_Swing/v_GolfSwing_g14_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Golf_Swing/v_GolfSwing_g13_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Golf_Swing/v_GolfSwing_g16_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Golf_Swing/v_GolfSwing_g25_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Golf_Swing/v_GolfSwing_g12_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Golf_Swing/v_GolfSwing_g19_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Golf_Swing/v_GolfSwing_g10_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Golf_Swing/v_GolfSwing_g25_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Golf_Swing/v_GolfSwing_g08_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Golf_Swing/v_GolfSwing_g18_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Golf_Swing/v_GolfSwing_g15_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Golf_Swing/v_GolfSwing_g24_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Golf_Swing/v_GolfSwing_g11_c06.jpg']
+--- 33
+['./data/ucf101/UCF-101-midframes/Haircut/v_Haircut_g23_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Haircut/v_Haircut_g10_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Haircut/v_Haircut_g15_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Haircut/v_Haircut_g17_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Haircut/v_Haircut_g15_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Haircut/v_Haircut_g24_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Haircut/v_Haircut_g22_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Haircut/v_Haircut_g14_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Haircut/v_Haircut_g23_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Haircut/v_Haircut_g10_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Haircut/v_Haircut_g09_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Haircut/v_Haircut_g08_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Haircut/v_Haircut_g21_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Haircut/v_Haircut_g16_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Haircut/v_Haircut_g24_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Haircut/v_Haircut_g22_c01.jpg']
+--- 34
+['./data/ucf101/UCF-101-midframes/Hammering/v_Hammering_g22_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Hammering/v_Hammering_g19_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Hammering/v_Hammering_g08_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Hammering/v_Hammering_g18_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Hammering/v_Hammering_g21_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Hammering/v_Hammering_g09_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Hammering/v_Hammering_g16_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Hammering/v_Hammering_g14_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Hammering/v_Hammering_g13_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Hammering/v_Hammering_g20_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Hammering/v_Hammering_g25_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Hammering/v_Hammering_g15_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Hammering/v_Hammering_g23_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Hammering/v_Hammering_g09_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Hammering/v_Hammering_g12_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Hammering/v_Hammering_g15_c03.jpg']
+--- 35
+['./data/ucf101/UCF-101-midframes/Hammer_Throw/v_HammerThrow_g14_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Hammer_Throw/v_HammerThrow_g22_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Hammer_Throw/v_HammerThrow_g10_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Hammer_Throw/v_HammerThrow_g19_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Hammer_Throw/v_HammerThrow_g16_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Hammer_Throw/v_HammerThrow_g10_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Hammer_Throw/v_HammerThrow_g23_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Hammer_Throw/v_HammerThrow_g24_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Hammer_Throw/v_HammerThrow_g08_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Hammer_Throw/v_HammerThrow_g20_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Hammer_Throw/v_HammerThrow_g22_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Hammer_Throw/v_HammerThrow_g25_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Hammer_Throw/v_HammerThrow_g25_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Hammer_Throw/v_HammerThrow_g20_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Hammer_Throw/v_HammerThrow_g25_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Hammer_Throw/v_HammerThrow_g21_c04.jpg']
+--- 36
+['./data/ucf101/UCF-101-midframes/Handstand_Pushups/v_HandStandPushups_g18_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Pushups/v_HandStandPushups_g18_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Pushups/v_HandStandPushups_g20_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Pushups/v_HandStandPushups_g13_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Pushups/v_HandStandPushups_g16_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Pushups/v_HandStandPushups_g25_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Pushups/v_HandStandPushups_g19_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Pushups/v_HandStandPushups_g10_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Pushups/v_HandStandPushups_g18_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Pushups/v_HandStandPushups_g16_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Pushups/v_HandStandPushups_g16_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Pushups/v_HandStandPushups_g22_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Pushups/v_HandStandPushups_g17_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Pushups/v_HandStandPushups_g23_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Pushups/v_HandStandPushups_g10_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Pushups/v_HandStandPushups_g24_c02.jpg']
+--- 37
+['./data/ucf101/UCF-101-midframes/Handstand_Walking/v_HandstandWalking_g17_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Walking/v_HandstandWalking_g18_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Walking/v_HandstandWalking_g13_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Walking/v_HandstandWalking_g10_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Walking/v_HandstandWalking_g15_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Walking/v_HandstandWalking_g10_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Walking/v_HandstandWalking_g19_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Walking/v_HandstandWalking_g18_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Walking/v_HandstandWalking_g12_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Walking/v_HandstandWalking_g20_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Walking/v_HandstandWalking_g13_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Walking/v_HandstandWalking_g18_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Walking/v_HandstandWalking_g20_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Walking/v_HandstandWalking_g11_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Walking/v_HandstandWalking_g25_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Handstand_Walking/v_HandstandWalking_g25_c01.jpg']
+--- 38
+['./data/ucf101/UCF-101-midframes/Head_Massage/v_HeadMassage_g20_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Head_Massage/v_HeadMassage_g14_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Head_Massage/v_HeadMassage_g10_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Head_Massage/v_HeadMassage_g18_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Head_Massage/v_HeadMassage_g23_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Head_Massage/v_HeadMassage_g13_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Head_Massage/v_HeadMassage_g09_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Head_Massage/v_HeadMassage_g21_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Head_Massage/v_HeadMassage_g13_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Head_Massage/v_HeadMassage_g21_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Head_Massage/v_HeadMassage_g21_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Head_Massage/v_HeadMassage_g15_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Head_Massage/v_HeadMassage_g23_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Head_Massage/v_HeadMassage_g22_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Head_Massage/v_HeadMassage_g11_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Head_Massage/v_HeadMassage_g15_c03.jpg']
+--- 39
+['./data/ucf101/UCF-101-midframes/High_Jump/v_HighJump_g09_c01.jpg'
+ './data/ucf101/UCF-101-midframes/High_Jump/v_HighJump_g14_c01.jpg'
+ './data/ucf101/UCF-101-midframes/High_Jump/v_HighJump_g08_c05.jpg'
+ './data/ucf101/UCF-101-midframes/High_Jump/v_HighJump_g12_c01.jpg'
+ './data/ucf101/UCF-101-midframes/High_Jump/v_HighJump_g24_c01.jpg'
+ './data/ucf101/UCF-101-midframes/High_Jump/v_HighJump_g20_c05.jpg'
+ './data/ucf101/UCF-101-midframes/High_Jump/v_HighJump_g15_c02.jpg'
+ './data/ucf101/UCF-101-midframes/High_Jump/v_HighJump_g13_c04.jpg'
+ './data/ucf101/UCF-101-midframes/High_Jump/v_HighJump_g22_c03.jpg'
+ './data/ucf101/UCF-101-midframes/High_Jump/v_HighJump_g18_c01.jpg'
+ './data/ucf101/UCF-101-midframes/High_Jump/v_HighJump_g23_c01.jpg'
+ './data/ucf101/UCF-101-midframes/High_Jump/v_HighJump_g13_c03.jpg'
+ './data/ucf101/UCF-101-midframes/High_Jump/v_HighJump_g23_c04.jpg'
+ './data/ucf101/UCF-101-midframes/High_Jump/v_HighJump_g14_c03.jpg'
+ './data/ucf101/UCF-101-midframes/High_Jump/v_HighJump_g25_c01.jpg'
+ './data/ucf101/UCF-101-midframes/High_Jump/v_HighJump_g16_c04.jpg']
+--- 40
+['./data/ucf101/UCF-101-midframes/Horse_Race/v_HorseRace_g16_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Race/v_HorseRace_g13_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Race/v_HorseRace_g22_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Race/v_HorseRace_g25_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Race/v_HorseRace_g22_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Race/v_HorseRace_g24_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Race/v_HorseRace_g21_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Race/v_HorseRace_g20_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Race/v_HorseRace_g10_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Race/v_HorseRace_g24_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Race/v_HorseRace_g25_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Race/v_HorseRace_g24_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Race/v_HorseRace_g11_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Race/v_HorseRace_g08_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Race/v_HorseRace_g15_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Race/v_HorseRace_g13_c05.jpg']
+--- 41
+['./data/ucf101/UCF-101-midframes/Horse_Riding/v_HorseRiding_g25_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Riding/v_HorseRiding_g11_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Riding/v_HorseRiding_g14_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Riding/v_HorseRiding_g19_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Riding/v_HorseRiding_g16_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Riding/v_HorseRiding_g18_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Riding/v_HorseRiding_g20_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Riding/v_HorseRiding_g13_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Riding/v_HorseRiding_g11_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Riding/v_HorseRiding_g15_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Riding/v_HorseRiding_g10_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Riding/v_HorseRiding_g14_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Riding/v_HorseRiding_g20_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Riding/v_HorseRiding_g11_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Riding/v_HorseRiding_g23_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Horse_Riding/v_HorseRiding_g12_c02.jpg']
+--- 42
+['./data/ucf101/UCF-101-midframes/Hula_Hoop/v_HulaHoop_g12_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Hula_Hoop/v_HulaHoop_g13_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Hula_Hoop/v_HulaHoop_g08_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Hula_Hoop/v_HulaHoop_g08_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Hula_Hoop/v_HulaHoop_g21_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Hula_Hoop/v_HulaHoop_g22_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Hula_Hoop/v_HulaHoop_g17_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Hula_Hoop/v_HulaHoop_g11_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Hula_Hoop/v_HulaHoop_g23_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Hula_Hoop/v_HulaHoop_g23_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Hula_Hoop/v_HulaHoop_g23_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Hula_Hoop/v_HulaHoop_g09_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Hula_Hoop/v_HulaHoop_g08_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Hula_Hoop/v_HulaHoop_g24_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Hula_Hoop/v_HulaHoop_g12_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Hula_Hoop/v_HulaHoop_g24_c04.jpg']
+--- 43
+['./data/ucf101/UCF-101-midframes/Ice_Dancing/v_IceDancing_g23_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Ice_Dancing/v_IceDancing_g18_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Ice_Dancing/v_IceDancing_g23_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Ice_Dancing/v_IceDancing_g17_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Ice_Dancing/v_IceDancing_g08_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Ice_Dancing/v_IceDancing_g19_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Ice_Dancing/v_IceDancing_g20_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Ice_Dancing/v_IceDancing_g18_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Ice_Dancing/v_IceDancing_g25_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Ice_Dancing/v_IceDancing_g10_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Ice_Dancing/v_IceDancing_g16_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Ice_Dancing/v_IceDancing_g10_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Ice_Dancing/v_IceDancing_g19_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Ice_Dancing/v_IceDancing_g16_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Ice_Dancing/v_IceDancing_g25_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Ice_Dancing/v_IceDancing_g08_c07.jpg']
+--- 44
+['./data/ucf101/UCF-101-midframes/Javelin_Throw/v_JavelinThrow_g14_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Javelin_Throw/v_JavelinThrow_g25_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Javelin_Throw/v_JavelinThrow_g22_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Javelin_Throw/v_JavelinThrow_g12_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Javelin_Throw/v_JavelinThrow_g24_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Javelin_Throw/v_JavelinThrow_g11_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Javelin_Throw/v_JavelinThrow_g12_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Javelin_Throw/v_JavelinThrow_g19_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Javelin_Throw/v_JavelinThrow_g22_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Javelin_Throw/v_JavelinThrow_g11_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Javelin_Throw/v_JavelinThrow_g08_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Javelin_Throw/v_JavelinThrow_g20_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Javelin_Throw/v_JavelinThrow_g24_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Javelin_Throw/v_JavelinThrow_g24_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Javelin_Throw/v_JavelinThrow_g10_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Javelin_Throw/v_JavelinThrow_g13_c03.jpg']
+--- 45
+['./data/ucf101/UCF-101-midframes/Juggling_Balls/v_JugglingBalls_g13_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Juggling_Balls/v_JugglingBalls_g24_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Juggling_Balls/v_JugglingBalls_g16_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Juggling_Balls/v_JugglingBalls_g23_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Juggling_Balls/v_JugglingBalls_g19_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Juggling_Balls/v_JugglingBalls_g12_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Juggling_Balls/v_JugglingBalls_g14_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Juggling_Balls/v_JugglingBalls_g18_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Juggling_Balls/v_JugglingBalls_g11_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Juggling_Balls/v_JugglingBalls_g12_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Juggling_Balls/v_JugglingBalls_g19_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Juggling_Balls/v_JugglingBalls_g22_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Juggling_Balls/v_JugglingBalls_g09_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Juggling_Balls/v_JugglingBalls_g22_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Juggling_Balls/v_JugglingBalls_g08_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Juggling_Balls/v_JugglingBalls_g09_c04.jpg']
+--- 46
+['./data/ucf101/UCF-101-midframes/Jumping_Jack/v_JumpingJack_g25_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Jumping_Jack/v_JumpingJack_g08_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Jumping_Jack/v_JumpingJack_g25_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Jumping_Jack/v_JumpingJack_g09_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Jumping_Jack/v_JumpingJack_g09_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Jumping_Jack/v_JumpingJack_g10_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Jumping_Jack/v_JumpingJack_g16_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Jumping_Jack/v_JumpingJack_g13_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Jumping_Jack/v_JumpingJack_g12_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Jumping_Jack/v_JumpingJack_g24_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Jumping_Jack/v_JumpingJack_g20_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Jumping_Jack/v_JumpingJack_g14_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Jumping_Jack/v_JumpingJack_g10_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Jumping_Jack/v_JumpingJack_g16_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Jumping_Jack/v_JumpingJack_g19_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Jumping_Jack/v_JumpingJack_g13_c06.jpg']
+--- 47
+['./data/ucf101/UCF-101-midframes/Jump_Rope/v_JumpRope_g25_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Jump_Rope/v_JumpRope_g13_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Jump_Rope/v_JumpRope_g09_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Jump_Rope/v_JumpRope_g24_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Jump_Rope/v_JumpRope_g24_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Jump_Rope/v_JumpRope_g16_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Jump_Rope/v_JumpRope_g19_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Jump_Rope/v_JumpRope_g23_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Jump_Rope/v_JumpRope_g14_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Jump_Rope/v_JumpRope_g18_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Jump_Rope/v_JumpRope_g13_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Jump_Rope/v_JumpRope_g24_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Jump_Rope/v_JumpRope_g15_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Jump_Rope/v_JumpRope_g11_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Jump_Rope/v_JumpRope_g17_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Jump_Rope/v_JumpRope_g21_c06.jpg']
+--- 48
+['./data/ucf101/UCF-101-midframes/Kayaking/v_Kayaking_g09_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Kayaking/v_Kayaking_g23_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Kayaking/v_Kayaking_g17_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Kayaking/v_Kayaking_g21_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Kayaking/v_Kayaking_g16_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Kayaking/v_Kayaking_g18_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Kayaking/v_Kayaking_g15_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Kayaking/v_Kayaking_g18_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Kayaking/v_Kayaking_g12_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Kayaking/v_Kayaking_g24_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Kayaking/v_Kayaking_g21_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Kayaking/v_Kayaking_g16_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Kayaking/v_Kayaking_g15_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Kayaking/v_Kayaking_g13_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Kayaking/v_Kayaking_g22_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Kayaking/v_Kayaking_g14_c03.jpg']
+--- 49
+['./data/ucf101/UCF-101-midframes/Knitting/v_Knitting_g25_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Knitting/v_Knitting_g12_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Knitting/v_Knitting_g22_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Knitting/v_Knitting_g21_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Knitting/v_Knitting_g15_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Knitting/v_Knitting_g10_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Knitting/v_Knitting_g14_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Knitting/v_Knitting_g13_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Knitting/v_Knitting_g22_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Knitting/v_Knitting_g15_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Knitting/v_Knitting_g22_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Knitting/v_Knitting_g17_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Knitting/v_Knitting_g19_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Knitting/v_Knitting_g08_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Knitting/v_Knitting_g22_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Knitting/v_Knitting_g10_c07.jpg']
+--- 50
+['./data/ucf101/UCF-101-midframes/Long_Jump/v_LongJump_g12_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Long_Jump/v_LongJump_g25_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Long_Jump/v_LongJump_g23_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Long_Jump/v_LongJump_g19_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Long_Jump/v_LongJump_g10_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Long_Jump/v_LongJump_g16_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Long_Jump/v_LongJump_g13_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Long_Jump/v_LongJump_g19_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Long_Jump/v_LongJump_g24_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Long_Jump/v_LongJump_g08_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Long_Jump/v_LongJump_g24_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Long_Jump/v_LongJump_g09_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Long_Jump/v_LongJump_g13_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Long_Jump/v_LongJump_g24_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Long_Jump/v_LongJump_g22_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Long_Jump/v_LongJump_g25_c04.jpg']
+--- 51
+['./data/ucf101/UCF-101-midframes/Lunges/v_Lunges_g17_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Lunges/v_Lunges_g11_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Lunges/v_Lunges_g13_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Lunges/v_Lunges_g11_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Lunges/v_Lunges_g18_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Lunges/v_Lunges_g12_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Lunges/v_Lunges_g23_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Lunges/v_Lunges_g19_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Lunges/v_Lunges_g14_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Lunges/v_Lunges_g17_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Lunges/v_Lunges_g19_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Lunges/v_Lunges_g14_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Lunges/v_Lunges_g23_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Lunges/v_Lunges_g16_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Lunges/v_Lunges_g08_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Lunges/v_Lunges_g10_c03.jpg']
+--- 52
+['./data/ucf101/UCF-101-midframes/Military_Parade/v_MilitaryParade_g14_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Military_Parade/v_MilitaryParade_g20_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Military_Parade/v_MilitaryParade_g20_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Military_Parade/v_MilitaryParade_g25_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Military_Parade/v_MilitaryParade_g10_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Military_Parade/v_MilitaryParade_g14_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Military_Parade/v_MilitaryParade_g11_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Military_Parade/v_MilitaryParade_g23_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Military_Parade/v_MilitaryParade_g16_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Military_Parade/v_MilitaryParade_g17_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Military_Parade/v_MilitaryParade_g09_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Military_Parade/v_MilitaryParade_g18_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Military_Parade/v_MilitaryParade_g21_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Military_Parade/v_MilitaryParade_g24_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Military_Parade/v_MilitaryParade_g19_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Military_Parade/v_MilitaryParade_g10_c04.jpg']
+--- 53
+['./data/ucf101/UCF-101-midframes/Mixing/v_Mixing_g17_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Mixing/v_Mixing_g23_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Mixing/v_Mixing_g09_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Mixing/v_Mixing_g17_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Mixing/v_Mixing_g12_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Mixing/v_Mixing_g23_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Mixing/v_Mixing_g22_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Mixing/v_Mixing_g19_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Mixing/v_Mixing_g13_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Mixing/v_Mixing_g24_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Mixing/v_Mixing_g21_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Mixing/v_Mixing_g20_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Mixing/v_Mixing_g20_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Mixing/v_Mixing_g24_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Mixing/v_Mixing_g20_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Mixing/v_Mixing_g16_c01.jpg']
+--- 54
+['./data/ucf101/UCF-101-midframes/Mopping_Floor/v_MoppingFloor_g11_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Mopping_Floor/v_MoppingFloor_g13_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Mopping_Floor/v_MoppingFloor_g21_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Mopping_Floor/v_MoppingFloor_g18_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Mopping_Floor/v_MoppingFloor_g10_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Mopping_Floor/v_MoppingFloor_g09_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Mopping_Floor/v_MoppingFloor_g12_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Mopping_Floor/v_MoppingFloor_g14_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Mopping_Floor/v_MoppingFloor_g19_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Mopping_Floor/v_MoppingFloor_g17_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Mopping_Floor/v_MoppingFloor_g10_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Mopping_Floor/v_MoppingFloor_g23_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Mopping_Floor/v_MoppingFloor_g10_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Mopping_Floor/v_MoppingFloor_g08_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Mopping_Floor/v_MoppingFloor_g18_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Mopping_Floor/v_MoppingFloor_g19_c04.jpg']
+--- 55
+['./data/ucf101/UCF-101-midframes/Nunchucks/v_Nunchucks_g15_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Nunchucks/v_Nunchucks_g21_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Nunchucks/v_Nunchucks_g25_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Nunchucks/v_Nunchucks_g17_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Nunchucks/v_Nunchucks_g25_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Nunchucks/v_Nunchucks_g23_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Nunchucks/v_Nunchucks_g08_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Nunchucks/v_Nunchucks_g17_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Nunchucks/v_Nunchucks_g08_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Nunchucks/v_Nunchucks_g19_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Nunchucks/v_Nunchucks_g24_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Nunchucks/v_Nunchucks_g10_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Nunchucks/v_Nunchucks_g18_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Nunchucks/v_Nunchucks_g21_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Nunchucks/v_Nunchucks_g15_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Nunchucks/v_Nunchucks_g14_c03.jpg']
+--- 56
+['./data/ucf101/UCF-101-midframes/Parallel_Bars/v_ParallelBars_g14_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Parallel_Bars/v_ParallelBars_g14_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Parallel_Bars/v_ParallelBars_g20_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Parallel_Bars/v_ParallelBars_g18_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Parallel_Bars/v_ParallelBars_g09_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Parallel_Bars/v_ParallelBars_g22_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Parallel_Bars/v_ParallelBars_g17_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Parallel_Bars/v_ParallelBars_g14_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Parallel_Bars/v_ParallelBars_g09_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Parallel_Bars/v_ParallelBars_g21_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Parallel_Bars/v_ParallelBars_g12_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Parallel_Bars/v_ParallelBars_g21_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Parallel_Bars/v_ParallelBars_g20_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Parallel_Bars/v_ParallelBars_g08_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Parallel_Bars/v_ParallelBars_g08_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Parallel_Bars/v_ParallelBars_g18_c02.jpg']
+--- 57
+['./data/ucf101/UCF-101-midframes/Pizza_Tossing/v_PizzaTossing_g12_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Pizza_Tossing/v_PizzaTossing_g25_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Pizza_Tossing/v_PizzaTossing_g23_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Pizza_Tossing/v_PizzaTossing_g15_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Pizza_Tossing/v_PizzaTossing_g11_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Pizza_Tossing/v_PizzaTossing_g19_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Pizza_Tossing/v_PizzaTossing_g17_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Pizza_Tossing/v_PizzaTossing_g21_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Pizza_Tossing/v_PizzaTossing_g23_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Pizza_Tossing/v_PizzaTossing_g11_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Pizza_Tossing/v_PizzaTossing_g15_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Pizza_Tossing/v_PizzaTossing_g20_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Pizza_Tossing/v_PizzaTossing_g18_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Pizza_Tossing/v_PizzaTossing_g17_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Pizza_Tossing/v_PizzaTossing_g16_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Pizza_Tossing/v_PizzaTossing_g22_c01.jpg']
+--- 58
+['./data/ucf101/UCF-101-midframes/Playing_Cello/v_PlayingCello_g10_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Cello/v_PlayingCello_g24_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Cello/v_PlayingCello_g19_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Cello/v_PlayingCello_g16_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Cello/v_PlayingCello_g22_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Cello/v_PlayingCello_g09_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Cello/v_PlayingCello_g12_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Cello/v_PlayingCello_g11_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Cello/v_PlayingCello_g08_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Cello/v_PlayingCello_g18_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Cello/v_PlayingCello_g25_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Cello/v_PlayingCello_g08_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Cello/v_PlayingCello_g12_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Cello/v_PlayingCello_g16_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Cello/v_PlayingCello_g17_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Cello/v_PlayingCello_g16_c01.jpg']
+--- 59
+['./data/ucf101/UCF-101-midframes/Playing_Daf/v_PlayingDaf_g10_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Daf/v_PlayingDaf_g16_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Daf/v_PlayingDaf_g25_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Daf/v_PlayingDaf_g12_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Daf/v_PlayingDaf_g17_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Daf/v_PlayingDaf_g13_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Daf/v_PlayingDaf_g11_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Daf/v_PlayingDaf_g13_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Daf/v_PlayingDaf_g15_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Daf/v_PlayingDaf_g20_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Daf/v_PlayingDaf_g16_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Daf/v_PlayingDaf_g23_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Daf/v_PlayingDaf_g12_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Daf/v_PlayingDaf_g22_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Daf/v_PlayingDaf_g14_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Daf/v_PlayingDaf_g18_c07.jpg']
+--- 60
+['./data/ucf101/UCF-101-midframes/Playing_Dhol/v_PlayingDhol_g21_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Dhol/v_PlayingDhol_g08_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Dhol/v_PlayingDhol_g20_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Dhol/v_PlayingDhol_g09_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Dhol/v_PlayingDhol_g23_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Dhol/v_PlayingDhol_g11_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Dhol/v_PlayingDhol_g21_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Dhol/v_PlayingDhol_g24_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Dhol/v_PlayingDhol_g23_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Dhol/v_PlayingDhol_g10_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Dhol/v_PlayingDhol_g14_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Dhol/v_PlayingDhol_g24_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Dhol/v_PlayingDhol_g13_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Dhol/v_PlayingDhol_g09_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Dhol/v_PlayingDhol_g25_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Dhol/v_PlayingDhol_g11_c05.jpg']
+--- 61
+['./data/ucf101/UCF-101-midframes/Playing_Flute/v_PlayingFlute_g09_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Flute/v_PlayingFlute_g23_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Flute/v_PlayingFlute_g20_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Flute/v_PlayingFlute_g11_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Flute/v_PlayingFlute_g08_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Flute/v_PlayingFlute_g21_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Flute/v_PlayingFlute_g11_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Flute/v_PlayingFlute_g14_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Flute/v_PlayingFlute_g24_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Flute/v_PlayingFlute_g22_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Flute/v_PlayingFlute_g17_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Flute/v_PlayingFlute_g18_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Flute/v_PlayingFlute_g24_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Flute/v_PlayingFlute_g11_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Flute/v_PlayingFlute_g15_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Flute/v_PlayingFlute_g10_c04.jpg']
+--- 62
+['./data/ucf101/UCF-101-midframes/Playing_Guitar/v_PlayingGuitar_g08_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Guitar/v_PlayingGuitar_g14_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Guitar/v_PlayingGuitar_g11_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Guitar/v_PlayingGuitar_g10_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Guitar/v_PlayingGuitar_g23_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Guitar/v_PlayingGuitar_g23_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Guitar/v_PlayingGuitar_g20_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Guitar/v_PlayingGuitar_g18_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Guitar/v_PlayingGuitar_g19_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Guitar/v_PlayingGuitar_g23_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Guitar/v_PlayingGuitar_g12_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Guitar/v_PlayingGuitar_g16_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Guitar/v_PlayingGuitar_g16_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Guitar/v_PlayingGuitar_g09_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Guitar/v_PlayingGuitar_g12_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Guitar/v_PlayingGuitar_g14_c01.jpg']
+--- 63
+['./data/ucf101/UCF-101-midframes/Playing_Piano/v_PlayingPiano_g13_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Piano/v_PlayingPiano_g15_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Piano/v_PlayingPiano_g17_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Piano/v_PlayingPiano_g15_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Piano/v_PlayingPiano_g24_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Piano/v_PlayingPiano_g17_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Piano/v_PlayingPiano_g11_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Piano/v_PlayingPiano_g16_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Piano/v_PlayingPiano_g22_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Piano/v_PlayingPiano_g16_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Piano/v_PlayingPiano_g23_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Piano/v_PlayingPiano_g11_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Piano/v_PlayingPiano_g22_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Piano/v_PlayingPiano_g12_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Piano/v_PlayingPiano_g21_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Piano/v_PlayingPiano_g20_c02.jpg']
+--- 64
+['./data/ucf101/UCF-101-midframes/Playing_Sitar/v_PlayingSitar_g21_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Sitar/v_PlayingSitar_g22_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Sitar/v_PlayingSitar_g14_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Sitar/v_PlayingSitar_g18_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Sitar/v_PlayingSitar_g09_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Sitar/v_PlayingSitar_g23_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Sitar/v_PlayingSitar_g08_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Sitar/v_PlayingSitar_g18_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Sitar/v_PlayingSitar_g11_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Sitar/v_PlayingSitar_g17_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Sitar/v_PlayingSitar_g11_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Sitar/v_PlayingSitar_g23_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Sitar/v_PlayingSitar_g24_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Sitar/v_PlayingSitar_g10_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Sitar/v_PlayingSitar_g21_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Sitar/v_PlayingSitar_g15_c03.jpg']
+--- 65
+['./data/ucf101/UCF-101-midframes/Playing_Tabla/v_PlayingTabla_g24_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Tabla/v_PlayingTabla_g10_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Tabla/v_PlayingTabla_g16_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Tabla/v_PlayingTabla_g09_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Tabla/v_PlayingTabla_g09_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Tabla/v_PlayingTabla_g25_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Tabla/v_PlayingTabla_g12_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Tabla/v_PlayingTabla_g11_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Tabla/v_PlayingTabla_g11_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Tabla/v_PlayingTabla_g24_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Tabla/v_PlayingTabla_g16_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Tabla/v_PlayingTabla_g18_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Tabla/v_PlayingTabla_g20_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Tabla/v_PlayingTabla_g12_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Tabla/v_PlayingTabla_g25_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Tabla/v_PlayingTabla_g18_c02.jpg']
+--- 66
+['./data/ucf101/UCF-101-midframes/Playing_Violin/v_PlayingViolin_g17_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Violin/v_PlayingViolin_g24_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Violin/v_PlayingViolin_g13_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Violin/v_PlayingViolin_g14_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Violin/v_PlayingViolin_g11_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Violin/v_PlayingViolin_g16_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Violin/v_PlayingViolin_g23_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Violin/v_PlayingViolin_g20_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Violin/v_PlayingViolin_g18_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Violin/v_PlayingViolin_g18_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Violin/v_PlayingViolin_g12_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Violin/v_PlayingViolin_g23_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Violin/v_PlayingViolin_g10_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Violin/v_PlayingViolin_g15_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Violin/v_PlayingViolin_g08_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Playing_Violin/v_PlayingViolin_g10_c04.jpg']
+--- 67
+['./data/ucf101/UCF-101-midframes/Pole_Vault/v_PoleVault_g09_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Pole_Vault/v_PoleVault_g10_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Pole_Vault/v_PoleVault_g11_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Pole_Vault/v_PoleVault_g12_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Pole_Vault/v_PoleVault_g16_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Pole_Vault/v_PoleVault_g10_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Pole_Vault/v_PoleVault_g24_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Pole_Vault/v_PoleVault_g24_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Pole_Vault/v_PoleVault_g20_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Pole_Vault/v_PoleVault_g18_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Pole_Vault/v_PoleVault_g13_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Pole_Vault/v_PoleVault_g23_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Pole_Vault/v_PoleVault_g22_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Pole_Vault/v_PoleVault_g20_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Pole_Vault/v_PoleVault_g17_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Pole_Vault/v_PoleVault_g24_c03.jpg']
+--- 68
+['./data/ucf101/UCF-101-midframes/Pommel_Horse/v_PommelHorse_g11_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Pommel_Horse/v_PommelHorse_g14_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Pommel_Horse/v_PommelHorse_g12_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Pommel_Horse/v_PommelHorse_g24_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Pommel_Horse/v_PommelHorse_g25_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Pommel_Horse/v_PommelHorse_g23_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Pommel_Horse/v_PommelHorse_g20_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Pommel_Horse/v_PommelHorse_g20_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Pommel_Horse/v_PommelHorse_g15_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Pommel_Horse/v_PommelHorse_g22_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Pommel_Horse/v_PommelHorse_g09_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Pommel_Horse/v_PommelHorse_g20_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Pommel_Horse/v_PommelHorse_g10_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Pommel_Horse/v_PommelHorse_g11_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Pommel_Horse/v_PommelHorse_g08_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Pommel_Horse/v_PommelHorse_g20_c07.jpg']
+--- 69
+['./data/ucf101/UCF-101-midframes/Pull_Ups/v_PullUps_g23_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Pull_Ups/v_PullUps_g13_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Pull_Ups/v_PullUps_g13_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Pull_Ups/v_PullUps_g17_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Pull_Ups/v_PullUps_g10_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Pull_Ups/v_PullUps_g11_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Pull_Ups/v_PullUps_g09_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Pull_Ups/v_PullUps_g20_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Pull_Ups/v_PullUps_g18_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Pull_Ups/v_PullUps_g22_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Pull_Ups/v_PullUps_g14_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Pull_Ups/v_PullUps_g19_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Pull_Ups/v_PullUps_g11_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Pull_Ups/v_PullUps_g09_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Pull_Ups/v_PullUps_g14_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Pull_Ups/v_PullUps_g23_c04.jpg']
+--- 70
+['./data/ucf101/UCF-101-midframes/Punch/v_Punch_g22_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Punch/v_Punch_g18_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Punch/v_Punch_g21_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Punch/v_Punch_g23_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Punch/v_Punch_g21_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Punch/v_Punch_g13_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Punch/v_Punch_g17_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Punch/v_Punch_g14_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Punch/v_Punch_g24_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Punch/v_Punch_g15_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Punch/v_Punch_g22_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Punch/v_Punch_g23_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Punch/v_Punch_g23_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Punch/v_Punch_g11_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Punch/v_Punch_g18_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Punch/v_Punch_g14_c01.jpg']
+--- 71
+['./data/ucf101/UCF-101-midframes/Push_Ups/v_PushUps_g20_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Push_Ups/v_PushUps_g16_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Push_Ups/v_PushUps_g09_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Push_Ups/v_PushUps_g25_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Push_Ups/v_PushUps_g11_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Push_Ups/v_PushUps_g08_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Push_Ups/v_PushUps_g12_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Push_Ups/v_PushUps_g10_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Push_Ups/v_PushUps_g21_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Push_Ups/v_PushUps_g23_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Push_Ups/v_PushUps_g25_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Push_Ups/v_PushUps_g16_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Push_Ups/v_PushUps_g20_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Push_Ups/v_PushUps_g13_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Push_Ups/v_PushUps_g24_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Push_Ups/v_PushUps_g19_c02.jpg']
+--- 72
+['./data/ucf101/UCF-101-midframes/Rafting/v_Rafting_g16_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Rafting/v_Rafting_g17_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Rafting/v_Rafting_g19_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Rafting/v_Rafting_g15_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Rafting/v_Rafting_g14_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Rafting/v_Rafting_g16_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Rafting/v_Rafting_g13_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Rafting/v_Rafting_g18_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Rafting/v_Rafting_g23_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Rafting/v_Rafting_g21_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Rafting/v_Rafting_g25_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Rafting/v_Rafting_g22_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Rafting/v_Rafting_g08_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Rafting/v_Rafting_g13_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Rafting/v_Rafting_g12_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Rafting/v_Rafting_g08_c01.jpg']
+--- 73
+['./data/ucf101/UCF-101-midframes/Rock_Climbing_Indoor/v_RockClimbingIndoor_g19_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Rock_Climbing_Indoor/v_RockClimbingIndoor_g23_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Rock_Climbing_Indoor/v_RockClimbingIndoor_g16_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Rock_Climbing_Indoor/v_RockClimbingIndoor_g24_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Rock_Climbing_Indoor/v_RockClimbingIndoor_g11_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Rock_Climbing_Indoor/v_RockClimbingIndoor_g09_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Rock_Climbing_Indoor/v_RockClimbingIndoor_g09_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Rock_Climbing_Indoor/v_RockClimbingIndoor_g11_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Rock_Climbing_Indoor/v_RockClimbingIndoor_g21_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Rock_Climbing_Indoor/v_RockClimbingIndoor_g25_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Rock_Climbing_Indoor/v_RockClimbingIndoor_g11_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Rock_Climbing_Indoor/v_RockClimbingIndoor_g21_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Rock_Climbing_Indoor/v_RockClimbingIndoor_g10_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Rock_Climbing_Indoor/v_RockClimbingIndoor_g10_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Rock_Climbing_Indoor/v_RockClimbingIndoor_g14_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Rock_Climbing_Indoor/v_RockClimbingIndoor_g13_c04.jpg']
+--- 74
+['./data/ucf101/UCF-101-midframes/Rope_Climbing/v_RopeClimbing_g15_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Rope_Climbing/v_RopeClimbing_g22_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Rope_Climbing/v_RopeClimbing_g15_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Rope_Climbing/v_RopeClimbing_g10_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Rope_Climbing/v_RopeClimbing_g19_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Rope_Climbing/v_RopeClimbing_g12_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Rope_Climbing/v_RopeClimbing_g13_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Rope_Climbing/v_RopeClimbing_g18_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Rope_Climbing/v_RopeClimbing_g16_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Rope_Climbing/v_RopeClimbing_g16_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Rope_Climbing/v_RopeClimbing_g09_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Rope_Climbing/v_RopeClimbing_g13_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Rope_Climbing/v_RopeClimbing_g17_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Rope_Climbing/v_RopeClimbing_g18_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Rope_Climbing/v_RopeClimbing_g14_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Rope_Climbing/v_RopeClimbing_g21_c02.jpg']
+--- 75
+['./data/ucf101/UCF-101-midframes/Rowing/v_Rowing_g13_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Rowing/v_Rowing_g11_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Rowing/v_Rowing_g24_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Rowing/v_Rowing_g24_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Rowing/v_Rowing_g09_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Rowing/v_Rowing_g19_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Rowing/v_Rowing_g15_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Rowing/v_Rowing_g18_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Rowing/v_Rowing_g11_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Rowing/v_Rowing_g12_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Rowing/v_Rowing_g13_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Rowing/v_Rowing_g14_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Rowing/v_Rowing_g12_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Rowing/v_Rowing_g23_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Rowing/v_Rowing_g25_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Rowing/v_Rowing_g21_c03.jpg']
+--- 76
+['./data/ucf101/UCF-101-midframes/Salsa_Spin/v_SalsaSpin_g12_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Salsa_Spin/v_SalsaSpin_g25_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Salsa_Spin/v_SalsaSpin_g13_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Salsa_Spin/v_SalsaSpin_g11_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Salsa_Spin/v_SalsaSpin_g23_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Salsa_Spin/v_SalsaSpin_g21_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Salsa_Spin/v_SalsaSpin_g18_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Salsa_Spin/v_SalsaSpin_g21_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Salsa_Spin/v_SalsaSpin_g13_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Salsa_Spin/v_SalsaSpin_g16_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Salsa_Spin/v_SalsaSpin_g08_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Salsa_Spin/v_SalsaSpin_g08_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Salsa_Spin/v_SalsaSpin_g19_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Salsa_Spin/v_SalsaSpin_g18_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Salsa_Spin/v_SalsaSpin_g16_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Salsa_Spin/v_SalsaSpin_g15_c05.jpg']
+--- 77
+['./data/ucf101/UCF-101-midframes/Shaving_Beard/v_ShavingBeard_g08_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Shaving_Beard/v_ShavingBeard_g20_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Shaving_Beard/v_ShavingBeard_g16_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Shaving_Beard/v_ShavingBeard_g12_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Shaving_Beard/v_ShavingBeard_g21_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Shaving_Beard/v_ShavingBeard_g09_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Shaving_Beard/v_ShavingBeard_g16_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Shaving_Beard/v_ShavingBeard_g24_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Shaving_Beard/v_ShavingBeard_g22_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Shaving_Beard/v_ShavingBeard_g21_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Shaving_Beard/v_ShavingBeard_g18_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Shaving_Beard/v_ShavingBeard_g18_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Shaving_Beard/v_ShavingBeard_g10_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Shaving_Beard/v_ShavingBeard_g23_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Shaving_Beard/v_ShavingBeard_g11_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Shaving_Beard/v_ShavingBeard_g10_c01.jpg']
+--- 78
+['./data/ucf101/UCF-101-midframes/Shotput/v_Shotput_g24_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Shotput/v_Shotput_g15_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Shotput/v_Shotput_g16_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Shotput/v_Shotput_g12_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Shotput/v_Shotput_g23_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Shotput/v_Shotput_g15_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Shotput/v_Shotput_g17_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Shotput/v_Shotput_g22_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Shotput/v_Shotput_g12_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Shotput/v_Shotput_g20_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Shotput/v_Shotput_g22_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Shotput/v_Shotput_g20_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Shotput/v_Shotput_g10_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Shotput/v_Shotput_g23_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Shotput/v_Shotput_g22_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Shotput/v_Shotput_g20_c01.jpg']
+--- 79
+['./data/ucf101/UCF-101-midframes/Skate_Boarding/v_SkateBoarding_g24_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Skate_Boarding/v_SkateBoarding_g24_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Skate_Boarding/v_SkateBoarding_g22_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Skate_Boarding/v_SkateBoarding_g14_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Skate_Boarding/v_SkateBoarding_g09_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Skate_Boarding/v_SkateBoarding_g17_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Skate_Boarding/v_SkateBoarding_g17_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Skate_Boarding/v_SkateBoarding_g12_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Skate_Boarding/v_SkateBoarding_g19_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Skate_Boarding/v_SkateBoarding_g13_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Skate_Boarding/v_SkateBoarding_g15_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Skate_Boarding/v_SkateBoarding_g08_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Skate_Boarding/v_SkateBoarding_g19_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Skate_Boarding/v_SkateBoarding_g12_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Skate_Boarding/v_SkateBoarding_g10_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Skate_Boarding/v_SkateBoarding_g13_c03.jpg']
+--- 80
+['./data/ucf101/UCF-101-midframes/Skiing/v_Skiing_g22_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Skiing/v_Skiing_g09_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Skiing/v_Skiing_g20_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Skiing/v_Skiing_g11_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Skiing/v_Skiing_g08_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Skiing/v_Skiing_g13_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Skiing/v_Skiing_g21_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Skiing/v_Skiing_g22_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Skiing/v_Skiing_g22_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Skiing/v_Skiing_g16_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Skiing/v_Skiing_g18_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Skiing/v_Skiing_g23_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Skiing/v_Skiing_g25_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Skiing/v_Skiing_g25_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Skiing/v_Skiing_g19_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Skiing/v_Skiing_g25_c05.jpg']
+--- 81
+['./data/ucf101/UCF-101-midframes/Skijet/v_Skijet_g16_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Skijet/v_Skijet_g09_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Skijet/v_Skijet_g23_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Skijet/v_Skijet_g09_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Skijet/v_Skijet_g09_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Skijet/v_Skijet_g18_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Skijet/v_Skijet_g25_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Skijet/v_Skijet_g20_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Skijet/v_Skijet_g22_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Skijet/v_Skijet_g14_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Skijet/v_Skijet_g15_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Skijet/v_Skijet_g08_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Skijet/v_Skijet_g23_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Skijet/v_Skijet_g15_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Skijet/v_Skijet_g24_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Skijet/v_Skijet_g17_c04.jpg']
+--- 82
+['./data/ucf101/UCF-101-midframes/Sky_Diving/v_SkyDiving_g12_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Sky_Diving/v_SkyDiving_g22_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Sky_Diving/v_SkyDiving_g11_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Sky_Diving/v_SkyDiving_g09_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Sky_Diving/v_SkyDiving_g12_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Sky_Diving/v_SkyDiving_g19_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Sky_Diving/v_SkyDiving_g19_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Sky_Diving/v_SkyDiving_g19_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Sky_Diving/v_SkyDiving_g14_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Sky_Diving/v_SkyDiving_g13_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Sky_Diving/v_SkyDiving_g11_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Sky_Diving/v_SkyDiving_g23_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Sky_Diving/v_SkyDiving_g12_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Sky_Diving/v_SkyDiving_g23_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Sky_Diving/v_SkyDiving_g10_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Sky_Diving/v_SkyDiving_g10_c05.jpg']
+--- 83
+['./data/ucf101/UCF-101-midframes/Soccer_Juggling/v_SoccerJuggling_g13_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Juggling/v_SoccerJuggling_g24_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Juggling/v_SoccerJuggling_g10_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Juggling/v_SoccerJuggling_g16_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Juggling/v_SoccerJuggling_g09_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Juggling/v_SoccerJuggling_g19_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Juggling/v_SoccerJuggling_g20_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Juggling/v_SoccerJuggling_g25_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Juggling/v_SoccerJuggling_g11_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Juggling/v_SoccerJuggling_g23_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Juggling/v_SoccerJuggling_g09_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Juggling/v_SoccerJuggling_g17_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Juggling/v_SoccerJuggling_g12_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Juggling/v_SoccerJuggling_g24_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Juggling/v_SoccerJuggling_g18_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Juggling/v_SoccerJuggling_g20_c03.jpg']
+--- 84
+['./data/ucf101/UCF-101-midframes/Soccer_Penalty/v_SoccerPenalty_g21_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Penalty/v_SoccerPenalty_g18_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Penalty/v_SoccerPenalty_g14_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Penalty/v_SoccerPenalty_g19_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Penalty/v_SoccerPenalty_g20_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Penalty/v_SoccerPenalty_g12_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Penalty/v_SoccerPenalty_g24_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Penalty/v_SoccerPenalty_g12_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Penalty/v_SoccerPenalty_g23_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Penalty/v_SoccerPenalty_g09_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Penalty/v_SoccerPenalty_g11_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Penalty/v_SoccerPenalty_g16_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Penalty/v_SoccerPenalty_g13_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Penalty/v_SoccerPenalty_g23_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Penalty/v_SoccerPenalty_g10_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Soccer_Penalty/v_SoccerPenalty_g10_c04.jpg']
+--- 85
+['./data/ucf101/UCF-101-midframes/Still_Rings/v_StillRings_g10_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Still_Rings/v_StillRings_g21_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Still_Rings/v_StillRings_g16_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Still_Rings/v_StillRings_g20_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Still_Rings/v_StillRings_g17_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Still_Rings/v_StillRings_g15_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Still_Rings/v_StillRings_g19_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Still_Rings/v_StillRings_g25_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Still_Rings/v_StillRings_g09_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Still_Rings/v_StillRings_g22_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Still_Rings/v_StillRings_g10_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Still_Rings/v_StillRings_g19_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Still_Rings/v_StillRings_g15_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Still_Rings/v_StillRings_g09_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Still_Rings/v_StillRings_g14_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Still_Rings/v_StillRings_g23_c03.jpg']
+--- 86
+['./data/ucf101/UCF-101-midframes/Sumo_Wrestling/v_SumoWrestling_g24_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Sumo_Wrestling/v_SumoWrestling_g23_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Sumo_Wrestling/v_SumoWrestling_g15_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Sumo_Wrestling/v_SumoWrestling_g10_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Sumo_Wrestling/v_SumoWrestling_g22_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Sumo_Wrestling/v_SumoWrestling_g18_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Sumo_Wrestling/v_SumoWrestling_g17_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Sumo_Wrestling/v_SumoWrestling_g12_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Sumo_Wrestling/v_SumoWrestling_g08_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Sumo_Wrestling/v_SumoWrestling_g19_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Sumo_Wrestling/v_SumoWrestling_g25_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Sumo_Wrestling/v_SumoWrestling_g14_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Sumo_Wrestling/v_SumoWrestling_g09_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Sumo_Wrestling/v_SumoWrestling_g21_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Sumo_Wrestling/v_SumoWrestling_g23_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Sumo_Wrestling/v_SumoWrestling_g17_c05.jpg']
+--- 87
+['./data/ucf101/UCF-101-midframes/Surfing/v_Surfing_g14_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Surfing/v_Surfing_g22_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Surfing/v_Surfing_g20_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Surfing/v_Surfing_g12_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Surfing/v_Surfing_g22_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Surfing/v_Surfing_g08_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Surfing/v_Surfing_g19_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Surfing/v_Surfing_g21_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Surfing/v_Surfing_g08_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Surfing/v_Surfing_g17_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Surfing/v_Surfing_g20_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Surfing/v_Surfing_g16_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Surfing/v_Surfing_g18_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Surfing/v_Surfing_g10_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Surfing/v_Surfing_g12_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Surfing/v_Surfing_g15_c03.jpg']
+--- 88
+['./data/ucf101/UCF-101-midframes/Swing/v_Swing_g24_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Swing/v_Swing_g09_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Swing/v_Swing_g12_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Swing/v_Swing_g11_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Swing/v_Swing_g19_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Swing/v_Swing_g24_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Swing/v_Swing_g22_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Swing/v_Swing_g09_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Swing/v_Swing_g08_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Swing/v_Swing_g10_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Swing/v_Swing_g16_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Swing/v_Swing_g16_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Swing/v_Swing_g20_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Swing/v_Swing_g08_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Swing/v_Swing_g20_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Swing/v_Swing_g23_c05.jpg']
+--- 89
+['./data/ucf101/UCF-101-midframes/Table_Tennis_Shot/v_TableTennisShot_g10_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Table_Tennis_Shot/v_TableTennisShot_g23_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Table_Tennis_Shot/v_TableTennisShot_g16_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Table_Tennis_Shot/v_TableTennisShot_g09_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Table_Tennis_Shot/v_TableTennisShot_g20_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Table_Tennis_Shot/v_TableTennisShot_g20_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Table_Tennis_Shot/v_TableTennisShot_g09_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Table_Tennis_Shot/v_TableTennisShot_g20_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Table_Tennis_Shot/v_TableTennisShot_g08_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Table_Tennis_Shot/v_TableTennisShot_g18_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Table_Tennis_Shot/v_TableTennisShot_g22_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Table_Tennis_Shot/v_TableTennisShot_g16_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Table_Tennis_Shot/v_TableTennisShot_g13_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Table_Tennis_Shot/v_TableTennisShot_g12_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Table_Tennis_Shot/v_TableTennisShot_g25_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Table_Tennis_Shot/v_TableTennisShot_g21_c03.jpg']
+--- 90
+['./data/ucf101/UCF-101-midframes/Tai_Chi/v_TaiChi_g09_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Tai_Chi/v_TaiChi_g12_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Tai_Chi/v_TaiChi_g18_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Tai_Chi/v_TaiChi_g15_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Tai_Chi/v_TaiChi_g09_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Tai_Chi/v_TaiChi_g10_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Tai_Chi/v_TaiChi_g19_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Tai_Chi/v_TaiChi_g16_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Tai_Chi/v_TaiChi_g13_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Tai_Chi/v_TaiChi_g12_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Tai_Chi/v_TaiChi_g22_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Tai_Chi/v_TaiChi_g22_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Tai_Chi/v_TaiChi_g13_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Tai_Chi/v_TaiChi_g22_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Tai_Chi/v_TaiChi_g08_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Tai_Chi/v_TaiChi_g20_c02.jpg']
+--- 91
+['./data/ucf101/UCF-101-midframes/Tennis_Swing/v_TennisSwing_g20_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Tennis_Swing/v_TennisSwing_g10_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Tennis_Swing/v_TennisSwing_g25_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Tennis_Swing/v_TennisSwing_g24_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Tennis_Swing/v_TennisSwing_g12_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Tennis_Swing/v_TennisSwing_g17_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Tennis_Swing/v_TennisSwing_g17_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Tennis_Swing/v_TennisSwing_g13_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Tennis_Swing/v_TennisSwing_g20_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Tennis_Swing/v_TennisSwing_g10_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Tennis_Swing/v_TennisSwing_g16_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Tennis_Swing/v_TennisSwing_g13_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Tennis_Swing/v_TennisSwing_g13_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Tennis_Swing/v_TennisSwing_g22_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Tennis_Swing/v_TennisSwing_g08_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Tennis_Swing/v_TennisSwing_g21_c03.jpg']
+--- 92
+['./data/ucf101/UCF-101-midframes/Throw_Discus/v_ThrowDiscus_g25_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Throw_Discus/v_ThrowDiscus_g13_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Throw_Discus/v_ThrowDiscus_g08_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Throw_Discus/v_ThrowDiscus_g11_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Throw_Discus/v_ThrowDiscus_g19_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Throw_Discus/v_ThrowDiscus_g16_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Throw_Discus/v_ThrowDiscus_g15_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Throw_Discus/v_ThrowDiscus_g12_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Throw_Discus/v_ThrowDiscus_g18_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Throw_Discus/v_ThrowDiscus_g17_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Throw_Discus/v_ThrowDiscus_g23_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Throw_Discus/v_ThrowDiscus_g22_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Throw_Discus/v_ThrowDiscus_g17_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Throw_Discus/v_ThrowDiscus_g08_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Throw_Discus/v_ThrowDiscus_g19_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Throw_Discus/v_ThrowDiscus_g20_c01.jpg']
+--- 93
+['./data/ucf101/UCF-101-midframes/Trampoline_Jumping/v_TrampolineJumping_g10_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Trampoline_Jumping/v_TrampolineJumping_g15_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Trampoline_Jumping/v_TrampolineJumping_g14_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Trampoline_Jumping/v_TrampolineJumping_g25_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Trampoline_Jumping/v_TrampolineJumping_g17_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Trampoline_Jumping/v_TrampolineJumping_g16_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Trampoline_Jumping/v_TrampolineJumping_g13_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Trampoline_Jumping/v_TrampolineJumping_g24_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Trampoline_Jumping/v_TrampolineJumping_g11_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Trampoline_Jumping/v_TrampolineJumping_g20_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Trampoline_Jumping/v_TrampolineJumping_g12_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Trampoline_Jumping/v_TrampolineJumping_g11_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Trampoline_Jumping/v_TrampolineJumping_g12_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Trampoline_Jumping/v_TrampolineJumping_g24_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Trampoline_Jumping/v_TrampolineJumping_g25_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Trampoline_Jumping/v_TrampolineJumping_g22_c02.jpg']
+--- 94
+['./data/ucf101/UCF-101-midframes/Typing/v_Typing_g23_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Typing/v_Typing_g11_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Typing/v_Typing_g21_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Typing/v_Typing_g08_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Typing/v_Typing_g18_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Typing/v_Typing_g21_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Typing/v_Typing_g11_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Typing/v_Typing_g11_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Typing/v_Typing_g10_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Typing/v_Typing_g11_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Typing/v_Typing_g24_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Typing/v_Typing_g18_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Typing/v_Typing_g12_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Typing/v_Typing_g10_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Typing/v_Typing_g18_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Typing/v_Typing_g24_c01.jpg']
+--- 95
+['./data/ucf101/UCF-101-midframes/Uneven_Bars/v_UnevenBars_g22_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Uneven_Bars/v_UnevenBars_g10_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Uneven_Bars/v_UnevenBars_g08_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Uneven_Bars/v_UnevenBars_g14_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Uneven_Bars/v_UnevenBars_g15_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Uneven_Bars/v_UnevenBars_g15_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Uneven_Bars/v_UnevenBars_g24_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Uneven_Bars/v_UnevenBars_g15_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Uneven_Bars/v_UnevenBars_g10_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Uneven_Bars/v_UnevenBars_g21_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Uneven_Bars/v_UnevenBars_g09_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Uneven_Bars/v_UnevenBars_g12_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Uneven_Bars/v_UnevenBars_g21_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Uneven_Bars/v_UnevenBars_g18_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Uneven_Bars/v_UnevenBars_g19_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Uneven_Bars/v_UnevenBars_g12_c04.jpg']
+--- 96
+['./data/ucf101/UCF-101-midframes/Volleyball_Spiking/v_VolleyballSpiking_g11_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Volleyball_Spiking/v_VolleyballSpiking_g24_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Volleyball_Spiking/v_VolleyballSpiking_g11_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Volleyball_Spiking/v_VolleyballSpiking_g20_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Volleyball_Spiking/v_VolleyballSpiking_g22_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Volleyball_Spiking/v_VolleyballSpiking_g21_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Volleyball_Spiking/v_VolleyballSpiking_g22_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Volleyball_Spiking/v_VolleyballSpiking_g19_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Volleyball_Spiking/v_VolleyballSpiking_g13_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Volleyball_Spiking/v_VolleyballSpiking_g16_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Volleyball_Spiking/v_VolleyballSpiking_g11_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Volleyball_Spiking/v_VolleyballSpiking_g18_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Volleyball_Spiking/v_VolleyballSpiking_g21_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Volleyball_Spiking/v_VolleyballSpiking_g19_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Volleyball_Spiking/v_VolleyballSpiking_g22_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Volleyball_Spiking/v_VolleyballSpiking_g18_c04.jpg']
+--- 97
+['./data/ucf101/UCF-101-midframes/Walking_With_Dog/v_WalkingWithDog_g17_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Walking_With_Dog/v_WalkingWithDog_g11_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Walking_With_Dog/v_WalkingWithDog_g24_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Walking_With_Dog/v_WalkingWithDog_g11_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Walking_With_Dog/v_WalkingWithDog_g20_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Walking_With_Dog/v_WalkingWithDog_g20_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Walking_With_Dog/v_WalkingWithDog_g21_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Walking_With_Dog/v_WalkingWithDog_g25_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Walking_With_Dog/v_WalkingWithDog_g09_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Walking_With_Dog/v_WalkingWithDog_g16_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Walking_With_Dog/v_WalkingWithDog_g09_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Walking_With_Dog/v_WalkingWithDog_g09_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Walking_With_Dog/v_WalkingWithDog_g24_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Walking_With_Dog/v_WalkingWithDog_g22_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Walking_With_Dog/v_WalkingWithDog_g19_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Walking_With_Dog/v_WalkingWithDog_g12_c05.jpg']
+--- 98
+['./data/ucf101/UCF-101-midframes/Wall_Pushups/v_WallPushups_g15_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Wall_Pushups/v_WallPushups_g09_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Wall_Pushups/v_WallPushups_g23_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Wall_Pushups/v_WallPushups_g25_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Wall_Pushups/v_WallPushups_g19_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Wall_Pushups/v_WallPushups_g24_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Wall_Pushups/v_WallPushups_g23_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Wall_Pushups/v_WallPushups_g20_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Wall_Pushups/v_WallPushups_g18_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Wall_Pushups/v_WallPushups_g14_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Wall_Pushups/v_WallPushups_g16_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Wall_Pushups/v_WallPushups_g16_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Wall_Pushups/v_WallPushups_g10_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Wall_Pushups/v_WallPushups_g16_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Wall_Pushups/v_WallPushups_g18_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Wall_Pushups/v_WallPushups_g19_c01.jpg']
+--- 99
+['./data/ucf101/UCF-101-midframes/Writing_On_Board/v_WritingOnBoard_g18_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Writing_On_Board/v_WritingOnBoard_g09_c06.jpg'
+ './data/ucf101/UCF-101-midframes/Writing_On_Board/v_WritingOnBoard_g10_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Writing_On_Board/v_WritingOnBoard_g22_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Writing_On_Board/v_WritingOnBoard_g10_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Writing_On_Board/v_WritingOnBoard_g25_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Writing_On_Board/v_WritingOnBoard_g17_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Writing_On_Board/v_WritingOnBoard_g18_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Writing_On_Board/v_WritingOnBoard_g10_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Writing_On_Board/v_WritingOnBoard_g12_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Writing_On_Board/v_WritingOnBoard_g20_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Writing_On_Board/v_WritingOnBoard_g20_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Writing_On_Board/v_WritingOnBoard_g21_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Writing_On_Board/v_WritingOnBoard_g09_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Writing_On_Board/v_WritingOnBoard_g23_c07.jpg'
+ './data/ucf101/UCF-101-midframes/Writing_On_Board/v_WritingOnBoard_g19_c02.jpg']
+--- 100
+['./data/ucf101/UCF-101-midframes/Yo_Yo/v_YoYo_g15_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Yo_Yo/v_YoYo_g22_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Yo_Yo/v_YoYo_g20_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Yo_Yo/v_YoYo_g23_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Yo_Yo/v_YoYo_g17_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Yo_Yo/v_YoYo_g12_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Yo_Yo/v_YoYo_g21_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Yo_Yo/v_YoYo_g13_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Yo_Yo/v_YoYo_g14_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Yo_Yo/v_YoYo_g22_c01.jpg'
+ './data/ucf101/UCF-101-midframes/Yo_Yo/v_YoYo_g09_c03.jpg'
+ './data/ucf101/UCF-101-midframes/Yo_Yo/v_YoYo_g24_c04.jpg'
+ './data/ucf101/UCF-101-midframes/Yo_Yo/v_YoYo_g10_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Yo_Yo/v_YoYo_g25_c05.jpg'
+ './data/ucf101/UCF-101-midframes/Yo_Yo/v_YoYo_g14_c02.jpg'
+ './data/ucf101/UCF-101-midframes/Yo_Yo/v_YoYo_g16_c05.jpg']
+* class: 0, Acc Rate 100.00%
+* class: 1, Acc Rate 100.00%
+* class: 2, Acc Rate 100.00%
+* class: 3, Acc Rate 100.00%
+* class: 4, Acc Rate 100.00%
+* class: 5, Acc Rate 100.00%
+* class: 6, Acc Rate 100.00%
+* class: 7, Acc Rate 100.00%
+* class: 8, Acc Rate 100.00%
+* class: 9, Acc Rate 100.00%
+* class: 10, Acc Rate 100.00%
+* class: 11, Acc Rate 100.00%
+* class: 12, Acc Rate 100.00%
+* class: 13, Acc Rate 100.00%
+* class: 14, Acc Rate 100.00%
+* class: 15, Acc Rate 100.00%
+* class: 16, Acc Rate 100.00%
+* class: 17, Acc Rate 100.00%
+* class: 18, Acc Rate 100.00%
+* class: 19, Acc Rate 100.00%
+* class: 20, Acc Rate 100.00%
+* class: 21, Acc Rate 100.00%
+* class: 22, Acc Rate 100.00%
+* class: 23, Acc Rate 100.00%
+* class: 24, Acc Rate 100.00%
+* class: 25, Acc Rate 100.00%
+* class: 26, Acc Rate 100.00%
+* class: 27, Acc Rate 100.00%
+* class: 28, Acc Rate 100.00%
+* class: 29, Acc Rate 100.00%
+* class: 30, Acc Rate 100.00%
+* class: 31, Acc Rate 100.00%
+* class: 32, Acc Rate 100.00%
+* class: 33, Acc Rate 100.00%
+* class: 34, Acc Rate 100.00%
+* class: 35, Acc Rate 100.00%
+* class: 36, Acc Rate 100.00%
+* class: 37, Acc Rate 100.00%
+* class: 38, Acc Rate 100.00%
+* class: 39, Acc Rate 100.00%
+* class: 40, Acc Rate 100.00%
+* class: 41, Acc Rate 100.00%
+* class: 42, Acc Rate 100.00%
+* class: 43, Acc Rate 100.00%
+* class: 44, Acc Rate 100.00%
+* class: 45, Acc Rate 100.00%
+* class: 46, Acc Rate 100.00%
+* class: 47, Acc Rate 100.00%
+* class: 48, Acc Rate 100.00%
+* class: 49, Acc Rate 100.00%
+* class: 50, Acc Rate 100.00%
+* class: 51, Acc Rate 100.00%
+* class: 52, Acc Rate 100.00%
+* class: 53, Acc Rate 100.00%
+* class: 54, Acc Rate 100.00%
+* class: 55, Acc Rate 100.00%
+* class: 56, Acc Rate 100.00%
+* class: 57, Acc Rate 100.00%
+* class: 58, Acc Rate 100.00%
+* class: 59, Acc Rate 100.00%
+* class: 60, Acc Rate 100.00%
+* class: 61, Acc Rate 100.00%
+* class: 62, Acc Rate 100.00%
+* class: 63, Acc Rate 100.00%
+* class: 64, Acc Rate 100.00%
+* class: 65, Acc Rate 100.00%
+* class: 66, Acc Rate 100.00%
+* class: 67, Acc Rate 100.00%
+* class: 68, Acc Rate 100.00%
+* class: 69, Acc Rate 100.00%
+* class: 70, Acc Rate 100.00%
+* class: 71, Acc Rate 100.00%
+* class: 72, Acc Rate 100.00%
+* class: 73, Acc Rate 100.00%
+* class: 74, Acc Rate 100.00%
+* class: 75, Acc Rate 100.00%
+* class: 76, Acc Rate 100.00%
+* class: 77, Acc Rate 100.00%
+* class: 78, Acc Rate 100.00%
+* class: 79, Acc Rate 100.00%
+* class: 80, Acc Rate 100.00%
+* class: 81, Acc Rate 100.00%
+* class: 82, Acc Rate 100.00%
+* class: 83, Acc Rate 100.00%
+* class: 84, Acc Rate 100.00%
+* class: 85, Acc Rate 100.00%
+* class: 86, Acc Rate 100.00%
+* class: 87, Acc Rate 100.00%
+* class: 88, Acc Rate 100.00%
+* class: 89, Acc Rate 100.00%
+* class: 90, Acc Rate 100.00%
+* class: 91, Acc Rate 100.00%
+* class: 92, Acc Rate 100.00%
+* class: 93, Acc Rate 100.00%
+* class: 94, Acc Rate 100.00%
+* class: 95, Acc Rate 100.00%
+* class: 96, Acc Rate 100.00%
+* class: 97, Acc Rate 100.00%
+* class: 98, Acc Rate 100.00%
+* class: 99, Acc Rate 100.00%
+* class: 100, Acc Rate 100.00%
+* average: 100.00%
+[[1.  0.1 0.1 ... 0.1 0.1 0.1]
+ [0.1 1.  0.1 ... 0.1 0.1 0.1]
+ [0.1 0.1 1.  ... 0.1 0.1 0.1]
+ ...
+ [0.1 0.1 0.1 ... 1.  0.1 0.1]
+ [0.1 0.1 0.1 ... 0.1 1.  0.1]
+ [0.1 0.1 0.1 ... 0.1 0.1 1. ]]
+Finish Generating Candidate Label Sets!
+
+SSUCF101
+Reading split from /mnt/disk2/zjh/projects7.12/PTNL/data/ucf101/split_zhou_UCF101.json
+sstrain 1616
+No checkpoint found, train from scratch
+Initialize tensorboard (log_dir=./output/ssucf101/UPLTrainer/rn50_ep50_16shots_EQULE_True_09-16_00-21-37/nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+gce/seed1/beta1.5/tensorboard)
+epoch [1/50][5/50]	time 0.082 (1.199)	data 0.000 (0.156)	eta 0:49:52	loss 26.0397 (27.4409) acc 40.6250 (34.3750)	lr 1.000000e-05
+epoch [1/50][10/50]	time 0.074 (0.643)	data 0.001 (0.078)	eta 0:26:39	loss 28.1844 (27.8975) acc 46.8750 (35.6250)	lr 1.000000e-05
+epoch [1/50][15/50]	time 0.083 (0.455)	data 0.001 (0.052)	eta 0:18:51	loss 26.6377 (27.6096) acc 50.0000 (38.9583)	lr 1.000000e-05
+epoch [1/50][20/50]	time 0.082 (0.363)	data 0.001 (0.039)	eta 0:15:00	loss 26.8224 (27.5021) acc 46.8750 (37.8125)	lr 1.000000e-05
+epoch [1/50][25/50]	time 0.086 (0.309)	data 0.001 (0.032)	eta 0:12:45	loss 26.5565 (27.4964) acc 40.6250 (38.1250)	lr 1.000000e-05
+epoch [1/50][30/50]	time 0.088 (0.273)	data 0.001 (0.027)	eta 0:11:13	loss 26.0756 (27.3396) acc 53.1250 (40.0000)	lr 1.000000e-05
+epoch [1/50][35/50]	time 0.089 (0.245)	data 0.001 (0.023)	eta 0:10:04	loss 27.5688 (27.3543) acc 40.6250 (40.3571)	lr 1.000000e-05
+epoch [1/50][40/50]	time 0.063 (0.224)	data 0.000 (0.020)	eta 0:09:11	loss 27.3681 (27.3257) acc 46.8750 (41.5625)	lr 1.000000e-05
+epoch [1/50][45/50]	time 0.056 (0.206)	data 0.000 (0.018)	eta 0:08:25	loss 25.1261 (27.1763) acc 46.8750 (42.1528)	lr 1.000000e-05
+epoch [1/50][50/50]	time 0.070 (0.191)	data 0.001 (0.016)	eta 0:07:48	loss 27.5579 (27.0986) acc 43.7500 (41.9375)	lr 2.000000e-03
+epoch [2/50][5/50]	time 0.093 (0.324)	data 0.001 (0.215)	eta 0:13:12	loss 25.2542 (25.5924) acc 37.5000 (42.5000)	lr 2.000000e-03
+epoch [2/50][10/50]	time 0.108 (0.207)	data 0.001 (0.108)	eta 0:08:24	loss 23.5547 (25.5598) acc 43.7500 (43.4375)	lr 2.000000e-03
+epoch [2/50][15/50]	time 0.076 (0.164)	data 0.001 (0.072)	eta 0:06:38	loss 25.6712 (25.4216) acc 37.5000 (45.8333)	lr 2.000000e-03
+epoch [2/50][20/50]	time 0.068 (0.144)	data 0.001 (0.054)	eta 0:05:48	loss 24.5188 (25.3692) acc 50.0000 (45.3125)	lr 2.000000e-03
+epoch [2/50][25/50]	time 0.073 (0.131)	data 0.000 (0.044)	eta 0:05:17	loss 25.2172 (25.4501) acc 46.8750 (46.8750)	lr 2.000000e-03
+epoch [2/50][30/50]	time 0.110 (0.126)	data 0.001 (0.036)	eta 0:05:04	loss 24.2848 (25.2210) acc 62.5000 (47.5000)	lr 2.000000e-03
+epoch [2/50][35/50]	time 0.074 (0.119)	data 0.001 (0.031)	eta 0:04:47	loss 25.1149 (25.0547) acc 53.1250 (47.5893)	lr 2.000000e-03
+epoch [2/50][40/50]	time 0.058 (0.112)	data 0.000 (0.028)	eta 0:04:29	loss 24.0311 (24.9146) acc 50.0000 (48.4375)	lr 2.000000e-03
+epoch [2/50][45/50]	time 0.062 (0.106)	data 0.000 (0.025)	eta 0:04:14	loss 24.0190 (24.8557) acc 50.0000 (48.6806)	lr 2.000000e-03
+epoch [2/50][50/50]	time 0.060 (0.101)	data 0.000 (0.022)	eta 0:04:03	loss 24.5338 (24.7170) acc 43.7500 (48.3750)	lr 1.998027e-03
+epoch [3/50][5/50]	time 0.086 (0.303)	data 0.001 (0.195)	eta 0:12:05	loss 23.3171 (24.0969) acc 62.5000 (55.6250)	lr 1.998027e-03
+epoch [3/50][10/50]	time 0.098 (0.191)	data 0.001 (0.098)	eta 0:07:37	loss 23.7428 (23.8889) acc 56.2500 (55.6250)	lr 1.998027e-03
+epoch [3/50][15/50]	time 0.096 (0.158)	data 0.000 (0.065)	eta 0:06:16	loss 25.9865 (24.4164) acc 53.1250 (54.3750)	lr 1.998027e-03
+epoch [3/50][20/50]	time 0.101 (0.142)	data 0.001 (0.049)	eta 0:05:37	loss 25.5112 (24.5184) acc 59.3750 (54.6875)	lr 1.998027e-03
+epoch [3/50][25/50]	time 0.091 (0.129)	data 0.001 (0.039)	eta 0:05:07	loss 25.3503 (24.4402) acc 53.1250 (53.6250)	lr 1.998027e-03
+epoch [3/50][30/50]	time 0.069 (0.121)	data 0.001 (0.033)	eta 0:04:46	loss 25.6096 (24.3947) acc 62.5000 (54.2708)	lr 1.998027e-03
+epoch [3/50][35/50]	time 0.091 (0.114)	data 0.001 (0.028)	eta 0:04:29	loss 26.5055 (24.3492) acc 50.0000 (54.1964)	lr 1.998027e-03
+epoch [3/50][40/50]	time 0.079 (0.109)	data 0.000 (0.025)	eta 0:04:16	loss 22.6246 (24.2912) acc 59.3750 (53.6719)	lr 1.998027e-03
+epoch [3/50][45/50]	time 0.070 (0.105)	data 0.000 (0.022)	eta 0:04:07	loss 24.2599 (24.3057) acc 65.6250 (53.8889)	lr 1.998027e-03
+epoch [3/50][50/50]	time 0.069 (0.101)	data 0.000 (0.020)	eta 0:03:57	loss 23.7766 (24.2806) acc 53.1250 (54.4375)	lr 1.992115e-03
+epoch [4/50][5/50]	time 0.068 (0.341)	data 0.001 (0.215)	eta 0:13:19	loss 24.6664 (24.9706) acc 71.8750 (59.3750)	lr 1.992115e-03
+epoch [4/50][10/50]	time 0.067 (0.206)	data 0.001 (0.108)	eta 0:08:02	loss 22.4608 (24.4982) acc 62.5000 (55.3125)	lr 1.992115e-03
+epoch [4/50][15/50]	time 0.073 (0.163)	data 0.001 (0.072)	eta 0:06:21	loss 26.2302 (24.6189) acc 46.8750 (55.8333)	lr 1.992115e-03
+epoch [4/50][20/50]	time 0.076 (0.143)	data 0.001 (0.054)	eta 0:05:33	loss 24.6359 (24.6081) acc 50.0000 (55.9375)	lr 1.992115e-03
+epoch [4/50][25/50]	time 0.089 (0.130)	data 0.001 (0.043)	eta 0:05:01	loss 24.8447 (24.5856) acc 53.1250 (56.8750)	lr 1.992115e-03
+epoch [4/50][30/50]	time 0.075 (0.122)	data 0.001 (0.036)	eta 0:04:43	loss 25.0251 (24.4318) acc 31.2500 (55.5208)	lr 1.992115e-03
+epoch [4/50][35/50]	time 0.073 (0.115)	data 0.001 (0.031)	eta 0:04:26	loss 21.9740 (24.2616) acc 53.1250 (55.0000)	lr 1.992115e-03
+epoch [4/50][40/50]	time 0.064 (0.109)	data 0.000 (0.027)	eta 0:04:12	loss 23.1249 (24.3219) acc 53.1250 (54.5312)	lr 1.992115e-03
+epoch [4/50][45/50]	time 0.060 (0.104)	data 0.000 (0.024)	eta 0:03:59	loss 22.9652 (24.2098) acc 50.0000 (54.3750)	lr 1.992115e-03
+epoch [4/50][50/50]	time 0.060 (0.100)	data 0.000 (0.022)	eta 0:03:48	loss 24.3682 (24.2200) acc 56.2500 (54.5625)	lr 1.982287e-03
+epoch [5/50][5/50]	time 0.073 (0.286)	data 0.001 (0.193)	eta 0:10:56	loss 23.3088 (23.9245) acc 46.8750 (55.0000)	lr 1.982287e-03
+epoch [5/50][10/50]	time 0.117 (0.191)	data 0.001 (0.097)	eta 0:07:16	loss 25.3417 (23.8957) acc 56.2500 (56.5625)	lr 1.982287e-03
+epoch [5/50][15/50]	time 0.094 (0.165)	data 0.001 (0.065)	eta 0:06:16	loss 24.4520 (24.0476) acc 68.7500 (57.0833)	lr 1.982287e-03
+epoch [5/50][20/50]	time 0.095 (0.152)	data 0.001 (0.049)	eta 0:05:46	loss 25.5046 (24.1444) acc 50.0000 (58.1250)	lr 1.982287e-03
+epoch [5/50][25/50]	time 0.133 (0.148)	data 0.001 (0.040)	eta 0:05:36	loss 22.9208 (24.1202) acc 53.1250 (56.5000)	lr 1.982287e-03
+epoch [5/50][30/50]	time 0.114 (0.144)	data 0.001 (0.033)	eta 0:05:26	loss 25.3583 (24.1814) acc 59.3750 (56.0417)	lr 1.982287e-03
+epoch [5/50][35/50]	time 0.094 (0.141)	data 0.001 (0.029)	eta 0:05:19	loss 22.6699 (24.0706) acc 68.7500 (55.9821)	lr 1.982287e-03
+epoch [5/50][40/50]	time 0.078 (0.134)	data 0.002 (0.026)	eta 0:05:03	loss 24.5172 (24.0273) acc 75.0000 (55.9375)	lr 1.982287e-03
+epoch [5/50][45/50]	time 0.089 (0.131)	data 0.001 (0.023)	eta 0:04:55	loss 24.1768 (24.1388) acc 46.8750 (56.1806)	lr 1.982287e-03
+epoch [5/50][50/50]	time 0.074 (0.127)	data 0.001 (0.021)	eta 0:04:44	loss 22.7892 (24.0999) acc 68.7500 (56.3750)	lr 1.968583e-03
+epoch [6/50][5/50]	time 0.085 (0.343)	data 0.001 (0.227)	eta 0:12:49	loss 23.3657 (23.7875) acc 56.2500 (62.5000)	lr 1.968583e-03
+epoch [6/50][10/50]	time 0.090 (0.213)	data 0.001 (0.114)	eta 0:07:56	loss 24.0983 (23.7744) acc 50.0000 (60.6250)	lr 1.968583e-03
+epoch [6/50][15/50]	time 0.091 (0.169)	data 0.001 (0.076)	eta 0:06:17	loss 25.5744 (24.0572) acc 50.0000 (60.8333)	lr 1.968583e-03
+epoch [6/50][20/50]	time 0.090 (0.147)	data 0.000 (0.057)	eta 0:05:28	loss 25.5279 (23.9785) acc 62.5000 (60.1562)	lr 1.968583e-03
+epoch [6/50][25/50]	time 0.091 (0.136)	data 0.001 (0.046)	eta 0:05:02	loss 24.6739 (24.0695) acc 65.6250 (58.2500)	lr 1.968583e-03
+epoch [6/50][30/50]	time 0.067 (0.128)	data 0.001 (0.038)	eta 0:04:44	loss 22.8376 (24.1028) acc 62.5000 (58.4375)	lr 1.968583e-03
+epoch [6/50][35/50]	time 0.074 (0.121)	data 0.001 (0.033)	eta 0:04:28	loss 25.3954 (24.0140) acc 43.7500 (58.1250)	lr 1.968583e-03
+epoch [6/50][40/50]	time 0.058 (0.114)	data 0.001 (0.029)	eta 0:04:11	loss 23.5254 (24.0095) acc 65.6250 (59.0625)	lr 1.968583e-03
+epoch [6/50][45/50]	time 0.053 (0.107)	data 0.001 (0.026)	eta 0:03:56	loss 21.4869 (24.0914) acc 68.7500 (58.9583)	lr 1.968583e-03
+epoch [6/50][50/50]	time 0.052 (0.102)	data 0.000 (0.023)	eta 0:03:43	loss 23.6177 (24.0383) acc 59.3750 (58.6875)	lr 1.951057e-03
+epoch [7/50][5/50]	time 0.082 (0.293)	data 0.000 (0.184)	eta 0:10:43	loss 25.0669 (24.1279) acc 56.2500 (59.3750)	lr 1.951057e-03
+epoch [7/50][10/50]	time 0.073 (0.186)	data 0.000 (0.092)	eta 0:06:46	loss 24.8726 (23.8502) acc 50.0000 (58.7500)	lr 1.951057e-03
+epoch [7/50][15/50]	time 0.084 (0.151)	data 0.000 (0.062)	eta 0:05:30	loss 24.2961 (23.9191) acc 68.7500 (58.7500)	lr 1.951057e-03
+epoch [7/50][20/50]	time 0.069 (0.134)	data 0.001 (0.046)	eta 0:04:52	loss 23.4610 (23.9151) acc 53.1250 (57.9688)	lr 1.951057e-03
+epoch [7/50][25/50]	time 0.061 (0.123)	data 0.001 (0.037)	eta 0:04:28	loss 21.9269 (23.7460) acc 59.3750 (58.3750)	lr 1.951057e-03
+epoch [7/50][30/50]	time 0.110 (0.118)	data 0.001 (0.031)	eta 0:04:14	loss 24.2398 (23.8258) acc 46.8750 (57.2917)	lr 1.951057e-03
+epoch [7/50][35/50]	time 0.090 (0.113)	data 0.001 (0.027)	eta 0:04:04	loss 23.7785 (23.9803) acc 62.5000 (58.0357)	lr 1.951057e-03
+epoch [7/50][40/50]	time 0.052 (0.106)	data 0.000 (0.023)	eta 0:03:49	loss 23.1046 (24.0140) acc 62.5000 (57.8906)	lr 1.951057e-03
+epoch [7/50][45/50]	time 0.065 (0.101)	data 0.001 (0.021)	eta 0:03:38	loss 22.4939 (23.9792) acc 68.7500 (58.3333)	lr 1.951057e-03
+epoch [7/50][50/50]	time 0.068 (0.097)	data 0.000 (0.019)	eta 0:03:29	loss 24.1249 (23.9856) acc 59.3750 (58.4375)	lr 1.929776e-03
+epoch [8/50][5/50]	time 0.064 (0.318)	data 0.001 (0.204)	eta 0:11:21	loss 23.8658 (24.0429) acc 62.5000 (65.0000)	lr 1.929776e-03
+epoch [8/50][10/50]	time 0.077 (0.201)	data 0.000 (0.102)	eta 0:07:09	loss 21.5688 (23.8203) acc 62.5000 (61.2500)	lr 1.929776e-03
+epoch [8/50][15/50]	time 0.109 (0.163)	data 0.001 (0.068)	eta 0:05:48	loss 24.9000 (23.8178) acc 53.1250 (61.4583)	lr 1.929776e-03
+epoch [8/50][20/50]	time 0.087 (0.142)	data 0.001 (0.051)	eta 0:05:01	loss 22.1882 (23.7218) acc 62.5000 (62.0312)	lr 1.929776e-03
+epoch [8/50][25/50]	time 0.109 (0.130)	data 0.001 (0.041)	eta 0:04:37	loss 24.2853 (23.7265) acc 65.6250 (62.0000)	lr 1.929776e-03
+epoch [8/50][30/50]	time 0.090 (0.123)	data 0.000 (0.034)	eta 0:04:19	loss 23.1598 (23.6082) acc 71.8750 (62.5000)	lr 1.929776e-03
+epoch [8/50][35/50]	time 0.084 (0.117)	data 0.001 (0.030)	eta 0:04:06	loss 23.6203 (23.7161) acc 56.2500 (61.5179)	lr 1.929776e-03
+epoch [8/50][40/50]	time 0.063 (0.111)	data 0.001 (0.026)	eta 0:03:53	loss 23.7804 (23.8017) acc 65.6250 (60.7812)	lr 1.929776e-03
+epoch [8/50][45/50]	time 0.062 (0.105)	data 0.001 (0.023)	eta 0:03:41	loss 24.2452 (23.8394) acc 56.2500 (60.6944)	lr 1.929776e-03
+epoch [8/50][50/50]	time 0.061 (0.102)	data 0.001 (0.021)	eta 0:03:34	loss 23.0555 (23.8771) acc 62.5000 (61.0000)	lr 1.904827e-03
+epoch [9/50][5/50]	time 0.066 (0.287)	data 0.001 (0.189)	eta 0:10:00	loss 24.4555 (24.3694) acc 56.2500 (59.3750)	lr 1.904827e-03
+epoch [9/50][10/50]	time 0.066 (0.187)	data 0.001 (0.095)	eta 0:06:31	loss 22.3689 (23.7936) acc 71.8750 (63.4375)	lr 1.904827e-03
+epoch [9/50][15/50]	time 0.081 (0.151)	data 0.000 (0.064)	eta 0:05:14	loss 25.2916 (24.0730) acc 59.3750 (63.1250)	lr 1.904827e-03
+epoch [9/50][20/50]	time 0.070 (0.136)	data 0.000 (0.048)	eta 0:04:43	loss 24.5711 (24.0673) acc 68.7500 (62.1875)	lr 1.904827e-03
+epoch [9/50][25/50]	time 0.104 (0.126)	data 0.001 (0.039)	eta 0:04:20	loss 24.9959 (24.1881) acc 62.5000 (61.6250)	lr 1.904827e-03
+epoch [9/50][30/50]	time 0.137 (0.120)	data 0.001 (0.032)	eta 0:04:09	loss 22.7896 (24.1074) acc 68.7500 (61.4583)	lr 1.904827e-03
+epoch [9/50][35/50]	time 0.071 (0.114)	data 0.001 (0.028)	eta 0:03:55	loss 21.9051 (23.9892) acc 62.5000 (60.9821)	lr 1.904827e-03
+epoch [9/50][40/50]	time 0.082 (0.108)	data 0.000 (0.025)	eta 0:03:42	loss 23.2719 (23.9278) acc 71.8750 (61.0156)	lr 1.904827e-03
+epoch [9/50][45/50]	time 0.056 (0.103)	data 0.001 (0.022)	eta 0:03:30	loss 25.6099 (24.0353) acc 59.3750 (60.4861)	lr 1.904827e-03
+epoch [9/50][50/50]	time 0.053 (0.099)	data 0.000 (0.020)	eta 0:03:21	loss 21.3662 (23.9459) acc 65.6250 (60.6875)	lr 1.876307e-03
+epoch [10/50][5/50]	time 0.092 (0.288)	data 0.001 (0.174)	eta 0:09:49	loss 24.7222 (23.6114) acc 59.3750 (61.2500)	lr 1.876307e-03
+epoch [10/50][10/50]	time 0.087 (0.193)	data 0.000 (0.087)	eta 0:06:34	loss 23.1761 (23.4955) acc 65.6250 (62.5000)	lr 1.876307e-03
+epoch [10/50][15/50]	time 0.123 (0.156)	data 0.000 (0.058)	eta 0:05:18	loss 23.4786 (23.8584) acc 62.5000 (62.0833)	lr 1.876307e-03
+epoch [10/50][20/50]	time 0.070 (0.136)	data 0.000 (0.044)	eta 0:04:36	loss 23.4319 (23.8883) acc 65.6250 (61.0938)	lr 1.876307e-03
+epoch [10/50][25/50]	time 0.093 (0.125)	data 0.000 (0.035)	eta 0:04:13	loss 22.2100 (23.9078) acc 56.2500 (61.6250)	lr 1.876307e-03
+epoch [10/50][30/50]	time 0.097 (0.121)	data 0.001 (0.029)	eta 0:04:03	loss 24.1188 (23.8548) acc 65.6250 (62.1875)	lr 1.876307e-03
+epoch [10/50][35/50]	time 0.086 (0.114)	data 0.001 (0.025)	eta 0:03:49	loss 23.1813 (23.9085) acc 65.6250 (62.0536)	lr 1.876307e-03

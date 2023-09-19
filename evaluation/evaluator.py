@@ -10,6 +10,7 @@ from dassl.evaluation.build import EVALUATOR_REGISTRY
 
 @EVALUATOR_REGISTRY.register()
 class UPLClassification(Classification):
+    class_acc_sumlist = []
 
     def process(self, mo, gt, per_image_txt_writer, per_class_txt_writer):
         # mo (torch.Tensor): model output [batch, num_classes]
@@ -65,26 +66,31 @@ class UPLClassification(Classification):
 
             print("=> per-class result")
             accs = []
-
-            for label in self._lab2cname:
+            class_acc_dict = {}
+            for label in sorted(self._lab2cname):
                 classname = self._lab2cname[label]
                 res = self._per_class_res[label]
                 correct = sum(res)
                 total = len(res)
                 acc = 100.0 * correct / total
                 accs.append(acc)
+                class_acc_dict[classname] = acc
                 print(
                     "* class: {} ({})\t"
                     "total: {:,}\t"
                     "correct: {:,}\t"
                     "acc: {:.2f}%".format(
-                        label, classname, total, correct, acc
+                        label, classname, total, correct, acc, flush=True
                     )
                 )
                 write_line = "* class: {} ({}), total: {:,}, correct: {:,}, acc: {:.2f}% \n".format(label, classname, total, correct, acc)
                 self.per_class_txt_writer.write(write_line)
             mean_acc = np.mean(accs)
             print("* average: {:.2f}%".format(mean_acc))
+            print_worst10_item = lambda x: print(f'worst10 classes: \n' 
+                                                 + '\n'.join([f'{k}: {x[k]:.2f}%' for k in sorted(x, key=x.get, reverse=False)[:10]]))
+            print_worst10_item(class_acc_dict)
+            self.class_acc_sumlist.append(class_acc_dict)
 
             results["perclass_accuracy"] = mean_acc
 
@@ -121,3 +127,4 @@ class UPLClassification(Classification):
             print('Confusion matrix is saved to "{}"'.format(save_path))
 
         return results
+

@@ -67,6 +67,8 @@ class PLL_loss(nn.Module):
         masked_p[y.bool()] = (1 - masked_p[y.bool()] ** self.q) / self.q
         masked_p[~y.bool()] = self.eps 
         loss = masked_p.sum(dim=1)
+        if not torch.isfinite(loss).all():
+            raise FloatingPointError("Loss is infinite or NaN!")
         return loss
     
     def forward_gce_rc(self, x, y, index):
@@ -77,19 +79,20 @@ class PLL_loss(nn.Module):
 
         # p = p.float()                                               #HACK solution here
         # masked_p = masked_p * self.confidence[index, :]       #NOTE add multiple conf here    
-
         # Apply the mask
         masked_p[y.bool()] = p[y.bool()] + self.eps      
         # Adjust masked positions to avoid undefined gradients by adding epsilon
         masked_p[y.bool()] = (1 - masked_p[y.bool()] ** self.q) / self.q        
         masked_p[~y.bool()] = self.eps 
         loss = (masked_p * self.confidence[index, :]).sum(dim=1)    #NOTE add multiple conf here   
+        if not torch.isfinite(loss).all():
+            raise FloatingPointError("Loss is infinite or NaN!")
         return loss
     
     def forward_cc(self, x, y, index):
         sm_outputs = F.softmax(x, dim=1)      #outputs are logits
         final_outputs = sm_outputs * y
-        loss = - torch.log(final_outputs.sum(dim=1))    #NOTE: add y.sum(dim=1)
+        loss = - torch.log(final_outputs.sum(dim=1))    #NOTE: add / y.sum(dim=1)
         return loss
     
     def forward_ce(self, x, y, index):
@@ -119,14 +122,16 @@ class PLL_loss(nn.Module):
 
     def forward_rc_plus(self, x, y, index):
         logsm_outputs = F.softmax(x, dim=1)         #x is the model ouputs
-        y_new = self.update_partial_labels(y, self.confidence, index)
-        final_outputs = logsm_outputs * y_new
+        # y_new = self.update_partial_labels(y, self.confidence, index)
+        final_outputs = logsm_outputs * y
 
         conf_loss = self.get_conf_loss(x, y, index, type=self.cfg.CONF_LOSS_TYPE)
 
         loss = (-torch.log((final_outputs).sum(dim=1)) + 
                     self.beta*conf_loss
                     )    
+        # if not torch.isfinite(loss).all():
+        #     raise FloatingPointError("Loss is infinite or NaN!")
         self.update_confidence(self.confidence, x, y, index)
         return loss     
 
@@ -153,16 +158,16 @@ class PLL_loss(nn.Module):
             self.confidence = confidence/base_value  # use maticx for element-wise division
 
     def log_conf(self, all_logits=None, all_labels=None):
-        log_id = 'PLL05'
+        log_id = 'PLL' + str(self.cfg.PARTIAL_RATE)
         if self.num % 2 == 0:
             print(f'save logits -> losstype: {self.losstype}, save id: {self.num}')
             if self.losstype == 'rc--':
-                torch.save(self.confidence, f'analyze_result_temp/confidence_{self.losstype.upper()}_{log_id}-{self.num}.pt')
+                torch.save(self.confidence, f'analyze_result_temp/logits&labels/confidence_{self.losstype.upper()}_{log_id}-{self.num}.pt')
             elif all_logits != None:
                 all_logits = F.softmax(all_logits, dim=1)    
                 all_labels = F.one_hot(all_labels)
-                torch.save(all_logits,  f'analyze_result_temp/outputs_{self.losstype.upper()}&cc2_{log_id}-{self.num}.pt')
-                torch.save(all_labels,  f'analyze_result_temp/labels_{self.losstype.upper()}&cc2_{log_id}-{self.num}.pt')
+                torch.save(all_logits,  f'analyze_result_temp/logits&labels/outputs_{self.losstype.upper()+self.cfg.CONF_LOSS_TYPE}_{log_id}-{self.num}.pt')
+                torch.save(all_labels,  f'analyze_result_temp/logits&labels/labels_{self.losstype.upper()+self.cfg.CONF_LOSS_TYPE}_{log_id}-{self.num}.pt')
         self.num += 1
 
 
