@@ -28,7 +28,7 @@ additional_classes = [ ]
 files_all = sorted(glob.glob(path +'/*.json'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
 
 #+++++++=========== select the file name:
-file_plot = files_all[3]                            #NOTE also need to set here manually
+file_plot = files_all[2]                            #NOTE also need to set here manually
 with open(file_plot, "r") as file:
     data = json.load(file)
 print(file_plot, len(data))

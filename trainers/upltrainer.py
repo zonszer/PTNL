@@ -408,14 +408,14 @@ class UPLTrainer(TrainerX):
             self.model_backward_and_update(loss)
 
         # gradients compare:
-        if self.criterion.num % 2 == 0:
-            grad_ratios_dict = self.compare_gradients(image, index, label, gt_label)
-            for key, value in grad_ratios_dict.items():
-                # assert len(grad_ratios_dict[key]) == 1
-                if not hasattr(self, 'grad_ratios_dict'):
-                    self.grad_ratios_dict = {}
-                for i in range(len(grad_ratios_dict[key])):
-                    dict_add(self.grad_ratios_dict, key, value[i])
+        # if self.criterion.num % 2 == 0:
+        #     grad_ratios_dict = self.compare_gradients(image, index, label, gt_label)
+        #     for key, value in grad_ratios_dict.items():
+        #         # assert len(grad_ratios_dict[key]) == 1
+        #         if not hasattr(self, 'grad_ratios_dict'):
+        #             self.grad_ratios_dict = {}
+        #         for i in range(len(grad_ratios_dict[key])):
+        #             dict_add(self.grad_ratios_dict, key, value[i])
 
         loss_summary = {
             "loss": loss.item(),
@@ -445,7 +445,7 @@ class UPLTrainer(TrainerX):
         output, image_features, text_features = self.model(image)
         if hasattr(self.criterion, 'confidence'):
             conf_tmp = deepcopy(self.criterion.confidence)
-        loss = self.criterion(output, gt_label_onehot, index)
+        loss = self.criterion(output, label, index)
         if hasattr(self.criterion, 'confidence'):
             self.criterion.confidence = conf_tmp
 
@@ -633,17 +633,18 @@ class UPLTrainer(TrainerX):
             outputs_all.append(output)
             label_all.append(label)
         results = self.evaluator.evaluate()
-        if True or log_conf == True:
-            self.criterion.log_conf(all_logits=torch.cat(outputs_all, dim=0), all_labels=torch.cat(label_all, dim=0))
-        if split == 'test':
-            # 1. save class_acc_sumlist:
-            filename = f'analyze_result_temp/class_acc_sumlist/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.criterion.cfg.PARTIAL_RATE}_{self.criterion.losstype}.json'
-            with open(filename, "w") as file:
-                json.dump(self.evaluator.class_acc_sumlist, file)
-            # 2. save grad_ratios_dict:
-            filename = f'analyze_result_temp/grad_ratios_dict/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.criterion.cfg.PARTIAL_RATE}_{self.criterion.losstype}.json'
-            with open(filename, "w") as file:
-                json.dump(self.grad_ratios_dict, file)
+        #0. save loged logits and conf: 
+        # if True or log_conf == True:
+        #     self.criterion.log_conf(all_logits=torch.cat(outputs_all, dim=0), all_labels=torch.cat(label_all, dim=0))
+        # if split == 'test':
+        #     #1. save class_acc_sumlist:        #NOTE before uncomment remember to changed the name, otherwise the original file will be overwritten
+        #     filename = f'analyze_result_temp/class_acc_sumlist/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.criterion.cfg.PARTIAL_RATE}_{self.criterion.losstype}.json'
+        #     with open(filename, "w") as file:
+        #         json.dump(self.evaluator.class_acc_sumlist, file)
+        #     #2. save grad_ratios_dict:
+        #     filename = f'analyze_result_temp/grad_ratios_dict/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.criterion.cfg.PARTIAL_RATE}_{self.criterion.losstype}.json'
+        #     with open(filename, "w") as file:
+        #         json.dump(self.grad_ratios_dict, file)
         if split in ['all', 'train', 'test', 'novel', 'base']:
             if len(outputs_all) != 0:
                 outputs_all = torch.cat(outputs_all, dim=0)

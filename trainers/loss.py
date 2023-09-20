@@ -92,13 +92,13 @@ class PLL_loss(nn.Module):
     def forward_cc(self, x, y, index):
         sm_outputs = F.softmax(x, dim=1)      #outputs are logits
         final_outputs = sm_outputs * y
-        loss = - torch.log(final_outputs.sum(dim=1))    #NOTE: add / y.sum(dim=1)
+        loss = - torch.log(final_outputs.sum(dim=1))     #NOTE: add / y.sum(dim=1)
         return loss
     
     def forward_ce(self, x, y, index):
         sm_outputs = F.log_softmax(x, dim=1)
         final_outputs = sm_outputs * y
-        loss = - final_outputs.sum(dim=1)  #NOTE: add y.sum(dim=1)
+        loss = - final_outputs.sum(dim=1)        #NOTE: add y.sum(dim=1)
         return loss
     
     def forward_rc(self, x, y, index):
