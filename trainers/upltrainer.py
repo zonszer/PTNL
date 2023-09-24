@@ -303,6 +303,7 @@ class UPLTrainer(TrainerX):
     def build_loss(self):
         if self.cfg.TRAINER.LOSS_TYPE == '':
             criterion = torch.nn.CrossEntropyLoss()
+            criterion.cfg = self.cfg.TRAINER.PLL
         else:
             if hasattr(self, 'partialY'):
                 criterion = PLL_loss(type=self.cfg.TRAINER.LOSS_TYPE, cfg=self.cfg.TRAINER.PLL,
@@ -640,10 +641,13 @@ class UPLTrainer(TrainerX):
         # if True or log_conf == True:
         #     self.criterion.log_conf(all_logits=torch.cat(outputs_all, dim=0), all_labels=torch.cat(label_all, dim=0))
         if split == 'test':
-            #1. save class_acc_sumlist:        #NOTE before uncomment remember to changed the name, otherwise the original file will be overwritten
-            filename = f'analyze_result_temp/class_acc_sumlist/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.criterion.cfg.PARTIAL_RATE}_{self.criterion.losstype}.json'
+            #1. save class_acc_sumlist and evalset_acc_sumlist:        #NOTE before uncomment remember to changed the name, otherwise the original file will be overwritten
+            filename = f'analyze_result_temp/class_acc_sumlist/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.cfg.TRAINER.PLL.PARTIAL_RATE}_{self.cfg.TRAINER.LOSS_TYPE}.json'
             with open(filename, "w") as file:
                 json.dump(self.evaluator.class_acc_sumlist, file)
+            filename = f'analyze_result_temp/evalset_acc_sumlist/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.cfg.TRAINER.PLL.PARTIAL_RATE}_{self.cfg.TRAINER.LOSS_TYPE}.json'
+            with open(filename, "w") as file:
+                json.dump(self.evaluator.evalset_acc_sumlist, file)
         #     #2. save grad_ratios_dict:
         #     filename = f'analyze_result_temp/grad_ratios_dict/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.criterion.cfg.PARTIAL_RATE}_{self.criterion.losstype}.json'
         #     with open(filename, "w") as file:
