@@ -16,25 +16,30 @@ all_data_true = []
 ##================set params:
 path = '../analyze_result_temp/class_acc_sumlist'
 # Number of worst-performing classes to display
-num_worst_classes = 5
+num_worst_classes = 0
 
 # Whether to compare data and data_PLL:
 compare_data_PLL = True
 
 # Additional specific classes to display
-additional_classes = [ ]
+additional_classes = ['crocodile_head',
+'crayfish',
+'anchor',
+'crab',
+'octopus',
+'lamp']
 ##================set params:
 
 files_all = sorted(glob.glob(path +'/*.json'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
 
 #+++++++=========== select the file name:
 file_plot = files_all[0]                            #NOTE also need to set here manually, bseline ACC (PLL0)
-with open(file_plot, "r") as file:
+with open(file_plot, "r") as file:      
     data = json.load(file)
 print(len(data), data )
 
 if compare_data_PLL == True:
-    file_plot_PLL = files_all[1]                    #NOTE also need to set here manually
+    file_plot_PLL = files_all[2]                    #NOTE also need to set here manually
     with open(file_plot_PLL, "r") as file:
         data_PLL = json.load(file)
     print(len(data_PLL), data_PLL )
@@ -92,17 +97,22 @@ display_classes = eval(display_classes)
 epoch_averages = [np.mean([epoch_data[class_name] for class_name in epoch_data]) for epoch_data in data]
 
 # Create a larger figure for better readability
-fig, ax = plt.subplots(figsize=(17, 10))
+fig, ax = plt.subplots(figsize=(16, 10))
 
-
+avg_accuracies = np.zeros((epoch_num,))
 if compare_data_PLL == True:
     for idx, class_name in enumerate(display_classes, start=1):
         class_accuracies = [item[class_name] - item_PLL[class_name] for item, item_PLL in zip(data, data_PLL)]
-        ax.plot(epochs, class_accuracies, marker="o", label=class_name, color=color_map(idx - 1))
+        ax.plot(epochs, class_accuracies, marker="o", label=class_name, color=color_map(idx - 1), linestyle="--")
+        avg_accuracies = avg_accuracies + np.array(class_accuracies)
+
 else:
     for idx, class_name in enumerate(display_classes, start=1):
         class_accuracies = [item[class_name] for item in data]
-        ax.plot(epochs, class_accuracies, marker="o", label=class_name, color=color_map(idx - 1))
+        ax.plot(epochs, class_accuracies, marker="o", label=class_name, color=color_map(idx - 1), linestyle="--")
+        avg_accuracies = avg_accuracies + np.array(class_accuracies)
+avg_accuracies = avg_accuracies/(idx+1)
+ax.plot(epochs, avg_accuracies, marker="s", label="Average across all selected classes", color=color_map(len(display_classes)))
 
 # Plot the average accuracy of all classes per epoch
 ax.plot(epochs, epoch_averages, marker="x", label="Average across all classes", color=color_map(len(display_classes)))
@@ -129,6 +139,47 @@ plt.show()
 # else:
 #     plt.savefig(f'ACC-{file_plot.split("/")[-1]}_{current_time}.svg')
 
+# %%
+
+#use_boxplot:
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+# Calculate the average of 100 classes
+# NOTE: fill data_PLL or data:
+# Convert list of dictionaries to numpy array
+data_box = np.array([[v for v in d.values()] for d in data_PLL])  # shape: (51, 100)
+
+# Create a figure and axis
+fig, ax = plt.subplots(figsize=(10, 6))
+
+# Create a boxplot using the avg_data
+boxplot = ax.boxplot(data_box.T, notch=True, widths=0.5)
+
+# Create a strip plot to show data points
+epochs = np.arange(1, 52)
+for epoch, epoch_data in enumerate(data_box, start=1):
+    y = epoch_data
+    x = np.random.normal(epoch, 0.04, size=len(y))  # Add some jitter for better visibility
+    ax.plot(x, y, 'r.', alpha=0.2)
+
+# Set axis labels
+ax.set_xlabel('Epochs')
+ax.set_ylabel('Average Values')
+
+# Set tick marks and spacing
+ax.set_xticks(epochs)
+ax.xaxis.set_tick_params(rotation=90)
+
+# Improve the readability of the plot by reducing the number of boxes shown
+ax.set_xticks(np.arange(1, 52, 2))
+ax.set_xticklabels(np.arange(1, 52, 2))
+
+# Configure the grid
+ax.grid(True, linestyle='--', linewidth=0.5)
+
+# Display the boxplot
+plt.show()
 # %%
 
 # import matplotlib.pyplot as plt

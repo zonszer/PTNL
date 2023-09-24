@@ -22,11 +22,11 @@ use_PLL=True    #$10
 # PLL_partial_rate=$11
 TAG=$TIME # log tag (multiple_models_random_init or rn50_random_init)
 
-LOG_FILE="log_${TIME}_${DATASET}_seed${SEED}.txt"
+LOG_FILE="logs_scripts/log_${TIME}_${DATASET}_seed${SEED}.txt"
 
-for loss_type in 'cc' 'rc'
+for PLL_partial_rate in 0.1 0.3 0.5
 do
-    for PLL_partial_rate in 0.1 0.3 0.5
+    for loss_type in 'cc' 'rc_rc' 'rc_cav'
     do
         DIR=./output/${DATASET}/${TRAINER}/${CFG}_${SHOTS}shots_EQULE_${CLASS_EQULE}_${TAG}/nctx${NCTX}_csc${CSC}_ctp${CTP}_fp${FP}_usePLL${use_PLL}${PLL_partial_rate}-${loss_type}/seed${SEED}
         if [ -d "$DIR" ]; then
@@ -61,7 +61,7 @@ for loss_type in 'rc+'
 do
     for PLL_partial_rate in 0.1 0.3 0.5
     do
-        for CONF_LOSS_TYPE in 'rc' 'gce_rc' 'gce'
+        for CONF_LOSS_TYPE in 'gce' 'ce' 'gce_rc' 'rc_rc' 'rc_cav'
         do
             for BETA in 0.05 0.075 0.1 0.125 1.5
             do

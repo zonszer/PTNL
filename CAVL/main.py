@@ -2,7 +2,7 @@ import argparse
 from utils.models import mlp_model, linear_model, LeNet
 import torch
 from utils.utils_data import prepare_cv_datasets, prepare_train_loaders_for_uniform_cv_candidate_labels
-from utils.utils_algo import accuracy_check, confidence_update, accuracy_check_train
+from utils.utils_algo import accuracy_check, confidence_update
 from utils.utils_loss import rc_loss
 from cifar_models import densenet, resnet, convnet
 import numpy as np
@@ -26,7 +26,7 @@ parser.add_argument('-op', help = 'optimizer', default='adam', type=str, require
 
 args = parser.parse_args()
 # print(set_ep)
-print("NOW is dataset: {} with model {} weight_decay {} learning rate {} batch_size {} op {}".format(args.ds,args.mo,args.wd,args.lr,args.bs,args.op,args.ca))
+print("NOW is dataset: {} with model {} weight_decay {} learning rate {} batch_size {} op {}".format(args.ds,args.mo,args.wd,args.lr,args.bs,args.op))
 
 device = torch.device("cuda:"+args.gpu if torch.cuda.is_available() else "cpu")
 

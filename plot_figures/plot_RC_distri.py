@@ -53,15 +53,29 @@ path = '../analyze_result_temp/logits&labels'
 # fig_id = 'CE_PLL05'
 
 # #+++++++=========== figure7, -> PLL05-rc, dataset is val
-files_no_true = sorted(glob.glob(path + '/outputs_RC_PLL0.5-*.pt'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
-files_true = sorted(glob.glob(path + '/labels_RC_PLL0.5-*.pt'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
-fig_id = 'RC_PLL05-logits'
+# files_no_true = sorted(glob.glob(path + '/outputs_RC_PLL0.5-*.pt'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
+# files_true = sorted(glob.glob(path + '/labels_RC_PLL0.5-*.pt'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
+# fig_id = 'RC_PLL05-logits'
 
+#+++++++=========== figure8, dataset is train -> PLL05 confidence_RC+gce_rc_PLL0.5-4.pt
+# Step 2: Get list of files confidence_RC+gce_rc_PLL0.5-42
+files_no_true = sorted(glob.glob(path+ '/confidence_RC+gce_rc_PLL0.5-*.pt'), key=lambda x: int(re.search('(\d+)', x).group()))
+files_true = sorted(glob.glob(path+ '/confidence_true-RC+gce_rc_PLL1e-34-*.pt'), key=lambda x: int(re.search('(\d+)', x).group()))
+fig_id = 'RC+gce_rc-conf-'
+
+#+++++++=========== figure9, dataset is train -> PLL05 new_rc confidence-RC_RC_PLL0.5-14.pt
+# files_no_true = sorted(glob.glob(path+ '/confidence-RC_RC_PLL0.5-*.pt'), key=lambda x: int(re.search('(\d+)', x).group()))
+# files_true = sorted(glob.glob(path+ '/confidence_true-RC_RC_PLL1e-32-*.pt'), key=lambda x: int(re.search('(\d+)', x).group()))
+# fig_id = 'RC_new-conf-'
+# Step 2: Get list of files confidence-RC_RC_PLL0.1-4.pt
+# files_no_true = sorted(glob.glob(path+ '/confidence-RC_RC_PLL0.1-*.pt'), key=lambda x: int(re.search('(\d+)', x).group()))
+# files_true = sorted(glob.glob(path+ '/confidence_true-RC_RC_PLL1e-32-*.pt'), key=lambda x: int(re.search('(\d+)', x).group()))
+# fig_id = 'RC_new-conf-PLL01'
 
 ##============set params:
 dataset_class_names = ['face', 'leopard', 'motorbike', 'accordion', 'airplane', 'anchor', 'ant', 'barrel', 'bass', 'beaver', 'binocular', 'bonsai', 'brain', 'brontosaurus', 'buddha', 'butterfly', 'camera', 'cannon', 'car_side', 'ceiling_fan', 'cellphone', 'chair', 'chandelier', 'cougar_body', 'cougar_face', 'crab', 'crayfish', 'crocodile', 'crocodile_head', 'cup', 'dalmatian', 'dollar_bill', 'dolphin', 'dragonfly', 'electric_guitar', 'elephant', 'emu', 'euphonium', 'ewer', 'ferry', 'flamingo', 'flamingo_head', 'garfield', 'gerenuk', 'gramophone', 'grand_piano', 'hawksbill', 'headphone', 'hedgehog', 'helicopter', 'ibis', 'inline_skate', 'joshua_tree', 'kangaroo', 'ketch', 'lamp', 'laptop', 'llama', 'lobster', 'lotus', 'mandolin', 'mayfly', 'menorah', 'metronome', 'minaret', 'nautilus', 'octopus', 'okapi', 'pagoda', 'panda', 'pigeon', 'pizza', 'platypus', 'pyramid', 'revolver', 'rhino', 'rooster', 'saxophone', 'schooner', 'scissors', 'scorpion', 'sea_horse', 'snoopy', 'soccer_ball', 'stapler', 'starfish', 'stegosaurus', 'stop_sign', 'strawberry', 'sunflower', 'tick', 'trilobite', 'umbrella', 'watch', 'water_lilly', 'wheelchair', 'wild_cat', 'windsor_chair', 'wrench', 'yin_yang']
 sub_figure_num = 9
-figure_type = 'wrench'      #anchor wrench
+figure_type = 'anchor'      #anchor wrench
 pos_loop = True
 np.random.seed(0)
 ##============set params:
@@ -110,7 +124,7 @@ else:
 print(f'valid_indices is {valid_indices}')
 print(f'selected_indices is {selected_indices}')
 # Select the corresponding figures
-data = all_data_no_true[selected_indices]
+data = all_data_no_true[selected_indices]               #after that the data shape is (8, 25, 100)
 data_taget_label_idx = all_data_bool[selected_indices]
 
 ##===========2. select in pos direction or neg direction samples:
@@ -150,7 +164,7 @@ for i in range(num_figures):
 
     # Plot max values
     max_z = np.max(data[i], axis=1)
-    ax.plot([0]*num_epochs, np.arange(num_epochs), max_z, color='r')
+    ax.plot([0]*num_epochs, np.arange(num_epochs), max_z, color='r')        #plot another fig here
 
     # Plot true target class variation:
     true_z = data[data_taget_label_idx].reshape(sub_figure_num, -1)[i]
@@ -167,6 +181,47 @@ for i in range(num_figures):
 
 plt.tight_layout()
 # # plt.show()
-plt.savefig(f'{fig_id}_distri-{figure_type}_{current_time}.svg')
+# plt.savefig(f'{fig_id}_distri-{figure_type}_{current_time}.svg')
+
+
+# %%
+
+# Create a new figure for the max_z conf plot
+fig2 = plt.figure(figsize=(10, 5))
+ax2 = fig2.add_subplot(111)
+fig_idx = 1  #NOTE fill the wanted fig index here(start from 0)
+
+
+# Plot max_z values for each figure
+for i in range(fig_idx, fig_idx+1):                        
+    max_z = np.max(data[i], axis=1)
+    ax2.plot(np.arange(num_epochs), max_z, label=f'Example {i+1} of ({figure_type}) indexed {i+1}')
+
+# ax2.set_xlabel('Epochs')
+# ax2.set_ylabel('Max Confidence Values')
+# ax2.set_title('Max Confidence Values for Each Example')
+# ax2.legend()
+
+# plt.tight_layout()
+# plt.show()
+
+
+# # %%
+# # Create a new figure for the true_z conf plot
+# fig2 = plt.figure(figsize=(10, 5))
+# ax2 = fig2.add_subplot(111)
+
+# true_z conf plot
+for i in range(fig_idx, fig_idx+1):
+    true_z = data[data_taget_label_idx].reshape(sub_figure_num, -1)[i]
+    ax2.plot(np.arange(num_epochs), true_z, linestyle='--', label=f'Example {i+1} of ({figure_type}) indexed {i+1}')
+
+ax2.set_xlabel('Epochs')
+ax2.set_ylabel('Max Confidence Values')
+ax2.set_title('True label Confidence Values for Each Example')
+ax2.legend()
+
+plt.tight_layout()
+plt.show()
 
 # %%

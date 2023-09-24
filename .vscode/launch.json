@@ -22,7 +22,7 @@
               "--config-file=configs/trainers/UPLTrainer/rn50_ep50.yaml",     //↓ 记得改别的后也改output-dir
               "--output-dir=./output/sscaltech101/UPLTrainer/rn50_ep50_16shots_EQULE_True_end_rn50_random_init/nctx16_cscFalse_ctpend_fp0/seed22",
               "--num-fp=0",
-              "--loss_type=rc",
+              "--loss_type=rc+",
               "TRAINER.UPLTrainer.N_CTX",
               "16",
               "TRAINER.UPLTrainer.CSC",
@@ -37,12 +37,12 @@
               "True",
               "TRAINER.PLL.PARTIAL_RATE",
               "0.3",
-              "TEST.FINAL_MODEL",
-              "best_val",
-              // "TRAINER.PLL.BETA",
-              // "0.1",
-              // "TRAINER.PLL.CONF_LOSS_TYPE",
-              // "rc",
+              // "TEST.FINAL_MODEL",
+              // "best_val",
+              "TRAINER.PLL.BETA",
+              "0.1",
+              "TRAINER.PLL.CONF_LOSS_TYPE",
+              "gce_rc",
               // "TRAINER.UPLTrainer.CTX_INIT",
               // "a photo of a "
             ]

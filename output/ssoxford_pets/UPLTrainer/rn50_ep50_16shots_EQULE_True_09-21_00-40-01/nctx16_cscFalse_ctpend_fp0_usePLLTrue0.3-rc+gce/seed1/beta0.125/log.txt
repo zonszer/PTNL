@@ -1,0 +1,1160 @@
+***************
+** Arguments **
+***************
+backbone: 
+config_file: configs/trainers/UPLTrainer/rn50_ep50.yaml
+dataset_config_file: configs/datasets/ssoxford_pets.yaml
+eval_only: False
+head: 
+hh_config_file: 
+load_epoch: None
+loss_type: rc+
+model_dir: 
+no_train: False
+num_fp: 0
+opts: ['TRAINER.UPLTrainer.N_CTX', '16', 'TRAINER.UPLTrainer.CSC', 'False', 'TRAINER.UPLTrainer.CLASS_TOKEN_POSITION', 'end', 'DATASET.NUM_SHOTS', '16', 'DATASET.CLASS_EQULE', 'True', 'TRAINER.PLL.USE_PLL', 'True', 'TRAINER.PLL.PARTIAL_RATE', '0.3', 'TRAINER.PLL.CONF_LOSS_TYPE', 'gce', 'TRAINER.PLL.BETA', '0.125']
+output_dir: ./output/ssoxford_pets/UPLTrainer/rn50_ep50_16shots_EQULE_True_09-21_00-40-01/nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+gce/seed1/beta0.125
+resume: 
+root: ./data
+seed: 1
+source_domains: None
+target_domains: None
+trainer: UPLTrainer
+transforms: None
+************
+** Config **
+************
+DATALOADER:
+  K_TRANSFORMS: 1
+  NUM_WORKERS: 8
+  OPEN_SETTING: False
+  RETURN_IMG0: False
+  TEST:
+    BATCH_SIZE: 100
+    SAMPLER: SequentialSampler
+    SHUFFLE: False
+  TRAIN_U:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAME_AS_X: True
+    SAMPLER: RandomSampler
+  TRAIN_X:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAMPLER: RandomSampler
+    SHUFFLE: True
+  VAL:
+    BATCH_SIZE: 50
+    SHUFFLE: False
+DATASET:
+  ALL_AS_UNLABELED: False
+  CIFAR_C_LEVEL: 1
+  CIFAR_C_TYPE: 
+  CLASS_EQULE: True
+  CONF_THRESHOLD: 0.9
+  IGNORE_FILE: 
+  IGNORE_NUM: 0
+  NAME: SSOxfordPets
+  NUM_LABELED: -1
+  NUM_SHOTS: 16
+  ROOT: ./data
+  SOURCE_DOMAINS: ()
+  STL10_FOLD: -1
+  TARGET_DOMAINS: ()
+  VAL_PERCENT: 0.1
+INPUT:
+  COLORJITTER_B: 0.4
+  COLORJITTER_C: 0.4
+  COLORJITTER_H: 0.1
+  COLORJITTER_S: 0.4
+  CROP_PADDING: 4
+  CUTOUT_LEN: 16
+  CUTOUT_N: 1
+  GB_K: 21
+  GB_P: 0.5
+  GN_MEAN: 0.0
+  GN_STD: 0.15
+  INTERPOLATION: bicubic
+  NO_TRANSFORM: False
+  PIXEL_MEAN: [0.48145466, 0.4578275, 0.40821073]
+  PIXEL_STD: [0.26862954, 0.26130258, 0.27577711]
+  RANDAUGMENT_M: 10
+  RANDAUGMENT_N: 2
+  RGS_P: 0.2
+  RRCROP_SCALE: (0.08, 1.0)
+  SIZE: (224, 224)
+  TRANSFORMS: ('random_resized_crop', 'random_flip', 'normalize')
+MODEL:
+  BACKBONE:
+    NAME: RN50
+    PRETRAINED: True
+  HEAD:
+    ACTIVATION: relu
+    BN: True
+    DROPOUT: 0.0
+    HIDDEN_LAYERS: ()
+    NAME: 
+  INIT_WEIGHTS: 
+  PSEUDO_LABEL_MODELS: ['RN50']
+OPTIM:
+  ADAM_BETA1: 0.9
+  ADAM_BETA2: 0.999
+  BASE_LR_MULT: 0.1
+  GAMMA: 0.1
+  LR: 0.002
+  LR_SCHEDULER: cosine
+  MAX_EPOCH: 50
+  MOMENTUM: 0.9
+  NAME: sgd
+  NEW_LAYERS: ()
+  RMSPROP_ALPHA: 0.99
+  SGD_DAMPNING: 0
+  SGD_NESTEROV: False
+  STAGED_LR: False
+  STEPSIZE: (-1,)
+  WARMUP_CONS_LR: 1e-05
+  WARMUP_EPOCH: 1
+  WARMUP_MIN_LR: 1e-05
+  WARMUP_RECOUNT: True
+  WARMUP_TYPE: constant
+  WEIGHT_DECAY: 0.0005
+OUTPUT_DIR: ./output/ssoxford_pets/UPLTrainer/rn50_ep50_16shots_EQULE_True_09-21_00-40-01/nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+gce/seed1/beta0.125
+RESUME: 
+SEED: 1
+TEST:
+  Analyze_Result_Path: ./analysis_results_test/
+  COMPUTE_CMAT: False
+  EVALUATOR: UPLClassification
+  FINAL_MODEL: last_val
+  NO_TEST: False
+  PER_CLASS_RESULT: True
+  SPLIT: test
+TRAIN:
+  CHECKPOINT_FREQ: 0
+  COUNT_ITER: train_x
+  PRINT_FREQ: 5
+TRAINER:
+  CG:
+    ALPHA_D: 0.5
+    ALPHA_F: 0.5
+    EPS_D: 1.0
+    EPS_F: 1.0
+  DAEL:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DDAIG:
+    ALPHA: 0.5
+    CLAMP: False
+    CLAMP_MAX: 1.0
+    CLAMP_MIN: -1.0
+    G_ARCH: 
+    LMDA: 0.3
+    WARMUP: 0
+  ENSEMBLE_NUM: 1
+  ENTMIN:
+    LMDA: 0.001
+  FIXMATCH:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 1.0
+  LOSS_TYPE: rc+
+  M3SDA:
+    LMDA: 0.5
+    N_STEP_F: 4
+  MCD:
+    N_STEP_F: 4
+  MEANTEA:
+    EMA_ALPHA: 0.999
+    RAMPUP: 5
+    WEIGHT_U: 1.0
+  MIXMATCH:
+    MIXUP_BETA: 0.75
+    RAMPUP: 20000
+    TEMP: 2.0
+    WEIGHT_U: 100.0
+  MME:
+    LMDA: 0.1
+  NAME: UPLTrainer
+  PLL:
+    BETA: 0.125
+    CONF_LOSS_TYPE: gce
+    PARTIAL_RATE: 0.3
+    USE_PLL: True
+  SE:
+    CONF_THRE: 0.95
+    EMA_ALPHA: 0.999
+    RAMPUP: 300
+  UPLTrainer:
+    CLASS_TOKEN_POSITION: end
+    CSC: False
+    CTX_INIT: 
+    NUM_FP: 0
+    N_CTX: 16
+    PREC: fp16
+USE_CUDA: True
+VERBOSE: True
+VERSION: 1
+Collecting env info ...
+** System info **
+PyTorch version: 1.12.1+cu113
+Is debug build: False
+CUDA used to build PyTorch: 11.3
+ROCM used to build PyTorch: N/A
+
+OS: Ubuntu 22.04.2 LTS (x86_64)
+GCC version: (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+Clang version: Could not collect
+CMake version: version 3.22.1
+Libc version: glibc-2.35
+
+Python version: 3.9.17 | packaged by conda-forge | (main, Aug 10 2023, 07:02:31)  [GCC 12.3.0] (64-bit runtime)
+Python platform: Linux-5.19.0-38-generic-x86_64-with-glibc2.35
+Is CUDA available: True
+CUDA runtime version: 11.5.119
+GPU models and configuration: 
+GPU 0: NVIDIA A100-PCIE-40GB
+GPU 1: Tesla V100-PCIE-16GB
+GPU 2: Tesla V100-PCIE-16GB
+
+Nvidia driver version: Could not collect
+cuDNN version: Could not collect
+HIP runtime version: N/A
+MIOpen runtime version: N/A
+Is XNNPACK available: True
+
+Versions of relevant libraries:
+[pip3] numpy==1.24.3
+[pip3] torch==1.12.1+cu113
+[pip3] torchaudio==0.12.1+cu113
+[pip3] torchvision==0.13.1+cu113
+[conda] numpy                     1.24.3                   pypi_0    pypi
+[conda] torch                     1.12.1+cu113             pypi_0    pypi
+[conda] torchaudio                0.12.1+cu113             pypi_0    pypi
+[conda] torchvision               0.13.1+cu113             pypi_0    pypi
+        Pillow (10.0.0)
+
+Loading trainer: UPLTrainer
+Loading dataset: SSOxfordPets
+Reading split from /mnt/disk2/zjh/projects7.12/PTNL/data/oxford_pets/split_zhou_OxfordPets.json
+Reading split from /mnt/disk2/zjh/projects7.12/PTNL/data/oxford_pets/split_zhou_OxfordPets.json
+Building transform_train
++ random resized crop (size=(224, 224), scale=(0.08, 1.0))
++ random flip
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+* Using custom transform for testing
+---------  ------------
+Dataset    SSOxfordPets
+# classes  37
+# train_x  2,944
+# val      736
+# test     3,669
+---------  ------------
+* Using custom transform for testing
+Building transform_train
++ random resized crop (size=(224, 224), scale=(0.08, 1.0))
++ random flip
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+Loading CLIP (backbone: RN50)
+Building custom CLIP
+Initializing a generic context
+Initial context: "X X X X X X X X X X X X X X X X"
+Number of context words (tokens): 16
+Turning off gradients in both the image and the text encoder
+Loading evaluator: UPLClassification
+Loaded training GT labels from /mnt/disk2/zjh/projects7.12/PTNL/data/oxford_pets/SSOxfordPets_GTlabels.json
+--- 0
+['./data/oxford_pets/images/Abyssinian_182.jpg'
+ './data/oxford_pets/images/Abyssinian_15.jpg'
+ './data/oxford_pets/images/Abyssinian_121.jpg'
+ './data/oxford_pets/images/Abyssinian_168.jpg'
+ './data/oxford_pets/images/Abyssinian_142.jpg'
+ './data/oxford_pets/images/Abyssinian_138.jpg'
+ './data/oxford_pets/images/Abyssinian_139.jpg'
+ './data/oxford_pets/images/Abyssinian_164.jpg'
+ './data/oxford_pets/images/Abyssinian_149.jpg'
+ './data/oxford_pets/images/Abyssinian_143.jpg'
+ './data/oxford_pets/images/Abyssinian_13.jpg'
+ './data/oxford_pets/images/Abyssinian_129.jpg'
+ './data/oxford_pets/images/Abyssinian_193.jpg'
+ './data/oxford_pets/images/Abyssinian_16.jpg'
+ './data/oxford_pets/images/Abyssinian_136.jpg'
+ './data/oxford_pets/images/Abyssinian_117.jpg']
+--- 1
+['./data/oxford_pets/images/american_bulldog_108.jpg'
+ './data/oxford_pets/images/american_bulldog_116.jpg'
+ './data/oxford_pets/images/american_bulldog_132.jpg'
+ './data/oxford_pets/images/american_bulldog_184.jpg'
+ './data/oxford_pets/images/american_bulldog_202.jpg'
+ './data/oxford_pets/images/american_bulldog_120.jpg'
+ './data/oxford_pets/images/american_bulldog_128.jpg'
+ './data/oxford_pets/images/american_bulldog_152.jpg'
+ './data/oxford_pets/images/american_bulldog_147.jpg'
+ './data/oxford_pets/images/american_bulldog_134.jpg'
+ './data/oxford_pets/images/american_bulldog_109.jpg'
+ './data/oxford_pets/images/american_bulldog_18.jpg'
+ './data/oxford_pets/images/american_bulldog_105.jpg'
+ './data/oxford_pets/images/american_bulldog_126.jpg'
+ './data/oxford_pets/images/american_bulldog_179.jpg'
+ './data/oxford_pets/images/american_bulldog_125.jpg']
+--- 2
+['./data/oxford_pets/images/american_pit_bull_terrier_134.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_175.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_147.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_12.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_140.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_16.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_105.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_158.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_165.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_153.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_171.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_157.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_150.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_127.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_15.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_111.jpg']
+--- 3
+['./data/oxford_pets/images/basset_hound_147.jpg'
+ './data/oxford_pets/images/basset_hound_167.jpg'
+ './data/oxford_pets/images/basset_hound_154.jpg'
+ './data/oxford_pets/images/basset_hound_174.jpg'
+ './data/oxford_pets/images/basset_hound_122.jpg'
+ './data/oxford_pets/images/basset_hound_171.jpg'
+ './data/oxford_pets/images/basset_hound_119.jpg'
+ './data/oxford_pets/images/basset_hound_136.jpg'
+ './data/oxford_pets/images/basset_hound_14.jpg'
+ './data/oxford_pets/images/basset_hound_161.jpg'
+ './data/oxford_pets/images/basset_hound_146.jpg'
+ './data/oxford_pets/images/basset_hound_156.jpg'
+ './data/oxford_pets/images/basset_hound_18.jpg'
+ './data/oxford_pets/images/basset_hound_114.jpg'
+ './data/oxford_pets/images/basset_hound_163.jpg'
+ './data/oxford_pets/images/basset_hound_118.jpg']
+--- 4
+['./data/oxford_pets/images/beagle_113.jpg'
+ './data/oxford_pets/images/beagle_131.jpg'
+ './data/oxford_pets/images/beagle_147.jpg'
+ './data/oxford_pets/images/beagle_109.jpg'
+ './data/oxford_pets/images/beagle_122.jpg'
+ './data/oxford_pets/images/beagle_185.jpg'
+ './data/oxford_pets/images/beagle_144.jpg'
+ './data/oxford_pets/images/beagle_151.jpg'
+ './data/oxford_pets/images/beagle_166.jpg'
+ './data/oxford_pets/images/beagle_164.jpg'
+ './data/oxford_pets/images/beagle_117.jpg'
+ './data/oxford_pets/images/beagle_18.jpg'
+ './data/oxford_pets/images/beagle_181.jpg'
+ './data/oxford_pets/images/beagle_119.jpg'
+ './data/oxford_pets/images/beagle_153.jpg'
+ './data/oxford_pets/images/beagle_149.jpg']
+--- 5
+['./data/oxford_pets/images/Bengal_101.jpg'
+ './data/oxford_pets/images/Bengal_138.jpg'
+ './data/oxford_pets/images/Bengal_155.jpg'
+ './data/oxford_pets/images/Bengal_160.jpg'
+ './data/oxford_pets/images/Bengal_17.jpg'
+ './data/oxford_pets/images/Bengal_133.jpg'
+ './data/oxford_pets/images/Bengal_175.jpg'
+ './data/oxford_pets/images/Bengal_12.jpg'
+ './data/oxford_pets/images/Bengal_125.jpg'
+ './data/oxford_pets/images/Bengal_149.jpg'
+ './data/oxford_pets/images/Bengal_153.jpg'
+ './data/oxford_pets/images/Bengal_142.jpg'
+ './data/oxford_pets/images/Bengal_134.jpg'
+ './data/oxford_pets/images/Bengal_14.jpg'
+ './data/oxford_pets/images/Bengal_179.jpg'
+ './data/oxford_pets/images/Bengal_122.jpg']
+--- 6
+['./data/oxford_pets/images/Birman_14.jpg'
+ './data/oxford_pets/images/Birman_127.jpg'
+ './data/oxford_pets/images/Birman_125.jpg'
+ './data/oxford_pets/images/Birman_108.jpg'
+ './data/oxford_pets/images/Birman_104.jpg'
+ './data/oxford_pets/images/Birman_142.jpg'
+ './data/oxford_pets/images/Birman_17.jpg'
+ './data/oxford_pets/images/Birman_188.jpg'
+ './data/oxford_pets/images/Birman_184.jpg'
+ './data/oxford_pets/images/Birman_16.jpg'
+ './data/oxford_pets/images/Birman_175.jpg'
+ './data/oxford_pets/images/Birman_171.jpg'
+ './data/oxford_pets/images/Birman_162.jpg'
+ './data/oxford_pets/images/Birman_158.jpg'
+ './data/oxford_pets/images/Birman_177.jpg'
+ './data/oxford_pets/images/Birman_119.jpg']
+--- 7
+['./data/oxford_pets/images/Bombay_104.jpg'
+ './data/oxford_pets/images/Bombay_125.jpg'
+ './data/oxford_pets/images/Bombay_115.jpg'
+ './data/oxford_pets/images/Bombay_110.jpg'
+ './data/oxford_pets/images/Bombay_156.jpg'
+ './data/oxford_pets/images/Bombay_10.jpg'
+ './data/oxford_pets/images/Bombay_1.jpg'
+ './data/oxford_pets/images/Bombay_128.jpg'
+ './data/oxford_pets/images/Bombay_18.jpg'
+ './data/oxford_pets/images/Bombay_135.jpg'
+ './data/oxford_pets/images/Bombay_127.jpg'
+ './data/oxford_pets/images/Bombay_158.jpg'
+ './data/oxford_pets/images/Bombay_113.jpg'
+ './data/oxford_pets/images/Bombay_126.jpg'
+ './data/oxford_pets/images/Bombay_186.jpg'
+ './data/oxford_pets/images/Bombay_148.jpg']
+--- 8
+['./data/oxford_pets/images/boxer_13.jpg'
+ './data/oxford_pets/images/boxer_15.jpg'
+ './data/oxford_pets/images/boxer_148.jpg'
+ './data/oxford_pets/images/boxer_156.jpg'
+ './data/oxford_pets/images/boxer_144.jpg'
+ './data/oxford_pets/images/boxer_145.jpg'
+ './data/oxford_pets/images/boxer_120.jpg'
+ './data/oxford_pets/images/boxer_165.jpg'
+ './data/oxford_pets/images/boxer_12.jpg'
+ './data/oxford_pets/images/boxer_176.jpg'
+ './data/oxford_pets/images/boxer_155.jpg'
+ './data/oxford_pets/images/boxer_17.jpg'
+ './data/oxford_pets/images/boxer_102.jpg'
+ './data/oxford_pets/images/boxer_139.jpg'
+ './data/oxford_pets/images/boxer_172.jpg'
+ './data/oxford_pets/images/boxer_186.jpg']
+--- 9
+['./data/oxford_pets/images/British_Shorthair_102.jpg'
+ './data/oxford_pets/images/British_Shorthair_17.jpg'
+ './data/oxford_pets/images/British_Shorthair_137.jpg'
+ './data/oxford_pets/images/British_Shorthair_185.jpg'
+ './data/oxford_pets/images/British_Shorthair_126.jpg'
+ './data/oxford_pets/images/British_Shorthair_196.jpg'
+ './data/oxford_pets/images/British_Shorthair_165.jpg'
+ './data/oxford_pets/images/British_Shorthair_125.jpg'
+ './data/oxford_pets/images/British_Shorthair_160.jpg'
+ './data/oxford_pets/images/British_Shorthair_173.jpg'
+ './data/oxford_pets/images/British_Shorthair_112.jpg'
+ './data/oxford_pets/images/British_Shorthair_109.jpg'
+ './data/oxford_pets/images/British_Shorthair_149.jpg'
+ './data/oxford_pets/images/British_Shorthair_128.jpg'
+ './data/oxford_pets/images/British_Shorthair_195.jpg'
+ './data/oxford_pets/images/British_Shorthair_177.jpg']
+--- 10
+['./data/oxford_pets/images/chihuahua_108.jpg'
+ './data/oxford_pets/images/chihuahua_149.jpg'
+ './data/oxford_pets/images/chihuahua_171.jpg'
+ './data/oxford_pets/images/chihuahua_153.jpg'
+ './data/oxford_pets/images/chihuahua_16.jpg'
+ './data/oxford_pets/images/chihuahua_110.jpg'
+ './data/oxford_pets/images/chihuahua_132.jpg'
+ './data/oxford_pets/images/chihuahua_126.jpg'
+ './data/oxford_pets/images/chihuahua_140.jpg'
+ './data/oxford_pets/images/chihuahua_100.jpg'
+ './data/oxford_pets/images/chihuahua_17.jpg'
+ './data/oxford_pets/images/chihuahua_183.jpg'
+ './data/oxford_pets/images/chihuahua_131.jpg'
+ './data/oxford_pets/images/chihuahua_117.jpg'
+ './data/oxford_pets/images/chihuahua_12.jpg'
+ './data/oxford_pets/images/chihuahua_133.jpg']
+--- 11
+['./data/oxford_pets/images/Egyptian_Mau_128.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_143.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_161.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_171.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_154.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_156.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_136.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_141.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_186.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_100.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_130.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_150.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_180.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_162.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_142.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_165.jpg']
+--- 12
+['./data/oxford_pets/images/english_cocker_spaniel_184.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_103.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_190.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_183.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_187.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_11.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_146.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_108.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_155.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_125.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_111.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_109.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_140.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_129.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_151.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_15.jpg']
+--- 13
+['./data/oxford_pets/images/english_setter_166.jpg'
+ './data/oxford_pets/images/english_setter_129.jpg'
+ './data/oxford_pets/images/english_setter_138.jpg'
+ './data/oxford_pets/images/english_setter_177.jpg'
+ './data/oxford_pets/images/english_setter_141.jpg'
+ './data/oxford_pets/images/english_setter_18.jpg'
+ './data/oxford_pets/images/english_setter_174.jpg'
+ './data/oxford_pets/images/english_setter_108.jpg'
+ './data/oxford_pets/images/english_setter_148.jpg'
+ './data/oxford_pets/images/english_setter_150.jpg'
+ './data/oxford_pets/images/english_setter_165.jpg'
+ './data/oxford_pets/images/english_setter_142.jpg'
+ './data/oxford_pets/images/english_setter_106.jpg'
+ './data/oxford_pets/images/english_setter_151.jpg'
+ './data/oxford_pets/images/english_setter_111.jpg'
+ './data/oxford_pets/images/english_setter_124.jpg']
+--- 14
+['./data/oxford_pets/images/german_shorthaired_150.jpg'
+ './data/oxford_pets/images/german_shorthaired_167.jpg'
+ './data/oxford_pets/images/german_shorthaired_119.jpg'
+ './data/oxford_pets/images/german_shorthaired_189.jpg'
+ './data/oxford_pets/images/german_shorthaired_117.jpg'
+ './data/oxford_pets/images/german_shorthaired_146.jpg'
+ './data/oxford_pets/images/german_shorthaired_133.jpg'
+ './data/oxford_pets/images/german_shorthaired_101.jpg'
+ './data/oxford_pets/images/german_shorthaired_186.jpg'
+ './data/oxford_pets/images/german_shorthaired_175.jpg'
+ './data/oxford_pets/images/german_shorthaired_147.jpg'
+ './data/oxford_pets/images/german_shorthaired_11.jpg'
+ './data/oxford_pets/images/german_shorthaired_148.jpg'
+ './data/oxford_pets/images/german_shorthaired_156.jpg'
+ './data/oxford_pets/images/german_shorthaired_15.jpg'
+ './data/oxford_pets/images/german_shorthaired_104.jpg']
+--- 15
+['./data/oxford_pets/images/great_pyrenees_189.jpg'
+ './data/oxford_pets/images/great_pyrenees_166.jpg'
+ './data/oxford_pets/images/great_pyrenees_127.jpg'
+ './data/oxford_pets/images/great_pyrenees_11.jpg'
+ './data/oxford_pets/images/great_pyrenees_146.jpg'
+ './data/oxford_pets/images/great_pyrenees_141.jpg'
+ './data/oxford_pets/images/great_pyrenees_122.jpg'
+ './data/oxford_pets/images/great_pyrenees_132.jpg'
+ './data/oxford_pets/images/great_pyrenees_102.jpg'
+ './data/oxford_pets/images/great_pyrenees_164.jpg'
+ './data/oxford_pets/images/great_pyrenees_138.jpg'
+ './data/oxford_pets/images/great_pyrenees_137.jpg'
+ './data/oxford_pets/images/great_pyrenees_153.jpg'
+ './data/oxford_pets/images/great_pyrenees_133.jpg'
+ './data/oxford_pets/images/great_pyrenees_17.jpg'
+ './data/oxford_pets/images/great_pyrenees_106.jpg']
+--- 16
+['./data/oxford_pets/images/havanese_125.jpg'
+ './data/oxford_pets/images/havanese_181.jpg'
+ './data/oxford_pets/images/havanese_138.jpg'
+ './data/oxford_pets/images/havanese_129.jpg'
+ './data/oxford_pets/images/havanese_104.jpg'
+ './data/oxford_pets/images/havanese_190.jpg'
+ './data/oxford_pets/images/havanese_130.jpg'
+ './data/oxford_pets/images/havanese_164.jpg'
+ './data/oxford_pets/images/havanese_187.jpg'
+ './data/oxford_pets/images/havanese_116.jpg'
+ './data/oxford_pets/images/havanese_126.jpg'
+ './data/oxford_pets/images/havanese_100.jpg'
+ './data/oxford_pets/images/havanese_147.jpg'
+ './data/oxford_pets/images/havanese_161.jpg'
+ './data/oxford_pets/images/havanese_133.jpg'
+ './data/oxford_pets/images/havanese_122.jpg']
+--- 17
+['./data/oxford_pets/images/japanese_chin_115.jpg'
+ './data/oxford_pets/images/japanese_chin_108.jpg'
+ './data/oxford_pets/images/japanese_chin_137.jpg'
+ './data/oxford_pets/images/japanese_chin_150.jpg'
+ './data/oxford_pets/images/japanese_chin_121.jpg'
+ './data/oxford_pets/images/japanese_chin_141.jpg'
+ './data/oxford_pets/images/japanese_chin_164.jpg'
+ './data/oxford_pets/images/japanese_chin_117.jpg'
+ './data/oxford_pets/images/japanese_chin_10.jpg'
+ './data/oxford_pets/images/japanese_chin_142.jpg'
+ './data/oxford_pets/images/japanese_chin_139.jpg'
+ './data/oxford_pets/images/japanese_chin_126.jpg'
+ './data/oxford_pets/images/japanese_chin_140.jpg'
+ './data/oxford_pets/images/japanese_chin_143.jpg'
+ './data/oxford_pets/images/japanese_chin_127.jpg'
+ './data/oxford_pets/images/japanese_chin_136.jpg']
+--- 18
+['./data/oxford_pets/images/keeshond_151.jpg'
+ './data/oxford_pets/images/keeshond_184.jpg'
+ './data/oxford_pets/images/keeshond_176.jpg'
+ './data/oxford_pets/images/keeshond_182.jpg'
+ './data/oxford_pets/images/keeshond_154.jpg'
+ './data/oxford_pets/images/keeshond_188.jpg'
+ './data/oxford_pets/images/keeshond_160.jpg'
+ './data/oxford_pets/images/keeshond_142.jpg'
+ './data/oxford_pets/images/keeshond_100.jpg'
+ './data/oxford_pets/images/keeshond_137.jpg'
+ './data/oxford_pets/images/keeshond_171.jpg'
+ './data/oxford_pets/images/keeshond_14.jpg'
+ './data/oxford_pets/images/keeshond_114.jpg'
+ './data/oxford_pets/images/keeshond_13.jpg'
+ './data/oxford_pets/images/keeshond_165.jpg'
+ './data/oxford_pets/images/keeshond_18.jpg']
+--- 19
+['./data/oxford_pets/images/leonberger_143.jpg'
+ './data/oxford_pets/images/leonberger_156.jpg'
+ './data/oxford_pets/images/leonberger_174.jpg'
+ './data/oxford_pets/images/leonberger_112.jpg'
+ './data/oxford_pets/images/leonberger_154.jpg'
+ './data/oxford_pets/images/leonberger_180.jpg'
+ './data/oxford_pets/images/leonberger_138.jpg'
+ './data/oxford_pets/images/leonberger_166.jpg'
+ './data/oxford_pets/images/leonberger_116.jpg'
+ './data/oxford_pets/images/leonberger_128.jpg'
+ './data/oxford_pets/images/leonberger_150.jpg'
+ './data/oxford_pets/images/leonberger_164.jpg'
+ './data/oxford_pets/images/leonberger_130.jpg'
+ './data/oxford_pets/images/leonberger_118.jpg'
+ './data/oxford_pets/images/leonberger_117.jpg'
+ './data/oxford_pets/images/leonberger_12.jpg']
+--- 20
+['./data/oxford_pets/images/Maine_Coon_196.jpg'
+ './data/oxford_pets/images/Maine_Coon_175.jpg'
+ './data/oxford_pets/images/Maine_Coon_153.jpg'
+ './data/oxford_pets/images/Maine_Coon_206.jpg'
+ './data/oxford_pets/images/Maine_Coon_107.jpg'
+ './data/oxford_pets/images/Maine_Coon_16.jpg'
+ './data/oxford_pets/images/Maine_Coon_213.jpg'
+ './data/oxford_pets/images/Maine_Coon_152.jpg'
+ './data/oxford_pets/images/Maine_Coon_147.jpg'
+ './data/oxford_pets/images/Maine_Coon_205.jpg'
+ './data/oxford_pets/images/Maine_Coon_193.jpg'
+ './data/oxford_pets/images/Maine_Coon_140.jpg'
+ './data/oxford_pets/images/Maine_Coon_163.jpg'
+ './data/oxford_pets/images/Maine_Coon_102.jpg'
+ './data/oxford_pets/images/Maine_Coon_14.jpg'
+ './data/oxford_pets/images/Maine_Coon_208.jpg']
+--- 21
+['./data/oxford_pets/images/miniature_pinscher_183.jpg'
+ './data/oxford_pets/images/miniature_pinscher_145.jpg'
+ './data/oxford_pets/images/miniature_pinscher_128.jpg'
+ './data/oxford_pets/images/miniature_pinscher_167.jpg'
+ './data/oxford_pets/images/miniature_pinscher_156.jpg'
+ './data/oxford_pets/images/miniature_pinscher_107.jpg'
+ './data/oxford_pets/images/miniature_pinscher_130.jpg'
+ './data/oxford_pets/images/miniature_pinscher_177.jpg'
+ './data/oxford_pets/images/miniature_pinscher_160.jpg'
+ './data/oxford_pets/images/miniature_pinscher_106.jpg'
+ './data/oxford_pets/images/miniature_pinscher_164.jpg'
+ './data/oxford_pets/images/miniature_pinscher_115.jpg'
+ './data/oxford_pets/images/miniature_pinscher_127.jpg'
+ './data/oxford_pets/images/miniature_pinscher_114.jpg'
+ './data/oxford_pets/images/miniature_pinscher_131.jpg'
+ './data/oxford_pets/images/miniature_pinscher_179.jpg']
+--- 22
+['./data/oxford_pets/images/newfoundland_169.jpg'
+ './data/oxford_pets/images/newfoundland_188.jpg'
+ './data/oxford_pets/images/newfoundland_125.jpg'
+ './data/oxford_pets/images/newfoundland_146.jpg'
+ './data/oxford_pets/images/newfoundland_178.jpg'
+ './data/oxford_pets/images/newfoundland_119.jpg'
+ './data/oxford_pets/images/newfoundland_12.jpg'
+ './data/oxford_pets/images/newfoundland_159.jpg'
+ './data/oxford_pets/images/newfoundland_176.jpg'
+ './data/oxford_pets/images/newfoundland_147.jpg'
+ './data/oxford_pets/images/newfoundland_177.jpg'
+ './data/oxford_pets/images/newfoundland_151.jpg'
+ './data/oxford_pets/images/newfoundland_131.jpg'
+ './data/oxford_pets/images/newfoundland_143.jpg'
+ './data/oxford_pets/images/newfoundland_145.jpg'
+ './data/oxford_pets/images/newfoundland_17.jpg']
+--- 23
+['./data/oxford_pets/images/Persian_197.jpg'
+ './data/oxford_pets/images/Persian_152.jpg'
+ './data/oxford_pets/images/Persian_106.jpg'
+ './data/oxford_pets/images/Persian_181.jpg'
+ './data/oxford_pets/images/Persian_192.jpg'
+ './data/oxford_pets/images/Persian_159.jpg'
+ './data/oxford_pets/images/Persian_180.jpg'
+ './data/oxford_pets/images/Persian_116.jpg'
+ './data/oxford_pets/images/Persian_191.jpg'
+ './data/oxford_pets/images/Persian_114.jpg'
+ './data/oxford_pets/images/Persian_120.jpg'
+ './data/oxford_pets/images/Persian_160.jpg'
+ './data/oxford_pets/images/Persian_141.jpg'
+ './data/oxford_pets/images/Persian_125.jpg'
+ './data/oxford_pets/images/Persian_165.jpg'
+ './data/oxford_pets/images/Persian_105.jpg']
+--- 24
+['./data/oxford_pets/images/pomeranian_174.jpg'
+ './data/oxford_pets/images/pomeranian_125.jpg'
+ './data/oxford_pets/images/pomeranian_130.jpg'
+ './data/oxford_pets/images/pomeranian_13.jpg'
+ './data/oxford_pets/images/pomeranian_108.jpg'
+ './data/oxford_pets/images/pomeranian_104.jpg'
+ './data/oxford_pets/images/pomeranian_101.jpg'
+ './data/oxford_pets/images/pomeranian_178.jpg'
+ './data/oxford_pets/images/pomeranian_103.jpg'
+ './data/oxford_pets/images/pomeranian_179.jpg'
+ './data/oxford_pets/images/pomeranian_187.jpg'
+ './data/oxford_pets/images/pomeranian_133.jpg'
+ './data/oxford_pets/images/pomeranian_144.jpg'
+ './data/oxford_pets/images/pomeranian_180.jpg'
+ './data/oxford_pets/images/pomeranian_18.jpg'
+ './data/oxford_pets/images/pomeranian_131.jpg']
+--- 25
+['./data/oxford_pets/images/pug_167.jpg'
+ './data/oxford_pets/images/pug_105.jpg'
+ './data/oxford_pets/images/pug_115.jpg'
+ './data/oxford_pets/images/pug_104.jpg'
+ './data/oxford_pets/images/pug_145.jpg'
+ './data/oxford_pets/images/pug_181.jpg'
+ './data/oxford_pets/images/pug_108.jpg'
+ './data/oxford_pets/images/pug_163.jpg'
+ './data/oxford_pets/images/pug_14.jpg'
+ './data/oxford_pets/images/pug_173.jpg'
+ './data/oxford_pets/images/pug_166.jpg'
+ './data/oxford_pets/images/pug_139.jpg'
+ './data/oxford_pets/images/pug_148.jpg'
+ './data/oxford_pets/images/pug_176.jpg'
+ './data/oxford_pets/images/pug_15.jpg'
+ './data/oxford_pets/images/pug_179.jpg']
+--- 26
+['./data/oxford_pets/images/Ragdoll_194.jpg'
+ './data/oxford_pets/images/Ragdoll_172.jpg'
+ './data/oxford_pets/images/Ragdoll_127.jpg'
+ './data/oxford_pets/images/Ragdoll_178.jpg'
+ './data/oxford_pets/images/Ragdoll_106.jpg'
+ './data/oxford_pets/images/Ragdoll_180.jpg'
+ './data/oxford_pets/images/Ragdoll_201.jpg'
+ './data/oxford_pets/images/Ragdoll_100.jpg'
+ './data/oxford_pets/images/Ragdoll_166.jpg'
+ './data/oxford_pets/images/Ragdoll_12.jpg'
+ './data/oxford_pets/images/Ragdoll_199.jpg'
+ './data/oxford_pets/images/Ragdoll_196.jpg'
+ './data/oxford_pets/images/Ragdoll_202.jpg'
+ './data/oxford_pets/images/Ragdoll_188.jpg'
+ './data/oxford_pets/images/Ragdoll_113.jpg'
+ './data/oxford_pets/images/Ragdoll_162.jpg']
+--- 27
+['./data/oxford_pets/images/Russian_Blue_109.jpg'
+ './data/oxford_pets/images/Russian_Blue_129.jpg'
+ './data/oxford_pets/images/Russian_Blue_136.jpg'
+ './data/oxford_pets/images/Russian_Blue_176.jpg'
+ './data/oxford_pets/images/Russian_Blue_18.jpg'
+ './data/oxford_pets/images/Russian_Blue_148.jpg'
+ './data/oxford_pets/images/Russian_Blue_127.jpg'
+ './data/oxford_pets/images/Russian_Blue_171.jpg'
+ './data/oxford_pets/images/Russian_Blue_131.jpg'
+ './data/oxford_pets/images/Russian_Blue_117.jpg'
+ './data/oxford_pets/images/Russian_Blue_199.jpg'
+ './data/oxford_pets/images/Russian_Blue_104.jpg'
+ './data/oxford_pets/images/Russian_Blue_135.jpg'
+ './data/oxford_pets/images/Russian_Blue_103.jpg'
+ './data/oxford_pets/images/Russian_Blue_132.jpg'
+ './data/oxford_pets/images/Russian_Blue_140.jpg']
+--- 28
+['./data/oxford_pets/images/saint_bernard_162.jpg'
+ './data/oxford_pets/images/saint_bernard_160.jpg'
+ './data/oxford_pets/images/saint_bernard_148.jpg'
+ './data/oxford_pets/images/saint_bernard_109.jpg'
+ './data/oxford_pets/images/saint_bernard_164.jpg'
+ './data/oxford_pets/images/saint_bernard_119.jpg'
+ './data/oxford_pets/images/saint_bernard_166.jpg'
+ './data/oxford_pets/images/saint_bernard_150.jpg'
+ './data/oxford_pets/images/saint_bernard_123.jpg'
+ './data/oxford_pets/images/saint_bernard_156.jpg'
+ './data/oxford_pets/images/saint_bernard_11.jpg'
+ './data/oxford_pets/images/saint_bernard_10.jpg'
+ './data/oxford_pets/images/saint_bernard_170.jpg'
+ './data/oxford_pets/images/saint_bernard_17.jpg'
+ './data/oxford_pets/images/saint_bernard_187.jpg'
+ './data/oxford_pets/images/saint_bernard_142.jpg']
+--- 29
+['./data/oxford_pets/images/samoyed_159.jpg'
+ './data/oxford_pets/images/samoyed_14.jpg'
+ './data/oxford_pets/images/samoyed_188.jpg'
+ './data/oxford_pets/images/samoyed_131.jpg'
+ './data/oxford_pets/images/samoyed_145.jpg'
+ './data/oxford_pets/images/samoyed_101.jpg'
+ './data/oxford_pets/images/samoyed_109.jpg'
+ './data/oxford_pets/images/samoyed_168.jpg'
+ './data/oxford_pets/images/samoyed_179.jpg'
+ './data/oxford_pets/images/samoyed_166.jpg'
+ './data/oxford_pets/images/samoyed_152.jpg'
+ './data/oxford_pets/images/samoyed_123.jpg'
+ './data/oxford_pets/images/samoyed_100.jpg'
+ './data/oxford_pets/images/samoyed_103.jpg'
+ './data/oxford_pets/images/samoyed_175.jpg'
+ './data/oxford_pets/images/samoyed_189.jpg']
+--- 30
+['./data/oxford_pets/images/scottish_terrier_125.jpg'
+ './data/oxford_pets/images/scottish_terrier_170.jpg'
+ './data/oxford_pets/images/scottish_terrier_177.jpg'
+ './data/oxford_pets/images/scottish_terrier_152.jpg'
+ './data/oxford_pets/images/scottish_terrier_121.jpg'
+ './data/oxford_pets/images/scottish_terrier_16.jpg'
+ './data/oxford_pets/images/scottish_terrier_131.jpg'
+ './data/oxford_pets/images/scottish_terrier_101.jpg'
+ './data/oxford_pets/images/scottish_terrier_137.jpg'
+ './data/oxford_pets/images/scottish_terrier_118.jpg'
+ './data/oxford_pets/images/scottish_terrier_175.jpg'
+ './data/oxford_pets/images/scottish_terrier_14.jpg'
+ './data/oxford_pets/images/scottish_terrier_144.jpg'
+ './data/oxford_pets/images/scottish_terrier_186.jpg'
+ './data/oxford_pets/images/scottish_terrier_122.jpg'
+ './data/oxford_pets/images/scottish_terrier_135.jpg']
+--- 31
+['./data/oxford_pets/images/shiba_inu_104.jpg'
+ './data/oxford_pets/images/shiba_inu_159.jpg'
+ './data/oxford_pets/images/shiba_inu_117.jpg'
+ './data/oxford_pets/images/shiba_inu_128.jpg'
+ './data/oxford_pets/images/shiba_inu_106.jpg'
+ './data/oxford_pets/images/shiba_inu_19.jpg'
+ './data/oxford_pets/images/shiba_inu_164.jpg'
+ './data/oxford_pets/images/shiba_inu_145.jpg'
+ './data/oxford_pets/images/shiba_inu_158.jpg'
+ './data/oxford_pets/images/shiba_inu_180.jpg'
+ './data/oxford_pets/images/shiba_inu_123.jpg'
+ './data/oxford_pets/images/shiba_inu_127.jpg'
+ './data/oxford_pets/images/shiba_inu_113.jpg'
+ './data/oxford_pets/images/shiba_inu_14.jpg'
+ './data/oxford_pets/images/shiba_inu_172.jpg'
+ './data/oxford_pets/images/shiba_inu_191.jpg']
+--- 32
+['./data/oxford_pets/images/Siamese_130.jpg'
+ './data/oxford_pets/images/Siamese_136.jpg'
+ './data/oxford_pets/images/Siamese_164.jpg'
+ './data/oxford_pets/images/Siamese_149.jpg'
+ './data/oxford_pets/images/Siamese_206.jpg'
+ './data/oxford_pets/images/Siamese_146.jpg'
+ './data/oxford_pets/images/Siamese_103.jpg'
+ './data/oxford_pets/images/Siamese_114.jpg'
+ './data/oxford_pets/images/Siamese_122.jpg'
+ './data/oxford_pets/images/Siamese_207.jpg'
+ './data/oxford_pets/images/Siamese_115.jpg'
+ './data/oxford_pets/images/Siamese_117.jpg'
+ './data/oxford_pets/images/Siamese_173.jpg'
+ './data/oxford_pets/images/Siamese_199.jpg'
+ './data/oxford_pets/images/Siamese_185.jpg'
+ './data/oxford_pets/images/Siamese_183.jpg']
+--- 33
+['./data/oxford_pets/images/Sphynx_139.jpg'
+ './data/oxford_pets/images/Sphynx_171.jpg'
+ './data/oxford_pets/images/Sphynx_173.jpg'
+ './data/oxford_pets/images/Sphynx_167.jpg'
+ './data/oxford_pets/images/Sphynx_143.jpg'
+ './data/oxford_pets/images/Sphynx_114.jpg'
+ './data/oxford_pets/images/Sphynx_198.jpg'
+ './data/oxford_pets/images/Sphynx_196.jpg'
+ './data/oxford_pets/images/Sphynx_162.jpg'
+ './data/oxford_pets/images/Sphynx_164.jpg'
+ './data/oxford_pets/images/Sphynx_178.jpg'
+ './data/oxford_pets/images/Sphynx_199.jpg'
+ './data/oxford_pets/images/Sphynx_104.jpg'
+ './data/oxford_pets/images/Sphynx_148.jpg'
+ './data/oxford_pets/images/Sphynx_108.jpg'
+ './data/oxford_pets/images/Sphynx_194.jpg']
+--- 34
+['./data/oxford_pets/images/staffordshire_bull_terrier_102.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_176.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_16.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_15.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_106.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_149.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_115.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_186.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_103.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_118.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_172.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_199.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_18.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_162.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_132.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_175.jpg']
+--- 35
+['./data/oxford_pets/images/wheaten_terrier_188.jpg'
+ './data/oxford_pets/images/wheaten_terrier_144.jpg'
+ './data/oxford_pets/images/wheaten_terrier_17.jpg'
+ './data/oxford_pets/images/wheaten_terrier_11.jpg'
+ './data/oxford_pets/images/wheaten_terrier_129.jpg'
+ './data/oxford_pets/images/wheaten_terrier_176.jpg'
+ './data/oxford_pets/images/wheaten_terrier_150.jpg'
+ './data/oxford_pets/images/wheaten_terrier_136.jpg'
+ './data/oxford_pets/images/wheaten_terrier_102.jpg'
+ './data/oxford_pets/images/wheaten_terrier_171.jpg'
+ './data/oxford_pets/images/wheaten_terrier_182.jpg'
+ './data/oxford_pets/images/wheaten_terrier_133.jpg'
+ './data/oxford_pets/images/wheaten_terrier_10.jpg'
+ './data/oxford_pets/images/wheaten_terrier_108.jpg'
+ './data/oxford_pets/images/wheaten_terrier_169.jpg'
+ './data/oxford_pets/images/wheaten_terrier_100.jpg']
+--- 36
+['./data/oxford_pets/images/yorkshire_terrier_105.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_102.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_171.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_126.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_186.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_170.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_14.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_100.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_131.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_160.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_108.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_10.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_184.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_154.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_165.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_120.jpg']
+* class: 0, Acc Rate 100.00%
+* class: 1, Acc Rate 100.00%
+* class: 2, Acc Rate 100.00%
+* class: 3, Acc Rate 100.00%
+* class: 4, Acc Rate 100.00%
+* class: 5, Acc Rate 100.00%
+* class: 6, Acc Rate 100.00%
+* class: 7, Acc Rate 100.00%
+* class: 8, Acc Rate 100.00%
+* class: 9, Acc Rate 100.00%
+* class: 10, Acc Rate 100.00%
+* class: 11, Acc Rate 100.00%
+* class: 12, Acc Rate 100.00%
+* class: 13, Acc Rate 100.00%
+* class: 14, Acc Rate 100.00%
+* class: 15, Acc Rate 100.00%
+* class: 16, Acc Rate 100.00%
+* class: 17, Acc Rate 100.00%
+* class: 18, Acc Rate 100.00%
+* class: 19, Acc Rate 100.00%
+* class: 20, Acc Rate 100.00%
+* class: 21, Acc Rate 100.00%
+* class: 22, Acc Rate 100.00%
+* class: 23, Acc Rate 100.00%
+* class: 24, Acc Rate 100.00%
+* class: 25, Acc Rate 100.00%
+* class: 26, Acc Rate 100.00%
+* class: 27, Acc Rate 100.00%
+* class: 28, Acc Rate 100.00%
+* class: 29, Acc Rate 100.00%
+* class: 30, Acc Rate 100.00%
+* class: 31, Acc Rate 100.00%
+* class: 32, Acc Rate 100.00%
+* class: 33, Acc Rate 100.00%
+* class: 34, Acc Rate 100.00%
+* class: 35, Acc Rate 100.00%
+* class: 36, Acc Rate 100.00%
+* average: 100.00%
+[[1.  0.3 0.3 ... 0.3 0.3 0.3]
+ [0.3 1.  0.3 ... 0.3 0.3 0.3]
+ [0.3 0.3 1.  ... 0.3 0.3 0.3]
+ ...
+ [0.3 0.3 0.3 ... 1.  0.3 0.3]
+ [0.3 0.3 0.3 ... 0.3 1.  0.3]
+ [0.3 0.3 0.3 ... 0.3 0.3 1. ]]
+Finish Generating Candidate Label Sets!
+
+SSOxfordPets
+Reading split from /mnt/disk2/zjh/projects7.12/PTNL/data/oxford_pets/split_zhou_OxfordPets.json
+sstrain 592
+No checkpoint found, train from scratch
+Initialize tensorboard (log_dir=./output/ssoxford_pets/UPLTrainer/rn50_ep50_16shots_EQULE_True_09-21_00-40-01/nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+gce/seed1/beta0.125/tensorboard)
+epoch [1/50][5/18]	time 0.095 (1.124)	data 0.000 (0.265)	eta 0:16:46	loss 2.9110 (2.9630) acc 56.2500 (40.6250)	lr 1.000000e-05
+epoch [1/50][10/18]	time 0.091 (0.609)	data 0.001 (0.133)	eta 0:09:02	loss 2.6198 (2.8880) acc 56.2500 (47.1875)	lr 1.000000e-05
+epoch [1/50][15/18]	time 0.086 (0.435)	data 0.001 (0.089)	eta 0:06:25	loss 2.8783 (2.8290) acc 46.8750 (50.0000)	lr 1.000000e-05
+epoch [2/50][5/18]	time 0.108 (0.338)	data 0.000 (0.229)	eta 0:04:56	loss 2.3727 (2.5683) acc 75.0000 (61.8750)	lr 2.000000e-03
+epoch [2/50][10/18]	time 0.092 (0.215)	data 0.000 (0.115)	eta 0:03:07	loss 2.4471 (2.4871) acc 71.8750 (67.5000)	lr 2.000000e-03
+epoch [2/50][15/18]	time 0.082 (0.173)	data 0.001 (0.077)	eta 0:02:29	loss 2.3075 (2.4840) acc 75.0000 (68.3333)	lr 2.000000e-03
+epoch [3/50][5/18]	time 0.088 (0.370)	data 0.001 (0.239)	eta 0:05:17	loss 2.7800 (2.4812) acc 46.8750 (63.7500)	lr 1.998027e-03
+epoch [3/50][10/18]	time 0.090 (0.229)	data 0.001 (0.120)	eta 0:03:15	loss 2.5299 (2.5048) acc 65.6250 (65.9375)	lr 1.998027e-03
+epoch [3/50][15/18]	time 0.107 (0.183)	data 0.001 (0.080)	eta 0:02:35	loss 2.6755 (2.4567) acc 65.6250 (68.7500)	lr 1.998027e-03
+epoch [4/50][5/18]	time 0.112 (0.347)	data 0.001 (0.221)	eta 0:04:52	loss 2.4953 (2.4471) acc 68.7500 (76.8750)	lr 1.992115e-03
+epoch [4/50][10/18]	time 0.091 (0.220)	data 0.001 (0.111)	eta 0:03:04	loss 2.3082 (2.3816) acc 81.2500 (75.6250)	lr 1.992115e-03
+epoch [4/50][15/18]	time 0.094 (0.178)	data 0.001 (0.074)	eta 0:02:27	loss 2.3199 (2.4130) acc 71.8750 (72.7083)	lr 1.992115e-03
+epoch [5/50][5/18]	time 0.100 (0.334)	data 0.001 (0.206)	eta 0:04:34	loss 2.4567 (2.5502) acc 81.2500 (67.5000)	lr 1.982287e-03
+epoch [5/50][10/18]	time 0.087 (0.215)	data 0.001 (0.103)	eta 0:02:55	loss 2.2523 (2.4519) acc 78.1250 (70.9375)	lr 1.982287e-03
+epoch [5/50][15/18]	time 0.088 (0.172)	data 0.000 (0.069)	eta 0:02:20	loss 2.4669 (2.4090) acc 81.2500 (73.1250)	lr 1.982287e-03
+epoch [6/50][5/18]	time 0.102 (0.336)	data 0.001 (0.210)	eta 0:04:30	loss 2.2874 (2.3989) acc 78.1250 (76.8750)	lr 1.968583e-03
+epoch [6/50][10/18]	time 0.130 (0.223)	data 0.001 (0.105)	eta 0:02:58	loss 2.0539 (2.3195) acc 78.1250 (77.5000)	lr 1.968583e-03
+epoch [6/50][15/18]	time 0.092 (0.181)	data 0.000 (0.070)	eta 0:02:24	loss 2.3295 (2.3313) acc 75.0000 (77.0833)	lr 1.968583e-03
+epoch [7/50][5/18]	time 0.106 (0.306)	data 0.001 (0.179)	eta 0:04:01	loss 2.3235 (2.3311) acc 78.1250 (71.2500)	lr 1.951057e-03
+epoch [7/50][10/18]	time 0.081 (0.195)	data 0.001 (0.090)	eta 0:02:32	loss 2.2496 (2.2949) acc 75.0000 (73.4375)	lr 1.951057e-03
+epoch [7/50][15/18]	time 0.101 (0.161)	data 0.001 (0.060)	eta 0:02:05	loss 2.4256 (2.3388) acc 71.8750 (72.2917)	lr 1.951057e-03
+epoch [8/50][5/18]	time 0.118 (0.318)	data 0.001 (0.191)	eta 0:04:04	loss 2.2769 (2.3411) acc 84.3750 (74.3750)	lr 1.929776e-03
+epoch [8/50][10/18]	time 0.101 (0.205)	data 0.000 (0.096)	eta 0:02:36	loss 2.2228 (2.3420) acc 78.1250 (75.0000)	lr 1.929776e-03
+epoch [8/50][15/18]	time 0.074 (0.168)	data 0.001 (0.064)	eta 0:02:07	loss 2.4172 (2.3357) acc 71.8750 (77.0833)	lr 1.929776e-03
+epoch [9/50][5/18]	time 0.118 (0.422)	data 0.001 (0.314)	eta 0:05:16	loss 2.3091 (2.2711) acc 81.2500 (81.2500)	lr 1.904827e-03
+epoch [9/50][10/18]	time 0.093 (0.260)	data 0.001 (0.157)	eta 0:03:13	loss 2.4652 (2.3570) acc 75.0000 (76.8750)	lr 1.904827e-03
+epoch [9/50][15/18]	time 0.095 (0.205)	data 0.001 (0.105)	eta 0:02:32	loss 2.3536 (2.3380) acc 71.8750 (77.9167)	lr 1.904827e-03
+epoch [10/50][5/18]	time 0.114 (0.325)	data 0.000 (0.189)	eta 0:03:58	loss 2.3075 (2.3776) acc 75.0000 (75.0000)	lr 1.876307e-03
+epoch [10/50][10/18]	time 0.092 (0.210)	data 0.001 (0.095)	eta 0:02:32	loss 2.4212 (2.3396) acc 75.0000 (77.1875)	lr 1.876307e-03
+epoch [10/50][15/18]	time 0.090 (0.170)	data 0.000 (0.063)	eta 0:02:03	loss 2.2460 (2.3043) acc 81.2500 (78.7500)	lr 1.876307e-03
+epoch [11/50][5/18]	time 0.110 (0.333)	data 0.001 (0.214)	eta 0:03:58	loss 2.4414 (2.3575) acc 75.0000 (82.5000)	lr 1.844328e-03
+epoch [11/50][10/18]	time 0.074 (0.207)	data 0.001 (0.107)	eta 0:02:26	loss 2.3386 (2.3393) acc 71.8750 (77.5000)	lr 1.844328e-03
+epoch [11/50][15/18]	time 0.079 (0.164)	data 0.000 (0.072)	eta 0:01:55	loss 2.4156 (2.3677) acc 75.0000 (74.3750)	lr 1.844328e-03
+epoch [12/50][5/18]	time 0.101 (0.320)	data 0.001 (0.187)	eta 0:03:42	loss 2.3503 (2.3384) acc 78.1250 (74.3750)	lr 1.809017e-03
+epoch [12/50][10/18]	time 0.103 (0.209)	data 0.001 (0.094)	eta 0:02:24	loss 2.2558 (2.3378) acc 78.1250 (74.6875)	lr 1.809017e-03
+epoch [12/50][15/18]	time 0.090 (0.172)	data 0.001 (0.063)	eta 0:01:57	loss 2.4888 (2.3323) acc 68.7500 (75.8333)	lr 1.809017e-03
+epoch [13/50][5/18]	time 0.103 (0.329)	data 0.000 (0.209)	eta 0:03:43	loss 2.3646 (2.3159) acc 71.8750 (75.6250)	lr 1.770513e-03
+epoch [13/50][10/18]	time 0.095 (0.211)	data 0.001 (0.105)	eta 0:02:21	loss 2.4083 (2.3080) acc 75.0000 (78.1250)	lr 1.770513e-03
+epoch [13/50][15/18]	time 0.094 (0.175)	data 0.000 (0.070)	eta 0:01:57	loss 2.3604 (2.2920) acc 84.3750 (78.9583)	lr 1.770513e-03
+epoch [14/50][5/18]	time 0.108 (0.336)	data 0.001 (0.194)	eta 0:03:42	loss 2.4441 (2.3691) acc 75.0000 (76.8750)	lr 1.728969e-03
+epoch [14/50][10/18]	time 0.122 (0.220)	data 0.001 (0.097)	eta 0:02:24	loss 2.2936 (2.3460) acc 78.1250 (78.4375)	lr 1.728969e-03
+epoch [14/50][15/18]	time 0.102 (0.187)	data 0.001 (0.065)	eta 0:02:01	loss 2.1774 (2.3280) acc 75.0000 (78.9583)	lr 1.728969e-03
+epoch [15/50][5/18]	time 0.100 (0.320)	data 0.001 (0.182)	eta 0:03:26	loss 2.2399 (2.2993) acc 84.3750 (78.1250)	lr 1.684547e-03
+epoch [15/50][10/18]	time 0.095 (0.207)	data 0.001 (0.091)	eta 0:02:12	loss 2.5088 (2.2857) acc 71.8750 (80.0000)	lr 1.684547e-03
+epoch [15/50][15/18]	time 0.095 (0.170)	data 0.000 (0.061)	eta 0:01:47	loss 2.1585 (2.2882) acc 87.5000 (80.6250)	lr 1.684547e-03
+epoch [16/50][5/18]	time 0.119 (0.328)	data 0.000 (0.208)	eta 0:03:24	loss 2.2900 (2.3213) acc 81.2500 (82.5000)	lr 1.637424e-03
+epoch [16/50][10/18]	time 0.092 (0.210)	data 0.001 (0.104)	eta 0:02:10	loss 2.4867 (2.3062) acc 68.7500 (80.6250)	lr 1.637424e-03
+epoch [16/50][15/18]	time 0.091 (0.173)	data 0.001 (0.070)	eta 0:01:46	loss 2.3060 (2.3052) acc 84.3750 (78.5417)	lr 1.637424e-03
+epoch [17/50][5/18]	time 0.118 (0.364)	data 0.000 (0.248)	eta 0:03:40	loss 2.2879 (2.3246) acc 87.5000 (73.7500)	lr 1.587785e-03
+epoch [17/50][10/18]	time 0.090 (0.230)	data 0.000 (0.124)	eta 0:02:18	loss 2.4023 (2.3470) acc 84.3750 (74.6875)	lr 1.587785e-03
+epoch [17/50][15/18]	time 0.105 (0.187)	data 0.000 (0.083)	eta 0:01:51	loss 2.3840 (2.3385) acc 75.0000 (76.0417)	lr 1.587785e-03
+epoch [18/50][5/18]	time 0.112 (0.345)	data 0.001 (0.212)	eta 0:03:23	loss 2.2936 (2.2577) acc 81.2500 (80.0000)	lr 1.535827e-03
+epoch [18/50][10/18]	time 0.098 (0.219)	data 0.001 (0.106)	eta 0:02:07	loss 2.1676 (2.2507) acc 87.5000 (78.1250)	lr 1.535827e-03
+epoch [18/50][15/18]	time 0.091 (0.177)	data 0.001 (0.071)	eta 0:01:42	loss 2.2904 (2.2516) acc 81.2500 (79.5833)	lr 1.535827e-03
+epoch [19/50][5/18]	time 0.109 (0.341)	data 0.001 (0.204)	eta 0:03:14	loss 2.1605 (2.3482) acc 90.6250 (79.3750)	lr 1.481754e-03
+epoch [19/50][10/18]	time 0.097 (0.218)	data 0.001 (0.103)	eta 0:02:03	loss 2.2458 (2.3139) acc 78.1250 (77.1875)	lr 1.481754e-03
+epoch [19/50][15/18]	time 0.091 (0.176)	data 0.001 (0.069)	eta 0:01:38	loss 2.3358 (2.2825) acc 71.8750 (78.1250)	lr 1.481754e-03
+epoch [20/50][5/18]	time 0.097 (0.326)	data 0.000 (0.208)	eta 0:03:00	loss 2.5170 (2.2926) acc 71.8750 (76.8750)	lr 1.425779e-03
+epoch [20/50][10/18]	time 0.105 (0.213)	data 0.001 (0.104)	eta 0:01:56	loss 2.4205 (2.3488) acc 81.2500 (75.6250)	lr 1.425779e-03
+epoch [20/50][15/18]	time 0.092 (0.174)	data 0.000 (0.070)	eta 0:01:34	loss 2.2339 (2.3252) acc 75.0000 (75.4167)	lr 1.425779e-03
+epoch [21/50][5/18]	time 0.099 (0.350)	data 0.001 (0.236)	eta 0:03:07	loss 2.3312 (2.4094) acc 87.5000 (76.8750)	lr 1.368125e-03
+epoch [21/50][10/18]	time 0.097 (0.223)	data 0.001 (0.118)	eta 0:01:58	loss 2.2110 (2.3281) acc 81.2500 (79.6875)	lr 1.368125e-03
+epoch [21/50][15/18]	time 0.102 (0.181)	data 0.001 (0.079)	eta 0:01:35	loss 1.9911 (2.2812) acc 93.7500 (80.2083)	lr 1.368125e-03
+epoch [22/50][5/18]	time 0.098 (0.322)	data 0.001 (0.193)	eta 0:02:46	loss 2.3160 (2.2988) acc 75.0000 (80.0000)	lr 1.309017e-03
+epoch [22/50][10/18]	time 0.092 (0.208)	data 0.001 (0.097)	eta 0:01:46	loss 2.0273 (2.2974) acc 78.1250 (77.5000)	lr 1.309017e-03
+epoch [22/50][15/18]	time 0.097 (0.172)	data 0.001 (0.065)	eta 0:01:27	loss 2.1570 (2.3111) acc 78.1250 (77.7083)	lr 1.309017e-03
+epoch [23/50][5/18]	time 0.091 (0.355)	data 0.001 (0.232)	eta 0:02:56	loss 2.2195 (2.1920) acc 84.3750 (81.2500)	lr 1.248690e-03
+epoch [23/50][10/18]	time 0.099 (0.228)	data 0.000 (0.116)	eta 0:01:52	loss 2.2324 (2.2655) acc 81.2500 (77.8125)	lr 1.248690e-03
+epoch [23/50][15/18]	time 0.127 (0.188)	data 0.001 (0.078)	eta 0:01:32	loss 2.1843 (2.2546) acc 81.2500 (79.3750)	lr 1.248690e-03
+epoch [24/50][5/18]	time 0.148 (0.344)	data 0.001 (0.214)	eta 0:02:45	loss 2.4218 (2.3002) acc 84.3750 (75.6250)	lr 1.187381e-03
+epoch [24/50][10/18]	time 0.088 (0.219)	data 0.002 (0.107)	eta 0:01:44	loss 2.2613 (2.2921) acc 81.2500 (77.1875)	lr 1.187381e-03
+epoch [24/50][15/18]	time 0.098 (0.176)	data 0.001 (0.072)	eta 0:01:22	loss 2.2210 (2.2739) acc 78.1250 (78.7500)	lr 1.187381e-03
+epoch [25/50][5/18]	time 0.099 (0.347)	data 0.001 (0.207)	eta 0:02:40	loss 2.3037 (2.2478) acc 81.2500 (79.3750)	lr 1.125333e-03
+epoch [25/50][10/18]	time 0.101 (0.222)	data 0.001 (0.104)	eta 0:01:41	loss 2.2790 (2.2335) acc 75.0000 (77.1875)	lr 1.125333e-03
+epoch [25/50][15/18]	time 0.101 (0.179)	data 0.001 (0.069)	eta 0:01:20	loss 2.2167 (2.2483) acc 84.3750 (76.8750)	lr 1.125333e-03
+epoch [26/50][5/18]	time 0.105 (0.345)	data 0.001 (0.220)	eta 0:02:33	loss 2.3053 (2.2190) acc 75.0000 (84.3750)	lr 1.062791e-03
+epoch [26/50][10/18]	time 0.086 (0.219)	data 0.000 (0.110)	eta 0:01:36	loss 2.3903 (2.3146) acc 65.6250 (76.5625)	lr 1.062791e-03
+epoch [26/50][15/18]	time 0.080 (0.174)	data 0.000 (0.074)	eta 0:01:15	loss 2.2178 (2.2964) acc 78.1250 (77.9167)	lr 1.062791e-03
+epoch [27/50][5/18]	time 0.103 (0.321)	data 0.001 (0.196)	eta 0:02:17	loss 2.2867 (2.2937) acc 84.3750 (81.8750)	lr 1.000000e-03
+epoch [27/50][10/18]	time 0.080 (0.207)	data 0.000 (0.098)	eta 0:01:27	loss 2.1599 (2.2548) acc 84.3750 (82.1875)	lr 1.000000e-03
+epoch [27/50][15/18]	time 0.098 (0.168)	data 0.001 (0.066)	eta 0:01:10	loss 2.2765 (2.2795) acc 71.8750 (80.4167)	lr 1.000000e-03
+epoch [28/50][5/18]	time 0.107 (0.349)	data 0.000 (0.232)	eta 0:02:22	loss 2.1656 (2.2196) acc 78.1250 (77.5000)	lr 9.372095e-04
+epoch [28/50][10/18]	time 0.094 (0.232)	data 0.000 (0.116)	eta 0:01:33	loss 2.1293 (2.2218) acc 75.0000 (77.8125)	lr 9.372095e-04
+epoch [28/50][15/18]	time 0.092 (0.185)	data 0.001 (0.078)	eta 0:01:13	loss 2.1749 (2.2393) acc 78.1250 (78.3333)	lr 9.372095e-04
+epoch [29/50][5/18]	time 0.119 (0.329)	data 0.001 (0.189)	eta 0:02:08	loss 2.4359 (2.2352) acc 62.5000 (78.7500)	lr 8.746668e-04
+epoch [29/50][10/18]	time 0.111 (0.218)	data 0.001 (0.095)	eta 0:01:24	loss 2.3390 (2.2561) acc 71.8750 (78.7500)	lr 8.746668e-04
+epoch [29/50][15/18]	time 0.093 (0.179)	data 0.001 (0.063)	eta 0:01:08	loss 2.3703 (2.2556) acc 81.2500 (79.3750)	lr 8.746668e-04
+epoch [30/50][5/18]	time 0.124 (0.337)	data 0.001 (0.201)	eta 0:02:05	loss 2.0594 (2.2107) acc 93.7500 (85.6250)	lr 8.126187e-04
+epoch [30/50][10/18]	time 0.088 (0.216)	data 0.001 (0.101)	eta 0:01:19	loss 2.1213 (2.1995) acc 81.2500 (82.8125)	lr 8.126187e-04
+epoch [30/50][15/18]	time 0.104 (0.176)	data 0.000 (0.067)	eta 0:01:03	loss 1.9743 (2.2413) acc 81.2500 (80.8333)	lr 8.126187e-04
+epoch [31/50][5/18]	time 0.120 (0.353)	data 0.001 (0.224)	eta 0:02:05	loss 2.1733 (2.2287) acc 81.2500 (80.0000)	lr 7.513101e-04
+epoch [31/50][10/18]	time 0.100 (0.226)	data 0.001 (0.112)	eta 0:01:19	loss 2.1619 (2.2403) acc 81.2500 (80.9375)	lr 7.513101e-04
+epoch [31/50][15/18]	time 0.086 (0.185)	data 0.000 (0.075)	eta 0:01:03	loss 2.3018 (2.2469) acc 78.1250 (80.0000)	lr 7.513101e-04
+epoch [32/50][5/18]	time 0.123 (0.324)	data 0.001 (0.193)	eta 0:01:49	loss 2.3011 (2.2838) acc 90.6250 (80.6250)	lr 6.909830e-04
+epoch [32/50][10/18]	time 0.101 (0.210)	data 0.001 (0.097)	eta 0:01:09	loss 2.1524 (2.2912) acc 87.5000 (79.3750)	lr 6.909830e-04
+epoch [32/50][15/18]	time 0.102 (0.175)	data 0.001 (0.065)	eta 0:00:57	loss 2.3610 (2.2779) acc 75.0000 (78.3333)	lr 6.909830e-04
+epoch [33/50][5/18]	time 0.097 (0.396)	data 0.000 (0.287)	eta 0:02:06	loss 2.3034 (2.2588) acc 81.2500 (78.7500)	lr 6.318754e-04
+epoch [33/50][10/18]	time 0.103 (0.248)	data 0.001 (0.144)	eta 0:01:17	loss 2.2325 (2.2468) acc 81.2500 (80.6250)	lr 6.318754e-04
+epoch [33/50][15/18]	time 0.091 (0.197)	data 0.000 (0.096)	eta 0:01:01	loss 2.4045 (2.2672) acc 71.8750 (78.5417)	lr 6.318754e-04
+epoch [34/50][5/18]	time 0.109 (0.342)	data 0.001 (0.223)	eta 0:01:42	loss 2.3908 (2.3046) acc 78.1250 (79.3750)	lr 5.742207e-04
+epoch [34/50][10/18]	time 0.094 (0.218)	data 0.002 (0.112)	eta 0:01:04	loss 2.2778 (2.2679) acc 81.2500 (77.1875)	lr 5.742207e-04
+epoch [34/50][15/18]	time 0.093 (0.175)	data 0.001 (0.075)	eta 0:00:51	loss 2.3302 (2.2541) acc 84.3750 (78.5417)	lr 5.742207e-04
+epoch [35/50][5/18]	time 0.103 (0.389)	data 0.001 (0.273)	eta 0:01:49	loss 2.1411 (2.3248) acc 68.7500 (73.1250)	lr 5.182463e-04
+epoch [35/50][10/18]	time 0.086 (0.243)	data 0.001 (0.137)	eta 0:01:07	loss 2.2452 (2.2661) acc 75.0000 (77.5000)	lr 5.182463e-04
+epoch [35/50][15/18]	time 0.090 (0.194)	data 0.000 (0.091)	eta 0:00:52	loss 2.0873 (2.2619) acc 90.6250 (80.2083)	lr 5.182463e-04
+epoch [36/50][5/18]	time 0.100 (0.361)	data 0.001 (0.233)	eta 0:01:35	loss 2.2025 (2.2000) acc 87.5000 (77.5000)	lr 4.641732e-04
+epoch [36/50][10/18]	time 0.092 (0.227)	data 0.001 (0.117)	eta 0:00:59	loss 2.2732 (2.2198) acc 78.1250 (79.6875)	lr 4.641732e-04
+epoch [36/50][15/18]	time 0.092 (0.182)	data 0.000 (0.078)	eta 0:00:46	loss 2.0755 (2.2161) acc 90.6250 (79.7917)	lr 4.641732e-04
+epoch [37/50][5/18]	time 0.128 (0.340)	data 0.001 (0.203)	eta 0:01:23	loss 2.1026 (2.1376) acc 87.5000 (84.3750)	lr 4.122147e-04
+epoch [37/50][10/18]	time 0.090 (0.221)	data 0.001 (0.102)	eta 0:00:53	loss 2.2570 (2.2178) acc 75.0000 (81.8750)	lr 4.122147e-04
+epoch [37/50][15/18]	time 0.091 (0.176)	data 0.001 (0.068)	eta 0:00:41	loss 2.0961 (2.2095) acc 93.7500 (81.6667)	lr 4.122147e-04
+epoch [38/50][5/18]	time 0.115 (0.350)	data 0.000 (0.196)	eta 0:01:20	loss 2.4814 (2.2616) acc 68.7500 (80.6250)	lr 3.625760e-04
+epoch [38/50][10/18]	time 0.098 (0.223)	data 0.001 (0.098)	eta 0:00:50	loss 2.0012 (2.2207) acc 93.7500 (82.1875)	lr 3.625760e-04
+epoch [38/50][15/18]	time 0.094 (0.181)	data 0.000 (0.066)	eta 0:00:39	loss 2.4758 (2.2511) acc 75.0000 (80.2083)	lr 3.625760e-04
+epoch [39/50][5/18]	time 0.096 (0.317)	data 0.000 (0.201)	eta 0:01:06	loss 2.3298 (2.2963) acc 71.8750 (75.0000)	lr 3.154529e-04
+epoch [39/50][10/18]	time 0.095 (0.204)	data 0.000 (0.101)	eta 0:00:41	loss 2.1926 (2.2233) acc 78.1250 (79.3750)	lr 3.154529e-04
+epoch [39/50][15/18]	time 0.087 (0.168)	data 0.000 (0.067)	eta 0:00:33	loss 2.1619 (2.2259) acc 75.0000 (80.0000)	lr 3.154529e-04
+epoch [40/50][5/18]	time 0.101 (0.345)	data 0.000 (0.210)	eta 0:01:06	loss 2.2421 (2.2356) acc 81.2500 (83.1250)	lr 2.710314e-04
+epoch [40/50][10/18]	time 0.105 (0.222)	data 0.001 (0.105)	eta 0:00:41	loss 2.2003 (2.2108) acc 78.1250 (80.9375)	lr 2.710314e-04
+epoch [40/50][15/18]	time 0.090 (0.178)	data 0.000 (0.070)	eta 0:00:32	loss 2.1242 (2.2108) acc 81.2500 (80.8333)	lr 2.710314e-04
+epoch [41/50][5/18]	time 0.096 (0.317)	data 0.001 (0.184)	eta 0:00:55	loss 2.2505 (2.2541) acc 81.2500 (81.8750)	lr 2.294868e-04
+epoch [41/50][10/18]	time 0.088 (0.204)	data 0.004 (0.093)	eta 0:00:34	loss 2.2167 (2.2436) acc 75.0000 (79.6875)	lr 2.294868e-04
+epoch [41/50][15/18]	time 0.087 (0.164)	data 0.001 (0.062)	eta 0:00:27	loss 2.1259 (2.2636) acc 84.3750 (78.9583)	lr 2.294868e-04
+epoch [42/50][5/18]	time 0.133 (0.357)	data 0.001 (0.216)	eta 0:00:56	loss 2.1641 (2.2309) acc 84.3750 (81.2500)	lr 1.909830e-04
+epoch [42/50][10/18]	time 0.087 (0.226)	data 0.001 (0.108)	eta 0:00:34	loss 2.3487 (2.2642) acc 81.2500 (80.9375)	lr 1.909830e-04
+epoch [42/50][15/18]	time 0.093 (0.181)	data 0.001 (0.072)	eta 0:00:26	loss 2.0440 (2.2222) acc 84.3750 (81.2500)	lr 1.909830e-04
+epoch [43/50][5/18]	time 0.094 (0.342)	data 0.000 (0.229)	eta 0:00:47	loss 2.1281 (2.1210) acc 84.3750 (86.2500)	lr 1.556721e-04
+epoch [43/50][10/18]	time 0.076 (0.212)	data 0.001 (0.115)	eta 0:00:28	loss 2.3656 (2.1972) acc 75.0000 (81.5625)	lr 1.556721e-04
+epoch [43/50][15/18]	time 0.094 (0.169)	data 0.001 (0.077)	eta 0:00:21	loss 2.3172 (2.2135) acc 87.5000 (80.4167)	lr 1.556721e-04
+epoch [44/50][5/18]	time 0.101 (0.321)	data 0.000 (0.205)	eta 0:00:38	loss 2.3216 (2.2285) acc 78.1250 (80.0000)	lr 1.236933e-04
+epoch [44/50][10/18]	time 0.093 (0.204)	data 0.000 (0.103)	eta 0:00:23	loss 2.2347 (2.2120) acc 81.2500 (80.3125)	lr 1.236933e-04
+epoch [44/50][15/18]	time 0.093 (0.166)	data 0.001 (0.069)	eta 0:00:18	loss 2.1978 (2.2103) acc 81.2500 (80.6250)	lr 1.236933e-04
+epoch [45/50][5/18]	time 0.089 (0.341)	data 0.000 (0.219)	eta 0:00:35	loss 2.3044 (2.3438) acc 87.5000 (73.7500)	lr 9.517295e-05
+epoch [45/50][10/18]	time 0.102 (0.221)	data 0.000 (0.110)	eta 0:00:21	loss 2.0405 (2.2965) acc 87.5000 (75.6250)	lr 9.517295e-05
+epoch [45/50][15/18]	time 0.090 (0.178)	data 0.001 (0.073)	eta 0:00:16	loss 2.2315 (2.2641) acc 87.5000 (78.9583)	lr 9.517295e-05
+epoch [46/50][5/18]	time 0.093 (0.309)	data 0.000 (0.187)	eta 0:00:26	loss 2.2296 (2.1976) acc 90.6250 (82.5000)	lr 7.022351e-05
+epoch [46/50][10/18]	time 0.079 (0.200)	data 0.001 (0.094)	eta 0:00:16	loss 2.2774 (2.1952) acc 90.6250 (84.0625)	lr 7.022351e-05
+epoch [46/50][15/18]	time 0.089 (0.162)	data 0.001 (0.063)	eta 0:00:12	loss 2.0758 (2.1937) acc 90.6250 (84.3750)	lr 7.022351e-05
+epoch [47/50][5/18]	time 0.106 (0.332)	data 0.001 (0.207)	eta 0:00:22	loss 2.0974 (2.2343) acc 87.5000 (83.7500)	lr 4.894348e-05
+epoch [47/50][10/18]	time 0.097 (0.212)	data 0.001 (0.104)	eta 0:00:13	loss 2.1261 (2.1969) acc 90.6250 (83.4375)	lr 4.894348e-05
+epoch [47/50][15/18]	time 0.093 (0.173)	data 0.001 (0.069)	eta 0:00:09	loss 2.2043 (2.2143) acc 81.2500 (81.8750)	lr 4.894348e-05
+epoch [48/50][5/18]	time 0.101 (0.334)	data 0.001 (0.205)	eta 0:00:16	loss 2.1524 (2.2112) acc 81.2500 (79.3750)	lr 3.141684e-05
+epoch [48/50][10/18]	time 0.106 (0.216)	data 0.001 (0.103)	eta 0:00:09	loss 2.1355 (2.2107) acc 81.2500 (80.6250)	lr 3.141684e-05
+epoch [48/50][15/18]	time 0.096 (0.175)	data 0.000 (0.069)	eta 0:00:06	loss 2.2526 (2.2115) acc 81.2500 (80.0000)	lr 3.141684e-05
+epoch [49/50][5/18]	time 0.106 (0.381)	data 0.001 (0.231)	eta 0:00:11	loss 2.3258 (2.2431) acc 68.7500 (80.0000)	lr 1.771275e-05
+epoch [49/50][10/18]	time 0.088 (0.238)	data 0.001 (0.116)	eta 0:00:06	loss 2.2256 (2.2467) acc 78.1250 (80.3125)	lr 1.771275e-05
+epoch [49/50][15/18]	time 0.097 (0.189)	data 0.000 (0.077)	eta 0:00:03	loss 2.1947 (2.2423) acc 84.3750 (80.4167)	lr 1.771275e-05
+epoch [50/50][5/18]	time 0.104 (0.349)	data 0.001 (0.222)	eta 0:00:04	loss 2.1469 (2.1938) acc 90.6250 (83.7500)	lr 7.885299e-06
+epoch [50/50][10/18]	time 0.106 (0.223)	data 0.001 (0.111)	eta 0:00:01	loss 2.0751 (2.2056) acc 81.2500 (81.5625)	lr 7.885299e-06
+epoch [50/50][15/18]	time 0.098 (0.181)	data 0.001 (0.074)	eta 0:00:00	loss 2.3752 (2.2373) acc 71.8750 (80.8333)	lr 7.885299e-06
+Checkpoint saved to ./output/ssoxford_pets/UPLTrainer/rn50_ep50_16shots_EQULE_True_09-21_00-40-01/nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+gce/seed1/beta0.125/prompt_learner/model-best-0.pth.tar
+Finished training
+Do evaluation on test set
+=> result
+* total: 3,669
+* correct: 3,261
+* accuracy: 88.88%
+* error: 11.12%
+* macro_f1: 88.87%
+=> per-class result
+* class: 0 (abyssinian)	total: 98	correct: 82	acc: 83.67%
+* class: 1 (american_bulldog)	total: 100	correct: 89	acc: 89.00%
+* class: 2 (american_pit_bull_terrier)	total: 100	correct: 59	acc: 59.00%
+* class: 3 (basset_hound)	total: 100	correct: 93	acc: 93.00%
+* class: 4 (beagle)	total: 100	correct: 80	acc: 80.00%
+* class: 5 (bengal)	total: 100	correct: 77	acc: 77.00%
+* class: 6 (birman)	total: 100	correct: 66	acc: 66.00%
+* class: 7 (bombay)	total: 88	correct: 84	acc: 95.45%
+* class: 8 (boxer)	total: 99	correct: 82	acc: 82.83%
+* class: 9 (british_shorthair)	total: 100	correct: 80	acc: 80.00%
+* class: 10 (chihuahua)	total: 100	correct: 91	acc: 91.00%
+* class: 11 (egyptian_mau)	total: 97	correct: 84	acc: 86.60%
+* class: 12 (english_cocker_spaniel)	total: 100	correct: 88	acc: 88.00%
+* class: 13 (english_setter)	total: 100	correct: 93	acc: 93.00%
+* class: 14 (german_shorthaired)	total: 100	correct: 97	acc: 97.00%
+* class: 15 (great_pyrenees)	total: 100	correct: 97	acc: 97.00%
+* class: 16 (havanese)	total: 100	correct: 96	acc: 96.00%
+* class: 17 (japanese_chin)	total: 100	correct: 98	acc: 98.00%
+* class: 18 (keeshond)	total: 99	correct: 92	acc: 92.93%
+* class: 19 (leonberger)	total: 100	correct: 88	acc: 88.00%
+* class: 20 (maine_coon)	total: 100	correct: 86	acc: 86.00%
+* class: 21 (miniature_pinscher)	total: 100	correct: 90	acc: 90.00%
+* class: 22 (newfoundland)	total: 100	correct: 93	acc: 93.00%
+* class: 23 (persian)	total: 100	correct: 87	acc: 87.00%
+* class: 24 (pomeranian)	total: 100	correct: 97	acc: 97.00%
+* class: 25 (pug)	total: 100	correct: 98	acc: 98.00%
+* class: 26 (ragdoll)	total: 100	correct: 78	acc: 78.00%
+* class: 27 (russian_blue)	total: 100	correct: 90	acc: 90.00%
+* class: 28 (saint_bernard)	total: 100	correct: 90	acc: 90.00%
+* class: 29 (samoyed)	total: 100	correct: 96	acc: 96.00%
+* class: 30 (scottish_terrier)	total: 99	correct: 97	acc: 97.98%
+* class: 31 (shiba_inu)	total: 100	correct: 99	acc: 99.00%
+* class: 32 (siamese)	total: 100	correct: 90	acc: 90.00%
+* class: 33 (sphynx)	total: 100	correct: 98	acc: 98.00%
+* class: 34 (staffordshire_bull_terrier)	total: 89	correct: 70	acc: 78.65%
+* class: 35 (wheaten_terrier)	total: 100	correct: 92	acc: 92.00%
+* class: 36 (yorkshire_terrier)	total: 100	correct: 94	acc: 94.00%
+* average: 88.87%
+worst10 classes: 
+american_pit_bull_terrier: 59.00%
+birman: 66.00%
+bengal: 77.00%
+ragdoll: 78.00%
+staffordshire_bull_terrier: 78.65%
+beagle: 80.00%
+british_shorthair: 80.00%
+boxer: 82.83%
+abyssinian: 83.67%
+maine_coon: 86.00%
+Elapsed: 0:02:49

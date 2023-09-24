@@ -1,0 +1,99 @@
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-cc/seed1 ----> test * accuracy: 88.01%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc_rc/seed1 ----> test * accuracy: 89.07%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc_cav/seed1 ----> test * accuracy: 89.72%
+
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-cc/seed1 ----> test * accuracy: 89.07%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc_rc/seed1 ----> test * accuracy: 85.31%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc_cav/seed1 ----> test * accuracy: 86.26%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-cc/seed1 ----> test * accuracy: 87.05%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc_rc/seed1 ----> test * accuracy: 60.48%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc_cav/seed1 ----> test * accuracy: 53.83%
+
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+gce/seed1/beta0.05 ----> test * accuracy: 88.33%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+gce/seed1/beta0.075 ----> test * accuracy: 88.25%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+gce/seed1/beta0.1 ----> test * accuracy: 88.03%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+gce/seed1/beta0.125 ----> test * accuracy: 87.54%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+gce/seed1/beta1.5 ----> test * accuracy: 88.58%
+
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+ce/seed1/beta0.05 ----> test * accuracy: 88.55%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+ce/seed1/beta0.075 ----> test * accuracy: 87.35%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+ce/seed1/beta0.1 ----> test * accuracy: 87.33%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+ce/seed1/beta0.125 ----> test * accuracy: 87.00%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+ce/seed1/beta1.5 ----> test * accuracy: 75.03%
+
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+gce_rc/seed1/beta0.05 ----> test * accuracy: 88.39%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+gce_rc/seed1/beta0.075 ----> test * accuracy: 88.03%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+gce_rc/seed1/beta0.1 ----> test * accuracy: 88.33%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+gce_rc/seed1/beta0.125 ----> test * accuracy: 87.93%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+gce_rc/seed1/beta1.5 ----> test * accuracy: 88.55%
+
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+rc_rc/seed1/beta0.05 ----> test * accuracy: 88.63%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+rc_rc/seed1/beta0.075 ----> test * accuracy: 89.51%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+rc_rc/seed1/beta0.1 ----> test * accuracy: 88.93%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+rc_rc/seed1/beta0.125 ----> test * accuracy: 88.50%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+rc_rc/seed1/beta1.5 ----> test * accuracy: 89.18%
+
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+rc_cav/seed1/beta0.05 ----> test * accuracy: 87.95%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+rc_cav/seed1/beta0.075 ----> test * accuracy: 89.10%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+rc_cav/seed1/beta0.1 ----> test * accuracy: 88.83%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+rc_cav/seed1/beta0.125 ----> test * accuracy: 89.04%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.1-rc+rc_cav/seed1/beta1.5 ----> test * accuracy: 89.23%
+
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+gce/seed1/beta0.05 ----> test * accuracy: 89.32%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+gce/seed1/beta0.075 ----> test * accuracy: 88.93%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+gce/seed1/beta0.1 ----> test * accuracy: 88.93%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+gce/seed1/beta0.125 ----> test * accuracy: 88.88%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+gce/seed1/beta1.5 ----> test * accuracy: 86.78%
+
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+ce/seed1/beta0.05 ----> test * accuracy: 63.59%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+ce/seed1/beta0.075 ----> test * accuracy: 54.62%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+ce/seed1/beta0.1 ----> test * accuracy: 54.02%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+ce/seed1/beta0.125 ----> test * accuracy: 45.57%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+ce/seed1/beta1.5 ----> test * accuracy: 38.38%
+
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+gce_rc/seed1/beta0.05 ----> test * accuracy: 87.74%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+gce_rc/seed1/beta0.075 ----> test * accuracy: 88.36%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+gce_rc/seed1/beta0.1 ----> test * accuracy: 87.54%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+gce_rc/seed1/beta0.125 ----> test * accuracy: 87.57%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+gce_rc/seed1/beta1.5 ----> test * accuracy: 87.41%
+
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+rc_rc/seed1/beta0.05 ----> test * accuracy: 87.35%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+rc_rc/seed1/beta0.075 ----> test * accuracy: 87.54%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+rc_rc/seed1/beta0.1 ----> test * accuracy: 88.96%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+rc_rc/seed1/beta0.125 ----> test * accuracy: 88.47%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+rc_rc/seed1/beta1.5 ----> test * accuracy: 87.05%
+
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+rc_cav/seed1/beta0.05 ----> test * accuracy: 88.50%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+rc_cav/seed1/beta0.075 ----> test * accuracy: 87.60%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+rc_cav/seed1/beta0.1 ----> test * accuracy: 88.50%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+rc_cav/seed1/beta0.125 ----> test * accuracy: 88.91%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.3-rc+rc_cav/seed1/beta1.5 ----> test * accuracy: 88.01%
+
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+gce/seed1/beta0.05 ----> test * accuracy: 85.20%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+gce/seed1/beta0.075 ----> test * accuracy: 85.85%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+gce/seed1/beta0.1 ----> test * accuracy: 86.21%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+gce/seed1/beta0.125 ----> test * accuracy: 86.59%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+gce/seed1/beta1.5 ----> test * accuracy: 61.24%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+ce/seed1/beta0.05 ----> test * accuracy: 32.84%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+ce/seed1/beta0.075 ----> test * accuracy: 27.56%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+ce/seed1/beta0.1 ----> test * accuracy: 11.07%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+ce/seed1/beta0.125 ----> test * accuracy: 19.76%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+ce/seed1/beta1.5 ----> test * accuracy: 6.62%
+
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+gce_rc/seed1/beta0.05 ----> test * accuracy: 86.73%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+gce_rc/seed1/beta0.075 ----> test * accuracy: 87.05%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+gce_rc/seed1/beta0.1 ----> test * accuracy: 87.00%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+gce_rc/seed1/beta0.125 ----> test * accuracy: 86.94%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+gce_rc/seed1/beta1.5 ----> test * accuracy: 85.85%
+
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+rc_rc/seed1/beta0.05 ----> test * accuracy: 86.32%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+rc_rc/seed1/beta0.075 ----> test * accuracy: 85.66%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+rc_rc/seed1/beta0.1 ----> test * accuracy: 85.99%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+rc_rc/seed1/beta0.125 ----> test * accuracy: 85.72%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+rc_rc/seed1/beta1.5 ----> test * accuracy: 79.18%
+
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+rc_cav/seed1/beta0.05 ----> test * accuracy: 86.51%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+rc_cav/seed1/beta0.075 ----> test * accuracy: 85.36%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+rc_cav/seed1/beta0.1 ----> test * accuracy: 85.64%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+rc_cav/seed1/beta0.125 ----> test * accuracy: 85.66%
+id: nctx16_cscFalse_ctpend_fp0_usePLLTrue0.5-rc+rc_cav/seed1/beta1.5 ----> test * accuracy: 74.13%

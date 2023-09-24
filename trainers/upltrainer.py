@@ -404,8 +404,11 @@ class UPLTrainer(TrainerX):
         else:
             output, image_features, text_features = self.model(image)
             # loss = self.GCE_loss(output, label)
+            self.criterion.model = self.model
             loss = self.criterion(output, label, index)
             self.model_backward_and_update(loss)
+            if hasattr(self.criterion, 'check_update'):
+                self.criterion.check_update(image, label, index)   
 
         # gradients compare:
         # if self.criterion.num % 2 == 0:
@@ -636,11 +639,11 @@ class UPLTrainer(TrainerX):
         #0. save loged logits and conf: 
         # if True or log_conf == True:
         #     self.criterion.log_conf(all_logits=torch.cat(outputs_all, dim=0), all_labels=torch.cat(label_all, dim=0))
-        # if split == 'test':
-        #     #1. save class_acc_sumlist:        #NOTE before uncomment remember to changed the name, otherwise the original file will be overwritten
-        #     filename = f'analyze_result_temp/class_acc_sumlist/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.criterion.cfg.PARTIAL_RATE}_{self.criterion.losstype}.json'
-        #     with open(filename, "w") as file:
-        #         json.dump(self.evaluator.class_acc_sumlist, file)
+        if split == 'test':
+            #1. save class_acc_sumlist:        #NOTE before uncomment remember to changed the name, otherwise the original file will be overwritten
+            filename = f'analyze_result_temp/class_acc_sumlist/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.criterion.cfg.PARTIAL_RATE}_{self.criterion.losstype}.json'
+            with open(filename, "w") as file:
+                json.dump(self.evaluator.class_acc_sumlist, file)
         #     #2. save grad_ratios_dict:
         #     filename = f'analyze_result_temp/grad_ratios_dict/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.criterion.cfg.PARTIAL_RATE}_{self.criterion.losstype}.json'
         #     with open(filename, "w") as file:
