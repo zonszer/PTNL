@@ -713,6 +713,7 @@ class UPLTrainer(TrainerX):
 
 
     def load_from_exist_file(self, file_path, model_names):
+        '''load logits and label from saved PSEUDO_LABEL_MODELS'''
         logits = None
         for model in model_names:
             model_path = os.path.join(file_path, model)
@@ -730,7 +731,7 @@ class UPLTrainer(TrainerX):
                     item = info[c][img_path]
                     items.append([img_path, int(item[3])]) # 路径 序号
             sorted(items, key=(lambda x:x[1]))
-            sstrain_img_paths = np.array(items)[:,0]
+            sstrain_img_paths = np.array(items)[:,0]        #shape is (4128,), why not directly use existing loaded dataset?
 
         logits /= len(model_names)
         predict_label_dict = select_top_k_similarity_per_class_with_noisy_label(img_paths=sstrain_img_paths,

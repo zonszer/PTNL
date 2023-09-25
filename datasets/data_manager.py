@@ -6,7 +6,7 @@ from dassl.data.samplers import build_sampler
 from torch.utils.data import DataLoader, WeightedRandomSampler
 import torch
 
-def build_data_loader(
+def build_data_loader(          #re-implementation
     cfg,
     sampler_type="RandomSampler",
     sampler=None,
@@ -64,7 +64,7 @@ class UPLDataManager(DataManager):
                 custom_tfm_train=None,
                 custom_tfm_test=None,
                 dataset_wrapper=None):
-        super().__init__(cfg, custom_tfm_train, custom_tfm_test, dataset_wrapper)
+        super().__init__(cfg, custom_tfm_train, custom_tfm_test, dataset_wrapper)   #get the train_loader_x, test_loader, and val_loader
 
 
         if custom_tfm_test is None:
@@ -116,7 +116,7 @@ class UPLDataManager(DataManager):
                     sampler_type="SequentialSampler",
                     data_source=self.dataset.sstrain,
                     batch_size=cfg.DATALOADER.TRAIN_X.BATCH_SIZE,
-                    tfm=tfm_test,
+                    tfm=tfm_test,       # both is tfm_test
                     is_train=False,
                     dataset_wrapper=dataset_wrapper,
                     tag='sstrain'
@@ -129,12 +129,12 @@ class UPLDataManager(DataManager):
                     sampler_type="SequentialSampler",
                     data_source=self.dataset.train_x,
                     batch_size=cfg.DATALOADER.TRAIN_X.BATCH_SIZE,
-                    tfm=tfm_test,
+                    tfm=tfm_test,       # both is tfm_test
                     is_train=False,
                     dataset_wrapper=dataset_wrapper,
                     tag='sstrain'
                 )
-                self.train_loader_x = train_loader_x
+                self.train_loader_x = train_loader_x        # cover train_loader_x
         except:
             pass
 
