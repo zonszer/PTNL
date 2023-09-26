@@ -8,12 +8,12 @@ eval_only: False
 head: 
 hh_config_file: 
 load_epoch: None
-loss_type: 
+loss_type: ce
 model_dir: 
 no_train: False
 num_fp: 0
 opts: ['TRAINER.UPLTrainer.N_CTX', '16', 'TRAINER.UPLTrainer.CSC', 'False', 'TRAINER.UPLTrainer.CLASS_TOKEN_POSITION', 'end', 'DATASET.NUM_SHOTS', '16', 'DATASET.CLASS_EQULE', 'True', 'TRAINER.PLL.USE_PLL', 'True', 'TRAINER.PLL.PARTIAL_RATE', '0.5', 'TEST.FINAL_MODEL', 'best_val']
-output_dir: ./output/sscaltech101/UPLTrainer/debug_4plot/nctx16_cscFalse_ctpend_fp0_PLL05-CE_4log_grad/seed2
+output_dir: ./output/sscaltech101/UPLTrainer/debug_4plot/nctx16_cscFalse_ctpend_fp0_PLL05-ce_4log_grad/seed2
 resume: 
 root: ./data
 seed: 2
@@ -120,7 +120,7 @@ OPTIM:
   WARMUP_RECOUNT: True
   WARMUP_TYPE: constant
   WEIGHT_DECAY: 0.0005
-OUTPUT_DIR: ./output/sscaltech101/UPLTrainer/debug_4plot/nctx16_cscFalse_ctpend_fp0_PLL05-CE_4log_grad/seed2
+OUTPUT_DIR: ./output/sscaltech101/UPLTrainer/debug_4plot/nctx16_cscFalse_ctpend_fp0_PLL05-ce_4log_grad/seed2
 RESUME: 
 SEED: 2
 TEST:
@@ -160,7 +160,7 @@ TRAINER:
     CONF_THRE: 0.95
     STRONG_TRANSFORMS: ()
     WEIGHT_U: 1.0
-  LOSS_TYPE: 
+  LOSS_TYPE: ce
   M3SDA:
     LMDA: 0.5
     N_STEP_F: 4
@@ -2081,4 +2081,317 @@ SSCaltech101
 Reading split from /mnt/disk2/zjh/projects7.12/PTNL/data/caltech-101/split_zhou_Caltech101.json
 sstrain 1196
 No checkpoint found, train from scratch
-Initialize tensorboard (log_dir=./output/sscaltech101/UPLTrainer/debug_4plot/nctx16_cscFalse_ctpend_fp0_PLL05-CE_4log_grad/seed2/tensorboard)
+Initialize tensorboard (log_dir=./output/sscaltech101/UPLTrainer/debug_4plot/nctx16_cscFalse_ctpend_fp0_PLL05-ce_4log_grad/seed2/tensorboard)
+{'prompt_learner': [22.953125]}
+{'prompt_learner': [16.59375]}
+{'prompt_learner': [9.46875]}
+{'prompt_learner': [8.1953125]}
+{'prompt_learner': [5.30859375]}
+epoch [1/50][5/37]	time 0.209 (1.275)	data 0.000 (0.185)	eta 0:39:12	loss 241.2967 (243.5107) acc 53.1250 (48.1250)	lr 1.000000e-05
+{'prompt_learner': [5.109375]}
+{'prompt_learner': [4.0546875]}
+{'prompt_learner': [2.888671875]}
+{'prompt_learner': [4.02734375]}
+{'prompt_learner': [3.37109375]}
+epoch [1/50][10/37]	time 0.207 (0.741)	data 0.001 (0.093)	eta 0:22:43	loss 236.5926 (240.0224) acc 34.3750 (43.1250)	lr 1.000000e-05
+{'prompt_learner': [2.38671875]}
+{'prompt_learner': [3.4375]}
+{'prompt_learner': [3.587890625]}
+{'prompt_learner': [3.0703125]}
+{'prompt_learner': [3.142578125]}
+epoch [1/50][15/37]	time 0.192 (0.564)	data 0.001 (0.062)	eta 0:17:14	loss 239.9490 (238.8958) acc 31.2500 (39.1667)	lr 1.000000e-05
+{'prompt_learner': [2.537109375]}
+{'prompt_learner': [2.97265625]}
+{'prompt_learner': [2.669921875]}
+{'prompt_learner': [2.15625]}
+{'prompt_learner': [1.6064453125]}
+epoch [1/50][20/37]	time 0.204 (0.478)	data 0.001 (0.047)	eta 0:14:34	loss 233.8277 (237.5670) acc 25.0000 (36.0938)	lr 1.000000e-05
+{'prompt_learner': [1.7333984375]}
+{'prompt_learner': [2.296875]}
+{'prompt_learner': [2.15625]}
+{'prompt_learner': [1.666015625]}
+{'prompt_learner': [2.255859375]}
+epoch [1/50][25/37]	time 0.199 (0.423)	data 0.001 (0.038)	eta 0:12:51	loss 236.1588 (236.7609) acc 25.0000 (34.2500)	lr 1.000000e-05
+{'prompt_learner': [1.4755859375]}
+{'prompt_learner': [2.26171875]}
+{'prompt_learner': [2.779296875]}
+{'prompt_learner': [1.693359375]}
+{'prompt_learner': [1.982421875]}
+epoch [1/50][30/37]	time 0.195 (0.383)	data 0.001 (0.031)	eta 0:11:36	loss 233.7058 (236.0140) acc 40.6250 (34.0625)	lr 1.000000e-05
+{'prompt_learner': [1.5244140625]}
+{'prompt_learner': [1.5986328125]}
+{'prompt_learner': [1.951171875]}
+{'prompt_learner': [1.8232421875]}
+{'prompt_learner': [2.037109375]}
+epoch [1/50][35/37]	time 0.195 (0.355)	data 0.001 (0.027)	eta 0:10:45	loss 234.6841 (235.2140) acc 28.1250 (33.4821)	lr 1.000000e-05
+{'prompt_learner': [1.650390625]}
+{'prompt_learner': [2.576171875]}
+Do evaluation on val set
+=> result
+* total: 1,649
+* correct: 710
+* accuracy: 43.06%
+* error: 56.94%
+* macro_f1: 35.77%
+=> per-class result
+* class: 0 (face)	total: 87	correct: 13	acc: 14.94%
+* class: 1 (leopard)	total: 40	correct: 6	acc: 15.00%
+* class: 2 (motorbike)	total: 160	correct: 146	acc: 91.25%
+* class: 3 (accordion)	total: 11	correct: 6	acc: 54.55%
+* class: 4 (airplane)	total: 160	correct: 17	acc: 10.62%
+* class: 5 (anchor)	total: 8	correct: 0	acc: 0.00%
+* class: 6 (ant)	total: 8	correct: 0	acc: 0.00%
+* class: 7 (barrel)	total: 9	correct: 6	acc: 66.67%
+* class: 8 (bass)	total: 11	correct: 0	acc: 0.00%
+* class: 9 (beaver)	total: 9	correct: 0	acc: 0.00%
+* class: 10 (binocular)	total: 7	correct: 4	acc: 57.14%
+* class: 11 (bonsai)	total: 26	correct: 23	acc: 88.46%
+* class: 12 (brain)	total: 20	correct: 6	acc: 30.00%
+* class: 13 (brontosaurus)	total: 9	correct: 0	acc: 0.00%
+* class: 14 (buddha)	total: 17	correct: 13	acc: 76.47%
+* class: 15 (butterfly)	total: 18	correct: 6	acc: 33.33%
+* class: 16 (camera)	total: 10	correct: 5	acc: 50.00%
+* class: 17 (cannon)	total: 9	correct: 1	acc: 11.11%
+* class: 18 (car_side)	total: 25	correct: 21	acc: 84.00%
+* class: 19 (ceiling_fan)	total: 9	correct: 5	acc: 55.56%
+* class: 20 (cellphone)	total: 12	correct: 5	acc: 41.67%
+* class: 21 (chair)	total: 12	correct: 4	acc: 33.33%
+* class: 22 (chandelier)	total: 21	correct: 8	acc: 38.10%
+* class: 23 (cougar_body)	total: 9	correct: 0	acc: 0.00%
+* class: 24 (cougar_face)	total: 14	correct: 0	acc: 0.00%
+* class: 25 (crab)	total: 15	correct: 0	acc: 0.00%
+* class: 26 (crayfish)	total: 14	correct: 5	acc: 35.71%
+* class: 27 (crocodile)	total: 10	correct: 1	acc: 10.00%
+* class: 28 (crocodile_head)	total: 10	correct: 2	acc: 20.00%
+* class: 29 (cup)	total: 11	correct: 7	acc: 63.64%
+* class: 30 (dalmatian)	total: 13	correct: 6	acc: 46.15%
+* class: 31 (dollar_bill)	total: 10	correct: 10	acc: 100.00%
+* class: 32 (dolphin)	total: 13	correct: 8	acc: 61.54%
+* class: 33 (dragonfly)	total: 14	correct: 2	acc: 14.29%
+* class: 34 (electric_guitar)	total: 15	correct: 11	acc: 73.33%
+* class: 35 (elephant)	total: 13	correct: 3	acc: 23.08%
+* class: 36 (emu)	total: 11	correct: 0	acc: 0.00%
+* class: 37 (euphonium)	total: 13	correct: 13	acc: 100.00%
+* class: 38 (ewer)	total: 17	correct: 0	acc: 0.00%
+* class: 39 (ferry)	total: 13	correct: 9	acc: 69.23%
+* class: 40 (flamingo)	total: 13	correct: 10	acc: 76.92%
+* class: 41 (flamingo_head)	total: 9	correct: 2	acc: 22.22%
+* class: 42 (garfield)	total: 7	correct: 1	acc: 14.29%
+* class: 43 (gerenuk)	total: 7	correct: 5	acc: 71.43%
+* class: 44 (gramophone)	total: 10	correct: 2	acc: 20.00%
+* class: 45 (grand_piano)	total: 20	correct: 0	acc: 0.00%
+* class: 46 (hawksbill)	total: 20	correct: 2	acc: 10.00%
+* class: 47 (headphone)	total: 8	correct: 6	acc: 75.00%
+* class: 48 (hedgehog)	total: 11	correct: 8	acc: 72.73%
+* class: 49 (helicopter)	total: 18	correct: 13	acc: 72.22%
+* class: 50 (ibis)	total: 16	correct: 2	acc: 12.50%
+* class: 51 (inline_skate)	total: 6	correct: 4	acc: 66.67%
+* class: 52 (joshua_tree)	total: 13	correct: 11	acc: 84.62%
+* class: 53 (kangaroo)	total: 17	correct: 11	acc: 64.71%
+* class: 54 (ketch)	total: 23	correct: 0	acc: 0.00%
+* class: 55 (lamp)	total: 12	correct: 2	acc: 16.67%
+* class: 56 (laptop)	total: 16	correct: 13	acc: 81.25%
+* class: 57 (llama)	total: 16	correct: 4	acc: 25.00%
+* class: 58 (lobster)	total: 8	correct: 7	acc: 87.50%
+* class: 59 (lotus)	total: 13	correct: 0	acc: 0.00%
+* class: 60 (mandolin)	total: 9	correct: 0	acc: 0.00%
+* class: 61 (mayfly)	total: 8	correct: 0	acc: 0.00%
+* class: 62 (menorah)	total: 17	correct: 14	acc: 82.35%
+* class: 63 (metronome)	total: 6	correct: 3	acc: 50.00%
+* class: 64 (minaret)	total: 15	correct: 0	acc: 0.00%
+* class: 65 (nautilus)	total: 11	correct: 0	acc: 0.00%
+* class: 66 (octopus)	total: 7	correct: 0	acc: 0.00%
+* class: 67 (okapi)	total: 8	correct: 1	acc: 12.50%
+* class: 68 (pagoda)	total: 9	correct: 1	acc: 11.11%
+* class: 69 (panda)	total: 8	correct: 7	acc: 87.50%
+* class: 70 (pigeon)	total: 9	correct: 2	acc: 22.22%
+* class: 71 (pizza)	total: 11	correct: 11	acc: 100.00%
+* class: 72 (platypus)	total: 7	correct: 1	acc: 14.29%
+* class: 73 (pyramid)	total: 11	correct: 11	acc: 100.00%
+* class: 74 (revolver)	total: 16	correct: 15	acc: 93.75%
+* class: 75 (rhino)	total: 12	correct: 0	acc: 0.00%
+* class: 76 (rooster)	total: 10	correct: 0	acc: 0.00%
+* class: 77 (saxophone)	total: 8	correct: 0	acc: 0.00%
+* class: 78 (schooner)	total: 13	correct: 2	acc: 15.38%
+* class: 79 (scissors)	total: 8	correct: 2	acc: 25.00%
+* class: 80 (scorpion)	total: 17	correct: 0	acc: 0.00%
+* class: 81 (sea_horse)	total: 11	correct: 3	acc: 27.27%
+* class: 82 (snoopy)	total: 7	correct: 6	acc: 85.71%
+* class: 83 (soccer_ball)	total: 13	correct: 8	acc: 61.54%
+* class: 84 (stapler)	total: 9	correct: 4	acc: 44.44%
+* class: 85 (starfish)	total: 17	correct: 17	acc: 100.00%
+* class: 86 (stegosaurus)	total: 12	correct: 12	acc: 100.00%
+* class: 87 (stop_sign)	total: 13	correct: 13	acc: 100.00%
+* class: 88 (strawberry)	total: 7	correct: 3	acc: 42.86%
+* class: 89 (sunflower)	total: 17	correct: 17	acc: 100.00%
+* class: 90 (tick)	total: 10	correct: 0	acc: 0.00%
+* class: 91 (trilobite)	total: 17	correct: 0	acc: 0.00%
+* class: 92 (umbrella)	total: 15	correct: 9	acc: 60.00%
+* class: 93 (watch)	total: 48	correct: 38	acc: 79.17%
+* class: 94 (water_lilly)	total: 7	correct: 1	acc: 14.29%
+* class: 95 (wheelchair)	total: 12	correct: 6	acc: 50.00%
+* class: 96 (wild_cat)	total: 7	correct: 2	acc: 28.57%
+* class: 97 (windsor_chair)	total: 11	correct: 9	acc: 81.82%
+* class: 98 (wrench)	total: 8	correct: 5	acc: 62.50%
+* class: 99 (yin_yang)	total: 12	correct: 12	acc: 100.00%
+* average: 40.95%
+worst10 classes: 
+anchor: 0.00%
+ant: 0.00%
+bass: 0.00%
+beaver: 0.00%
+brontosaurus: 0.00%
+cougar_body: 0.00%
+cougar_face: 0.00%
+crab: 0.00%
+emu: 0.00%
+ewer: 0.00%
+save logits -> losstype: ce, save id: 0
+Checkpoint saved to ./output/sscaltech101/UPLTrainer/debug_4plot/nctx16_cscFalse_ctpend_fp0_PLL05-ce_4log_grad/seed2/prompt_learner/model-best-0.pth.tar
+epoch [2/50][5/37]	time 0.068 (0.298)	data 0.001 (0.206)	eta 0:08:59	loss 233.9785 (232.4550) acc 21.8750 (28.1250)	lr 2.000000e-03
+epoch [2/50][10/37]	time 0.073 (0.187)	data 0.001 (0.103)	eta 0:05:37	loss 226.6631 (231.4749) acc 21.8750 (25.3125)	lr 2.000000e-03
+epoch [2/50][15/37]	time 0.083 (0.154)	data 0.001 (0.069)	eta 0:04:36	loss 235.4857 (231.1482) acc 15.6250 (25.8333)	lr 2.000000e-03
+epoch [2/50][20/37]	time 0.093 (0.137)	data 0.001 (0.052)	eta 0:04:05	loss 243.9747 (232.5276) acc 28.1250 (25.0000)	lr 2.000000e-03
+epoch [2/50][25/37]	time 0.071 (0.125)	data 0.001 (0.042)	eta 0:03:44	loss 236.6036 (232.3771) acc 25.0000 (25.1250)	lr 2.000000e-03
+epoch [2/50][30/37]	time 0.069 (0.117)	data 0.001 (0.035)	eta 0:03:27	loss 242.6864 (233.0117) acc 25.0000 (24.3750)	lr 2.000000e-03
+epoch [2/50][35/37]	time 0.072 (0.110)	data 0.001 (0.030)	eta 0:03:16	loss 230.9268 (232.8700) acc 28.1250 (24.7321)	lr 2.000000e-03
+Do evaluation on val set
+=> result
+* total: 1,649
+* correct: 561
+* accuracy: 34.02%
+* error: 65.98%
+* macro_f1: 21.48%
+=> per-class result
+* class: 0 (face)	total: 87	correct: 0	acc: 0.00%
+* class: 1 (leopard)	total: 40	correct: 7	acc: 17.50%
+* class: 2 (motorbike)	total: 160	correct: 160	acc: 100.00%
+* class: 3 (accordion)	total: 11	correct: 1	acc: 9.09%
+* class: 4 (airplane)	total: 160	correct: 0	acc: 0.00%
+* class: 5 (anchor)	total: 8	correct: 0	acc: 0.00%
+* class: 6 (ant)	total: 8	correct: 0	acc: 0.00%
+* class: 7 (barrel)	total: 9	correct: 2	acc: 22.22%
+* class: 8 (bass)	total: 11	correct: 0	acc: 0.00%
+* class: 9 (beaver)	total: 9	correct: 0	acc: 0.00%
+* class: 10 (binocular)	total: 7	correct: 0	acc: 0.00%
+* class: 11 (bonsai)	total: 26	correct: 1	acc: 3.85%
+* class: 12 (brain)	total: 20	correct: 10	acc: 50.00%
+* class: 13 (brontosaurus)	total: 9	correct: 0	acc: 0.00%
+* class: 14 (buddha)	total: 17	correct: 17	acc: 100.00%
+* class: 15 (butterfly)	total: 18	correct: 16	acc: 88.89%
+* class: 16 (camera)	total: 10	correct: 9	acc: 90.00%
+* class: 17 (cannon)	total: 9	correct: 0	acc: 0.00%
+* class: 18 (car_side)	total: 25	correct: 25	acc: 100.00%
+* class: 19 (ceiling_fan)	total: 9	correct: 0	acc: 0.00%
+* class: 20 (cellphone)	total: 12	correct: 0	acc: 0.00%
+* class: 21 (chair)	total: 12	correct: 6	acc: 50.00%
+* class: 22 (chandelier)	total: 21	correct: 6	acc: 28.57%
+* class: 23 (cougar_body)	total: 9	correct: 0	acc: 0.00%
+* class: 24 (cougar_face)	total: 14	correct: 0	acc: 0.00%
+* class: 25 (crab)	total: 15	correct: 10	acc: 66.67%
+* class: 26 (crayfish)	total: 14	correct: 1	acc: 7.14%
+* class: 27 (crocodile)	total: 10	correct: 0	acc: 0.00%
+* class: 28 (crocodile_head)	total: 10	correct: 0	acc: 0.00%
+* class: 29 (cup)	total: 11	correct: 6	acc: 54.55%
+* class: 30 (dalmatian)	total: 13	correct: 0	acc: 0.00%
+* class: 31 (dollar_bill)	total: 10	correct: 10	acc: 100.00%
+* class: 32 (dolphin)	total: 13	correct: 13	acc: 100.00%
+* class: 33 (dragonfly)	total: 14	correct: 7	acc: 50.00%
+* class: 34 (electric_guitar)	total: 15	correct: 15	acc: 100.00%
+* class: 35 (elephant)	total: 13	correct: 13	acc: 100.00%
+* class: 36 (emu)	total: 11	correct: 0	acc: 0.00%
+* class: 37 (euphonium)	total: 13	correct: 0	acc: 0.00%
+* class: 38 (ewer)	total: 17	correct: 0	acc: 0.00%
+* class: 39 (ferry)	total: 13	correct: 0	acc: 0.00%
+* class: 40 (flamingo)	total: 13	correct: 2	acc: 15.38%
+* class: 41 (flamingo_head)	total: 9	correct: 0	acc: 0.00%
+* class: 42 (garfield)	total: 7	correct: 1	acc: 14.29%
+* class: 43 (gerenuk)	total: 7	correct: 0	acc: 0.00%
+* class: 44 (gramophone)	total: 10	correct: 1	acc: 10.00%
+* class: 45 (grand_piano)	total: 20	correct: 19	acc: 95.00%
+* class: 46 (hawksbill)	total: 20	correct: 0	acc: 0.00%
+* class: 47 (headphone)	total: 8	correct: 0	acc: 0.00%
+* class: 48 (hedgehog)	total: 11	correct: 0	acc: 0.00%
+* class: 49 (helicopter)	total: 18	correct: 18	acc: 100.00%
+* class: 50 (ibis)	total: 16	correct: 0	acc: 0.00%
+* class: 51 (inline_skate)	total: 6	correct: 6	acc: 100.00%
+* class: 52 (joshua_tree)	total: 13	correct: 13	acc: 100.00%
+* class: 53 (kangaroo)	total: 17	correct: 12	acc: 70.59%
+* class: 54 (ketch)	total: 23	correct: 0	acc: 0.00%
+* class: 55 (lamp)	total: 12	correct: 8	acc: 66.67%
+* class: 56 (laptop)	total: 16	correct: 15	acc: 93.75%
+* class: 57 (llama)	total: 16	correct: 0	acc: 0.00%
+* class: 58 (lobster)	total: 8	correct: 0	acc: 0.00%
+* class: 59 (lotus)	total: 13	correct: 0	acc: 0.00%
+* class: 60 (mandolin)	total: 9	correct: 0	acc: 0.00%
+* class: 61 (mayfly)	total: 8	correct: 0	acc: 0.00%
+* class: 62 (menorah)	total: 17	correct: 0	acc: 0.00%
+* class: 63 (metronome)	total: 6	correct: 0	acc: 0.00%
+* class: 64 (minaret)	total: 15	correct: 0	acc: 0.00%
+* class: 65 (nautilus)	total: 11	correct: 0	acc: 0.00%
+* class: 66 (octopus)	total: 7	correct: 0	acc: 0.00%
+* class: 67 (okapi)	total: 8	correct: 0	acc: 0.00%
+* class: 68 (pagoda)	total: 9	correct: 1	acc: 11.11%
+* class: 69 (panda)	total: 8	correct: 1	acc: 12.50%
+* class: 70 (pigeon)	total: 9	correct: 3	acc: 33.33%
+* class: 71 (pizza)	total: 11	correct: 11	acc: 100.00%
+* class: 72 (platypus)	total: 7	correct: 0	acc: 0.00%
+* class: 73 (pyramid)	total: 11	correct: 11	acc: 100.00%
+* class: 74 (revolver)	total: 16	correct: 1	acc: 6.25%
+* class: 75 (rhino)	total: 12	correct: 0	acc: 0.00%
+* class: 76 (rooster)	total: 10	correct: 3	acc: 30.00%
+* class: 77 (saxophone)	total: 8	correct: 0	acc: 0.00%
+* class: 78 (schooner)	total: 13	correct: 0	acc: 0.00%
+* class: 79 (scissors)	total: 8	correct: 4	acc: 50.00%
+* class: 80 (scorpion)	total: 17	correct: 0	acc: 0.00%
+* class: 81 (sea_horse)	total: 11	correct: 10	acc: 90.91%
+* class: 82 (snoopy)	total: 7	correct: 5	acc: 71.43%
+* class: 83 (soccer_ball)	total: 13	correct: 12	acc: 92.31%
+* class: 84 (stapler)	total: 9	correct: 0	acc: 0.00%
+* class: 85 (starfish)	total: 17	correct: 0	acc: 0.00%
+* class: 86 (stegosaurus)	total: 12	correct: 2	acc: 16.67%
+* class: 87 (stop_sign)	total: 13	correct: 13	acc: 100.00%
+* class: 88 (strawberry)	total: 7	correct: 1	acc: 14.29%
+* class: 89 (sunflower)	total: 17	correct: 17	acc: 100.00%
+* class: 90 (tick)	total: 10	correct: 0	acc: 0.00%
+* class: 91 (trilobite)	total: 17	correct: 0	acc: 0.00%
+* class: 92 (umbrella)	total: 15	correct: 0	acc: 0.00%
+* class: 93 (watch)	total: 48	correct: 2	acc: 4.17%
+* class: 94 (water_lilly)	total: 7	correct: 0	acc: 0.00%
+* class: 95 (wheelchair)	total: 12	correct: 10	acc: 83.33%
+* class: 96 (wild_cat)	total: 7	correct: 5	acc: 71.43%
+* class: 97 (windsor_chair)	total: 11	correct: 8	acc: 72.73%
+* class: 98 (wrench)	total: 8	correct: 0	acc: 0.00%
+* class: 99 (yin_yang)	total: 12	correct: 11	acc: 91.67%
+* average: 30.56%
+worst10 classes: 
+face: 0.00%
+airplane: 0.00%
+anchor: 0.00%
+ant: 0.00%
+bass: 0.00%
+beaver: 0.00%
+binocular: 0.00%
+brontosaurus: 0.00%
+cannon: 0.00%
+ceiling_fan: 0.00%
+{'prompt_learner': [0.98046875]}
+{'prompt_learner': [1.20703125]}
+{'prompt_learner': [1.1484375]}
+{'prompt_learner': [0.86279296875]}
+{'prompt_learner': [1.296875]}
+epoch [3/50][5/37]	time 0.220 (0.450)	data 0.001 (0.205)	eta 0:13:16	loss 228.7933 (231.3763) acc 18.7500 (25.0000)	lr 1.998027e-03
+{'prompt_learner': [1.2353515625]}
+{'prompt_learner': [1.2939453125]}
+{'prompt_learner': [1.3798828125]}
+{'prompt_learner': [1.2744140625]}
+{'prompt_learner': [1.1416015625]}
+epoch [3/50][10/37]	time 0.180 (0.332)	data 0.001 (0.103)	eta 0:09:46	loss 230.0563 (232.1575) acc 28.1250 (27.5000)	lr 1.998027e-03
+{'prompt_learner': [1.2392578125]}
+{'prompt_learner': [0.92529296875]}
+{'prompt_learner': [1.1884765625]}
+{'prompt_learner': [0.7939453125]}
+{'prompt_learner': [1.17578125]}
+epoch [3/50][15/37]	time 0.230 (0.289)	data 0.001 (0.069)	eta 0:08:28	loss 227.6104 (232.5710) acc 25.0000 (25.6250)	lr 1.998027e-03
+{'prompt_learner': [1.8095703125]}
+{'prompt_learner': [0.908203125]}

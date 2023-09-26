@@ -30,13 +30,13 @@ from copy import deepcopy
 from clip import clip
 from clip.simple_tokenizer import SimpleTokenizer as _Tokenizer
     
-from datasets.data_manager import UPLDataManager
+from datasets.data_manager import UPLDataManager, ElevaterDataManager
 from evaluation.evaluator import UPLClassification
 from .hhzsclip import ZeroshotCLIP
 from .utils import (select_top_k_similarity_per_class, caculate_noise_rate, save_outputs,
 select_top_k_similarity, select_top_by_value, caculate_noise_rate_analyze, 
 select_top_k_similarity_per_class_with_noisy_label,
-add_partial_labels,
+add_partial_labels, generate_uniform_cv_candidate_labels
 )
 
 from utils_temp.utils_ import dict_add
@@ -72,6 +72,11 @@ CUSTOM_TEMPLATES = {
     "SSCaltech101": "a photo of a {}.",
     "SSUCF101": "a photo of a person doing {}.",
     "SSImageNet": "a photo of a {}.",
+}
+
+ElevaterDatasets = {
+    'CIFAR10': "a photo of a {}.",
+    'CIFAR100': "a photo of a {}.",
 }
 
 
@@ -714,36 +719,46 @@ class UPLTrainer(TrainerX):
 
     def load_from_exist_file(self, file_path, model_names):
         '''load logits and label from saved PSEUDO_LABEL_MODELS'''
-        logits = None
-        for model in model_names:
-            model_path = os.path.join(file_path, model)
-            logist_path = os.path.join(model_path, '{}_logits.pt'.format(self.cfg.DATASET.NAME))
-            if logits is None:
-                logits = torch.load(logist_path)
-            else:
-                logits += torch.load(logist_path)
+        if isinstance(self.dm, ElevaterDataManager):
+            #HACK only suppprot PLL now:
+            if self.cfg.TRAINER.PLL.USE_PLL:
+                labels_true = self.train_loader_sstrain.dataset.labels
+                partialY = generate_uniform_cv_candidate_labels(torch.tensor(labels_true, dtype=torch.int64), 
+                                                                self.cfg.TRAINER.PLL.PARTIAL_RATE)
+                predict_label_dict = None
+        else:
+            logits = None
+            for model in model_names:
+                model_path = os.path.join(file_path, model)
+                logist_path = os.path.join(model_path, '{}_logits.pt'.format(self.cfg.DATASET.NAME))
+                if logits is None:
+                    logits = torch.load(logist_path)
+                else:
+                    logits += torch.load(logist_path)
 
-            info_path = os.path.join(model_path, '{}.json'.format(self.cfg.DATASET.NAME))
-            info = json.load(open(info_path))       
-            items = []
-            for c in info:
-                for img_path in info[c]:
-                    item = info[c][img_path]
-                    items.append([img_path, int(item[3])]) # 路径 序号
-            sorted(items, key=(lambda x:x[1]))
-            sstrain_img_paths = np.array(items)[:,0]        #shape is (4128,), why not directly use existing loaded dataset?
+                info_path = os.path.join(model_path, '{}.json'.format(self.cfg.DATASET.NAME))
+                info = json.load(open(info_path))       
+                items = []
+                for c in info:
+                    for img_path in info[c]:
+                        item = info[c][img_path]
+                        items.append([img_path, int(item[3])]) # 路径 序号
+                sorted(items, key=(lambda x:x[1]))
+                sstrain_img_paths = np.array(items)[:,0]        #shape is (4128,), why not directly use existing loaded dataset?
 
-        logits /= len(model_names)
-        predict_label_dict = select_top_k_similarity_per_class_with_noisy_label(img_paths=sstrain_img_paths,
-                                                                                K=self.cfg.DATASET.NUM_SHOTS,
-                                                                                random_seed=self.cfg.SEED, 
-                                                                                gt_label_dict=self.gt_label_dict,
-                                                                                num_fp=self.cfg.TRAINER.UPLTrainer.NUM_FP)
-        if self.cfg.TRAINER.PLL.USE_PLL:
-            predict_label_dict, partialY, labels_true = add_partial_labels(label_dict=predict_label_dict,
-                                                     partial_rate=self.cfg.TRAINER.PLL.PARTIAL_RATE)
-            self.partialY = partialY
-            self.labels_true = torch.tensor(labels_true)
+            logits /= len(model_names)
+            predict_label_dict = select_top_k_similarity_per_class_with_noisy_label(img_paths=sstrain_img_paths,
+                                                                                    K=self.cfg.DATASET.NUM_SHOTS,
+                                                                                    random_seed=self.cfg.SEED, 
+                                                                                    gt_label_dict=self.gt_label_dict,
+                                                                                    num_fp=self.cfg.TRAINER.UPLTrainer.NUM_FP)
+            if self.cfg.TRAINER.PLL.USE_PLL:
+                predict_label_dict, partialY, labels_true = add_partial_labels(label_dict=predict_label_dict,
+                                                        partial_rate=self.cfg.TRAINER.PLL.PARTIAL_RATE)
+            
+        # Attributes:
+        self.partialY = partialY
+        self.labels_true = torch.tensor(labels_true)
         return predict_label_dict 
 
     @torch.no_grad()
@@ -872,7 +887,6 @@ class UPLTrainer(TrainerX):
         return list(results.values())[0]
 
 
-
     def build_data_loader(self):
         """Create essential data-related attributes.
 
@@ -880,7 +894,10 @@ class UPLTrainer(TrainerX):
         same attributes (except self.dm).
         """
         _, preprocess = clip.load(self.cfg.MODEL.BACKBONE.NAME)
-        dm = UPLDataManager(self.cfg, custom_tfm_test=preprocess)
+        if self.cfg.DATASET.NAME in ElevaterDatasets.keys():
+            dm = ElevaterDataManager(self.cfg, custom_tfm_test=preprocess)
+        else:
+            dm = UPLDataManager(self.cfg, custom_tfm_test=preprocess)
         # _, preprocess = clip.load(self.cfg.MODEL.BACKBONE.NAME)
         # dm = UPLDataManager(self.cfg, custom_tfm_test=preprocess)
 
@@ -896,7 +913,6 @@ class UPLTrainer(TrainerX):
         if self.cfg.DATALOADER.OPEN_SETTING:
             self.test_novel_loader = dm.test_novel_loader
             self.test_base_loader = dm.test_base_loader
-
 
         self.dm = dm
 

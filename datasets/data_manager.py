@@ -3,6 +3,7 @@ from dassl.data.data_manager import DatasetWrapper
 from dassl.data.transforms import build_transform
 from dassl.data.samplers import build_sampler
 from dassl.data.datasets import build_dataset
+from ..vision_benchmark.evaluation import construct_dataloader, construct_multitask_dataset
 
 from torch.utils.data import DataLoader, WeightedRandomSampler
 import torch
@@ -58,6 +59,46 @@ def build_data_loader(          #re-implementation
         )
 
     return data_loader
+
+class ElevaterDataManager(DataManager):
+    def __init__(self, cfg):
+        # Load dataset:
+        train_loader_x, val_loader, test_loader, class_map, train_dataset = construct_dataloader(cfg)       #train_dataset=500
+
+        # self._metric = get_metric(class_map_metric[cfg.DATASET.DATASET])
+        # self._metric_name = class_map_metric[cfg.DATASET.DATASET]
+        # Attributes:
+        self._num_classes = len(class_map)
+        self._num_source_domains = len(cfg.DATASET.SOURCE_DOMAINS)
+        self._lab2cname = {}
+        # random.seed(cfg.DATASET.RANDOM_SEED_SAMPLING)
+        for key, value in enumerate(class_map):
+            if isinstance(value, list):
+                value = value[0] #random.choice(value)
+            self._lab2cname[key] = value
+
+        # Dataset and data-loaders:
+        self.train_loader_x = train_loader_x
+        self.train_loader_u = None
+        self.val_loader = val_loader
+        self.test_loader = test_loader
+        self.train_loader_sstrain = train_loader_x
+
+        if cfg.VERBOSE:
+            pass
+            # self.show_dataset_summary(cfg)
+
+    def update_ssdateloader(self, predict_label_dict: None) -> None:
+        """
+        This function is used to update the train_loader_sstrain to add labels.
+
+        Args:
+            predict_label_dict (dict): A dictionary containing image paths as keys and corresponding labels as values.
+        """
+        assert predict_label_dict is None
+        self.train_loader_sstrain.dataset.labels = self.partialY         #TODO check 
+        print('ElevaterDataset sstrain: len()==', len(self.train_loader_sstrain.dataset))
+
 
 class UPLDataManager(DataManager):
     def __init__(self,
@@ -215,10 +256,8 @@ class UPLDataManager(DataManager):
             predict_label_dict ([dict]): [a dict {'imagepath': 'label'}]
         """
 
-
         sstrain = self.dataset.add_label(predict_label_dict, self.cfg.DATASET.NAME)
         print('sstrain', len(sstrain))
-
 
         # train_sampler = WeightedRandomSampler(weights, len(sstrain))
         train_loader_sstrain = build_data_loader(

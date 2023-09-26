@@ -222,7 +222,17 @@ def select_top_k_similarity_per_class_with_noisy_label(img_paths, K=1, random_se
         pdb.set_trace()
     return predict_label_dict
 
-def generate_uniform_cv_candidate_labels(train_labels: torch.int64, partial_rate=0.1):
+def generate_uniform_cv_candidate_labels(train_labels: torch.int64, partial_rate=0.1) -> torch.float32:
+    """
+    This function generates uniform cross-validation candidate labels.
+
+    Parameters:
+    train_labels (torch.Tensor): A 1D tensor of training labels.
+    partial_rate (float, optional): The rate of partial labels. Default is 0.1.
+
+    Returns:
+    torch.Tensor: A tensor of candidate label sets of type torch.float32.
+    """
     assert train_labels.dim() == 1 or train_labels.dim() == 0, 'train_labels should be a 1D tensor'
     if torch.min(train_labels) > 1:
         raise RuntimeError('testError')
