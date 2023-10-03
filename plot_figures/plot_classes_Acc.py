@@ -16,33 +16,28 @@ all_data_true = []
 ##================set params:
 path = '../analyze_result_temp/class_acc_sumlist'
 # Number of worst-performing classes to display
-num_worst_classes = 0
+num_worst_classes = 5
 
 # Whether to compare data and data_PLL:
 compare_data_PLL = True
 
 # Additional specific classes to display
-additional_classes = ['crocodile_head',
-'crayfish',
-'anchor',
-'crab',
-'octopus',
-'lamp']
+additional_classes = [ ]
 ##================set params:
 
 files_all = sorted(glob.glob(path +'/*.json'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
-
+files_all_dict = {i:file.split("/")[-1] for i, file in enumerate(files_all)}
 #+++++++=========== select the file name:
 file_plot = files_all[0]                            #NOTE also need to set here manually, bseline ACC (PLL0)
 with open(file_plot, "r") as file:      
     data = json.load(file)
-print(len(data), data )
+print(f'data={file_plot}', f'len={len(data)}' , data)
 
 if compare_data_PLL == True:
-    file_plot_PLL = files_all[2]                    #NOTE also need to set here manually
+    file_plot_PLL = files_all[7]                    #NOTE also need to set here manually
     with open(file_plot_PLL, "r") as file:
         data_PLL = json.load(file)
-    print(len(data_PLL), data_PLL )
+    print(f'data_PLL={file_plot_PLL}', f'len={len(data_PLL)}' , data_PLL)
 
 # %%
 import matplotlib.pyplot as plt
@@ -97,7 +92,7 @@ display_classes = eval(display_classes)
 epoch_averages = [np.mean([epoch_data[class_name] for class_name in epoch_data]) for epoch_data in data]
 
 # Create a larger figure for better readability
-fig, ax = plt.subplots(figsize=(16, 10))
+fig, ax = plt.subplots(figsize=(26, 10))        #(16, 10)
 
 avg_accuracies = np.zeros((epoch_num,))
 if compare_data_PLL == True:
@@ -120,7 +115,7 @@ ax.plot(epochs, epoch_averages, marker="x", label="Average across all classes", 
 ax.set_xticks(epochs)
 ax.set_xlabel("Epoch")
 ax.set_ylabel("Class Accuracy")
-ax.set_title("Class Accuracy per Epoch for Classes with Largest Gap")
+ax.set_title(f"Class Accuracy per Epoch for Classes with Largest Gap, File name: {file_plot.split('/')[-1] if compare_data_PLL == False else file_plot_PLL.split('/')[-1]}")
 ax.grid()
 
 # Place the legend outside the plot area in a separate space
@@ -138,76 +133,6 @@ plt.show()
 #     plt.savefig(f'ACC-{file_plot_PLL.split("/")[-1]}_{current_time}.svg')
 # else:
 #     plt.savefig(f'ACC-{file_plot.split("/")[-1]}_{current_time}.svg')
-
-# %%
-
-#use_boxplot:
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-# Calculate the average of 100 classes
-# NOTE: fill data_PLL or data:
-# Convert list of dictionaries to numpy array
-data_box = np.array([[v for v in d.values()] for d in data_PLL])  # shape: (51, 100)
-
-# Create a figure and axis
-fig, ax = plt.subplots(figsize=(10, 6))
-
-# Create a boxplot using the avg_data
-boxplot = ax.boxplot(data_box.T, notch=True, widths=0.5)
-
-# Create a strip plot to show data points
-epochs = np.arange(1, 52)
-for epoch, epoch_data in enumerate(data_box, start=1):
-    y = epoch_data
-    x = np.random.normal(epoch, 0.04, size=len(y))  # Add some jitter for better visibility
-    ax.plot(x, y, 'r.', alpha=0.2)
-
-# Set axis labels
-ax.set_xlabel('Epochs')
-ax.set_ylabel('Average Values')
-
-# Set tick marks and spacing
-ax.set_xticks(epochs)
-ax.xaxis.set_tick_params(rotation=90)
-
-# Improve the readability of the plot by reducing the number of boxes shown
-ax.set_xticks(np.arange(1, 52, 2))
-ax.set_xticklabels(np.arange(1, 52, 2))
-
-# Configure the grid
-ax.grid(True, linestyle='--', linewidth=0.5)
-
-# Display the boxplot
-plt.show()
-# %%
-
-# import matplotlib.pyplot as plt
-# # Define the list of accuracies
-# accuracies = [
-#     78.17, 87.14, 91.09, 91.63, 91.33, 90.72, 91.02, 91.15, 91.27, 91.45,
-#     91.21, 90.84, 90.18, 90.66, 90.54, 90.60, 90.12, 89.45, 89.33, 89.81,
-#     90.24, 89.99, 89.93, 89.75, 89.87, 89.69
-# ]
-
-# # Define the epochs based on the length of accuracies list
-# epochs = list(range(1, len(accuracies) + 1))
-
-# # Create the plot
-# plt.figure(figsize=(10, 5))
-# plt.plot(epochs, accuracies, marker="o", linestyle=":", label="Accuracy")
-
-# # Label the axes and title the plot
-# plt.xlabel("Epoch")
-# plt.ylabel("Accuracy (%)")
-# plt.title("Accuracy Variation across Epochs")
-
-# # Add a grid for better readability
-# plt.grid()
-
-# # Display the legend and plot
-# plt.legend()
-# plt.show()
 
 
 # %%

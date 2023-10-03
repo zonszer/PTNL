@@ -186,7 +186,7 @@ plt.tight_layout()
 
 # %%
 
-# Create a new figure for the max_z conf plot
+# Create a new 2D-figure for the max_z conf plot
 fig2 = plt.figure(figsize=(10, 5))
 ax2 = fig2.add_subplot(111)
 fig_idx = 1  #NOTE fill the wanted fig index here(start from 0)
@@ -204,7 +204,6 @@ for i in range(fig_idx, fig_idx+1):
 
 # plt.tight_layout()
 # plt.show()
-
 
 # # %%
 # # Create a new figure for the true_z conf plot

@@ -110,7 +110,7 @@ def accuracy_vmap(y_pred, y_test):
 
 # -
 
-# TODO: This is necessary because of a bug in NT's CPU detection inside a jit
+# This is necessary because of a bug in NT's CPU detection inside a jit
 nt.predict._arr_is_on_cpu = lambda x: False
 
 def scale(a, b):

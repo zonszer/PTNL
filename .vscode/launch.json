@@ -16,13 +16,13 @@
             },
             "args": [
               "--root=./data",
-              "--seed=22",
+              "--seed=2",
               "--trainer=UPLTrainer",
-              "--dataset-config-file=configs/datasets/sscaltech101.yaml",
+              "--dataset-config-file=configs/datasets/ssucf101.yaml",
               "--config-file=configs/trainers/UPLTrainer/rn50_ep50.yaml",     //↓ 记得改别的后也改output-dir
-              "--output-dir=./output/sscaltech101/UPLTrainer/rn50_ep50_16shots_EQULE_True_end_rn50_random_init/nctx16_cscFalse_ctpend_fp0/seed22",
+              "--output-dir=./output/ssucf101/UPLTrainer/debuging9.26/nctx16_cscFalse_ctpend_fp0/seed2",
               "--num-fp=0",
-              "--loss_type=rc_rc",
+              "--loss_type=cc",
               "TRAINER.UPLTrainer.N_CTX",
               "16",
               "TRAINER.UPLTrainer.CSC",
@@ -37,8 +37,8 @@
               "True",
               "TRAINER.PLL.PARTIAL_RATE",
               "0.3",
-              // "TEST.FINAL_MODEL",
-              // "best_val",
+              "TEST.FINAL_MODEL",
+              "best_val",
               // "TRAINER.PLL.BETA",
               // "0.1",
               // "TRAINER.PLL.CONF_LOSS_TYPE",
@@ -47,6 +47,85 @@
               // "a photo of a "
             ]
           },
+          //===================== for Elevator datamanager:
+        {
+            "name": "upl_train.py-CIFAR100-rn50-Elevator",
+            "type": "python",
+            "request": "launch",
+            "program": "upl_train.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+              "CUDA_VISIBLE_DEVICES": "1"
+            },
+            "args": [
+              "--root=./data/Elevater_datasets",
+              "--seed=2",
+              "--trainer=UPLTrainer",
+              "--dataset-config-file=configs/datasets/cifar-100.yaml",
+              "--config-file=configs/trainers/UPLTrainer/rn50_ep50.yaml",     //↓ 记得改别的后也改output-dir
+              "--output-dir=./output/CIFAR100/UPLTrainer/debuging9.26/nctx16_cscFalse_ctpend_fp0_PLL00-CE/seed2",
+              "--num-fp=0",
+              // "--loss_type=cc",
+              "TRAINER.UPLTrainer.N_CTX",
+              "16",
+              "TRAINER.UPLTrainer.CSC",
+              "False",
+              "TRAINER.UPLTrainer.CLASS_TOKEN_POSITION",
+              "end",
+              "DATASET.NUM_SHOTS",
+              "16",
+              "DATASET.CLASS_EQULE",
+              "True",
+              "TRAINER.PLL.USE_PLL",
+              "False",
+              // "TRAINER.PLL.PARTIAL_RATE",
+              // "0.3",
+              "TEST.FINAL_MODEL",
+              "best_val",
+              // "TRAINER.PLL.BETA",
+              // "0.1",
+              // "TRAINER.PLL.CONF_LOSS_TYPE",
+              // "gce_rc",
+              // "TRAINER.UPLTrainer.CTX_INIT",
+              // "a photo of a "
+            ]
+          },
+          {
+            "name": "upl_train.py-CIFAR100-rn101-Elevator",
+            "type": "python",
+            "request": "launch",
+            "program": "upl_train.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+              "CUDA_VISIBLE_DEVICES": "0"
+            },
+            "args": [
+              "--root=./data/Elevater_datasets",
+              "--seed=2",
+              "--trainer=UPLTrainer",
+              "--dataset-config-file=configs/datasets/cifar-100.yaml",
+              "--config-file=configs/trainers/UPLTrainer/rn101_ep200.yaml",
+              "--output-dir=./output/CIFAR100/UPLTrainer/9.28plot4figure/rn101/nctx16_cscFalse_ctpend_fp0_PLL00-CE_/seed2",
+              "--num-fp=0",
+              "TRAINER.UPLTrainer.N_CTX",
+              "16",
+              "TRAINER.UPLTrainer.CSC",
+              "False",
+              "TRAINER.UPLTrainer.CLASS_TOKEN_POSITION",
+              "end",
+              "DATASET.NUM_SHOTS",
+              "16",
+              "DATASET.CLASS_EQULE",
+              "True",
+              "TRAINER.PLL.USE_PLL",
+              "False",
+              "TEST.FINAL_MODEL",
+              "best_val"
+            ]
+          },
+          
 
           {
             "name": "upl_train-rc+GCE_rc.py",

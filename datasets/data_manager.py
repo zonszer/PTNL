@@ -3,7 +3,7 @@ from dassl.data.data_manager import DatasetWrapper
 from dassl.data.transforms import build_transform
 from dassl.data.samplers import build_sampler
 from dassl.data.datasets import build_dataset
-from ..vision_benchmark.evaluation import construct_dataloader, construct_multitask_dataset
+from vision_benchmark.evaluation import construct_dataloader, construct_multitask_dataset
 
 from torch.utils.data import DataLoader, WeightedRandomSampler
 import torch
@@ -61,17 +61,27 @@ def build_data_loader(          #re-implementation
     return data_loader
 
 class ElevaterDataManager(DataManager):
-    def __init__(self, cfg):
-        # Load dataset:
-        train_loader_x, val_loader, test_loader, class_map, train_dataset = construct_dataloader(cfg)       #train_dataset=500
+    def __init__(self, cfg,
+                custom_tfm_train=None,
+                custom_tfm_test=None,
+                dataset_wrapper=None):
+        # 2. build transform 
+        if custom_tfm_test is None:
+            tfm_test = build_transform(cfg, is_train=False)
+        else:
+            print(f"* Using custom transform for testing: \n{custom_tfm_test}")
+            tfm_test = custom_tfm_test
 
-        # self._metric = get_metric(class_map_metric[cfg.DATASET.DATASET])
-        # self._metric_name = class_map_metric[cfg.DATASET.DATASET]
+        # Load dataset:
+        train_loader_x, val_loader, test_loader, class_map, train_dataset = construct_dataloader(cfg, tfm_train=tfm_test, tfm_test=tfm_test)  
+
         # Attributes:
+        self.cfg = cfg
         self._num_classes = len(class_map)
         self._num_source_domains = len(cfg.DATASET.SOURCE_DOMAINS)
         self._lab2cname = {}
-        # random.seed(cfg.DATASET.RANDOM_SEED_SAMPLING)
+        self.dataset = train_dataset
+        self.dataset.classnames = class_map
         for key, value in enumerate(class_map):
             if isinstance(value, list):
                 value = value[0] #random.choice(value)
@@ -88,16 +98,33 @@ class ElevaterDataManager(DataManager):
             pass
             # self.show_dataset_summary(cfg)
 
-    def update_ssdateloader(self, predict_label_dict: None) -> None:
+    def update_ssdateloader(self, predict_label_dict: dict) -> None:
         """
         This function is used to update the train_loader_sstrain to add labels.
 
         Args:
             predict_label_dict (dict): A dictionary containing image paths as keys and corresponding labels as values.
         """
-        assert predict_label_dict is None
-        self.train_loader_sstrain.dataset.labels = self.partialY         #TODO check 
+        Datums = self.train_loader_sstrain.dataset.dataset.dataset.dataset_manifest.images      #len=3200
+        Datums, origin_label = self.add_label(predict_label_dict, Datums, self.cfg.DATASET.NAME)
+
+        self.gt_labels_sstrain = origin_label
         print('ElevaterDataset sstrain: len()==', len(self.train_loader_sstrain.dataset))
+    
+    def add_label(self, predict_label_dict, Datums, dataset_name):
+        """change the labels in original Datums
+        Args:
+            predict_label_dict ([dict]): [a dict {'imagepath': 'label'}]
+            Datums ([list]): [a list of Datum]
+            dataset ([str]): [dataset name]
+        """
+        origin_label = {}
+        for i, (k, v) in enumerate(predict_label_dict.items()):        #k: idxs in the train+val dataset(original sequence), v: label   
+            assert str(i) == k
+            if i in self.train_loader_sstrain.dataset.indices:
+                origin_label[k] = Datums[i].labels[0]
+                Datums[i].labels = [v]
+        return Datums, origin_label
 
 
 class UPLDataManager(DataManager):

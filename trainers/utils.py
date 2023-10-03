@@ -222,7 +222,7 @@ def select_top_k_similarity_per_class_with_noisy_label(img_paths, K=1, random_se
         pdb.set_trace()
     return predict_label_dict
 
-def generate_uniform_cv_candidate_labels(train_labels: torch.int64, partial_rate=0.1) -> torch.float32:
+def generate_uniform_cv_candidate_labels(train_labels: torch.int64, partial_rate=0.1) -> (torch.float32, torch.int64):
     """
     This function generates uniform cross-validation candidate labels.
 
@@ -233,6 +233,9 @@ def generate_uniform_cv_candidate_labels(train_labels: torch.int64, partial_rate
     Returns:
     torch.Tensor: A tensor of candidate label sets of type torch.float32.
     """
+    if train_labels.dim() != 1 and train_labels.dim() != 0:
+        if (train_labels.shape[0] == 1 or train_labels.shape[1] == 1) and train_labels.dim() == 2:
+            train_labels = train_labels.squeeze()
     assert train_labels.dim() == 1 or train_labels.dim() == 0, 'train_labels should be a 1D tensor'
     if torch.min(train_labels) > 1:
         raise RuntimeError('testError')
@@ -255,16 +258,16 @@ def generate_uniform_cv_candidate_labels(train_labels: torch.int64, partial_rate
         # partialY[j, :] = torch.from_numpy((random_n[j, :] < transition_matrix[train_labels[j], :]) * 1) * partialY[j, :]  #???
 
     print("Finish Generating Candidate Label Sets!\n")
-    return partialY
+    return partialY, train_labels
 
 def add_partial_labels(label_dict, partial_rate=0.1):
     ipath = list(label_dict.keys())
     true_labels = list(label_dict.values())
-    partialY = generate_uniform_cv_candidate_labels(torch.tensor(true_labels, dtype=torch.int64), partial_rate)
+    partialY, true_labels_ = generate_uniform_cv_candidate_labels(torch.tensor(true_labels, dtype=torch.int64), partial_rate)
     new_dict = {}
     for i in range(len(label_dict)):
         new_dict[ipath[i]] = partialY[i]
-    return new_dict, partialY, true_labels
+    return new_dict, partialY, true_labels_
 
 
 

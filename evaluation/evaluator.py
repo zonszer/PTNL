@@ -92,7 +92,7 @@ class UPLClassification(Classification):
                                                  + '\n'.join([f'{k}: {x[k]:.2f}%' for k in sorted(x, key=x.get, reverse=False)[:10]]))
             print_worst10_item(class_acc_dict)
             self.class_acc_sumlist.append(class_acc_dict)
-            self.evalset_acc_sumlist.append(mean_acc.item())
+            self.evalset_acc_sumlist.append(results["accuracy"])
 
             results["perclass_accuracy"] = mean_acc
 

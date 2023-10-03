@@ -74,11 +74,27 @@ CUSTOM_TEMPLATES = {
     "SSImageNet": "a photo of a {}.",
 }
 
-ElevaterDatasets = {
-    'CIFAR10': "a photo of a {}.",
-    'CIFAR100': "a photo of a {}.",
+OriginDatasets = {
+    "SSImageNet":"imagenet",
+    "SSCaltech101":"caltech-101",
+    "SSOxfordPets":"oxford_pets",
+    "SSUCF101":"ucf101",
+    "SSOxfordFlowers":"oxford_flowers",
+    "SSStanfordCars":"stanford_cars",
+    "SSFGVCAircraft":"fgvc_aircraft",
+    "SSDescribableTextures":"dtd",
+    "SSEuroSAT":"eurosat",
+    "SSFood101":"food-101",
+    "SSSUN397":"sun397",          
 }
 
+ElevaterDatasets = {
+# 'hateful-memes',  'patch-camelyon', 'kitti-distance', 'fgvc-aircraft-2013b-variants102', 
+# 'fer-2013', 'caltech-101', 'eurosat_clip', 'oxford-iiit-pets', 'resisc45_clip', 'oxford-flower-102', 'food-101', 
+# 'voc-2007-classification', 'rendered-sst2', 'country211', 'mnist', 'gtsrb', 'dtd', 'stanford-cars',
+'cifar-10': 'cifar_10_20211007',
+'cifar-100': 'cifar100_20200721',
+}
 
 def load_clip_to_cpu(cfg):
     backbone_name = cfg.MODEL.BACKBONE.NAME
@@ -171,7 +187,6 @@ class PromptLearner(nn.Module):
         # but they should be ignored in load_model() as we want to use
         # those computed using the current class names
         self.register_buffer("token_prefix", embedding[:, :1, :])  # SOS    #上面prompt_prefix的作用只是用来创建相应的token_prefix和token_suffix
-
         self.register_buffer("token_suffix", embedding[:, 1 + n_ctx :, :])  # CLS and EOS
 
         self.n_cls = n_cls
@@ -310,7 +325,7 @@ class UPLTrainer(TrainerX):
             criterion = torch.nn.CrossEntropyLoss()
             criterion.cfg = self.cfg.TRAINER.PLL
         else:
-            if hasattr(self, 'partialY'):
+            if hasattr(self, 'partialY') and self.partialY != None:
                 criterion = PLL_loss(type=self.cfg.TRAINER.LOSS_TYPE, cfg=self.cfg.TRAINER.PLL,
                                      PartialY=deepcopy(self.partialY))
             else:
@@ -353,26 +368,55 @@ class UPLTrainer(TrainerX):
             print(f"Multiple GPUs detected (n_gpus={device_count}), use all of them!")
             self.model = nn.DataParallel(self.model)
 
-    def get_gt_label(self, cfg):
-            dataset_map = {
-                "SSImageNet":"imagenet",
-                "SSCaltech101":"caltech-101",
-                "SSOxfordPets":"oxford_pets",
-                "SSUCF101":"ucf101",
-                "SSOxfordFlowers":"oxford_flowers",
-                "SSStanfordCars":"stanford_cars",
-                "SSFGVCAircraft":"fgvc_aircraft",
-                "SSDescribableTextures":"dtd",
-                "SSEuroSAT":"eurosat",
-                "SSFood101":"food-101",
-                "SSSUN397":"sun397"          
-            }
+    def get_gt_label_(self, cfg):
+        if self.cfg.DATASET.NAME in ElevaterDatasets.keys():
+            dataset_map = ElevaterDatasets
+            dataset_dir = dataset_map[self.cfg.DATASET.NAME]
+            root = os.path.abspath(os.path.expanduser(cfg.DATASET.ROOT))
+            dataset_dir = os.path.join(root, 'classification', dataset_dir)
+            gt_labels = os.path.join(dataset_dir, "train_images.txt")
+        elif self.cfg.DATASET.NAME in OriginDatasets.keys():
+            dataset_map = OriginDatasets
             dataset_dir = dataset_map[self.cfg.DATASET.NAME]
             root = os.path.abspath(os.path.expanduser(cfg.DATASET.ROOT))
             dataset_dir = os.path.join(root, dataset_dir)
             gt_labels = os.path.join(dataset_dir, "{}_GTlabels.json".format(self.cfg.DATASET.NAME))
+        else:
+            raise ValueError
+        
+        gt_label_dict = {}
+        if os.path.exists(gt_labels):
+            with open(gt_labels, "r") as f:         #TOorg 读json和 txt文件的不同代码使用（txt必须用 'r' mode while json can be 'r' or 'rb')
+                if gt_labels.endswith('.txt'):
+                    for i, line in enumerate(f):
+                        img_path, value = line.strip().split()
+                        gt_label_dict[img_path] = int(value)
+                else:
+                    gt_label_dict = json.load(f)
+            print("Loaded training GT labels from {}".format(gt_labels))
+        else:
+            print("Generating training GT labels to {}".format(gt_labels))
+            gt_label_dict = {}
+            for batch_idx, batch in enumerate(self.train_loader_x):
+                input, label, impath = self.parse_batch_test_with_impath(batch)
+                for l, ip in zip(label, impath):
+                    ip = './data/' + ip.split('/data/')[1]
+                    gt_label_dict[ip] = l.item()
+            with open(gt_labels, "w") as outfile:
+                json.dump(gt_label_dict, outfile)
+        return gt_label_dict
+    
+    def get_gt_label(self, cfg):
+        gt_label_dict = {}
+        if self.cfg.DATASET.NAME in OriginDatasets.keys():
+            dataset_map = OriginDatasets
+            dataset_dir = dataset_map[self.cfg.DATASET.NAME]
+            root = os.path.abspath(os.path.expanduser(cfg.DATASET.ROOT))
+            dataset_dir = os.path.join(root, dataset_dir)
+            gt_labels = os.path.join(dataset_dir, "{}_GTlabels.json".format(self.cfg.DATASET.NAME))
+
             if os.path.exists(gt_labels):
-                with open(gt_labels, "rb") as f:
+                with open(gt_labels, "r") as f:         
                     gt_label_dict = json.load(f)
                 print("Loaded training GT labels from {}".format(gt_labels))
             else:
@@ -385,17 +429,27 @@ class UPLTrainer(TrainerX):
                         gt_label_dict[ip] = l.item()
                 with open(gt_labels, "w") as outfile:
                     json.dump(gt_label_dict, outfile)
-            return gt_label_dict
+        elif self.cfg.DATASET.NAME in ElevaterDatasets.keys():
+            pass
+        return gt_label_dict
 
-    def forward_backward(self, batch):
+    def _get_gt_label(self, impath, dtype):
         gt_label_list = []
+        if '/' in impath[0]:
+            for ip in impath:
+                ip = './data/' + ip.split('/data/')[1]
+                gt_label = self.gt_label_dict[ip]
+                gt_label_list.append(gt_label)
+        else:
+            for idx_str in impath:
+                gt_label_list.append(self.dm.gt_labels_sstrain[idx_str])
+        gt_label = torch.tensor(gt_label_list, dtype=dtype).to(self.device)
+        return gt_label
+    
+    def forward_backward(self, batch):
         _, _, impath = self.parse_batch_test_with_impath(batch)
         image, label, index = self.parse_batch_train(batch)     #When PLL: labels_true == self.labels_true[index]
-        for ip in impath:
-            ip = './data/' + ip.split('/data/')[1]
-            gt_label = self.gt_label_dict[ip]
-            gt_label_list.append(gt_label)
-        gt_label = torch.tensor(gt_label_list, dtype=label.dtype).to(label.device)
+        gt_label = self._get_gt_label(impath, dtype=label.dtype)
         prec = self.cfg.TRAINER.UPLTrainer.PREC
         if prec == "amp":
             with autocast():
@@ -505,9 +559,15 @@ class UPLTrainer(TrainerX):
         return ratios
 
     def parse_batch_train(self, batch):
-        input = batch["img"]
-        label = batch["label"]
-        index = batch["index"]
+        if isinstance(batch, dict):
+            input = batch["img"]
+            label = batch["label"]
+            index = batch["index"]
+        elif isinstance(batch, list):
+            input = batch[0]
+            label = batch[1]
+            index = [eval(i) for i in batch[2]]
+
         input = input.to(self.device)
         label = label.to(self.device)
         return input, label, index
@@ -588,7 +648,7 @@ class UPLTrainer(TrainerX):
             self._models[name].load_state_dict(state_dict, strict=False)
 
     @torch.no_grad()
-    def test(self, split=None, trainer_list=None):
+    def test(self, split=None, trainer_list=None):                      
         """A generic testing pipeline."""
 
         self.set_model_mode("eval")
@@ -600,7 +660,7 @@ class UPLTrainer(TrainerX):
             os.makedirs(save_path)
 
         results_id = 0
-        while os.path.exists(os.path.join(save_path, 'per_image_results_{}_{}.txt'.format(split, results_id))):
+        while os.path.exists(os.path.join(save_path, 'per_image_results_{}_{}.txt'.format(split, results_id))):     #Toorg: how to save a result file without overwritten (also used in dassl)
             results_id += 1
         self.per_image_txt_writer = open(os.path.join(save_path, 'per_image_results_{}_{}.txt'.format(split, results_id)), 'w')
         self.per_class_txt_writer = open(os.path.join(save_path, 'per_class_results_{}_{}.txt'.format(split, results_id)), 'w')
@@ -645,14 +705,14 @@ class UPLTrainer(TrainerX):
         #0. save loged logits and conf: 
         # if True or log_conf == True:
         #     self.criterion.log_conf(all_logits=torch.cat(outputs_all, dim=0), all_labels=torch.cat(label_all, dim=0))
-        if split == 'test':
-            #1. save class_acc_sumlist and evalset_acc_sumlist:        #NOTE before uncomment remember to changed the name, otherwise the original file will be overwritten
-            filename = f'analyze_result_temp/class_acc_sumlist/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.cfg.TRAINER.PLL.PARTIAL_RATE}_{self.cfg.TRAINER.LOSS_TYPE}.json'
-            with open(filename, "w") as file:
-                json.dump(self.evaluator.class_acc_sumlist, file)
-            filename = f'analyze_result_temp/evalset_acc_sumlist/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.cfg.TRAINER.PLL.PARTIAL_RATE}_{self.cfg.TRAINER.LOSS_TYPE}.json'
-            with open(filename, "w") as file:
-                json.dump(self.evaluator.evalset_acc_sumlist, file)
+        # if split == 'test':
+            ##1. save class_acc_sumlist and evalset_acc_sumlist:        #NOTE before uncomment remember to changed the name, otherwise the original file will be overwritten
+            # filename = f'analyze_result_temp/class_acc_sumlist/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.cfg.TRAINER.PLL.PARTIAL_RATE}_{self.cfg.TRAINER.LOSS_TYPE}.json'
+            # with open(filename, "w") as file:
+            #     json.dump(self.evaluator.class_acc_sumlist, file)
+            # filename = f'analyze_result_temp/evalset_acc_sumlist/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.cfg.TRAINER.PLL.PARTIAL_RATE}_{self.cfg.TRAINER.LOSS_TYPE}.json'
+            # with open(filename, "w") as file:
+            #     json.dump(self.evaluator.evalset_acc_sumlist, file)
         #     #2. save grad_ratios_dict:
         #     filename = f'analyze_result_temp/grad_ratios_dict/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.criterion.cfg.PARTIAL_RATE}_{self.criterion.losstype}.json'
         #     with open(filename, "w") as file:
@@ -667,6 +727,7 @@ class UPLTrainer(TrainerX):
                 torch.save(image_features_all, os.path.join(save_path, '{}_targets.pt'.format(split)))
                 torch.save(outputs_all, os.path.join(save_path, '{}_logits.pt'.format(split)))
                 torch.save(text_features_all, os.path.join(save_path, '{}_l_features.pt'.format(split)))
+                torch.save(label_all, os.path.join(save_path, '{}_labels.pt'.format(split)))
 
 
         self.per_image_txt_writer.close()
@@ -719,15 +780,17 @@ class UPLTrainer(TrainerX):
 
     def load_from_exist_file(self, file_path, model_names):
         '''load logits and label from saved PSEUDO_LABEL_MODELS'''
+        logits, partialY = None, None
+
         if isinstance(self.dm, ElevaterDataManager):
-            #HACK only suppprot PLL now:
-            if self.cfg.TRAINER.PLL.USE_PLL:
-                labels_true = self.train_loader_sstrain.dataset.labels
-                partialY = generate_uniform_cv_candidate_labels(torch.tensor(labels_true, dtype=torch.int64), 
-                                                                self.cfg.TRAINER.PLL.PARTIAL_RATE)
-                predict_label_dict = None
+            Datums = self.train_loader_sstrain.dataset.dataset.dataset.dataset_manifest.images      #len(Datums) = 3200
+            convert_datum_to_dict = lambda Datums: {str(i): datum.labels[0] for i, datum in enumerate(Datums)}
+            predict_label_dict = convert_datum_to_dict(Datums)  #predict_label_dict -> k: idxs in the train+val dataset, v: label  
+           
+            if self.cfg.TRAINER.PLL.USE_PLL:                 #HACK only suppprot PLL now:
+                predict_label_dict, partialY, labels_true = add_partial_labels(label_dict=predict_label_dict,
+                                                        partial_rate=self.cfg.TRAINER.PLL.PARTIAL_RATE)
         else:
-            logits = None
             for model in model_names:
                 model_path = os.path.join(file_path, model)
                 logist_path = os.path.join(model_path, '{}_logits.pt'.format(self.cfg.DATASET.NAME))
@@ -758,7 +821,6 @@ class UPLTrainer(TrainerX):
             
         # Attributes:
         self.partialY = partialY
-        self.labels_true = torch.tensor(labels_true)
         return predict_label_dict 
 
     @torch.no_grad()
@@ -894,8 +956,8 @@ class UPLTrainer(TrainerX):
         same attributes (except self.dm).
         """
         _, preprocess = clip.load(self.cfg.MODEL.BACKBONE.NAME)
-        if self.cfg.DATASET.NAME in ElevaterDatasets.keys():
-            dm = ElevaterDataManager(self.cfg, custom_tfm_test=preprocess)
+        if self.cfg.DATASET.NAME in ElevaterDatasets:
+            dm = ElevaterDataManager(self.cfg, custom_tfm_test=preprocess)      
         else:
             dm = UPLDataManager(self.cfg, custom_tfm_test=preprocess)
         # _, preprocess = clip.load(self.cfg.MODEL.BACKBONE.NAME)
@@ -1031,29 +1093,35 @@ class UPLTrainer(TrainerX):
         self.close_writer()
 
     def parse_batch_test(self, batch):
-        input = batch["img"]
-        label = batch["label"]
+        if isinstance(batch, dict):
+            input = batch["img"]
+            label = batch["label"]
+        elif isinstance(batch, list):
+            input = batch[0]
+            label = batch[1]
 
         input = input.to(self.device)
         label = label.to(self.device)
-
         return input, label
 
     def parse_batch_test_with_impath(self, batch):
-        input = batch["img"]
-        label = batch["label"]
-        impath = batch["impath"]
+        impath, idx = None, None
+        if isinstance(batch, dict):
+            input = batch["img"]
+            label = batch["label"]
+            impath = batch["impath"]
+        elif isinstance(batch, list):
+            input = batch[0]
+            label = batch[1]
+            idx = batch[2]
 
         input = input.to(self.device)
-
         label = label.to(self.device)
         # impath = impath.to(self.device)
-
-        return input, label, impath
+        return input, label, impath or idx
 
     @torch.no_grad()
     def test_with_existing_logits(self, logits, split='test'):
-
 
         self.set_model_mode("eval")
         self.evaluator.reset()

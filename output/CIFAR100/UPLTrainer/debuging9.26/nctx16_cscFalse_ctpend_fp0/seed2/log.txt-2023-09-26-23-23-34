@@ -1,0 +1,1454 @@
+***************
+** Arguments **
+***************
+backbone: 
+config_file: configs/trainers/UPLTrainer/rn50_ep50.yaml
+dataset_config_file: configs/datasets/cifar-100.yaml
+eval_only: False
+head: 
+hh_config_file: 
+load_epoch: None
+loss_type: cc
+model_dir: 
+no_train: False
+num_fp: 0
+opts: ['TRAINER.UPLTrainer.N_CTX', '16', 'TRAINER.UPLTrainer.CSC', 'False', 'TRAINER.UPLTrainer.CLASS_TOKEN_POSITION', 'end', 'DATASET.NUM_SHOTS', '16', 'DATASET.CLASS_EQULE', 'True', 'TRAINER.PLL.USE_PLL', 'True', 'TRAINER.PLL.PARTIAL_RATE', '0.3', 'TEST.FINAL_MODEL', 'best_val']
+output_dir: ./output/CIFAR100/UPLTrainer/debuging9.26/nctx16_cscFalse_ctpend_fp0/seed2
+resume: 
+root: ./data/Elevater_datasets
+seed: 2
+source_domains: None
+target_domains: None
+trainer: UPLTrainer
+transforms: None
+************
+** Config **
+************
+DATALOADER:
+  K_TRANSFORMS: 1
+  NUM_WORKERS: 8
+  OPEN_SETTING: False
+  RETURN_IMG0: False
+  TEST:
+    BATCH_SIZE: 100
+    SAMPLER: SequentialSampler
+    SHUFFLE: False
+  TRAIN_U:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAME_AS_X: True
+    SAMPLER: RandomSampler
+  TRAIN_X:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAMPLER: RandomSampler
+    SHUFFLE: True
+  VAL:
+    BATCH_SIZE: 50
+    SHUFFLE: False
+DATASET:
+  ALL_AS_UNLABELED: False
+  CIFAR_C_LEVEL: 1
+  CIFAR_C_TYPE: 
+  CLASS_EQULE: True
+  CONF_THRESHOLD: 0.9
+  IGNORE_FILE: 
+  IGNORE_NUM: 0
+  NAME: cifar-100
+  NUM_LABELED: -1
+  NUM_SHOTS: 16
+  ROOT: ./data/Elevater_datasets
+  SOURCE_DOMAINS: ()
+  STL10_FOLD: -1
+  TARGET_DOMAINS: ()
+  VAL_PERCENT: 0.1
+INPUT:
+  COLORJITTER_B: 0.4
+  COLORJITTER_C: 0.4
+  COLORJITTER_H: 0.1
+  COLORJITTER_S: 0.4
+  CROP_PADDING: 4
+  CUTOUT_LEN: 16
+  CUTOUT_N: 1
+  GB_K: 21
+  GB_P: 0.5
+  GN_MEAN: 0.0
+  GN_STD: 0.15
+  INTERPOLATION: bicubic
+  NO_TRANSFORM: False
+  PIXEL_MEAN: [0.48145466, 0.4578275, 0.40821073]
+  PIXEL_STD: [0.26862954, 0.26130258, 0.27577711]
+  RANDAUGMENT_M: 10
+  RANDAUGMENT_N: 2
+  RGS_P: 0.2
+  RRCROP_SCALE: (0.08, 1.0)
+  SIZE: (224, 224)
+  TRANSFORMS: ('random_resized_crop', 'random_flip', 'normalize')
+MODEL:
+  BACKBONE:
+    NAME: RN50
+    PRETRAINED: True
+  HEAD:
+    ACTIVATION: relu
+    BN: True
+    DROPOUT: 0.0
+    HIDDEN_LAYERS: ()
+    NAME: 
+  INIT_WEIGHTS: 
+  PSEUDO_LABEL_MODELS: ['RN50']
+OPTIM:
+  ADAM_BETA1: 0.9
+  ADAM_BETA2: 0.999
+  BASE_LR_MULT: 0.1
+  GAMMA: 0.1
+  LR: 0.002
+  LR_SCHEDULER: cosine
+  MAX_EPOCH: 50
+  MOMENTUM: 0.9
+  NAME: sgd
+  NEW_LAYERS: ()
+  RMSPROP_ALPHA: 0.99
+  SGD_DAMPNING: 0
+  SGD_NESTEROV: False
+  STAGED_LR: False
+  STEPSIZE: (-1,)
+  WARMUP_CONS_LR: 1e-05
+  WARMUP_EPOCH: 1
+  WARMUP_MIN_LR: 1e-05
+  WARMUP_RECOUNT: True
+  WARMUP_TYPE: constant
+  WEIGHT_DECAY: 0.0005
+OUTPUT_DIR: ./output/CIFAR100/UPLTrainer/debuging9.26/nctx16_cscFalse_ctpend_fp0/seed2
+RESUME: 
+SEED: 2
+TEST:
+  Analyze_Result_Path: ./analysis_results_test/
+  COMPUTE_CMAT: False
+  EVALUATOR: UPLClassification
+  FINAL_MODEL: best_val
+  NO_TEST: False
+  PER_CLASS_RESULT: True
+  SPLIT: test
+TRAIN:
+  CHECKPOINT_FREQ: 0
+  COUNT_ITER: train_x
+  PRINT_FREQ: 5
+TRAINER:
+  CG:
+    ALPHA_D: 0.5
+    ALPHA_F: 0.5
+    EPS_D: 1.0
+    EPS_F: 1.0
+  DAEL:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DDAIG:
+    ALPHA: 0.5
+    CLAMP: False
+    CLAMP_MAX: 1.0
+    CLAMP_MIN: -1.0
+    G_ARCH: 
+    LMDA: 0.3
+    WARMUP: 0
+  ENSEMBLE_NUM: 1
+  ENTMIN:
+    LMDA: 0.001
+  FIXMATCH:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 1.0
+  LOSS_TYPE: cc
+  M3SDA:
+    LMDA: 0.5
+    N_STEP_F: 4
+  MCD:
+    N_STEP_F: 4
+  MEANTEA:
+    EMA_ALPHA: 0.999
+    RAMPUP: 5
+    WEIGHT_U: 1.0
+  MIXMATCH:
+    MIXUP_BETA: 0.75
+    RAMPUP: 20000
+    TEMP: 2.0
+    WEIGHT_U: 100.0
+  MME:
+    LMDA: 0.1
+  NAME: UPLTrainer
+  PLL:
+    BETA: 0.0
+    CONF_LOSS_TYPE: 
+    PARTIAL_RATE: 0.3
+    USE_PLL: True
+  SE:
+    CONF_THRE: 0.95
+    EMA_ALPHA: 0.999
+    RAMPUP: 300
+  UPLTrainer:
+    CLASS_TOKEN_POSITION: end
+    CSC: False
+    CTX_INIT: 
+    NUM_FP: 0
+    N_CTX: 16
+    PREC: fp16
+USE_CUDA: True
+VERBOSE: True
+VERSION: 1
+Collecting env info ...
+** System info **
+PyTorch version: 1.12.1+cu113
+Is debug build: False
+CUDA used to build PyTorch: 11.3
+ROCM used to build PyTorch: N/A
+
+OS: Ubuntu 22.04.2 LTS (x86_64)
+GCC version: (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+Clang version: Could not collect
+CMake version: version 3.22.1
+Libc version: glibc-2.35
+
+Python version: 3.9.17 | packaged by conda-forge | (main, Aug 10 2023, 07:02:31)  [GCC 12.3.0] (64-bit runtime)
+Python platform: Linux-5.19.0-38-generic-x86_64-with-glibc2.35
+Is CUDA available: True
+CUDA runtime version: 11.5.119
+GPU models and configuration: 
+GPU 0: NVIDIA A100-PCIE-40GB
+GPU 1: Tesla V100-PCIE-16GB
+GPU 2: Tesla V100-PCIE-16GB
+
+Nvidia driver version: Could not collect
+cuDNN version: Could not collect
+HIP runtime version: N/A
+MIOpen runtime version: N/A
+Is XNNPACK available: True
+
+Versions of relevant libraries:
+[pip3] numpy==1.24.3
+[pip3] torch==1.12.1+cu113
+[pip3] torch-tb-profiler==0.2.0
+[pip3] torchaudio==0.12.1+cu113
+[pip3] torchvision==0.13.1+cu113
+[conda] numpy                     1.24.3                   pypi_0    pypi
+[conda] torch                     1.12.1+cu113             pypi_0    pypi
+[conda] torch-tb-profiler         0.2.0                    pypi_0    pypi
+[conda] torchaudio                0.12.1+cu113             pypi_0    pypi
+[conda] torchvision               0.13.1+cu113             pypi_0    pypi
+        Pillow (10.0.0)
+
+Loading trainer: UPLTrainer
+no center crop
+Test size is 10000.
+Creating datatset
+Creating val datatset, len(trainset):len(valset)=1:1
+Val split from Train set: Train size is 1600.0, and validation size is 1600.0.
+Loading CLIP (backbone: RN50)
+Building custom CLIP
+Initializing a generic context
+Initial context: "X X X X X X X X X X X X X X X X"
+Number of context words (tokens): 16
+Turning off gradients in both the image and the text encoder
+Loading evaluator: UPLClassification
+Loaded training GT labels from /mnt/disk2/zjh/projects7.12/PTNL/data/Elevater_datasets/classification/cifar100_20200721/train_images.txt
+[[1.  0.3 0.3 ... 0.3 0.3 0.3]
+ [0.3 1.  0.3 ... 0.3 0.3 0.3]
+ [0.3 0.3 1.  ... 0.3 0.3 0.3]
+ ...
+ [0.3 0.3 0.3 ... 1.  0.3 0.3]
+ [0.3 0.3 0.3 ... 0.3 1.  0.3]
+ [0.3 0.3 0.3 ... 0.3 0.3 1. ]]
+Finish Generating Candidate Label Sets!
+
+ElevaterDataset sstrain: len()== 1600
+No checkpoint found, train from scratch
+Initialize tensorboard (log_dir=./output/CIFAR100/UPLTrainer/debuging9.26/nctx16_cscFalse_ctpend_fp0/seed2/tensorboard)
+epoch [1/50][5/50]	time 0.097 (7.424)	data 0.002 (0.615)	eta 5:08:43	loss 1.0993 (1.1024) acc 3.1250 (1.2500)	lr 1.000000e-05
+epoch [1/50][10/50]	time 0.091 (3.759)	data 0.002 (0.308)	eta 2:36:00	loss 1.1423 (1.1043) acc 0.0000 (0.6250)	lr 1.000000e-05
+epoch [1/50][15/50]	time 0.085 (2.541)	data 0.002 (0.206)	eta 1:45:14	loss 1.0640 (1.1047) acc 0.0000 (0.4167)	lr 1.000000e-05
+epoch [1/50][20/50]	time 0.097 (1.931)	data 0.001 (0.155)	eta 1:19:48	loss 1.1449 (1.1115) acc 3.1250 (0.9375)	lr 1.000000e-05
+epoch [1/50][25/50]	time 0.097 (1.564)	data 0.001 (0.124)	eta 1:04:31	loss 1.1039 (1.1127) acc 0.0000 (0.8750)	lr 1.000000e-05
+epoch [1/50][30/50]	time 0.098 (1.320)	data 0.003 (0.104)	eta 0:54:19	loss 1.0629 (1.1118) acc 3.1250 (1.0417)	lr 1.000000e-05
+epoch [1/50][35/50]	time 0.097 (1.145)	data 0.002 (0.089)	eta 0:47:02	loss 1.0851 (1.1115) acc 3.1250 (0.9821)	lr 1.000000e-05
+epoch [1/50][40/50]	time 0.084 (1.014)	data 0.001 (0.078)	eta 0:41:34	loss 1.1517 (1.1152) acc 0.0000 (0.8594)	lr 1.000000e-05
+epoch [1/50][45/50]	time 0.080 (0.910)	data 0.001 (0.070)	eta 0:37:15	loss 1.1462 (1.1136) acc 0.0000 (0.8333)	lr 1.000000e-05
+epoch [1/50][50/50]	time 0.080 (0.827)	data 0.001 (0.063)	eta 0:33:47	loss 1.1067 (1.1118) acc 0.0000 (0.8125)	lr 2.000000e-03
+Do evaluation on val set
+=> result
+* total: 1,600
+* correct: 531
+* accuracy: 33.19%
+* error: 66.81%
+* macro_f1: 30.20%
+=> per-class result
+* class: 0 (chimpanzee)	total: 16	correct: 4	acc: 25.00%
+* class: 1 (trout)	total: 16	correct: 0	acc: 0.00%
+* class: 2 (skunk)	total: 16	correct: 5	acc: 31.25%
+* class: 3 (spider)	total: 16	correct: 1	acc: 6.25%
+* class: 4 (chair)	total: 16	correct: 14	acc: 87.50%
+* class: 5 (tank)	total: 16	correct: 1	acc: 6.25%
+* class: 6 (keyboard)	total: 16	correct: 12	acc: 75.00%
+* class: 7 (man)	total: 16	correct: 0	acc: 0.00%
+* class: 8 (whale)	total: 16	correct: 4	acc: 25.00%
+* class: 9 (lobster)	total: 16	correct: 4	acc: 25.00%
+* class: 10 (house)	total: 16	correct: 9	acc: 56.25%
+* class: 11 (beetle)	total: 16	correct: 3	acc: 18.75%
+* class: 12 (bear)	total: 16	correct: 2	acc: 12.50%
+* class: 13 (shrew)	total: 16	correct: 0	acc: 0.00%
+* class: 14 (bottle)	total: 16	correct: 12	acc: 75.00%
+* class: 15 (cup)	total: 16	correct: 1	acc: 6.25%
+* class: 16 (bus)	total: 16	correct: 11	acc: 68.75%
+* class: 17 (orange)	total: 16	correct: 12	acc: 75.00%
+* class: 18 (sea)	total: 16	correct: 8	acc: 50.00%
+* class: 19 (oak tree)	total: 16	correct: 5	acc: 31.25%
+* class: 20 (bed)	total: 16	correct: 11	acc: 68.75%
+* class: 21 (tulip)	total: 16	correct: 0	acc: 0.00%
+* class: 22 (rabbit)	total: 16	correct: 3	acc: 18.75%
+* class: 23 (skyscraper)	total: 16	correct: 5	acc: 31.25%
+* class: 24 (apple)	total: 16	correct: 7	acc: 43.75%
+* class: 25 (maple tree)	total: 16	correct: 1	acc: 6.25%
+* class: 26 (pine tree)	total: 16	correct: 9	acc: 56.25%
+* class: 27 (snail)	total: 16	correct: 6	acc: 37.50%
+* class: 28 (pear)	total: 16	correct: 10	acc: 62.50%
+* class: 29 (bridge)	total: 16	correct: 3	acc: 18.75%
+* class: 30 (train)	total: 16	correct: 8	acc: 50.00%
+* class: 31 (mountain)	total: 16	correct: 9	acc: 56.25%
+* class: 32 (caterpillar)	total: 16	correct: 3	acc: 18.75%
+* class: 33 (crocodile)	total: 16	correct: 1	acc: 6.25%
+* class: 34 (snake)	total: 16	correct: 10	acc: 62.50%
+* class: 35 (kangaroo)	total: 16	correct: 7	acc: 43.75%
+* class: 36 (dolphin)	total: 16	correct: 1	acc: 6.25%
+* class: 37 (cattle)	total: 16	correct: 7	acc: 43.75%
+* class: 38 (raccoon)	total: 16	correct: 12	acc: 75.00%
+* class: 39 (mushroom)	total: 16	correct: 8	acc: 50.00%
+* class: 40 (hamster)	total: 16	correct: 9	acc: 56.25%
+* class: 41 (bowl)	total: 16	correct: 3	acc: 18.75%
+* class: 42 (lamp)	total: 16	correct: 2	acc: 12.50%
+* class: 43 (rocket)	total: 16	correct: 8	acc: 50.00%
+* class: 44 (pickup truck)	total: 16	correct: 15	acc: 93.75%
+* class: 45 (wolf)	total: 16	correct: 1	acc: 6.25%
+* class: 46 (worm)	total: 16	correct: 0	acc: 0.00%
+* class: 47 (otter)	total: 16	correct: 3	acc: 18.75%
+* class: 48 (sunflower)	total: 16	correct: 15	acc: 93.75%
+* class: 49 (leopard)	total: 16	correct: 1	acc: 6.25%
+* class: 50 (ray)	total: 16	correct: 0	acc: 0.00%
+* class: 51 (lawn mower)	total: 16	correct: 4	acc: 25.00%
+* class: 52 (motorcycle)	total: 16	correct: 12	acc: 75.00%
+* class: 53 (boy)	total: 16	correct: 7	acc: 43.75%
+* class: 54 (fox)	total: 16	correct: 4	acc: 25.00%
+* class: 55 (palm tree)	total: 16	correct: 15	acc: 93.75%
+* class: 56 (cloud)	total: 16	correct: 8	acc: 50.00%
+* class: 57 (dinosaur)	total: 16	correct: 7	acc: 43.75%
+* class: 58 (turtle)	total: 16	correct: 5	acc: 31.25%
+* class: 59 (forest)	total: 16	correct: 0	acc: 0.00%
+* class: 60 (couch)	total: 16	correct: 5	acc: 31.25%
+* class: 61 (poppy)	total: 16	correct: 8	acc: 50.00%
+* class: 62 (rose)	total: 16	correct: 5	acc: 31.25%
+* class: 63 (bee)	total: 16	correct: 1	acc: 6.25%
+* class: 64 (girl)	total: 16	correct: 5	acc: 31.25%
+* class: 65 (clock)	total: 16	correct: 10	acc: 62.50%
+* class: 66 (can)	total: 16	correct: 1	acc: 6.25%
+* class: 67 (table)	total: 16	correct: 4	acc: 25.00%
+* class: 68 (road)	total: 16	correct: 11	acc: 68.75%
+* class: 69 (orchid)	total: 16	correct: 12	acc: 75.00%
+* class: 70 (streetcar)	total: 16	correct: 3	acc: 18.75%
+* class: 71 (squirrel)	total: 16	correct: 3	acc: 18.75%
+* class: 72 (crab)	total: 16	correct: 0	acc: 0.00%
+* class: 73 (butterfly)	total: 16	correct: 2	acc: 12.50%
+* class: 74 (tractor)	total: 16	correct: 8	acc: 50.00%
+* class: 75 (beaver)	total: 16	correct: 0	acc: 0.00%
+* class: 76 (willow tree)	total: 16	correct: 0	acc: 0.00%
+* class: 77 (camel)	total: 16	correct: 1	acc: 6.25%
+* class: 78 (plain)	total: 16	correct: 0	acc: 0.00%
+* class: 79 (mouse)	total: 16	correct: 1	acc: 6.25%
+* class: 80 (elephant)	total: 16	correct: 10	acc: 62.50%
+* class: 81 (flatfish)	total: 16	correct: 0	acc: 0.00%
+* class: 82 (sweet pepper)	total: 16	correct: 7	acc: 43.75%
+* class: 83 (plate)	total: 16	correct: 5	acc: 31.25%
+* class: 84 (television)	total: 16	correct: 3	acc: 18.75%
+* class: 85 (aquarium fish)	total: 16	correct: 1	acc: 6.25%
+* class: 86 (wardrobe)	total: 16	correct: 2	acc: 12.50%
+* class: 87 (seal)	total: 16	correct: 1	acc: 6.25%
+* class: 88 (lizard)	total: 16	correct: 2	acc: 12.50%
+* class: 89 (cockroach)	total: 16	correct: 0	acc: 0.00%
+* class: 90 (porcupine)	total: 16	correct: 0	acc: 0.00%
+* class: 91 (woman)	total: 16	correct: 10	acc: 62.50%
+* class: 92 (possum)	total: 16	correct: 1	acc: 6.25%
+* class: 93 (baby)	total: 16	correct: 8	acc: 50.00%
+* class: 94 (tiger)	total: 16	correct: 9	acc: 56.25%
+* class: 95 (telephone)	total: 16	correct: 5	acc: 31.25%
+* class: 96 (shark)	total: 16	correct: 10	acc: 62.50%
+* class: 97 (lion)	total: 16	correct: 9	acc: 56.25%
+* class: 98 (castle)	total: 16	correct: 14	acc: 87.50%
+* class: 99 (bicycle)	total: 16	correct: 6	acc: 37.50%
+* average: 33.19%
+worst10 classes: 
+trout: 0.00%
+man: 0.00%
+shrew: 0.00%
+tulip: 0.00%
+worm: 0.00%
+ray: 0.00%
+forest: 0.00%
+crab: 0.00%
+beaver: 0.00%
+willow tree: 0.00%
+Checkpoint saved to ./output/CIFAR100/UPLTrainer/debuging9.26/nctx16_cscFalse_ctpend_fp0/seed2/prompt_learner/model-best-0.pth.tar
+epoch [2/50][5/50]	time 1.034 (1.252)	data 0.918 (1.153)	eta 0:51:00	loss 1.1128 (1.0212) acc 9.3750 (1.8750)	lr 2.000000e-03
+epoch [2/50][10/50]	time 0.089 (0.753)	data 0.002 (0.651)	eta 0:30:37	loss 0.7160 (0.9175) acc 0.0000 (2.1875)	lr 2.000000e-03
+epoch [2/50][15/50]	time 0.096 (0.535)	data 0.001 (0.435)	eta 0:21:43	loss 0.8662 (0.9215) acc 3.1250 (2.0833)	lr 2.000000e-03
+epoch [2/50][20/50]	time 0.086 (0.427)	data 0.001 (0.326)	eta 0:17:16	loss 0.8563 (0.9041) acc 0.0000 (1.8750)	lr 2.000000e-03
+epoch [2/50][25/50]	time 0.105 (0.362)	data 0.002 (0.261)	eta 0:14:38	loss 0.6972 (0.8789) acc 3.1250 (1.7500)	lr 2.000000e-03
+epoch [2/50][30/50]	time 0.101 (0.318)	data 0.001 (0.218)	eta 0:12:50	loss 0.9712 (0.8739) acc 0.0000 (1.4583)	lr 2.000000e-03
+epoch [2/50][35/50]	time 0.101 (0.288)	data 0.016 (0.188)	eta 0:11:34	loss 0.7629 (0.8599) acc 0.0000 (1.2500)	lr 2.000000e-03
+epoch [2/50][40/50]	time 0.080 (0.264)	data 0.001 (0.164)	eta 0:10:35	loss 0.8265 (0.8654) acc 0.0000 (1.0938)	lr 2.000000e-03
+epoch [2/50][45/50]	time 0.080 (0.243)	data 0.001 (0.146)	eta 0:09:45	loss 0.9297 (0.8693) acc 0.0000 (1.0417)	lr 2.000000e-03
+epoch [2/50][50/50]	time 0.082 (0.227)	data 0.001 (0.132)	eta 0:09:05	loss 1.0834 (0.8715) acc 0.0000 (0.9375)	lr 1.998027e-03
+Do evaluation on val set
+=> result
+* total: 1,600
+* correct: 713
+* accuracy: 44.56%
+* error: 55.44%
+* macro_f1: 42.65%
+=> per-class result
+* class: 0 (chimpanzee)	total: 16	correct: 10	acc: 62.50%
+* class: 1 (trout)	total: 16	correct: 9	acc: 56.25%
+* class: 2 (skunk)	total: 16	correct: 9	acc: 56.25%
+* class: 3 (spider)	total: 16	correct: 2	acc: 12.50%
+* class: 4 (chair)	total: 16	correct: 13	acc: 81.25%
+* class: 5 (tank)	total: 16	correct: 7	acc: 43.75%
+* class: 6 (keyboard)	total: 16	correct: 13	acc: 81.25%
+* class: 7 (man)	total: 16	correct: 9	acc: 56.25%
+* class: 8 (whale)	total: 16	correct: 8	acc: 50.00%
+* class: 9 (lobster)	total: 16	correct: 5	acc: 31.25%
+* class: 10 (house)	total: 16	correct: 12	acc: 75.00%
+* class: 11 (beetle)	total: 16	correct: 2	acc: 12.50%
+* class: 12 (bear)	total: 16	correct: 3	acc: 18.75%
+* class: 13 (shrew)	total: 16	correct: 1	acc: 6.25%
+* class: 14 (bottle)	total: 16	correct: 13	acc: 81.25%
+* class: 15 (cup)	total: 16	correct: 9	acc: 56.25%
+* class: 16 (bus)	total: 16	correct: 7	acc: 43.75%
+* class: 17 (orange)	total: 16	correct: 13	acc: 81.25%
+* class: 18 (sea)	total: 16	correct: 6	acc: 37.50%
+* class: 19 (oak tree)	total: 16	correct: 9	acc: 56.25%
+* class: 20 (bed)	total: 16	correct: 6	acc: 37.50%
+* class: 21 (tulip)	total: 16	correct: 8	acc: 50.00%
+* class: 22 (rabbit)	total: 16	correct: 3	acc: 18.75%
+* class: 23 (skyscraper)	total: 16	correct: 11	acc: 68.75%
+* class: 24 (apple)	total: 16	correct: 10	acc: 62.50%
+* class: 25 (maple tree)	total: 16	correct: 6	acc: 37.50%
+* class: 26 (pine tree)	total: 16	correct: 9	acc: 56.25%
+* class: 27 (snail)	total: 16	correct: 7	acc: 43.75%
+* class: 28 (pear)	total: 16	correct: 11	acc: 68.75%
+* class: 29 (bridge)	total: 16	correct: 6	acc: 37.50%
+* class: 30 (train)	total: 16	correct: 11	acc: 68.75%
+* class: 31 (mountain)	total: 16	correct: 14	acc: 87.50%
+* class: 32 (caterpillar)	total: 16	correct: 4	acc: 25.00%
+* class: 33 (crocodile)	total: 16	correct: 1	acc: 6.25%
+* class: 34 (snake)	total: 16	correct: 9	acc: 56.25%
+* class: 35 (kangaroo)	total: 16	correct: 8	acc: 50.00%
+* class: 36 (dolphin)	total: 16	correct: 8	acc: 50.00%
+* class: 37 (cattle)	total: 16	correct: 10	acc: 62.50%
+* class: 38 (raccoon)	total: 16	correct: 7	acc: 43.75%
+* class: 39 (mushroom)	total: 16	correct: 7	acc: 43.75%
+* class: 40 (hamster)	total: 16	correct: 11	acc: 68.75%
+* class: 41 (bowl)	total: 16	correct: 7	acc: 43.75%
+* class: 42 (lamp)	total: 16	correct: 4	acc: 25.00%
+* class: 43 (rocket)	total: 16	correct: 12	acc: 75.00%
+* class: 44 (pickup truck)	total: 16	correct: 14	acc: 87.50%
+* class: 45 (wolf)	total: 16	correct: 6	acc: 37.50%
+* class: 46 (worm)	total: 16	correct: 10	acc: 62.50%
+* class: 47 (otter)	total: 16	correct: 0	acc: 0.00%
+* class: 48 (sunflower)	total: 16	correct: 15	acc: 93.75%
+* class: 49 (leopard)	total: 16	correct: 4	acc: 25.00%
+* class: 50 (ray)	total: 16	correct: 0	acc: 0.00%
+* class: 51 (lawn mower)	total: 16	correct: 8	acc: 50.00%
+* class: 52 (motorcycle)	total: 16	correct: 13	acc: 81.25%
+* class: 53 (boy)	total: 16	correct: 7	acc: 43.75%
+* class: 54 (fox)	total: 16	correct: 7	acc: 43.75%
+* class: 55 (palm tree)	total: 16	correct: 10	acc: 62.50%
+* class: 56 (cloud)	total: 16	correct: 9	acc: 56.25%
+* class: 57 (dinosaur)	total: 16	correct: 4	acc: 25.00%
+* class: 58 (turtle)	total: 16	correct: 0	acc: 0.00%
+* class: 59 (forest)	total: 16	correct: 9	acc: 56.25%
+* class: 60 (couch)	total: 16	correct: 6	acc: 37.50%
+* class: 61 (poppy)	total: 16	correct: 9	acc: 56.25%
+* class: 62 (rose)	total: 16	correct: 4	acc: 25.00%
+* class: 63 (bee)	total: 16	correct: 8	acc: 50.00%
+* class: 64 (girl)	total: 16	correct: 5	acc: 31.25%
+* class: 65 (clock)	total: 16	correct: 9	acc: 56.25%
+* class: 66 (can)	total: 16	correct: 6	acc: 37.50%
+* class: 67 (table)	total: 16	correct: 4	acc: 25.00%
+* class: 68 (road)	total: 16	correct: 12	acc: 75.00%
+* class: 69 (orchid)	total: 16	correct: 4	acc: 25.00%
+* class: 70 (streetcar)	total: 16	correct: 13	acc: 81.25%
+* class: 71 (squirrel)	total: 16	correct: 1	acc: 6.25%
+* class: 72 (crab)	total: 16	correct: 2	acc: 12.50%
+* class: 73 (butterfly)	total: 16	correct: 3	acc: 18.75%
+* class: 74 (tractor)	total: 16	correct: 7	acc: 43.75%
+* class: 75 (beaver)	total: 16	correct: 0	acc: 0.00%
+* class: 76 (willow tree)	total: 16	correct: 1	acc: 6.25%
+* class: 77 (camel)	total: 16	correct: 5	acc: 31.25%
+* class: 78 (plain)	total: 16	correct: 14	acc: 87.50%
+* class: 79 (mouse)	total: 16	correct: 4	acc: 25.00%
+* class: 80 (elephant)	total: 16	correct: 10	acc: 62.50%
+* class: 81 (flatfish)	total: 16	correct: 0	acc: 0.00%
+* class: 82 (sweet pepper)	total: 16	correct: 5	acc: 31.25%
+* class: 83 (plate)	total: 16	correct: 9	acc: 56.25%
+* class: 84 (television)	total: 16	correct: 6	acc: 37.50%
+* class: 85 (aquarium fish)	total: 16	correct: 1	acc: 6.25%
+* class: 86 (wardrobe)	total: 16	correct: 14	acc: 87.50%
+* class: 87 (seal)	total: 16	correct: 9	acc: 56.25%
+* class: 88 (lizard)	total: 16	correct: 0	acc: 0.00%
+* class: 89 (cockroach)	total: 16	correct: 2	acc: 12.50%
+* class: 90 (porcupine)	total: 16	correct: 0	acc: 0.00%
+* class: 91 (woman)	total: 16	correct: 11	acc: 68.75%
+* class: 92 (possum)	total: 16	correct: 4	acc: 25.00%
+* class: 93 (baby)	total: 16	correct: 8	acc: 50.00%
+* class: 94 (tiger)	total: 16	correct: 11	acc: 68.75%
+* class: 95 (telephone)	total: 16	correct: 11	acc: 68.75%
+* class: 96 (shark)	total: 16	correct: 3	acc: 18.75%
+* class: 97 (lion)	total: 16	correct: 8	acc: 50.00%
+* class: 98 (castle)	total: 16	correct: 12	acc: 75.00%
+* class: 99 (bicycle)	total: 16	correct: 6	acc: 37.50%
+* average: 44.56%
+worst10 classes: 
+otter: 0.00%
+ray: 0.00%
+turtle: 0.00%
+beaver: 0.00%
+flatfish: 0.00%
+lizard: 0.00%
+porcupine: 0.00%
+shrew: 6.25%
+crocodile: 6.25%
+squirrel: 6.25%
+Checkpoint saved to ./output/CIFAR100/UPLTrainer/debuging9.26/nctx16_cscFalse_ctpend_fp0/seed2/prompt_learner/model-best-0.pth.tar
+epoch [3/50][5/50]	time 1.080 (1.253)	data 0.994 (1.143)	eta 0:50:02	loss 0.8478 (0.7756) acc 0.0000 (0.0000)	lr 1.998027e-03
+epoch [3/50][10/50]	time 0.105 (0.729)	data 0.002 (0.622)	eta 0:29:03	loss 0.9286 (0.7930) acc 0.0000 (0.3125)	lr 1.998027e-03
+epoch [3/50][15/50]	time 0.097 (0.519)	data 0.002 (0.415)	eta 0:20:38	loss 0.7018 (0.7959) acc 0.0000 (0.8333)	lr 1.998027e-03
+epoch [3/50][20/50]	time 0.105 (0.414)	data 0.001 (0.312)	eta 0:16:26	loss 0.8363 (0.7877) acc 0.0000 (0.7812)	lr 1.998027e-03
+epoch [3/50][25/50]	time 0.101 (0.352)	data 0.002 (0.250)	eta 0:13:55	loss 0.9467 (0.7933) acc 0.0000 (0.6250)	lr 1.998027e-03
+epoch [3/50][30/50]	time 0.089 (0.310)	data 0.001 (0.208)	eta 0:12:15	loss 0.6299 (0.7828) acc 0.0000 (0.6250)	lr 1.998027e-03
+epoch [3/50][35/50]	time 0.102 (0.281)	data 0.001 (0.179)	eta 0:11:03	loss 0.7810 (0.7751) acc 0.0000 (0.6250)	lr 1.998027e-03
+epoch [3/50][40/50]	time 0.085 (0.258)	data 0.001 (0.157)	eta 0:10:08	loss 0.5804 (0.7708) acc 0.0000 (0.7031)	lr 1.998027e-03
+epoch [3/50][45/50]	time 0.081 (0.238)	data 0.001 (0.139)	eta 0:09:20	loss 0.8156 (0.7757) acc 0.0000 (0.6944)	lr 1.998027e-03
+epoch [3/50][50/50]	time 0.080 (0.222)	data 0.001 (0.126)	eta 0:08:42	loss 0.9186 (0.7784) acc 0.0000 (0.6250)	lr 1.992115e-03
+Do evaluation on val set
+=> result
+* total: 1,600
+* correct: 716
+* accuracy: 44.75%
+* error: 55.25%
+* macro_f1: 43.02%
+=> per-class result
+* class: 0 (chimpanzee)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (trout)	total: 16	correct: 9	acc: 56.25%
+* class: 2 (skunk)	total: 16	correct: 8	acc: 50.00%
+* class: 3 (spider)	total: 16	correct: 1	acc: 6.25%
+* class: 4 (chair)	total: 16	correct: 13	acc: 81.25%
+* class: 5 (tank)	total: 16	correct: 7	acc: 43.75%
+* class: 6 (keyboard)	total: 16	correct: 10	acc: 62.50%
+* class: 7 (man)	total: 16	correct: 12	acc: 75.00%
+* class: 8 (whale)	total: 16	correct: 9	acc: 56.25%
+* class: 9 (lobster)	total: 16	correct: 5	acc: 31.25%
+* class: 10 (house)	total: 16	correct: 13	acc: 81.25%
+* class: 11 (beetle)	total: 16	correct: 3	acc: 18.75%
+* class: 12 (bear)	total: 16	correct: 3	acc: 18.75%
+* class: 13 (shrew)	total: 16	correct: 3	acc: 18.75%
+* class: 14 (bottle)	total: 16	correct: 13	acc: 81.25%
+* class: 15 (cup)	total: 16	correct: 3	acc: 18.75%
+* class: 16 (bus)	total: 16	correct: 7	acc: 43.75%
+* class: 17 (orange)	total: 16	correct: 14	acc: 87.50%
+* class: 18 (sea)	total: 16	correct: 9	acc: 56.25%
+* class: 19 (oak tree)	total: 16	correct: 8	acc: 50.00%
+* class: 20 (bed)	total: 16	correct: 5	acc: 31.25%
+* class: 21 (tulip)	total: 16	correct: 7	acc: 43.75%
+* class: 22 (rabbit)	total: 16	correct: 2	acc: 12.50%
+* class: 23 (skyscraper)	total: 16	correct: 10	acc: 62.50%
+* class: 24 (apple)	total: 16	correct: 8	acc: 50.00%
+* class: 25 (maple tree)	total: 16	correct: 4	acc: 25.00%
+* class: 26 (pine tree)	total: 16	correct: 9	acc: 56.25%
+* class: 27 (snail)	total: 16	correct: 7	acc: 43.75%
+* class: 28 (pear)	total: 16	correct: 10	acc: 62.50%
+* class: 29 (bridge)	total: 16	correct: 5	acc: 31.25%
+* class: 30 (train)	total: 16	correct: 9	acc: 56.25%
+* class: 31 (mountain)	total: 16	correct: 13	acc: 81.25%
+* class: 32 (caterpillar)	total: 16	correct: 4	acc: 25.00%
+* class: 33 (crocodile)	total: 16	correct: 2	acc: 12.50%
+* class: 34 (snake)	total: 16	correct: 10	acc: 62.50%
+* class: 35 (kangaroo)	total: 16	correct: 8	acc: 50.00%
+* class: 36 (dolphin)	total: 16	correct: 8	acc: 50.00%
+* class: 37 (cattle)	total: 16	correct: 9	acc: 56.25%
+* class: 38 (raccoon)	total: 16	correct: 9	acc: 56.25%
+* class: 39 (mushroom)	total: 16	correct: 7	acc: 43.75%
+* class: 40 (hamster)	total: 16	correct: 12	acc: 75.00%
+* class: 41 (bowl)	total: 16	correct: 11	acc: 68.75%
+* class: 42 (lamp)	total: 16	correct: 6	acc: 37.50%
+* class: 43 (rocket)	total: 16	correct: 11	acc: 68.75%
+* class: 44 (pickup truck)	total: 16	correct: 14	acc: 87.50%
+* class: 45 (wolf)	total: 16	correct: 6	acc: 37.50%
+* class: 46 (worm)	total: 16	correct: 8	acc: 50.00%
+* class: 47 (otter)	total: 16	correct: 0	acc: 0.00%
+* class: 48 (sunflower)	total: 16	correct: 15	acc: 93.75%
+* class: 49 (leopard)	total: 16	correct: 3	acc: 18.75%
+* class: 50 (ray)	total: 16	correct: 0	acc: 0.00%
+* class: 51 (lawn mower)	total: 16	correct: 9	acc: 56.25%
+* class: 52 (motorcycle)	total: 16	correct: 11	acc: 68.75%
+* class: 53 (boy)	total: 16	correct: 9	acc: 56.25%
+* class: 54 (fox)	total: 16	correct: 8	acc: 50.00%
+* class: 55 (palm tree)	total: 16	correct: 15	acc: 93.75%
+* class: 56 (cloud)	total: 16	correct: 9	acc: 56.25%
+* class: 57 (dinosaur)	total: 16	correct: 4	acc: 25.00%
+* class: 58 (turtle)	total: 16	correct: 1	acc: 6.25%
+* class: 59 (forest)	total: 16	correct: 9	acc: 56.25%
+* class: 60 (couch)	total: 16	correct: 5	acc: 31.25%
+* class: 61 (poppy)	total: 16	correct: 9	acc: 56.25%
+* class: 62 (rose)	total: 16	correct: 4	acc: 25.00%
+* class: 63 (bee)	total: 16	correct: 7	acc: 43.75%
+* class: 64 (girl)	total: 16	correct: 6	acc: 37.50%
+* class: 65 (clock)	total: 16	correct: 9	acc: 56.25%
+* class: 66 (can)	total: 16	correct: 11	acc: 68.75%
+* class: 67 (table)	total: 16	correct: 5	acc: 31.25%
+* class: 68 (road)	total: 16	correct: 12	acc: 75.00%
+* class: 69 (orchid)	total: 16	correct: 6	acc: 37.50%
+* class: 70 (streetcar)	total: 16	correct: 9	acc: 56.25%
+* class: 71 (squirrel)	total: 16	correct: 1	acc: 6.25%
+* class: 72 (crab)	total: 16	correct: 2	acc: 12.50%
+* class: 73 (butterfly)	total: 16	correct: 1	acc: 6.25%
+* class: 74 (tractor)	total: 16	correct: 8	acc: 50.00%
+* class: 75 (beaver)	total: 16	correct: 0	acc: 0.00%
+* class: 76 (willow tree)	total: 16	correct: 1	acc: 6.25%
+* class: 77 (camel)	total: 16	correct: 5	acc: 31.25%
+* class: 78 (plain)	total: 16	correct: 14	acc: 87.50%
+* class: 79 (mouse)	total: 16	correct: 3	acc: 18.75%
+* class: 80 (elephant)	total: 16	correct: 10	acc: 62.50%
+* class: 81 (flatfish)	total: 16	correct: 1	acc: 6.25%
+* class: 82 (sweet pepper)	total: 16	correct: 7	acc: 43.75%
+* class: 83 (plate)	total: 16	correct: 8	acc: 50.00%
+* class: 84 (television)	total: 16	correct: 4	acc: 25.00%
+* class: 85 (aquarium fish)	total: 16	correct: 1	acc: 6.25%
+* class: 86 (wardrobe)	total: 16	correct: 14	acc: 87.50%
+* class: 87 (seal)	total: 16	correct: 7	acc: 43.75%
+* class: 88 (lizard)	total: 16	correct: 0	acc: 0.00%
+* class: 89 (cockroach)	total: 16	correct: 3	acc: 18.75%
+* class: 90 (porcupine)	total: 16	correct: 0	acc: 0.00%
+* class: 91 (woman)	total: 16	correct: 10	acc: 62.50%
+* class: 92 (possum)	total: 16	correct: 3	acc: 18.75%
+* class: 93 (baby)	total: 16	correct: 8	acc: 50.00%
+* class: 94 (tiger)	total: 16	correct: 9	acc: 56.25%
+* class: 95 (telephone)	total: 16	correct: 14	acc: 87.50%
+* class: 96 (shark)	total: 16	correct: 1	acc: 6.25%
+* class: 97 (lion)	total: 16	correct: 8	acc: 50.00%
+* class: 98 (castle)	total: 16	correct: 11	acc: 68.75%
+* class: 99 (bicycle)	total: 16	correct: 8	acc: 50.00%
+* average: 44.75%
+worst10 classes: 
+otter: 0.00%
+ray: 0.00%
+beaver: 0.00%
+lizard: 0.00%
+porcupine: 0.00%
+spider: 6.25%
+turtle: 6.25%
+squirrel: 6.25%
+butterfly: 6.25%
+willow tree: 6.25%
+Checkpoint saved to ./output/CIFAR100/UPLTrainer/debuging9.26/nctx16_cscFalse_ctpend_fp0/seed2/prompt_learner/model-best-0.pth.tar
+epoch [4/50][5/50]	time 0.775 (1.524)	data 0.692 (1.430)	eta 0:59:34	loss 0.8330 (0.7279) acc 0.0000 (0.0000)	lr 1.992115e-03
+epoch [4/50][10/50]	time 0.122 (0.885)	data 0.001 (0.787)	eta 0:34:31	loss 0.8520 (0.7516) acc 0.0000 (0.3125)	lr 1.992115e-03
+epoch [4/50][15/50]	time 0.096 (0.622)	data 0.001 (0.525)	eta 0:24:11	loss 0.9305 (0.7567) acc 0.0000 (0.2083)	lr 1.992115e-03
+epoch [4/50][20/50]	time 0.096 (0.490)	data 0.001 (0.394)	eta 0:19:01	loss 0.6333 (0.7484) acc 0.0000 (0.1562)	lr 1.992115e-03
+epoch [4/50][25/50]	time 0.095 (0.411)	data 0.001 (0.316)	eta 0:15:56	loss 0.7489 (0.7466) acc 3.1250 (0.6250)	lr 1.992115e-03
+epoch [4/50][30/50]	time 0.095 (0.359)	data 0.001 (0.263)	eta 0:13:52	loss 0.8531 (0.7395) acc 0.0000 (0.7292)	lr 1.992115e-03
+epoch [4/50][35/50]	time 0.095 (0.321)	data 0.002 (0.226)	eta 0:12:23	loss 0.8264 (0.7454) acc 0.0000 (0.6250)	lr 1.992115e-03
+epoch [4/50][40/50]	time 0.078 (0.292)	data 0.001 (0.198)	eta 0:11:15	loss 0.5275 (0.7433) acc 0.0000 (0.6250)	lr 1.992115e-03
+epoch [4/50][45/50]	time 0.078 (0.269)	data 0.001 (0.176)	eta 0:10:18	loss 0.6698 (0.7361) acc 0.0000 (0.6250)	lr 1.992115e-03
+epoch [4/50][50/50]	time 0.079 (0.250)	data 0.001 (0.158)	eta 0:09:34	loss 0.6938 (0.7402) acc 0.0000 (0.6250)	lr 1.982287e-03
+Do evaluation on val set
+=> result
+* total: 1,600
+* correct: 747
+* accuracy: 46.69%
+* error: 53.31%
+* macro_f1: 45.32%
+=> per-class result
+* class: 0 (chimpanzee)	total: 16	correct: 13	acc: 81.25%
+* class: 1 (trout)	total: 16	correct: 9	acc: 56.25%
+* class: 2 (skunk)	total: 16	correct: 9	acc: 56.25%
+* class: 3 (spider)	total: 16	correct: 1	acc: 6.25%
+* class: 4 (chair)	total: 16	correct: 14	acc: 87.50%
+* class: 5 (tank)	total: 16	correct: 7	acc: 43.75%
+* class: 6 (keyboard)	total: 16	correct: 12	acc: 75.00%
+* class: 7 (man)	total: 16	correct: 13	acc: 81.25%
+* class: 8 (whale)	total: 16	correct: 9	acc: 56.25%
+* class: 9 (lobster)	total: 16	correct: 5	acc: 31.25%
+* class: 10 (house)	total: 16	correct: 11	acc: 68.75%
+* class: 11 (beetle)	total: 16	correct: 2	acc: 12.50%
+* class: 12 (bear)	total: 16	correct: 2	acc: 12.50%
+* class: 13 (shrew)	total: 16	correct: 3	acc: 18.75%
+* class: 14 (bottle)	total: 16	correct: 13	acc: 81.25%
+* class: 15 (cup)	total: 16	correct: 13	acc: 81.25%
+* class: 16 (bus)	total: 16	correct: 6	acc: 37.50%
+* class: 17 (orange)	total: 16	correct: 14	acc: 87.50%
+* class: 18 (sea)	total: 16	correct: 7	acc: 43.75%
+* class: 19 (oak tree)	total: 16	correct: 12	acc: 75.00%
+* class: 20 (bed)	total: 16	correct: 9	acc: 56.25%
+* class: 21 (tulip)	total: 16	correct: 7	acc: 43.75%
+* class: 22 (rabbit)	total: 16	correct: 4	acc: 25.00%
+* class: 23 (skyscraper)	total: 16	correct: 10	acc: 62.50%
+* class: 24 (apple)	total: 16	correct: 8	acc: 50.00%
+* class: 25 (maple tree)	total: 16	correct: 5	acc: 31.25%
+* class: 26 (pine tree)	total: 16	correct: 8	acc: 50.00%
+* class: 27 (snail)	total: 16	correct: 7	acc: 43.75%
+* class: 28 (pear)	total: 16	correct: 9	acc: 56.25%
+* class: 29 (bridge)	total: 16	correct: 6	acc: 37.50%
+* class: 30 (train)	total: 16	correct: 12	acc: 75.00%
+* class: 31 (mountain)	total: 16	correct: 14	acc: 87.50%
+* class: 32 (caterpillar)	total: 16	correct: 6	acc: 37.50%
+* class: 33 (crocodile)	total: 16	correct: 3	acc: 18.75%
+* class: 34 (snake)	total: 16	correct: 6	acc: 37.50%
+* class: 35 (kangaroo)	total: 16	correct: 7	acc: 43.75%
+* class: 36 (dolphin)	total: 16	correct: 6	acc: 37.50%
+* class: 37 (cattle)	total: 16	correct: 8	acc: 50.00%
+* class: 38 (raccoon)	total: 16	correct: 6	acc: 37.50%
+* class: 39 (mushroom)	total: 16	correct: 7	acc: 43.75%
+* class: 40 (hamster)	total: 16	correct: 11	acc: 68.75%
+* class: 41 (bowl)	total: 16	correct: 9	acc: 56.25%
+* class: 42 (lamp)	total: 16	correct: 7	acc: 43.75%
+* class: 43 (rocket)	total: 16	correct: 7	acc: 43.75%
+* class: 44 (pickup truck)	total: 16	correct: 14	acc: 87.50%
+* class: 45 (wolf)	total: 16	correct: 6	acc: 37.50%
+* class: 46 (worm)	total: 16	correct: 10	acc: 62.50%
+* class: 47 (otter)	total: 16	correct: 0	acc: 0.00%
+* class: 48 (sunflower)	total: 16	correct: 14	acc: 87.50%
+* class: 49 (leopard)	total: 16	correct: 5	acc: 31.25%
+* class: 50 (ray)	total: 16	correct: 2	acc: 12.50%
+* class: 51 (lawn mower)	total: 16	correct: 8	acc: 50.00%
+* class: 52 (motorcycle)	total: 16	correct: 12	acc: 75.00%
+* class: 53 (boy)	total: 16	correct: 10	acc: 62.50%
+* class: 54 (fox)	total: 16	correct: 11	acc: 68.75%
+* class: 55 (palm tree)	total: 16	correct: 12	acc: 75.00%
+* class: 56 (cloud)	total: 16	correct: 8	acc: 50.00%
+* class: 57 (dinosaur)	total: 16	correct: 5	acc: 31.25%
+* class: 58 (turtle)	total: 16	correct: 0	acc: 0.00%
+* class: 59 (forest)	total: 16	correct: 9	acc: 56.25%
+* class: 60 (couch)	total: 16	correct: 7	acc: 43.75%
+* class: 61 (poppy)	total: 16	correct: 9	acc: 56.25%
+* class: 62 (rose)	total: 16	correct: 4	acc: 25.00%
+* class: 63 (bee)	total: 16	correct: 5	acc: 31.25%
+* class: 64 (girl)	total: 16	correct: 6	acc: 37.50%
+* class: 65 (clock)	total: 16	correct: 10	acc: 62.50%
+* class: 66 (can)	total: 16	correct: 8	acc: 50.00%
+* class: 67 (table)	total: 16	correct: 4	acc: 25.00%
+* class: 68 (road)	total: 16	correct: 12	acc: 75.00%
+* class: 69 (orchid)	total: 16	correct: 7	acc: 43.75%
+* class: 70 (streetcar)	total: 16	correct: 12	acc: 75.00%
+* class: 71 (squirrel)	total: 16	correct: 1	acc: 6.25%
+* class: 72 (crab)	total: 16	correct: 4	acc: 25.00%
+* class: 73 (butterfly)	total: 16	correct: 2	acc: 12.50%
+* class: 74 (tractor)	total: 16	correct: 7	acc: 43.75%
+* class: 75 (beaver)	total: 16	correct: 0	acc: 0.00%
+* class: 76 (willow tree)	total: 16	correct: 2	acc: 12.50%
+* class: 77 (camel)	total: 16	correct: 7	acc: 43.75%
+* class: 78 (plain)	total: 16	correct: 13	acc: 81.25%
+* class: 79 (mouse)	total: 16	correct: 3	acc: 18.75%
+* class: 80 (elephant)	total: 16	correct: 8	acc: 50.00%
+* class: 81 (flatfish)	total: 16	correct: 1	acc: 6.25%
+* class: 82 (sweet pepper)	total: 16	correct: 8	acc: 50.00%
+* class: 83 (plate)	total: 16	correct: 9	acc: 56.25%
+* class: 84 (television)	total: 16	correct: 4	acc: 25.00%
+* class: 85 (aquarium fish)	total: 16	correct: 2	acc: 12.50%
+* class: 86 (wardrobe)	total: 16	correct: 14	acc: 87.50%
+* class: 87 (seal)	total: 16	correct: 8	acc: 50.00%
+* class: 88 (lizard)	total: 16	correct: 0	acc: 0.00%
+* class: 89 (cockroach)	total: 16	correct: 7	acc: 43.75%
+* class: 90 (porcupine)	total: 16	correct: 0	acc: 0.00%
+* class: 91 (woman)	total: 16	correct: 10	acc: 62.50%
+* class: 92 (possum)	total: 16	correct: 3	acc: 18.75%
+* class: 93 (baby)	total: 16	correct: 7	acc: 43.75%
+* class: 94 (tiger)	total: 16	correct: 10	acc: 62.50%
+* class: 95 (telephone)	total: 16	correct: 13	acc: 81.25%
+* class: 96 (shark)	total: 16	correct: 6	acc: 37.50%
+* class: 97 (lion)	total: 16	correct: 10	acc: 62.50%
+* class: 98 (castle)	total: 16	correct: 12	acc: 75.00%
+* class: 99 (bicycle)	total: 16	correct: 9	acc: 56.25%
+* average: 46.69%
+worst10 classes: 
+otter: 0.00%
+turtle: 0.00%
+beaver: 0.00%
+lizard: 0.00%
+porcupine: 0.00%
+spider: 6.25%
+squirrel: 6.25%
+flatfish: 6.25%
+beetle: 12.50%
+bear: 12.50%
+Checkpoint saved to ./output/CIFAR100/UPLTrainer/debuging9.26/nctx16_cscFalse_ctpend_fp0/seed2/prompt_learner/model-best-0.pth.tar
+epoch [5/50][5/50]	time 0.941 (1.287)	data 0.818 (1.184)	eta 0:49:13	loss 0.4226 (0.5923) acc 0.0000 (0.0000)	lr 1.982287e-03
+epoch [5/50][10/50]	time 0.100 (0.734)	data 0.002 (0.634)	eta 0:28:00	loss 0.7774 (0.6209) acc 0.0000 (0.0000)	lr 1.982287e-03
+epoch [5/50][15/50]	time 0.094 (0.523)	data 0.002 (0.423)	eta 0:19:54	loss 0.6209 (0.6443) acc 0.0000 (0.0000)	lr 1.982287e-03
+epoch [5/50][20/50]	time 0.095 (0.417)	data 0.001 (0.318)	eta 0:15:50	loss 0.7186 (0.6526) acc 0.0000 (0.3125)	lr 1.982287e-03
+epoch [5/50][25/50]	time 0.096 (0.354)	data 0.002 (0.254)	eta 0:13:25	loss 0.7558 (0.6628) acc 0.0000 (0.3750)	lr 1.982287e-03
+epoch [5/50][30/50]	time 0.124 (0.312)	data 0.003 (0.212)	eta 0:11:48	loss 0.4734 (0.6639) acc 3.1250 (0.5208)	lr 1.982287e-03
+epoch [5/50][35/50]	time 0.102 (0.281)	data 0.001 (0.182)	eta 0:10:37	loss 0.9299 (0.6800) acc 0.0000 (0.4464)	lr 1.982287e-03
+epoch [5/50][40/50]	time 0.081 (0.258)	data 0.001 (0.160)	eta 0:09:42	loss 0.7034 (0.6821) acc 0.0000 (0.4688)	lr 1.982287e-03
+epoch [5/50][45/50]	time 0.093 (0.239)	data 0.001 (0.142)	eta 0:08:59	loss 0.9191 (0.6959) acc 0.0000 (0.4861)	lr 1.982287e-03
+epoch [5/50][50/50]	time 0.094 (0.225)	data 0.001 (0.128)	eta 0:08:25	loss 0.8223 (0.7034) acc 3.1250 (0.5625)	lr 1.968583e-03
+Do evaluation on val set
+=> result
+* total: 1,600
+* correct: 748
+* accuracy: 46.75%
+* error: 53.25%
+* macro_f1: 45.43%
+=> per-class result
+* class: 0 (chimpanzee)	total: 16	correct: 13	acc: 81.25%
+* class: 1 (trout)	total: 16	correct: 11	acc: 68.75%
+* class: 2 (skunk)	total: 16	correct: 9	acc: 56.25%
+* class: 3 (spider)	total: 16	correct: 1	acc: 6.25%
+* class: 4 (chair)	total: 16	correct: 13	acc: 81.25%
+* class: 5 (tank)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (keyboard)	total: 16	correct: 10	acc: 62.50%
+* class: 7 (man)	total: 16	correct: 13	acc: 81.25%
+* class: 8 (whale)	total: 16	correct: 9	acc: 56.25%
+* class: 9 (lobster)	total: 16	correct: 6	acc: 37.50%
+* class: 10 (house)	total: 16	correct: 12	acc: 75.00%
+* class: 11 (beetle)	total: 16	correct: 1	acc: 6.25%
+* class: 12 (bear)	total: 16	correct: 2	acc: 12.50%
+* class: 13 (shrew)	total: 16	correct: 3	acc: 18.75%
+* class: 14 (bottle)	total: 16	correct: 13	acc: 81.25%
+* class: 15 (cup)	total: 16	correct: 10	acc: 62.50%
+* class: 16 (bus)	total: 16	correct: 7	acc: 43.75%
+* class: 17 (orange)	total: 16	correct: 14	acc: 87.50%
+* class: 18 (sea)	total: 16	correct: 9	acc: 56.25%
+* class: 19 (oak tree)	total: 16	correct: 11	acc: 68.75%
+* class: 20 (bed)	total: 16	correct: 7	acc: 43.75%
+* class: 21 (tulip)	total: 16	correct: 8	acc: 50.00%
+* class: 22 (rabbit)	total: 16	correct: 4	acc: 25.00%
+* class: 23 (skyscraper)	total: 16	correct: 12	acc: 75.00%
+* class: 24 (apple)	total: 16	correct: 8	acc: 50.00%
+* class: 25 (maple tree)	total: 16	correct: 9	acc: 56.25%
+* class: 26 (pine tree)	total: 16	correct: 9	acc: 56.25%
+* class: 27 (snail)	total: 16	correct: 4	acc: 25.00%
+* class: 28 (pear)	total: 16	correct: 11	acc: 68.75%
+* class: 29 (bridge)	total: 16	correct: 6	acc: 37.50%
+* class: 30 (train)	total: 16	correct: 12	acc: 75.00%
+* class: 31 (mountain)	total: 16	correct: 14	acc: 87.50%
+* class: 32 (caterpillar)	total: 16	correct: 4	acc: 25.00%
+* class: 33 (crocodile)	total: 16	correct: 4	acc: 25.00%
+* class: 34 (snake)	total: 16	correct: 5	acc: 31.25%
+* class: 35 (kangaroo)	total: 16	correct: 7	acc: 43.75%
+* class: 36 (dolphin)	total: 16	correct: 7	acc: 43.75%
+* class: 37 (cattle)	total: 16	correct: 10	acc: 62.50%
+* class: 38 (raccoon)	total: 16	correct: 6	acc: 37.50%
+* class: 39 (mushroom)	total: 16	correct: 9	acc: 56.25%
+* class: 40 (hamster)	total: 16	correct: 12	acc: 75.00%
+* class: 41 (bowl)	total: 16	correct: 8	acc: 50.00%
+* class: 42 (lamp)	total: 16	correct: 5	acc: 31.25%
+* class: 43 (rocket)	total: 16	correct: 14	acc: 87.50%
+* class: 44 (pickup truck)	total: 16	correct: 13	acc: 81.25%
+* class: 45 (wolf)	total: 16	correct: 6	acc: 37.50%
+* class: 46 (worm)	total: 16	correct: 13	acc: 81.25%
+* class: 47 (otter)	total: 16	correct: 1	acc: 6.25%
+* class: 48 (sunflower)	total: 16	correct: 15	acc: 93.75%
+* class: 49 (leopard)	total: 16	correct: 4	acc: 25.00%
+* class: 50 (ray)	total: 16	correct: 4	acc: 25.00%
+* class: 51 (lawn mower)	total: 16	correct: 7	acc: 43.75%
+* class: 52 (motorcycle)	total: 16	correct: 11	acc: 68.75%
+* class: 53 (boy)	total: 16	correct: 8	acc: 50.00%
+* class: 54 (fox)	total: 16	correct: 8	acc: 50.00%
+* class: 55 (palm tree)	total: 16	correct: 13	acc: 81.25%
+* class: 56 (cloud)	total: 16	correct: 8	acc: 50.00%
+* class: 57 (dinosaur)	total: 16	correct: 5	acc: 31.25%
+* class: 58 (turtle)	total: 16	correct: 1	acc: 6.25%
+* class: 59 (forest)	total: 16	correct: 7	acc: 43.75%
+* class: 60 (couch)	total: 16	correct: 8	acc: 50.00%
+* class: 61 (poppy)	total: 16	correct: 5	acc: 31.25%
+* class: 62 (rose)	total: 16	correct: 4	acc: 25.00%
+* class: 63 (bee)	total: 16	correct: 10	acc: 62.50%
+* class: 64 (girl)	total: 16	correct: 4	acc: 25.00%
+* class: 65 (clock)	total: 16	correct: 9	acc: 56.25%
+* class: 66 (can)	total: 16	correct: 7	acc: 43.75%
+* class: 67 (table)	total: 16	correct: 6	acc: 37.50%
+* class: 68 (road)	total: 16	correct: 12	acc: 75.00%
+* class: 69 (orchid)	total: 16	correct: 6	acc: 37.50%
+* class: 70 (streetcar)	total: 16	correct: 12	acc: 75.00%
+* class: 71 (squirrel)	total: 16	correct: 1	acc: 6.25%
+* class: 72 (crab)	total: 16	correct: 2	acc: 12.50%
+* class: 73 (butterfly)	total: 16	correct: 2	acc: 12.50%
+* class: 74 (tractor)	total: 16	correct: 7	acc: 43.75%
+* class: 75 (beaver)	total: 16	correct: 0	acc: 0.00%
+* class: 76 (willow tree)	total: 16	correct: 4	acc: 25.00%
+* class: 77 (camel)	total: 16	correct: 8	acc: 50.00%
+* class: 78 (plain)	total: 16	correct: 13	acc: 81.25%
+* class: 79 (mouse)	total: 16	correct: 0	acc: 0.00%
+* class: 80 (elephant)	total: 16	correct: 11	acc: 68.75%
+* class: 81 (flatfish)	total: 16	correct: 0	acc: 0.00%
+* class: 82 (sweet pepper)	total: 16	correct: 6	acc: 37.50%
+* class: 83 (plate)	total: 16	correct: 7	acc: 43.75%
+* class: 84 (television)	total: 16	correct: 7	acc: 43.75%
+* class: 85 (aquarium fish)	total: 16	correct: 2	acc: 12.50%
+* class: 86 (wardrobe)	total: 16	correct: 13	acc: 81.25%
+* class: 87 (seal)	total: 16	correct: 6	acc: 37.50%
+* class: 88 (lizard)	total: 16	correct: 0	acc: 0.00%
+* class: 89 (cockroach)	total: 16	correct: 5	acc: 31.25%
+* class: 90 (porcupine)	total: 16	correct: 1	acc: 6.25%
+* class: 91 (woman)	total: 16	correct: 11	acc: 68.75%
+* class: 92 (possum)	total: 16	correct: 4	acc: 25.00%
+* class: 93 (baby)	total: 16	correct: 7	acc: 43.75%
+* class: 94 (tiger)	total: 16	correct: 11	acc: 68.75%
+* class: 95 (telephone)	total: 16	correct: 13	acc: 81.25%
+* class: 96 (shark)	total: 16	correct: 0	acc: 0.00%
+* class: 97 (lion)	total: 16	correct: 8	acc: 50.00%
+* class: 98 (castle)	total: 16	correct: 11	acc: 68.75%
+* class: 99 (bicycle)	total: 16	correct: 10	acc: 62.50%
+* average: 46.75%
+worst10 classes: 
+beaver: 0.00%
+mouse: 0.00%
+flatfish: 0.00%
+lizard: 0.00%
+shark: 0.00%
+spider: 6.25%
+beetle: 6.25%
+otter: 6.25%
+turtle: 6.25%
+squirrel: 6.25%
+Checkpoint saved to ./output/CIFAR100/UPLTrainer/debuging9.26/nctx16_cscFalse_ctpend_fp0/seed2/prompt_learner/model-best-0.pth.tar
+epoch [6/50][5/50]	time 0.859 (1.256)	data 0.732 (1.147)	eta 0:46:59	loss 0.7179 (0.6383) acc 0.0000 (1.2500)	lr 1.968583e-03
+epoch [6/50][10/50]	time 0.094 (0.826)	data 0.001 (0.723)	eta 0:30:50	loss 0.6009 (0.6421) acc 0.0000 (0.9375)	lr 1.968583e-03
+epoch [6/50][15/50]	time 0.100 (0.584)	data 0.002 (0.482)	eta 0:21:44	loss 0.6831 (0.6543) acc 0.0000 (0.6250)	lr 1.968583e-03
+epoch [6/50][20/50]	time 0.103 (0.463)	data 0.002 (0.362)	eta 0:17:12	loss 0.5436 (0.6551) acc 0.0000 (0.4688)	lr 1.968583e-03
+epoch [6/50][25/50]	time 0.103 (0.391)	data 0.001 (0.290)	eta 0:14:29	loss 0.8803 (0.6705) acc 6.2500 (0.6250)	lr 1.968583e-03
+epoch [6/50][30/50]	time 0.096 (0.342)	data 0.001 (0.242)	eta 0:12:40	loss 0.8499 (0.6630) acc 0.0000 (0.6250)	lr 1.968583e-03
+epoch [6/50][35/50]	time 0.102 (0.308)	data 0.001 (0.207)	eta 0:11:22	loss 0.7032 (0.6758) acc 0.0000 (0.7143)	lr 1.968583e-03
+epoch [6/50][40/50]	time 0.098 (0.283)	data 0.001 (0.182)	eta 0:10:24	loss 0.8239 (0.6814) acc 0.0000 (0.6250)	lr 1.968583e-03
+epoch [6/50][45/50]	time 0.112 (0.263)	data 0.001 (0.162)	eta 0:09:40	loss 0.9039 (0.6806) acc 0.0000 (0.6944)	lr 1.968583e-03
+epoch [6/50][50/50]	time 0.093 (0.247)	data 0.001 (0.146)	eta 0:09:03	loss 0.6643 (0.6830) acc 0.0000 (0.6875)	lr 1.951057e-03
+Do evaluation on val set
+=> result
+* total: 1,600
+* correct: 757
+* accuracy: 47.31%
+* error: 52.69%
+* macro_f1: 45.53%
+=> per-class result
+* class: 0 (chimpanzee)	total: 16	correct: 13	acc: 81.25%
+* class: 1 (trout)	total: 16	correct: 9	acc: 56.25%
+* class: 2 (skunk)	total: 16	correct: 10	acc: 62.50%
+* class: 3 (spider)	total: 16	correct: 1	acc: 6.25%
+* class: 4 (chair)	total: 16	correct: 12	acc: 75.00%
+* class: 5 (tank)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (keyboard)	total: 16	correct: 9	acc: 56.25%
+* class: 7 (man)	total: 16	correct: 13	acc: 81.25%
+* class: 8 (whale)	total: 16	correct: 9	acc: 56.25%
+* class: 9 (lobster)	total: 16	correct: 4	acc: 25.00%
+* class: 10 (house)	total: 16	correct: 11	acc: 68.75%
+* class: 11 (beetle)	total: 16	correct: 1	acc: 6.25%
+* class: 12 (bear)	total: 16	correct: 2	acc: 12.50%
+* class: 13 (shrew)	total: 16	correct: 3	acc: 18.75%
+* class: 14 (bottle)	total: 16	correct: 13	acc: 81.25%
+* class: 15 (cup)	total: 16	correct: 12	acc: 75.00%
+* class: 16 (bus)	total: 16	correct: 8	acc: 50.00%
+* class: 17 (orange)	total: 16	correct: 14	acc: 87.50%
+* class: 18 (sea)	total: 16	correct: 9	acc: 56.25%
+* class: 19 (oak tree)	total: 16	correct: 9	acc: 56.25%
+* class: 20 (bed)	total: 16	correct: 8	acc: 50.00%
+* class: 21 (tulip)	total: 16	correct: 8	acc: 50.00%
+* class: 22 (rabbit)	total: 16	correct: 2	acc: 12.50%
+* class: 23 (skyscraper)	total: 16	correct: 13	acc: 81.25%
+* class: 24 (apple)	total: 16	correct: 9	acc: 56.25%
+* class: 25 (maple tree)	total: 16	correct: 5	acc: 31.25%
+* class: 26 (pine tree)	total: 16	correct: 10	acc: 62.50%
+* class: 27 (snail)	total: 16	correct: 7	acc: 43.75%
+* class: 28 (pear)	total: 16	correct: 11	acc: 68.75%
+* class: 29 (bridge)	total: 16	correct: 6	acc: 37.50%
+* class: 30 (train)	total: 16	correct: 12	acc: 75.00%
+* class: 31 (mountain)	total: 16	correct: 15	acc: 93.75%
+* class: 32 (caterpillar)	total: 16	correct: 4	acc: 25.00%
+* class: 33 (crocodile)	total: 16	correct: 5	acc: 31.25%
+* class: 34 (snake)	total: 16	correct: 5	acc: 31.25%
+* class: 35 (kangaroo)	total: 16	correct: 5	acc: 31.25%
+* class: 36 (dolphin)	total: 16	correct: 4	acc: 25.00%
+* class: 37 (cattle)	total: 16	correct: 9	acc: 56.25%
+* class: 38 (raccoon)	total: 16	correct: 8	acc: 50.00%
+* class: 39 (mushroom)	total: 16	correct: 9	acc: 56.25%
+* class: 40 (hamster)	total: 16	correct: 11	acc: 68.75%
+* class: 41 (bowl)	total: 16	correct: 10	acc: 62.50%
+* class: 42 (lamp)	total: 16	correct: 7	acc: 43.75%
+* class: 43 (rocket)	total: 16	correct: 10	acc: 62.50%
+* class: 44 (pickup truck)	total: 16	correct: 13	acc: 81.25%
+* class: 45 (wolf)	total: 16	correct: 5	acc: 31.25%
+* class: 46 (worm)	total: 16	correct: 13	acc: 81.25%
+* class: 47 (otter)	total: 16	correct: 1	acc: 6.25%
+* class: 48 (sunflower)	total: 16	correct: 15	acc: 93.75%
+* class: 49 (leopard)	total: 16	correct: 5	acc: 31.25%
+* class: 50 (ray)	total: 16	correct: 4	acc: 25.00%
+* class: 51 (lawn mower)	total: 16	correct: 9	acc: 56.25%
+* class: 52 (motorcycle)	total: 16	correct: 12	acc: 75.00%
+* class: 53 (boy)	total: 16	correct: 8	acc: 50.00%
+* class: 54 (fox)	total: 16	correct: 5	acc: 31.25%
+* class: 55 (palm tree)	total: 16	correct: 13	acc: 81.25%
+* class: 56 (cloud)	total: 16	correct: 9	acc: 56.25%
+* class: 57 (dinosaur)	total: 16	correct: 4	acc: 25.00%
+* class: 58 (turtle)	total: 16	correct: 0	acc: 0.00%
+* class: 59 (forest)	total: 16	correct: 6	acc: 37.50%
+* class: 60 (couch)	total: 16	correct: 7	acc: 43.75%
+* class: 61 (poppy)	total: 16	correct: 7	acc: 43.75%
+* class: 62 (rose)	total: 16	correct: 5	acc: 31.25%
+* class: 63 (bee)	total: 16	correct: 8	acc: 50.00%
+* class: 64 (girl)	total: 16	correct: 3	acc: 18.75%
+* class: 65 (clock)	total: 16	correct: 10	acc: 62.50%
+* class: 66 (can)	total: 16	correct: 10	acc: 62.50%
+* class: 67 (table)	total: 16	correct: 7	acc: 43.75%
+* class: 68 (road)	total: 16	correct: 12	acc: 75.00%
+* class: 69 (orchid)	total: 16	correct: 6	acc: 37.50%
+* class: 70 (streetcar)	total: 16	correct: 12	acc: 75.00%
+* class: 71 (squirrel)	total: 16	correct: 2	acc: 12.50%
+* class: 72 (crab)	total: 16	correct: 2	acc: 12.50%
+* class: 73 (butterfly)	total: 16	correct: 1	acc: 6.25%
+* class: 74 (tractor)	total: 16	correct: 5	acc: 31.25%
+* class: 75 (beaver)	total: 16	correct: 0	acc: 0.00%
+* class: 76 (willow tree)	total: 16	correct: 8	acc: 50.00%
+* class: 77 (camel)	total: 16	correct: 7	acc: 43.75%
+* class: 78 (plain)	total: 16	correct: 14	acc: 87.50%
+* class: 79 (mouse)	total: 16	correct: 1	acc: 6.25%
+* class: 80 (elephant)	total: 16	correct: 11	acc: 68.75%
+* class: 81 (flatfish)	total: 16	correct: 1	acc: 6.25%
+* class: 82 (sweet pepper)	total: 16	correct: 7	acc: 43.75%
+* class: 83 (plate)	total: 16	correct: 10	acc: 62.50%
+* class: 84 (television)	total: 16	correct: 5	acc: 31.25%
+* class: 85 (aquarium fish)	total: 16	correct: 2	acc: 12.50%
+* class: 86 (wardrobe)	total: 16	correct: 14	acc: 87.50%
+* class: 87 (seal)	total: 16	correct: 7	acc: 43.75%
+* class: 88 (lizard)	total: 16	correct: 0	acc: 0.00%
+* class: 89 (cockroach)	total: 16	correct: 9	acc: 56.25%
+* class: 90 (porcupine)	total: 16	correct: 0	acc: 0.00%
+* class: 91 (woman)	total: 16	correct: 11	acc: 68.75%
+* class: 92 (possum)	total: 16	correct: 4	acc: 25.00%
+* class: 93 (baby)	total: 16	correct: 8	acc: 50.00%
+* class: 94 (tiger)	total: 16	correct: 11	acc: 68.75%
+* class: 95 (telephone)	total: 16	correct: 12	acc: 75.00%
+* class: 96 (shark)	total: 16	correct: 3	acc: 18.75%
+* class: 97 (lion)	total: 16	correct: 7	acc: 43.75%
+* class: 98 (castle)	total: 16	correct: 12	acc: 75.00%
+* class: 99 (bicycle)	total: 16	correct: 10	acc: 62.50%
+* average: 47.31%
+worst10 classes: 
+turtle: 0.00%
+beaver: 0.00%
+lizard: 0.00%
+porcupine: 0.00%
+spider: 6.25%
+beetle: 6.25%
+otter: 6.25%
+butterfly: 6.25%
+mouse: 6.25%
+flatfish: 6.25%
+Checkpoint saved to ./output/CIFAR100/UPLTrainer/debuging9.26/nctx16_cscFalse_ctpend_fp0/seed2/prompt_learner/model-best-0.pth.tar
+epoch [7/50][5/50]	time 0.969 (1.399)	data 0.840 (1.296)	eta 0:51:09	loss 0.5572 (0.5426) acc 0.0000 (0.6250)	lr 1.951057e-03
+epoch [7/50][10/50]	time 0.107 (0.825)	data 0.002 (0.723)	eta 0:30:06	loss 0.6427 (0.5794) acc 0.0000 (0.6250)	lr 1.951057e-03
+epoch [7/50][15/50]	time 0.106 (0.584)	data 0.001 (0.483)	eta 0:21:15	loss 0.6048 (0.6044) acc 0.0000 (0.4167)	lr 1.951057e-03
+epoch [7/50][20/50]	time 0.106 (0.467)	data 0.001 (0.362)	eta 0:16:57	loss 0.5934 (0.6228) acc 0.0000 (0.6250)	lr 1.951057e-03
+epoch [7/50][25/50]	time 0.099 (0.396)	data 0.002 (0.290)	eta 0:14:20	loss 0.7021 (0.6188) acc 0.0000 (0.5000)	lr 1.951057e-03
+epoch [7/50][30/50]	time 0.120 (0.349)	data 0.001 (0.243)	eta 0:12:37	loss 0.8514 (0.6361) acc 0.0000 (0.4167)	lr 1.951057e-03
+epoch [7/50][35/50]	time 0.135 (0.319)	data 0.001 (0.208)	eta 0:11:30	loss 0.7224 (0.6487) acc 0.0000 (0.4464)	lr 1.951057e-03
+epoch [7/50][40/50]	time 0.136 (0.296)	data 0.001 (0.182)	eta 0:10:38	loss 0.6868 (0.6485) acc 0.0000 (0.3906)	lr 1.951057e-03
+epoch [7/50][45/50]	time 0.119 (0.277)	data 0.001 (0.162)	eta 0:09:56	loss 0.8685 (0.6543) acc 0.0000 (0.3472)	lr 1.951057e-03
+epoch [7/50][50/50]	time 0.115 (0.260)	data 0.001 (0.146)	eta 0:09:19	loss 0.5642 (0.6556) acc 0.0000 (0.3750)	lr 1.929776e-03
+Do evaluation on val set
+=> result
+* total: 1,600
+* correct: 754
+* accuracy: 47.12%
+* error: 52.88%
+* macro_f1: 45.28%
+=> per-class result
+* class: 0 (chimpanzee)	total: 16	correct: 12	acc: 75.00%
+* class: 1 (trout)	total: 16	correct: 10	acc: 62.50%
+* class: 2 (skunk)	total: 16	correct: 10	acc: 62.50%
+* class: 3 (spider)	total: 16	correct: 1	acc: 6.25%
+* class: 4 (chair)	total: 16	correct: 13	acc: 81.25%
+* class: 5 (tank)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (keyboard)	total: 16	correct: 15	acc: 93.75%
+* class: 7 (man)	total: 16	correct: 13	acc: 81.25%
+* class: 8 (whale)	total: 16	correct: 9	acc: 56.25%
+* class: 9 (lobster)	total: 16	correct: 5	acc: 31.25%
+* class: 10 (house)	total: 16	correct: 11	acc: 68.75%
+* class: 11 (beetle)	total: 16	correct: 1	acc: 6.25%
+* class: 12 (bear)	total: 16	correct: 2	acc: 12.50%
+* class: 13 (shrew)	total: 16	correct: 3	acc: 18.75%
+* class: 14 (bottle)	total: 16	correct: 13	acc: 81.25%
+* class: 15 (cup)	total: 16	correct: 11	acc: 68.75%
+* class: 16 (bus)	total: 16	correct: 8	acc: 50.00%
+* class: 17 (orange)	total: 16	correct: 13	acc: 81.25%
+* class: 18 (sea)	total: 16	correct: 8	acc: 50.00%
+* class: 19 (oak tree)	total: 16	correct: 12	acc: 75.00%
+* class: 20 (bed)	total: 16	correct: 9	acc: 56.25%
+* class: 21 (tulip)	total: 16	correct: 7	acc: 43.75%
+* class: 22 (rabbit)	total: 16	correct: 4	acc: 25.00%
+* class: 23 (skyscraper)	total: 16	correct: 13	acc: 81.25%
+* class: 24 (apple)	total: 16	correct: 8	acc: 50.00%
+* class: 25 (maple tree)	total: 16	correct: 5	acc: 31.25%
+* class: 26 (pine tree)	total: 16	correct: 10	acc: 62.50%
+* class: 27 (snail)	total: 16	correct: 7	acc: 43.75%
+* class: 28 (pear)	total: 16	correct: 10	acc: 62.50%
+* class: 29 (bridge)	total: 16	correct: 7	acc: 43.75%
+* class: 30 (train)	total: 16	correct: 13	acc: 81.25%
+* class: 31 (mountain)	total: 16	correct: 12	acc: 75.00%
+* class: 32 (caterpillar)	total: 16	correct: 3	acc: 18.75%
+* class: 33 (crocodile)	total: 16	correct: 4	acc: 25.00%
+* class: 34 (snake)	total: 16	correct: 4	acc: 25.00%
+* class: 35 (kangaroo)	total: 16	correct: 2	acc: 12.50%
+* class: 36 (dolphin)	total: 16	correct: 5	acc: 31.25%
+* class: 37 (cattle)	total: 16	correct: 8	acc: 50.00%
+* class: 38 (raccoon)	total: 16	correct: 8	acc: 50.00%
+* class: 39 (mushroom)	total: 16	correct: 8	acc: 50.00%
+* class: 40 (hamster)	total: 16	correct: 11	acc: 68.75%
+* class: 41 (bowl)	total: 16	correct: 8	acc: 50.00%
+* class: 42 (lamp)	total: 16	correct: 8	acc: 50.00%
+* class: 43 (rocket)	total: 16	correct: 9	acc: 56.25%
+* class: 44 (pickup truck)	total: 16	correct: 12	acc: 75.00%
+* class: 45 (wolf)	total: 16	correct: 7	acc: 43.75%
+* class: 46 (worm)	total: 16	correct: 12	acc: 75.00%
+* class: 47 (otter)	total: 16	correct: 0	acc: 0.00%
+* class: 48 (sunflower)	total: 16	correct: 15	acc: 93.75%
+* class: 49 (leopard)	total: 16	correct: 6	acc: 37.50%
+* class: 50 (ray)	total: 16	correct: 3	acc: 18.75%
+* class: 51 (lawn mower)	total: 16	correct: 9	acc: 56.25%
+* class: 52 (motorcycle)	total: 16	correct: 11	acc: 68.75%
+* class: 53 (boy)	total: 16	correct: 8	acc: 50.00%
+* class: 54 (fox)	total: 16	correct: 7	acc: 43.75%
+* class: 55 (palm tree)	total: 16	correct: 13	acc: 81.25%
+* class: 56 (cloud)	total: 16	correct: 8	acc: 50.00%
+* class: 57 (dinosaur)	total: 16	correct: 4	acc: 25.00%
+* class: 58 (turtle)	total: 16	correct: 1	acc: 6.25%
+* class: 59 (forest)	total: 16	correct: 8	acc: 50.00%
+* class: 60 (couch)	total: 16	correct: 6	acc: 37.50%
+* class: 61 (poppy)	total: 16	correct: 9	acc: 56.25%
+* class: 62 (rose)	total: 16	correct: 4	acc: 25.00%
+* class: 63 (bee)	total: 16	correct: 6	acc: 37.50%
+* class: 64 (girl)	total: 16	correct: 6	acc: 37.50%
+* class: 65 (clock)	total: 16	correct: 10	acc: 62.50%
+* class: 66 (can)	total: 16	correct: 10	acc: 62.50%
+* class: 67 (table)	total: 16	correct: 7	acc: 43.75%
+* class: 68 (road)	total: 16	correct: 12	acc: 75.00%
+* class: 69 (orchid)	total: 16	correct: 7	acc: 43.75%
+* class: 70 (streetcar)	total: 16	correct: 13	acc: 81.25%
+* class: 71 (squirrel)	total: 16	correct: 2	acc: 12.50%
+* class: 72 (crab)	total: 16	correct: 4	acc: 25.00%
+* class: 73 (butterfly)	total: 16	correct: 1	acc: 6.25%
+* class: 74 (tractor)	total: 16	correct: 7	acc: 43.75%
+* class: 75 (beaver)	total: 16	correct: 0	acc: 0.00%
+* class: 76 (willow tree)	total: 16	correct: 5	acc: 31.25%
+* class: 77 (camel)	total: 16	correct: 6	acc: 37.50%
+* class: 78 (plain)	total: 16	correct: 13	acc: 81.25%
+* class: 79 (mouse)	total: 16	correct: 1	acc: 6.25%
+* class: 80 (elephant)	total: 16	correct: 11	acc: 68.75%
+* class: 81 (flatfish)	total: 16	correct: 0	acc: 0.00%
+* class: 82 (sweet pepper)	total: 16	correct: 7	acc: 43.75%
+* class: 83 (plate)	total: 16	correct: 10	acc: 62.50%
+* class: 84 (television)	total: 16	correct: 2	acc: 12.50%
+* class: 85 (aquarium fish)	total: 16	correct: 3	acc: 18.75%
+* class: 86 (wardrobe)	total: 16	correct: 14	acc: 87.50%
+* class: 87 (seal)	total: 16	correct: 4	acc: 25.00%
+* class: 88 (lizard)	total: 16	correct: 0	acc: 0.00%
+* class: 89 (cockroach)	total: 16	correct: 10	acc: 62.50%
+* class: 90 (porcupine)	total: 16	correct: 0	acc: 0.00%
+* class: 91 (woman)	total: 16	correct: 10	acc: 62.50%
+* class: 92 (possum)	total: 16	correct: 4	acc: 25.00%
+* class: 93 (baby)	total: 16	correct: 8	acc: 50.00%
+* class: 94 (tiger)	total: 16	correct: 10	acc: 62.50%
+* class: 95 (telephone)	total: 16	correct: 14	acc: 87.50%
+* class: 96 (shark)	total: 16	correct: 4	acc: 25.00%
+* class: 97 (lion)	total: 16	correct: 7	acc: 43.75%
+* class: 98 (castle)	total: 16	correct: 11	acc: 68.75%
+* class: 99 (bicycle)	total: 16	correct: 10	acc: 62.50%
+* average: 47.12%
+worst10 classes: 
+otter: 0.00%
+beaver: 0.00%
+flatfish: 0.00%
+lizard: 0.00%
+porcupine: 0.00%
+spider: 6.25%
+beetle: 6.25%
+turtle: 6.25%
+butterfly: 6.25%
+mouse: 6.25%
+epoch [8/50][5/50]	time 1.307 (1.686)	data 1.177 (1.583)	eta 1:00:15	loss 0.5858 (0.6091) acc 3.1250 (0.6250)	lr 1.929776e-03
+epoch [8/50][10/50]	time 0.105 (0.943)	data 0.002 (0.839)	eta 0:33:37	loss 0.6296 (0.6290) acc 0.0000 (0.3125)	lr 1.929776e-03
+epoch [8/50][15/50]	time 0.315 (0.725)	data 0.001 (0.560)	eta 0:25:48	loss 0.6955 (0.6501) acc 0.0000 (0.4167)	lr 1.929776e-03
+epoch [8/50][20/50]	time 0.111 (0.596)	data 0.001 (0.420)	eta 0:21:09	loss 0.5983 (0.6280) acc 0.0000 (0.6250)	lr 1.929776e-03
+epoch [8/50][25/50]	time 0.141 (0.519)	data 0.001 (0.337)	eta 0:18:23	loss 0.5049 (0.6176) acc 0.0000 (0.7500)	lr 1.929776e-03
+epoch [8/50][30/50]	time 0.125 (0.452)	data 0.001 (0.281)	eta 0:15:59	loss 0.5270 (0.6221) acc 0.0000 (0.7292)	lr 1.929776e-03
+epoch [8/50][35/50]	time 0.202 (0.423)	data 0.002 (0.241)	eta 0:14:54	loss 0.6111 (0.6295) acc 0.0000 (0.8036)	lr 1.929776e-03
+epoch [8/50][40/50]	time 0.097 (0.384)	data 0.001 (0.211)	eta 0:13:30	loss 0.6649 (0.6285) acc 0.0000 (0.7031)	lr 1.929776e-03
+epoch [8/50][45/50]	time 0.149 (0.353)	data 0.001 (0.188)	eta 0:12:23	loss 0.4655 (0.6327) acc 3.1250 (0.7639)	lr 1.929776e-03
+epoch [8/50][50/50]	time 0.315 (0.339)	data 0.002 (0.169)	eta 0:11:51	loss 0.7691 (0.6375) acc 0.0000 (0.6875)	lr 1.904827e-03
+Do evaluation on val set
+=> result
+* total: 1,600
+* correct: 779
+* accuracy: 48.69%
+* error: 51.31%
+* macro_f1: 47.53%
+=> per-class result
+* class: 0 (chimpanzee)	total: 16	correct: 13	acc: 81.25%
+* class: 1 (trout)	total: 16	correct: 12	acc: 75.00%
+* class: 2 (skunk)	total: 16	correct: 10	acc: 62.50%
+* class: 3 (spider)	total: 16	correct: 1	acc: 6.25%
+* class: 4 (chair)	total: 16	correct: 13	acc: 81.25%
+* class: 5 (tank)	total: 16	correct: 10	acc: 62.50%
+* class: 6 (keyboard)	total: 16	correct: 11	acc: 68.75%
+* class: 7 (man)	total: 16	correct: 13	acc: 81.25%
+* class: 8 (whale)	total: 16	correct: 9	acc: 56.25%
+* class: 9 (lobster)	total: 16	correct: 5	acc: 31.25%
+* class: 10 (house)	total: 16	correct: 11	acc: 68.75%
+* class: 11 (beetle)	total: 16	correct: 1	acc: 6.25%
+* class: 12 (bear)	total: 16	correct: 2	acc: 12.50%
+* class: 13 (shrew)	total: 16	correct: 3	acc: 18.75%
+* class: 14 (bottle)	total: 16	correct: 13	acc: 81.25%
+* class: 15 (cup)	total: 16	correct: 12	acc: 75.00%
+* class: 16 (bus)	total: 16	correct: 8	acc: 50.00%
+* class: 17 (orange)	total: 16	correct: 14	acc: 87.50%
+* class: 18 (sea)	total: 16	correct: 10	acc: 62.50%
+* class: 19 (oak tree)	total: 16	correct: 11	acc: 68.75%
+* class: 20 (bed)	total: 16	correct: 9	acc: 56.25%
+* class: 21 (tulip)	total: 16	correct: 7	acc: 43.75%
+* class: 22 (rabbit)	total: 16	correct: 3	acc: 18.75%
+* class: 23 (skyscraper)	total: 16	correct: 13	acc: 81.25%
+* class: 24 (apple)	total: 16	correct: 8	acc: 50.00%
+* class: 25 (maple tree)	total: 16	correct: 8	acc: 50.00%
+* class: 26 (pine tree)	total: 16	correct: 9	acc: 56.25%
+* class: 27 (snail)	total: 16	correct: 6	acc: 37.50%
+* class: 28 (pear)	total: 16	correct: 10	acc: 62.50%
+* class: 29 (bridge)	total: 16	correct: 6	acc: 37.50%
+* class: 30 (train)	total: 16	correct: 12	acc: 75.00%
+* class: 31 (mountain)	total: 16	correct: 14	acc: 87.50%
+* class: 32 (caterpillar)	total: 16	correct: 7	acc: 43.75%
+* class: 33 (crocodile)	total: 16	correct: 5	acc: 31.25%
+* class: 34 (snake)	total: 16	correct: 6	acc: 37.50%
+* class: 35 (kangaroo)	total: 16	correct: 4	acc: 25.00%
+* class: 36 (dolphin)	total: 16	correct: 6	acc: 37.50%
+* class: 37 (cattle)	total: 16	correct: 10	acc: 62.50%
+* class: 38 (raccoon)	total: 16	correct: 9	acc: 56.25%
+* class: 39 (mushroom)	total: 16	correct: 7	acc: 43.75%
+* class: 40 (hamster)	total: 16	correct: 11	acc: 68.75%
+* class: 41 (bowl)	total: 16	correct: 10	acc: 62.50%
+* class: 42 (lamp)	total: 16	correct: 8	acc: 50.00%
+* class: 43 (rocket)	total: 16	correct: 8	acc: 50.00%
+* class: 44 (pickup truck)	total: 16	correct: 13	acc: 81.25%
+* class: 45 (wolf)	total: 16	correct: 7	acc: 43.75%
+* class: 46 (worm)	total: 16	correct: 12	acc: 75.00%
+* class: 47 (otter)	total: 16	correct: 1	acc: 6.25%
+* class: 48 (sunflower)	total: 16	correct: 15	acc: 93.75%
+* class: 49 (leopard)	total: 16	correct: 5	acc: 31.25%
+* class: 50 (ray)	total: 16	correct: 3	acc: 18.75%
+* class: 51 (lawn mower)	total: 16	correct: 9	acc: 56.25%
+* class: 52 (motorcycle)	total: 16	correct: 12	acc: 75.00%
+* class: 53 (boy)	total: 16	correct: 8	acc: 50.00%
+* class: 54 (fox)	total: 16	correct: 8	acc: 50.00%
+* class: 55 (palm tree)	total: 16	correct: 14	acc: 87.50%
+* class: 56 (cloud)	total: 16	correct: 7	acc: 43.75%
+* class: 57 (dinosaur)	total: 16	correct: 2	acc: 12.50%
+* class: 58 (turtle)	total: 16	correct: 0	acc: 0.00%
+* class: 59 (forest)	total: 16	correct: 7	acc: 43.75%
+* class: 60 (couch)	total: 16	correct: 8	acc: 50.00%
+* class: 61 (poppy)	total: 16	correct: 8	acc: 50.00%
+* class: 62 (rose)	total: 16	correct: 5	acc: 31.25%
+* class: 63 (bee)	total: 16	correct: 8	acc: 50.00%
+* class: 64 (girl)	total: 16	correct: 6	acc: 37.50%
+* class: 65 (clock)	total: 16	correct: 9	acc: 56.25%
+* class: 66 (can)	total: 16	correct: 10	acc: 62.50%
+* class: 67 (table)	total: 16	correct: 7	acc: 43.75%
+* class: 68 (road)	total: 16	correct: 12	acc: 75.00%
+* class: 69 (orchid)	total: 16	correct: 8	acc: 50.00%
+* class: 70 (streetcar)	total: 16	correct: 12	acc: 75.00%
+* class: 71 (squirrel)	total: 16	correct: 1	acc: 6.25%
+* class: 72 (crab)	total: 16	correct: 2	acc: 12.50%
+* class: 73 (butterfly)	total: 16	correct: 2	acc: 12.50%
+* class: 74 (tractor)	total: 16	correct: 7	acc: 43.75%
+* class: 75 (beaver)	total: 16	correct: 0	acc: 0.00%
+* class: 76 (willow tree)	total: 16	correct: 5	acc: 31.25%
+* class: 77 (camel)	total: 16	correct: 8	acc: 50.00%
+* class: 78 (plain)	total: 16	correct: 13	acc: 81.25%
+* class: 79 (mouse)	total: 16	correct: 1	acc: 6.25%
+* class: 80 (elephant)	total: 16	correct: 12	acc: 75.00%
+* class: 81 (flatfish)	total: 16	correct: 0	acc: 0.00%
+* class: 82 (sweet pepper)	total: 16	correct: 7	acc: 43.75%
+* class: 83 (plate)	total: 16	correct: 8	acc: 50.00%
+* class: 84 (television)	total: 16	correct: 4	acc: 25.00%
+* class: 85 (aquarium fish)	total: 16	correct: 5	acc: 31.25%
+* class: 86 (wardrobe)	total: 16	correct: 13	acc: 81.25%
+* class: 87 (seal)	total: 16	correct: 7	acc: 43.75%
+* class: 88 (lizard)	total: 16	correct: 0	acc: 0.00%
+* class: 89 (cockroach)	total: 16	correct: 8	acc: 50.00%
+* class: 90 (porcupine)	total: 16	correct: 1	acc: 6.25%
+* class: 91 (woman)	total: 16	correct: 9	acc: 56.25%
+* class: 92 (possum)	total: 16	correct: 4	acc: 25.00%
+* class: 93 (baby)	total: 16	correct: 7	acc: 43.75%
+* class: 94 (tiger)	total: 16	correct: 10	acc: 62.50%
+* class: 95 (telephone)	total: 16	correct: 14	acc: 87.50%
+* class: 96 (shark)	total: 16	correct: 6	acc: 37.50%
+* class: 97 (lion)	total: 16	correct: 8	acc: 50.00%
+* class: 98 (castle)	total: 16	correct: 12	acc: 75.00%
+* class: 99 (bicycle)	total: 16	correct: 11	acc: 68.75%
+* average: 48.69%
+worst10 classes: 
+turtle: 0.00%
+beaver: 0.00%
+flatfish: 0.00%
+lizard: 0.00%
+spider: 6.25%
+beetle: 6.25%
+otter: 6.25%
+squirrel: 6.25%
+mouse: 6.25%
+porcupine: 6.25%
+Checkpoint saved to ./output/CIFAR100/UPLTrainer/debuging9.26/nctx16_cscFalse_ctpend_fp0/seed2/prompt_learner/model-best-0.pth.tar
+epoch [9/50][5/50]	time 0.753 (1.281)	data 0.631 (1.181)	eta 0:44:42	loss 0.5837 (0.6055) acc 0.0000 (0.0000)	lr 1.904827e-03
+epoch [9/50][10/50]	time 0.117 (0.759)	data 0.003 (0.651)	eta 0:26:26	loss 0.7135 (0.6470) acc 0.0000 (0.3125)	lr 1.904827e-03
+epoch [9/50][15/50]	time 0.208 (0.551)	data 0.002 (0.434)	eta 0:19:09	loss 0.7019 (0.6426) acc 0.0000 (0.2083)	lr 1.904827e-03
+epoch [9/50][20/50]	time 0.113 (0.473)	data 0.003 (0.326)	eta 0:16:24	loss 0.5206 (0.6139) acc 0.0000 (0.3125)	lr 1.904827e-03
+epoch [9/50][25/50]	time 0.271 (0.440)	data 0.002 (0.261)	eta 0:15:13	loss 0.6667 (0.6134) acc 0.0000 (0.5000)	lr 1.904827e-03
+epoch [9/50][30/50]	time 0.315 (0.399)	data 0.001 (0.218)	eta 0:13:45	loss 0.5488 (0.6087) acc 6.2500 (0.7292)	lr 1.904827e-03
+epoch [9/50][35/50]	time 0.166 (0.368)	data 0.002 (0.187)	eta 0:12:40	loss 0.5595 (0.6122) acc 0.0000 (0.7143)	lr 1.904827e-03
+epoch [9/50][40/50]	time 0.314 (0.358)	data 0.001 (0.164)	eta 0:12:17	loss 0.5340 (0.6165) acc 0.0000 (0.6250)	lr 1.904827e-03
+epoch [9/50][45/50]	time 0.132 (0.343)	data 0.001 (0.146)	eta 0:11:45	loss 0.6797 (0.6151) acc 0.0000 (0.5556)	lr 1.904827e-03
+epoch [9/50][50/50]	time 0.100 (0.320)	data 0.001 (0.131)	eta 0:10:56	loss 0.6990 (0.6114) acc 3.1250 (0.6875)	lr 1.876307e-03
+Do evaluation on val set
+=> result
+* total: 1,600
+* correct: 778
+* accuracy: 48.62%
+* error: 51.38%
+* macro_f1: 47.14%
+=> per-class result
+* class: 0 (chimpanzee)	total: 16	correct: 13	acc: 81.25%
+* class: 1 (trout)	total: 16	correct: 12	acc: 75.00%
+* class: 2 (skunk)	total: 16	correct: 10	acc: 62.50%
+* class: 3 (spider)	total: 16	correct: 1	acc: 6.25%
+* class: 4 (chair)	total: 16	correct: 12	acc: 75.00%
+* class: 5 (tank)	total: 16	correct: 10	acc: 62.50%
+* class: 6 (keyboard)	total: 16	correct: 11	acc: 68.75%
+* class: 7 (man)	total: 16	correct: 14	acc: 87.50%
+* class: 8 (whale)	total: 16	correct: 11	acc: 68.75%
+* class: 9 (lobster)	total: 16	correct: 3	acc: 18.75%
+* class: 10 (house)	total: 16	correct: 11	acc: 68.75%
+* class: 11 (beetle)	total: 16	correct: 2	acc: 12.50%
+* class: 12 (bear)	total: 16	correct: 2	acc: 12.50%
+* class: 13 (shrew)	total: 16	correct: 3	acc: 18.75%
+* class: 14 (bottle)	total: 16	correct: 13	acc: 81.25%
+* class: 15 (cup)	total: 16	correct: 12	acc: 75.00%
+* class: 16 (bus)	total: 16	correct: 8	acc: 50.00%
+* class: 17 (orange)	total: 16	correct: 13	acc: 81.25%
+* class: 18 (sea)	total: 16	correct: 9	acc: 56.25%
+* class: 19 (oak tree)	total: 16	correct: 11	acc: 68.75%
+* class: 20 (bed)	total: 16	correct: 9	acc: 56.25%
+* class: 21 (tulip)	total: 16	correct: 6	acc: 37.50%
+* class: 22 (rabbit)	total: 16	correct: 2	acc: 12.50%
+* class: 23 (skyscraper)	total: 16	correct: 13	acc: 81.25%
+* class: 24 (apple)	total: 16	correct: 7	acc: 43.75%
+* class: 25 (maple tree)	total: 16	correct: 8	acc: 50.00%
+* class: 26 (pine tree)	total: 16	correct: 9	acc: 56.25%
+* class: 27 (snail)	total: 16	correct: 6	acc: 37.50%
+* class: 28 (pear)	total: 16	correct: 10	acc: 62.50%
+* class: 29 (bridge)	total: 16	correct: 9	acc: 56.25%
+* class: 30 (train)	total: 16	correct: 13	acc: 81.25%
+* class: 31 (mountain)	total: 16	correct: 14	acc: 87.50%
+* class: 32 (caterpillar)	total: 16	correct: 5	acc: 31.25%
+* class: 33 (crocodile)	total: 16	correct: 3	acc: 18.75%
+* class: 34 (snake)	total: 16	correct: 8	acc: 50.00%
+* class: 35 (kangaroo)	total: 16	correct: 3	acc: 18.75%
+* class: 36 (dolphin)	total: 16	correct: 3	acc: 18.75%
+* class: 37 (cattle)	total: 16	correct: 8	acc: 50.00%
+* class: 38 (raccoon)	total: 16	correct: 8	acc: 50.00%
+* class: 39 (mushroom)	total: 16	correct: 10	acc: 62.50%
+* class: 40 (hamster)	total: 16	correct: 9	acc: 56.25%
+* class: 41 (bowl)	total: 16	correct: 9	acc: 56.25%
+* class: 42 (lamp)	total: 16	correct: 8	acc: 50.00%
+* class: 43 (rocket)	total: 16	correct: 9	acc: 56.25%
+* class: 44 (pickup truck)	total: 16	correct: 13	acc: 81.25%
+* class: 45 (wolf)	total: 16	correct: 6	acc: 37.50%
+* class: 46 (worm)	total: 16	correct: 11	acc: 68.75%
+* class: 47 (otter)	total: 16	correct: 0	acc: 0.00%
+* class: 48 (sunflower)	total: 16	correct: 15	acc: 93.75%
+* class: 49 (leopard)	total: 16	correct: 6	acc: 37.50%
+* class: 50 (ray)	total: 16	correct: 3	acc: 18.75%
+* class: 51 (lawn mower)	total: 16	correct: 10	acc: 62.50%
+* class: 52 (motorcycle)	total: 16	correct: 12	acc: 75.00%
+* class: 53 (boy)	total: 16	correct: 7	acc: 43.75%
+* class: 54 (fox)	total: 16	correct: 7	acc: 43.75%
+* class: 55 (palm tree)	total: 16	correct: 13	acc: 81.25%
+* class: 56 (cloud)	total: 16	correct: 7	acc: 43.75%
+* class: 57 (dinosaur)	total: 16	correct: 4	acc: 25.00%
+* class: 58 (turtle)	total: 16	correct: 0	acc: 0.00%
+* class: 59 (forest)	total: 16	correct: 7	acc: 43.75%
+* class: 60 (couch)	total: 16	correct: 8	acc: 50.00%
+* class: 61 (poppy)	total: 16	correct: 7	acc: 43.75%
+* class: 62 (rose)	total: 16	correct: 4	acc: 25.00%
+* class: 63 (bee)	total: 16	correct: 9	acc: 56.25%
+* class: 64 (girl)	total: 16	correct: 6	acc: 37.50%
+* class: 65 (clock)	total: 16	correct: 10	acc: 62.50%
+* class: 66 (can)	total: 16	correct: 11	acc: 68.75%
+* class: 67 (table)	total: 16	correct: 7	acc: 43.75%
+* class: 68 (road)	total: 16	correct: 12	acc: 75.00%
+* class: 69 (orchid)	total: 16	correct: 8	acc: 50.00%
+* class: 70 (streetcar)	total: 16	correct: 12	acc: 75.00%
+* class: 71 (squirrel)	total: 16	correct: 1	acc: 6.25%
+* class: 72 (crab)	total: 16	correct: 4	acc: 25.00%
+* class: 73 (butterfly)	total: 16	correct: 2	acc: 12.50%
+* class: 74 (tractor)	total: 16	correct: 7	acc: 43.75%
+* class: 75 (beaver)	total: 16	correct: 0	acc: 0.00%
+* class: 76 (willow tree)	total: 16	correct: 8	acc: 50.00%
+* class: 77 (camel)	total: 16	correct: 8	acc: 50.00%
+* class: 78 (plain)	total: 16	correct: 14	acc: 87.50%
+* class: 79 (mouse)	total: 16	correct: 2	acc: 12.50%
+* class: 80 (elephant)	total: 16	correct: 11	acc: 68.75%
+* class: 81 (flatfish)	total: 16	correct: 0	acc: 0.00%
+* class: 82 (sweet pepper)	total: 16	correct: 8	acc: 50.00%
+* class: 83 (plate)	total: 16	correct: 9	acc: 56.25%
+* class: 84 (television)	total: 16	correct: 4	acc: 25.00%
+* class: 85 (aquarium fish)	total: 16	correct: 4	acc: 25.00%
+* class: 86 (wardrobe)	total: 16	correct: 14	acc: 87.50%
+* class: 87 (seal)	total: 16	correct: 9	acc: 56.25%
+* class: 88 (lizard)	total: 16	correct: 0	acc: 0.00%
+* class: 89 (cockroach)	total: 16	correct: 8	acc: 50.00%
+* class: 90 (porcupine)	total: 16	correct: 1	acc: 6.25%
+* class: 91 (woman)	total: 16	correct: 10	acc: 62.50%
+* class: 92 (possum)	total: 16	correct: 7	acc: 43.75%
+* class: 93 (baby)	total: 16	correct: 8	acc: 50.00%
+* class: 94 (tiger)	total: 16	correct: 8	acc: 50.00%
+* class: 95 (telephone)	total: 16	correct: 14	acc: 87.50%
+* class: 96 (shark)	total: 16	correct: 2	acc: 12.50%
+* class: 97 (lion)	total: 16	correct: 8	acc: 50.00%
+* class: 98 (castle)	total: 16	correct: 12	acc: 75.00%
+* class: 99 (bicycle)	total: 16	correct: 10	acc: 62.50%
+* average: 48.62%
+worst10 classes: 
+otter: 0.00%
+turtle: 0.00%
+beaver: 0.00%
+flatfish: 0.00%
+lizard: 0.00%
+spider: 6.25%
+squirrel: 6.25%
+porcupine: 6.25%
+beetle: 12.50%
+bear: 12.50%
+epoch [10/50][5/50]	time 1.072 (1.260)	data 0.951 (1.148)	eta 0:42:55	loss 0.5554 (0.5469) acc 0.0000 (0.6250)	lr 1.876307e-03
+epoch [10/50][10/50]	time 0.138 (0.768)	data 0.002 (0.642)	eta 0:26:07	loss 0.4831 (0.5203) acc 0.0000 (0.3125)	lr 1.876307e-03
+epoch [10/50][15/50]	time 0.277 (0.609)	data 0.001 (0.428)	eta 0:20:40	loss 0.3970 (0.5304) acc 3.1250 (0.6250)	lr 1.876307e-03
+epoch [10/50][20/50]	time 0.125 (0.514)	data 0.001 (0.322)	eta 0:17:23	loss 0.3633 (0.5412) acc 0.0000 (0.7812)	lr 1.876307e-03
+epoch [10/50][25/50]	time 0.121 (0.463)	data 0.002 (0.258)	eta 0:15:36	loss 0.7705 (0.5609) acc 0.0000 (0.7500)	lr 1.876307e-03
+epoch [10/50][30/50]	time 0.312 (0.412)	data 0.002 (0.215)	eta 0:13:52	loss 0.6600 (0.5717) acc 0.0000 (0.6250)	lr 1.876307e-03
+epoch [10/50][35/50]	time 0.314 (0.413)	data 0.002 (0.185)	eta 0:13:51	loss 0.7147 (0.5857) acc 3.1250 (0.7143)	lr 1.876307e-03
+epoch [10/50][40/50]	time 0.147 (0.396)	data 0.003 (0.162)	eta 0:13:16	loss 0.5360 (0.5836) acc 0.0000 (0.7812)	lr 1.876307e-03
+epoch [10/50][45/50]	time 0.526 (0.377)	data 0.002 (0.144)	eta 0:12:36	loss 0.6652 (0.5922) acc 3.1250 (0.7639)	lr 1.876307e-03
+epoch [10/50][50/50]	time 0.161 (0.357)	data 0.001 (0.130)	eta 0:11:54	loss 0.8170 (0.5988) acc 0.0000 (0.7500)	lr 1.844328e-03
+Do evaluation on val set

@@ -1,0 +1,1915 @@
+***************
+** Arguments **
+***************
+backbone: 
+config_file: configs/trainers/UPLTrainer/rn101_ep50.yaml
+dataset_config_file: configs/datasets/cifar-10.yaml
+eval_only: False
+head: 
+hh_config_file: 
+load_epoch: None
+loss_type: rc_rc
+model_dir: 
+no_train: False
+num_fp: 0
+opts: ['TRAINER.UPLTrainer.N_CTX', '16', 'TRAINER.UPLTrainer.CSC', 'False', 'TRAINER.UPLTrainer.CLASS_TOKEN_POSITION', 'end', 'DATASET.NUM_SHOTS', '16', 'DATASET.CLASS_EQULE', 'True', 'TRAINER.PLL.USE_PLL', 'True', 'TRAINER.PLL.PARTIAL_RATE', '0.1', 'TEST.FINAL_MODEL', 'best_val']
+output_dir: ./output/cifar-10/UPLTrainer/debuging9.26/rn101_nctx16_cscFalse_ctpend_fp0_PLL01-rc_rc_no-tfm/seed2
+resume: 
+root: ./data/Elevater_datasets
+seed: 2
+source_domains: None
+target_domains: None
+trainer: UPLTrainer
+transforms: None
+************
+** Config **
+************
+DATALOADER:
+  K_TRANSFORMS: 1
+  NUM_WORKERS: 3
+  OPEN_SETTING: False
+  RETURN_IMG0: False
+  TEST:
+    BATCH_SIZE: 256
+    SAMPLER: SequentialSampler
+    SHUFFLE: False
+  TRAIN_U:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAME_AS_X: True
+    SAMPLER: RandomSampler
+  TRAIN_X:
+    BATCH_SIZE: 128
+    N_DOMAIN: 0
+    N_INS: 16
+    SAMPLER: RandomSampler
+    SHUFFLE: True
+  VAL:
+    BATCH_SIZE: 256
+    SHUFFLE: False
+DATASET:
+  ALL_AS_UNLABELED: False
+  CIFAR_C_LEVEL: 1
+  CIFAR_C_TYPE: 
+  CLASS_EQULE: True
+  CONF_THRESHOLD: 0.9
+  IGNORE_FILE: 
+  IGNORE_NUM: 0
+  NAME: cifar-10
+  NUM_LABELED: -1
+  NUM_SHOTS: 16
+  ROOT: ./data/Elevater_datasets
+  SOURCE_DOMAINS: ()
+  STL10_FOLD: -1
+  TARGET_DOMAINS: ()
+  VAL_PERCENT: 0.1
+INPUT:
+  COLORJITTER_B: 0.4
+  COLORJITTER_C: 0.4
+  COLORJITTER_H: 0.1
+  COLORJITTER_S: 0.4
+  CROP_PADDING: 4
+  CUTOUT_LEN: 16
+  CUTOUT_N: 1
+  GB_K: 21
+  GB_P: 0.5
+  GN_MEAN: 0.0
+  GN_STD: 0.15
+  INTERPOLATION: bicubic
+  NO_TRANSFORM: False
+  PIXEL_MEAN: [0.48145466, 0.4578275, 0.40821073]
+  PIXEL_STD: [0.26862954, 0.26130258, 0.27577711]
+  RANDAUGMENT_M: 10
+  RANDAUGMENT_N: 2
+  RGS_P: 0.2
+  RRCROP_SCALE: (0.08, 1.0)
+  SIZE: (224, 224)
+  TRANSFORMS: ('random_resized_crop', 'random_flip', 'normalize')
+MODEL:
+  BACKBONE:
+    NAME: RN101
+    PRETRAINED: True
+  HEAD:
+    ACTIVATION: relu
+    BN: True
+    DROPOUT: 0.0
+    HIDDEN_LAYERS: ()
+    NAME: 
+  INIT_WEIGHTS: 
+  PSEUDO_LABEL_MODELS: ['RN101']
+OPTIM:
+  ADAM_BETA1: 0.9
+  ADAM_BETA2: 0.999
+  BASE_LR_MULT: 0.1
+  GAMMA: 0.1
+  LR: 0.002
+  LR_SCHEDULER: cosine
+  MAX_EPOCH: 50
+  MOMENTUM: 0.9
+  NAME: sgd
+  NEW_LAYERS: ()
+  RMSPROP_ALPHA: 0.99
+  SGD_DAMPNING: 0
+  SGD_NESTEROV: False
+  STAGED_LR: False
+  STEPSIZE: (-1,)
+  WARMUP_CONS_LR: 1e-05
+  WARMUP_EPOCH: 1
+  WARMUP_MIN_LR: 1e-05
+  WARMUP_RECOUNT: True
+  WARMUP_TYPE: constant
+  WEIGHT_DECAY: 0.0005
+OUTPUT_DIR: ./output/cifar-10/UPLTrainer/debuging9.26/rn101_nctx16_cscFalse_ctpend_fp0_PLL01-rc_rc_no-tfm/seed2
+RESUME: 
+SEED: 2
+TEST:
+  Analyze_Result_Path: ./analysis_results_test/
+  COMPUTE_CMAT: False
+  EVALUATOR: UPLClassification
+  FINAL_MODEL: best_val
+  NO_TEST: False
+  PER_CLASS_RESULT: True
+  SPLIT: test
+TRAIN:
+  CHECKPOINT_FREQ: 0
+  COUNT_ITER: train_x
+  PRINT_FREQ: 5
+TRAINER:
+  CG:
+    ALPHA_D: 0.5
+    ALPHA_F: 0.5
+    EPS_D: 1.0
+    EPS_F: 1.0
+  DAEL:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DDAIG:
+    ALPHA: 0.5
+    CLAMP: False
+    CLAMP_MAX: 1.0
+    CLAMP_MIN: -1.0
+    G_ARCH: 
+    LMDA: 0.3
+    WARMUP: 0
+  ENSEMBLE_NUM: 1
+  ENTMIN:
+    LMDA: 0.001
+  FIXMATCH:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 1.0
+  LOSS_TYPE: rc_rc
+  M3SDA:
+    LMDA: 0.5
+    N_STEP_F: 4
+  MCD:
+    N_STEP_F: 4
+  MEANTEA:
+    EMA_ALPHA: 0.999
+    RAMPUP: 5
+    WEIGHT_U: 1.0
+  MIXMATCH:
+    MIXUP_BETA: 0.75
+    RAMPUP: 20000
+    TEMP: 2.0
+    WEIGHT_U: 100.0
+  MME:
+    LMDA: 0.1
+  NAME: UPLTrainer
+  PLL:
+    BETA: 0.0
+    CONF_LOSS_TYPE: 
+    PARTIAL_RATE: 0.1
+    USE_PLL: True
+  SE:
+    CONF_THRE: 0.95
+    EMA_ALPHA: 0.999
+    RAMPUP: 300
+  UPLTrainer:
+    CLASS_TOKEN_POSITION: end
+    CSC: False
+    CTX_INIT: 
+    NUM_FP: 0
+    N_CTX: 16
+    PREC: fp16
+USE_CUDA: True
+VERBOSE: True
+VERSION: 1
+Collecting env info ...
+** System info **
+PyTorch version: 1.12.1+cu113
+Is debug build: False
+CUDA used to build PyTorch: 11.3
+ROCM used to build PyTorch: N/A
+
+OS: Ubuntu 22.04.2 LTS (x86_64)
+GCC version: (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+Clang version: Could not collect
+CMake version: version 3.22.1
+Libc version: glibc-2.35
+
+Python version: 3.9.17 | packaged by conda-forge | (main, Aug 10 2023, 07:02:31)  [GCC 12.3.0] (64-bit runtime)
+Python platform: Linux-5.19.0-38-generic-x86_64-with-glibc2.35
+Is CUDA available: True
+CUDA runtime version: 11.5.119
+GPU models and configuration: 
+GPU 0: NVIDIA A100-PCIE-40GB
+GPU 1: Tesla V100-PCIE-16GB
+GPU 2: Tesla V100-PCIE-16GB
+
+Nvidia driver version: Could not collect
+cuDNN version: Could not collect
+HIP runtime version: N/A
+MIOpen runtime version: N/A
+Is XNNPACK available: True
+
+Versions of relevant libraries:
+[pip3] numpy==1.24.3
+[pip3] torch==1.12.1+cu113
+[pip3] torch-tb-profiler==0.2.0
+[pip3] torchaudio==0.12.1+cu113
+[pip3] torchvision==0.13.1+cu113
+[conda] numpy                     1.24.3                   pypi_0    pypi
+[conda] torch                     1.12.1+cu113             pypi_0    pypi
+[conda] torch-tb-profiler         0.2.0                    pypi_0    pypi
+[conda] torchaudio                0.12.1+cu113             pypi_0    pypi
+[conda] torchvision               0.13.1+cu113             pypi_0    pypi
+        Pillow (10.0.0)
+
+Loading trainer: UPLTrainer
+* Using custom transform for testing
+Building transform_train
++ random resized crop (size=(224, 224), scale=(0.08, 1.0))
++ random flip
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+no center crop
+Test size is 10000.
+Creating datatset
+Creating val datatset, len(trainset):len(valset)=1:1
+Val split from Train set: Train size is 160.0, and validation size is 160.0.
+Loading CLIP (backbone: RN101)
+Building custom CLIP
+Initializing a generic context
+Initial context: "X X X X X X X X X X X X X X X X"
+Number of context words (tokens): 16
+Turning off gradients in both the image and the text encoder
+Loading evaluator: UPLClassification
+[[1.  0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1]
+ [0.1 1.  0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1]
+ [0.1 0.1 1.  0.1 0.1 0.1 0.1 0.1 0.1 0.1]
+ [0.1 0.1 0.1 1.  0.1 0.1 0.1 0.1 0.1 0.1]
+ [0.1 0.1 0.1 0.1 1.  0.1 0.1 0.1 0.1 0.1]
+ [0.1 0.1 0.1 0.1 0.1 1.  0.1 0.1 0.1 0.1]
+ [0.1 0.1 0.1 0.1 0.1 0.1 1.  0.1 0.1 0.1]
+ [0.1 0.1 0.1 0.1 0.1 0.1 0.1 1.  0.1 0.1]
+ [0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 1.  0.1]
+ [0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 1. ]]
+Finish Generating Candidate Label Sets!
+
+ElevaterDataset sstrain: len()== 160
+No checkpoint found, train from scratch
+Initialize tensorboard (log_dir=./output/cifar-10/UPLTrainer/debuging9.26/rn101_nctx16_cscFalse_ctpend_fp0_PLL01-rc_rc_no-tfm/seed2/tensorboard)
+epoch [1/50][1/2]	time 5.613 (5.613)	data 1.401 (1.401)	eta 0:09:15	loss 1.9314 (1.9314) acc 65.6250 (65.6250)	lr 1.000000e-05
+epoch [1/50][2/2]	time 0.632 (3.123)	data 0.001 (0.701)	eta 0:05:06	loss 1.8729 (1.9021) acc 71.8750 (68.7500)	lr 2.000000e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 104
+* accuracy: 65.00%
+* error: 35.00%
+* macro_f1: 61.43%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 15	acc: 93.75%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 8	acc: 50.00%
+* class: 3 (cat)	total: 16	correct: 2	acc: 12.50%
+* class: 4 (deer)	total: 16	correct: 6	acc: 37.50%
+* class: 5 (dog)	total: 16	correct: 6	acc: 37.50%
+* class: 6 (frog)	total: 16	correct: 8	acc: 50.00%
+* class: 7 (horse)	total: 16	correct: 16	acc: 100.00%
+* class: 8 (ship)	total: 16	correct: 13	acc: 81.25%
+* class: 9 (truck)	total: 16	correct: 15	acc: 93.75%
+* average: 65.00%
+worst10 classes: 
+cat: 12.50%
+deer: 37.50%
+dog: 37.50%
+bird: 50.00%
+frog: 50.00%
+ship: 81.25%
+airplane: 93.75%
+automobile: 93.75%
+truck: 93.75%
+horse: 100.00%
+Checkpoint saved to ./output/cifar-10/UPLTrainer/debuging9.26/rn101_nctx16_cscFalse_ctpend_fp0_PLL01-rc_rc_no-tfm/seed2/prompt_learner/model-best-0.pth.tar
+epoch [2/50][1/2]	time 1.675 (1.675)	data 1.346 (1.346)	eta 0:02:42	loss 1.5489 (1.5489) acc 64.8438 (64.8438)	lr 2.000000e-03
+epoch [2/50][2/2]	time 0.127 (0.901)	data 0.001 (0.673)	eta 0:01:26	loss 1.3009 (1.4249) acc 71.8750 (68.3594)	lr 1.998027e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 120
+* accuracy: 75.00%
+* error: 25.00%
+* macro_f1: 73.52%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 15	acc: 93.75%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 13	acc: 81.25%
+* class: 3 (cat)	total: 16	correct: 15	acc: 93.75%
+* class: 4 (deer)	total: 16	correct: 6	acc: 37.50%
+* class: 5 (dog)	total: 16	correct: 6	acc: 37.50%
+* class: 6 (frog)	total: 16	correct: 7	acc: 43.75%
+* class: 7 (horse)	total: 16	correct: 16	acc: 100.00%
+* class: 8 (ship)	total: 16	correct: 13	acc: 81.25%
+* class: 9 (truck)	total: 16	correct: 14	acc: 87.50%
+* average: 75.00%
+worst10 classes: 
+deer: 37.50%
+dog: 37.50%
+frog: 43.75%
+bird: 81.25%
+ship: 81.25%
+truck: 87.50%
+airplane: 93.75%
+automobile: 93.75%
+cat: 93.75%
+horse: 100.00%
+Checkpoint saved to ./output/cifar-10/UPLTrainer/debuging9.26/rn101_nctx16_cscFalse_ctpend_fp0_PLL01-rc_rc_no-tfm/seed2/prompt_learner/model-best-0.pth.tar
+epoch [3/50][1/2]	time 1.647 (1.647)	data 1.335 (1.335)	eta 0:02:36	loss 0.8029 (0.8029) acc 79.6875 (79.6875)	lr 1.998027e-03
+epoch [3/50][2/2]	time 0.127 (0.887)	data 0.001 (0.668)	eta 0:01:23	loss 0.8526 (0.8277) acc 81.2500 (80.4688)	lr 1.992115e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 123
+* accuracy: 76.88%
+* error: 23.12%
+* macro_f1: 76.37%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 15	acc: 93.75%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 14	acc: 87.50%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 8	acc: 50.00%
+* class: 6 (frog)	total: 16	correct: 9	acc: 56.25%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 11	acc: 68.75%
+* class: 9 (truck)	total: 16	correct: 14	acc: 87.50%
+* average: 76.88%
+worst10 classes: 
+dog: 50.00%
+frog: 56.25%
+deer: 62.50%
+ship: 68.75%
+bird: 75.00%
+cat: 87.50%
+truck: 87.50%
+airplane: 93.75%
+automobile: 93.75%
+horse: 93.75%
+Checkpoint saved to ./output/cifar-10/UPLTrainer/debuging9.26/rn101_nctx16_cscFalse_ctpend_fp0_PLL01-rc_rc_no-tfm/seed2/prompt_learner/model-best-0.pth.tar
+epoch [4/50][1/2]	time 1.599 (1.599)	data 1.281 (1.281)	eta 0:02:28	loss 0.6266 (0.6266) acc 83.5938 (83.5938)	lr 1.992115e-03
+epoch [4/50][2/2]	time 0.133 (0.866)	data 0.001 (0.641)	eta 0:01:19	loss 0.8701 (0.7484) acc 75.0000 (79.2969)	lr 1.982287e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 126
+* accuracy: 78.75%
+* error: 21.25%
+* macro_f1: 78.32%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 13	acc: 81.25%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 8	acc: 50.00%
+* class: 6 (frog)	total: 16	correct: 11	acc: 68.75%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 13	acc: 81.25%
+* class: 9 (truck)	total: 16	correct: 15	acc: 93.75%
+* average: 78.75%
+worst10 classes: 
+dog: 50.00%
+deer: 62.50%
+frog: 68.75%
+bird: 75.00%
+cat: 81.25%
+ship: 81.25%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+truck: 93.75%
+Checkpoint saved to ./output/cifar-10/UPLTrainer/debuging9.26/rn101_nctx16_cscFalse_ctpend_fp0_PLL01-rc_rc_no-tfm/seed2/prompt_learner/model-best-0.pth.tar
+epoch [5/50][1/2]	time 1.513 (1.513)	data 1.192 (1.192)	eta 0:02:17	loss 0.5772 (0.5772) acc 82.8125 (82.8125)	lr 1.982287e-03
+epoch [5/50][2/2]	time 0.127 (0.820)	data 0.001 (0.596)	eta 0:01:13	loss 0.6570 (0.6171) acc 68.7500 (75.7812)	lr 1.968583e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 130
+* accuracy: 81.25%
+* error: 18.75%
+* macro_f1: 80.86%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 11	acc: 68.75%
+* class: 4 (deer)	total: 16	correct: 11	acc: 68.75%
+* class: 5 (dog)	total: 16	correct: 8	acc: 50.00%
+* class: 6 (frog)	total: 16	correct: 13	acc: 81.25%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 81.25%
+worst10 classes: 
+dog: 50.00%
+cat: 68.75%
+deer: 68.75%
+bird: 75.00%
+frog: 81.25%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+Checkpoint saved to ./output/cifar-10/UPLTrainer/debuging9.26/rn101_nctx16_cscFalse_ctpend_fp0_PLL01-rc_rc_no-tfm/seed2/prompt_learner/model-best-0.pth.tar
+epoch [6/50][1/2]	time 1.553 (1.553)	data 1.229 (1.229)	eta 0:02:18	loss 0.5611 (0.5611) acc 85.9375 (85.9375)	lr 1.968583e-03
+epoch [6/50][2/2]	time 0.115 (0.834)	data 0.001 (0.615)	eta 0:01:13	loss 0.4913 (0.5262) acc 84.3750 (85.1562)	lr 1.951057e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 129
+* accuracy: 80.62%
+* error: 19.38%
+* macro_f1: 80.25%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 13	acc: 81.25%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 13	acc: 81.25%
+* class: 4 (deer)	total: 16	correct: 11	acc: 68.75%
+* class: 5 (dog)	total: 16	correct: 7	acc: 43.75%
+* class: 6 (frog)	total: 16	correct: 13	acc: 81.25%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 15	acc: 93.75%
+* average: 80.62%
+worst10 classes: 
+dog: 43.75%
+deer: 68.75%
+bird: 75.00%
+airplane: 81.25%
+cat: 81.25%
+frog: 81.25%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 93.75%
+epoch [7/50][1/2]	time 1.540 (1.540)	data 1.213 (1.213)	eta 0:02:13	loss 0.4898 (0.4898) acc 89.0625 (89.0625)	lr 1.951057e-03
+epoch [7/50][2/2]	time 0.125 (0.833)	data 0.001 (0.607)	eta 0:01:11	loss 0.5616 (0.5257) acc 78.1250 (83.5938)	lr 1.929776e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 129
+* accuracy: 80.62%
+* error: 19.38%
+* macro_f1: 80.38%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 14	acc: 87.50%
+* class: 4 (deer)	total: 16	correct: 11	acc: 68.75%
+* class: 5 (dog)	total: 16	correct: 7	acc: 43.75%
+* class: 6 (frog)	total: 16	correct: 11	acc: 68.75%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 15	acc: 93.75%
+* average: 80.62%
+worst10 classes: 
+dog: 43.75%
+deer: 68.75%
+frog: 68.75%
+bird: 75.00%
+airplane: 87.50%
+cat: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 93.75%
+epoch [8/50][1/2]	time 1.696 (1.696)	data 1.371 (1.371)	eta 0:02:24	loss 0.5257 (0.5257) acc 84.3750 (84.3750)	lr 1.929776e-03
+epoch [8/50][2/2]	time 0.145 (0.921)	data 0.000 (0.686)	eta 0:01:17	loss 0.3468 (0.4362) acc 87.5000 (85.9375)	lr 1.904827e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 130
+* accuracy: 81.25%
+* error: 18.75%
+* macro_f1: 81.14%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 13	acc: 81.25%
+* class: 3 (cat)	total: 16	correct: 13	acc: 81.25%
+* class: 4 (deer)	total: 16	correct: 11	acc: 68.75%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 9	acc: 56.25%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 81.25%
+worst10 classes: 
+dog: 56.25%
+frog: 56.25%
+deer: 68.75%
+bird: 81.25%
+cat: 81.25%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [9/50][1/2]	time 1.597 (1.597)	data 1.272 (1.272)	eta 0:02:12	loss 0.4831 (0.4831) acc 86.7188 (86.7188)	lr 1.904827e-03
+epoch [9/50][2/2]	time 0.136 (0.866)	data 0.001 (0.636)	eta 0:01:11	loss 0.3803 (0.4317) acc 84.3750 (85.5469)	lr 1.876307e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 131
+* accuracy: 81.88%
+* error: 18.12%
+* macro_f1: 81.61%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 15	acc: 93.75%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 13	acc: 81.25%
+* class: 3 (cat)	total: 16	correct: 13	acc: 81.25%
+* class: 4 (deer)	total: 16	correct: 11	acc: 68.75%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 9	acc: 56.25%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 81.88%
+worst10 classes: 
+dog: 56.25%
+frog: 56.25%
+deer: 68.75%
+bird: 81.25%
+cat: 81.25%
+airplane: 93.75%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+Checkpoint saved to ./output/cifar-10/UPLTrainer/debuging9.26/rn101_nctx16_cscFalse_ctpend_fp0_PLL01-rc_rc_no-tfm/seed2/prompt_learner/model-best-0.pth.tar
+epoch [10/50][1/2]	time 1.554 (1.554)	data 1.233 (1.233)	eta 0:02:05	loss 0.4718 (0.4718) acc 85.9375 (85.9375)	lr 1.876307e-03
+epoch [10/50][2/2]	time 0.131 (0.842)	data 0.001 (0.617)	eta 0:01:07	loss 0.2988 (0.3853) acc 90.6250 (88.2812)	lr 1.844328e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 130
+* accuracy: 81.25%
+* error: 18.75%
+* macro_f1: 81.18%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 15	acc: 93.75%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 11	acc: 68.75%
+* class: 4 (deer)	total: 16	correct: 11	acc: 68.75%
+* class: 5 (dog)	total: 16	correct: 10	acc: 62.50%
+* class: 6 (frog)	total: 16	correct: 11	acc: 68.75%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 15	acc: 93.75%
+* average: 81.25%
+worst10 classes: 
+dog: 62.50%
+cat: 68.75%
+deer: 68.75%
+frog: 68.75%
+bird: 75.00%
+airplane: 93.75%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 93.75%
+epoch [11/50][1/2]	time 1.651 (1.651)	data 1.324 (1.324)	eta 0:02:10	loss 0.4464 (0.4464) acc 87.5000 (87.5000)	lr 1.844328e-03
+epoch [11/50][2/2]	time 0.124 (0.888)	data 0.001 (0.663)	eta 0:01:09	loss 0.2932 (0.3698) acc 96.8750 (92.1875)	lr 1.809017e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 130
+* accuracy: 81.25%
+* error: 18.75%
+* macro_f1: 81.18%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 11	acc: 68.75%
+* class: 5 (dog)	total: 16	correct: 10	acc: 62.50%
+* class: 6 (frog)	total: 16	correct: 13	acc: 81.25%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 15	acc: 93.75%
+* average: 81.25%
+worst10 classes: 
+cat: 62.50%
+dog: 62.50%
+deer: 68.75%
+bird: 75.00%
+frog: 81.25%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 93.75%
+epoch [12/50][1/2]	time 1.728 (1.728)	data 1.405 (1.405)	eta 0:02:13	loss 0.4195 (0.4195) acc 89.8438 (89.8438)	lr 1.809017e-03
+epoch [12/50][2/2]	time 0.121 (0.924)	data 0.000 (0.703)	eta 0:01:10	loss 0.3277 (0.3736) acc 93.7500 (91.7969)	lr 1.770513e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 129
+* accuracy: 80.62%
+* error: 19.38%
+* macro_f1: 80.53%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 13	acc: 81.25%
+* class: 3 (cat)	total: 16	correct: 11	acc: 68.75%
+* class: 4 (deer)	total: 16	correct: 11	acc: 68.75%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 11	acc: 68.75%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 15	acc: 93.75%
+* average: 80.62%
+worst10 classes: 
+dog: 56.25%
+cat: 68.75%
+deer: 68.75%
+frog: 68.75%
+bird: 81.25%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 93.75%
+epoch [13/50][1/2]	time 1.613 (1.613)	data 1.294 (1.294)	eta 0:02:00	loss 0.4176 (0.4176) acc 87.5000 (87.5000)	lr 1.770513e-03
+epoch [13/50][2/2]	time 0.139 (0.876)	data 0.001 (0.647)	eta 0:01:04	loss 0.2521 (0.3348) acc 96.8750 (92.1875)	lr 1.728969e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 128
+* accuracy: 80.00%
+* error: 20.00%
+* macro_f1: 79.90%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 11	acc: 68.75%
+* class: 4 (deer)	total: 16	correct: 11	acc: 68.75%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 11	acc: 68.75%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 15	acc: 93.75%
+* average: 80.00%
+worst10 classes: 
+dog: 56.25%
+cat: 68.75%
+deer: 68.75%
+frog: 68.75%
+bird: 75.00%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 93.75%
+epoch [14/50][1/2]	time 1.513 (1.513)	data 1.185 (1.185)	eta 0:01:50	loss 0.3892 (0.3892) acc 89.8438 (89.8438)	lr 1.728969e-03
+epoch [14/50][2/2]	time 0.184 (0.848)	data 0.001 (0.593)	eta 0:01:01	loss 0.3159 (0.3526) acc 90.6250 (90.2344)	lr 1.684547e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 128
+* accuracy: 80.00%
+* error: 20.00%
+* macro_f1: 79.96%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 11	acc: 68.75%
+* class: 3 (cat)	total: 16	correct: 11	acc: 68.75%
+* class: 4 (deer)	total: 16	correct: 11	acc: 68.75%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 11	acc: 68.75%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 80.00%
+worst10 classes: 
+dog: 56.25%
+bird: 68.75%
+cat: 68.75%
+deer: 68.75%
+frog: 68.75%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [15/50][1/2]	time 1.634 (1.634)	data 1.320 (1.320)	eta 0:01:55	loss 0.3319 (0.3319) acc 93.7500 (93.7500)	lr 1.684547e-03
+epoch [15/50][2/2]	time 0.131 (0.882)	data 0.001 (0.660)	eta 0:01:01	loss 0.4870 (0.4094) acc 78.1250 (85.9375)	lr 1.637424e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 128
+* accuracy: 80.00%
+* error: 20.00%
+* macro_f1: 79.99%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 11	acc: 68.75%
+* class: 3 (cat)	total: 16	correct: 11	acc: 68.75%
+* class: 4 (deer)	total: 16	correct: 11	acc: 68.75%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 11	acc: 68.75%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 80.00%
+worst10 classes: 
+dog: 56.25%
+bird: 68.75%
+cat: 68.75%
+deer: 68.75%
+frog: 68.75%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [16/50][1/2]	time 1.637 (1.637)	data 1.309 (1.309)	eta 0:01:52	loss 0.3227 (0.3227) acc 92.1875 (92.1875)	lr 1.637424e-03
+epoch [16/50][2/2]	time 0.127 (0.882)	data 0.001 (0.655)	eta 0:00:59	loss 0.4647 (0.3937) acc 87.5000 (89.8438)	lr 1.587785e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 129
+* accuracy: 80.62%
+* error: 19.38%
+* macro_f1: 80.64%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 11	acc: 68.75%
+* class: 3 (cat)	total: 16	correct: 11	acc: 68.75%
+* class: 4 (deer)	total: 16	correct: 12	acc: 75.00%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 11	acc: 68.75%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 80.62%
+worst10 classes: 
+dog: 56.25%
+bird: 68.75%
+cat: 68.75%
+frog: 68.75%
+deer: 75.00%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [17/50][1/2]	time 1.472 (1.472)	data 1.150 (1.150)	eta 0:01:38	loss 0.3334 (0.3334) acc 90.6250 (90.6250)	lr 1.587785e-03
+epoch [17/50][2/2]	time 0.117 (0.795)	data 0.000 (0.575)	eta 0:00:52	loss 0.3530 (0.3432) acc 90.6250 (90.6250)	lr 1.535827e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 128
+* accuracy: 80.00%
+* error: 20.00%
+* macro_f1: 80.06%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 11	acc: 68.75%
+* class: 3 (cat)	total: 16	correct: 11	acc: 68.75%
+* class: 4 (deer)	total: 16	correct: 11	acc: 68.75%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 11	acc: 68.75%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 80.00%
+worst10 classes: 
+dog: 56.25%
+bird: 68.75%
+cat: 68.75%
+deer: 68.75%
+frog: 68.75%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [18/50][1/2]	time 1.639 (1.639)	data 1.312 (1.312)	eta 0:01:46	loss 0.3502 (0.3502) acc 90.6250 (90.6250)	lr 1.535827e-03
+epoch [18/50][2/2]	time 0.109 (0.874)	data 0.000 (0.656)	eta 0:00:55	loss 0.2809 (0.3155) acc 93.7500 (92.1875)	lr 1.481754e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 129
+* accuracy: 80.62%
+* error: 19.38%
+* macro_f1: 80.64%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 11	acc: 68.75%
+* class: 3 (cat)	total: 16	correct: 11	acc: 68.75%
+* class: 4 (deer)	total: 16	correct: 11	acc: 68.75%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 12	acc: 75.00%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 80.62%
+worst10 classes: 
+dog: 56.25%
+bird: 68.75%
+cat: 68.75%
+deer: 68.75%
+frog: 75.00%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [19/50][1/2]	time 1.602 (1.602)	data 1.275 (1.275)	eta 0:01:40	loss 0.3359 (0.3359) acc 92.1875 (92.1875)	lr 1.481754e-03
+epoch [19/50][2/2]	time 0.141 (0.872)	data 0.001 (0.638)	eta 0:00:54	loss 0.2820 (0.3089) acc 87.5000 (89.8438)	lr 1.425779e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 126
+* accuracy: 78.75%
+* error: 21.25%
+* macro_f1: 78.73%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 13	acc: 81.25%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 11	acc: 68.75%
+* class: 3 (cat)	total: 16	correct: 11	acc: 68.75%
+* class: 4 (deer)	total: 16	correct: 9	acc: 56.25%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 12	acc: 75.00%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 78.75%
+worst10 classes: 
+deer: 56.25%
+dog: 56.25%
+bird: 68.75%
+cat: 68.75%
+frog: 75.00%
+airplane: 81.25%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [20/50][1/2]	time 1.503 (1.503)	data 1.178 (1.178)	eta 0:01:31	loss 0.2966 (0.2966) acc 90.6250 (90.6250)	lr 1.425779e-03
+epoch [20/50][2/2]	time 0.151 (0.827)	data 0.001 (0.589)	eta 0:00:49	loss 0.3489 (0.3227) acc 90.6250 (90.6250)	lr 1.368125e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 126
+* accuracy: 78.75%
+* error: 21.25%
+* macro_f1: 78.80%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 13	acc: 81.25%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 12	acc: 75.00%
+* class: 7 (horse)	total: 16	correct: 14	acc: 87.50%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 78.75%
+worst10 classes: 
+dog: 56.25%
+cat: 62.50%
+deer: 62.50%
+bird: 75.00%
+frog: 75.00%
+airplane: 81.25%
+horse: 87.50%
+automobile: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [21/50][1/2]	time 1.540 (1.540)	data 1.225 (1.225)	eta 0:01:30	loss 0.3036 (0.3036) acc 89.8438 (89.8438)	lr 1.368125e-03
+epoch [21/50][2/2]	time 0.132 (0.836)	data 0.001 (0.613)	eta 0:00:48	loss 0.2884 (0.2960) acc 93.7500 (91.7969)	lr 1.309017e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 126
+* accuracy: 78.75%
+* error: 21.25%
+* macro_f1: 78.82%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 13	acc: 81.25%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 9	acc: 56.25%
+* class: 5 (dog)	total: 16	correct: 10	acc: 62.50%
+* class: 6 (frog)	total: 16	correct: 12	acc: 75.00%
+* class: 7 (horse)	total: 16	correct: 14	acc: 87.50%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 78.75%
+worst10 classes: 
+deer: 56.25%
+cat: 62.50%
+dog: 62.50%
+bird: 75.00%
+frog: 75.00%
+airplane: 81.25%
+horse: 87.50%
+automobile: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [22/50][1/2]	time 1.645 (1.645)	data 1.315 (1.315)	eta 0:01:33	loss 0.3192 (0.3192) acc 88.2812 (88.2812)	lr 1.309017e-03
+epoch [22/50][2/2]	time 0.128 (0.886)	data 0.001 (0.658)	eta 0:00:49	loss 0.1675 (0.2433) acc 96.8750 (92.5781)	lr 1.248690e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 127
+* accuracy: 79.38%
+* error: 20.62%
+* macro_f1: 79.44%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 13	acc: 81.25%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 10	acc: 62.50%
+* class: 6 (frog)	total: 16	correct: 12	acc: 75.00%
+* class: 7 (horse)	total: 16	correct: 14	acc: 87.50%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 79.38%
+worst10 classes: 
+cat: 62.50%
+deer: 62.50%
+dog: 62.50%
+bird: 75.00%
+frog: 75.00%
+airplane: 81.25%
+horse: 87.50%
+automobile: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [23/50][1/2]	time 1.458 (1.458)	data 1.141 (1.141)	eta 0:01:20	loss 0.2696 (0.2696) acc 91.4062 (91.4062)	lr 1.248690e-03
+epoch [23/50][2/2]	time 0.138 (0.798)	data 0.001 (0.571)	eta 0:00:43	loss 0.3243 (0.2970) acc 90.6250 (91.0156)	lr 1.187381e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 127
+* accuracy: 79.38%
+* error: 20.62%
+* macro_f1: 79.29%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 13	acc: 81.25%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 11	acc: 68.75%
+* class: 3 (cat)	total: 16	correct: 11	acc: 68.75%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 12	acc: 75.00%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 79.38%
+worst10 classes: 
+dog: 56.25%
+deer: 62.50%
+bird: 68.75%
+cat: 68.75%
+frog: 75.00%
+airplane: 81.25%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [24/50][1/2]	time 1.488 (1.488)	data 1.169 (1.169)	eta 0:01:18	loss 0.2763 (0.2763) acc 90.6250 (90.6250)	lr 1.187381e-03
+epoch [24/50][2/2]	time 0.117 (0.803)	data 0.001 (0.585)	eta 0:00:41	loss 0.2595 (0.2679) acc 93.7500 (92.1875)	lr 1.125333e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 131
+* accuracy: 81.88%
+* error: 18.12%
+* macro_f1: 81.69%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 11	acc: 68.75%
+* class: 3 (cat)	total: 16	correct: 11	acc: 68.75%
+* class: 4 (deer)	total: 16	correct: 11	acc: 68.75%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 14	acc: 87.50%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 81.88%
+worst10 classes: 
+dog: 56.25%
+bird: 68.75%
+cat: 68.75%
+deer: 68.75%
+airplane: 87.50%
+frog: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [25/50][1/2]	time 1.535 (1.535)	data 1.206 (1.206)	eta 0:01:18	loss 0.2471 (0.2471) acc 93.7500 (93.7500)	lr 1.125333e-03
+epoch [25/50][2/2]	time 0.155 (0.845)	data 0.001 (0.603)	eta 0:00:42	loss 0.3685 (0.3078) acc 90.6250 (92.1875)	lr 1.062791e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 130
+* accuracy: 81.25%
+* error: 18.75%
+* macro_f1: 81.12%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 11	acc: 68.75%
+* class: 3 (cat)	total: 16	correct: 11	acc: 68.75%
+* class: 4 (deer)	total: 16	correct: 11	acc: 68.75%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 13	acc: 81.25%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 81.25%
+worst10 classes: 
+dog: 56.25%
+bird: 68.75%
+cat: 68.75%
+deer: 68.75%
+frog: 81.25%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [26/50][1/2]	time 1.662 (1.662)	data 1.348 (1.348)	eta 0:01:21	loss 0.2384 (0.2384) acc 95.3125 (95.3125)	lr 1.062791e-03
+epoch [26/50][2/2]	time 0.153 (0.908)	data 0.001 (0.674)	eta 0:00:43	loss 0.3491 (0.2938) acc 90.6250 (92.9688)	lr 1.000000e-03
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 126
+* accuracy: 78.75%
+* error: 21.25%
+* macro_f1: 78.78%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 11	acc: 68.75%
+* class: 3 (cat)	total: 16	correct: 11	acc: 68.75%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 11	acc: 68.75%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 15	acc: 93.75%
+* average: 78.75%
+worst10 classes: 
+dog: 56.25%
+deer: 62.50%
+bird: 68.75%
+cat: 68.75%
+frog: 68.75%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 93.75%
+epoch [27/50][1/2]	time 1.565 (1.565)	data 1.252 (1.252)	eta 0:01:13	loss 0.2642 (0.2642) acc 92.9688 (92.9688)	lr 1.000000e-03
+epoch [27/50][2/2]	time 0.121 (0.843)	data 0.001 (0.626)	eta 0:00:38	loss 0.2187 (0.2415) acc 96.8750 (94.9219)	lr 9.372095e-04
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 126
+* accuracy: 78.75%
+* error: 21.25%
+* macro_f1: 78.67%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 13	acc: 81.25%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 9	acc: 56.25%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 10	acc: 62.50%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 78.75%
+worst10 classes: 
+deer: 56.25%
+dog: 56.25%
+cat: 62.50%
+frog: 62.50%
+bird: 81.25%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [28/50][1/2]	time 1.536 (1.536)	data 1.213 (1.213)	eta 0:01:09	loss 0.2218 (0.2218) acc 94.5312 (94.5312)	lr 9.372095e-04
+epoch [28/50][2/2]	time 0.135 (0.836)	data 0.001 (0.607)	eta 0:00:36	loss 0.3281 (0.2749) acc 90.6250 (92.5781)	lr 8.746668e-04
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 126
+* accuracy: 78.75%
+* error: 21.25%
+* macro_f1: 78.69%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 10	acc: 62.50%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 78.75%
+worst10 classes: 
+dog: 56.25%
+cat: 62.50%
+deer: 62.50%
+frog: 62.50%
+bird: 75.00%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [29/50][1/2]	time 1.556 (1.556)	data 1.236 (1.236)	eta 0:01:06	loss 0.2562 (0.2562) acc 93.7500 (93.7500)	lr 8.746668e-04
+epoch [29/50][2/2]	time 0.131 (0.844)	data 0.001 (0.619)	eta 0:00:35	loss 0.1715 (0.2138) acc 93.7500 (93.7500)	lr 8.126187e-04
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 126
+* accuracy: 78.75%
+* error: 21.25%
+* macro_f1: 78.69%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 10	acc: 62.50%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 78.75%
+worst10 classes: 
+dog: 56.25%
+cat: 62.50%
+deer: 62.50%
+frog: 62.50%
+bird: 75.00%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [30/50][1/2]	time 1.645 (1.645)	data 1.325 (1.325)	eta 0:01:07	loss 0.2483 (0.2483) acc 92.9688 (92.9688)	lr 8.126187e-04
+epoch [30/50][2/2]	time 0.141 (0.893)	data 0.001 (0.663)	eta 0:00:35	loss 0.1821 (0.2152) acc 93.7500 (93.3594)	lr 7.513101e-04
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 126
+* accuracy: 78.75%
+* error: 21.25%
+* macro_f1: 78.69%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 10	acc: 62.50%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 78.75%
+worst10 classes: 
+dog: 56.25%
+cat: 62.50%
+deer: 62.50%
+frog: 62.50%
+bird: 75.00%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [31/50][1/2]	time 1.622 (1.622)	data 1.301 (1.301)	eta 0:01:03	loss 0.2358 (0.2358) acc 92.9688 (92.9688)	lr 7.513101e-04
+epoch [31/50][2/2]	time 0.135 (0.879)	data 0.000 (0.650)	eta 0:00:33	loss 0.2012 (0.2185) acc 93.7500 (93.3594)	lr 6.909830e-04
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 126
+* accuracy: 78.75%
+* error: 21.25%
+* macro_f1: 78.72%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 10	acc: 62.50%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 78.75%
+worst10 classes: 
+dog: 56.25%
+cat: 62.50%
+deer: 62.50%
+frog: 62.50%
+bird: 75.00%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [32/50][1/2]	time 1.468 (1.468)	data 1.144 (1.144)	eta 0:00:54	loss 0.2153 (0.2153) acc 93.7500 (93.7500)	lr 6.909830e-04
+epoch [32/50][2/2]	time 0.135 (0.801)	data 0.001 (0.573)	eta 0:00:28	loss 0.2647 (0.2400) acc 90.6250 (92.1875)	lr 6.318754e-04
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 126
+* accuracy: 78.75%
+* error: 21.25%
+* macro_f1: 78.70%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 11	acc: 68.75%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 15	acc: 93.75%
+* average: 78.75%
+worst10 classes: 
+dog: 56.25%
+cat: 62.50%
+deer: 62.50%
+frog: 68.75%
+bird: 75.00%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 93.75%
+epoch [33/50][1/2]	time 1.528 (1.528)	data 1.209 (1.209)	eta 0:00:53	loss 0.2333 (0.2333) acc 94.5312 (94.5312)	lr 6.318754e-04
+epoch [33/50][2/2]	time 0.134 (0.831)	data 0.001 (0.605)	eta 0:00:28	loss 0.1912 (0.2122) acc 87.5000 (91.0156)	lr 5.742207e-04
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 129
+* accuracy: 80.62%
+* error: 19.38%
+* macro_f1: 80.51%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 11	acc: 68.75%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 13	acc: 81.25%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 15	acc: 93.75%
+* average: 80.62%
+worst10 classes: 
+dog: 56.25%
+deer: 62.50%
+cat: 68.75%
+bird: 75.00%
+frog: 81.25%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 93.75%
+epoch [34/50][1/2]	time 1.497 (1.497)	data 1.179 (1.179)	eta 0:00:49	loss 0.2290 (0.2290) acc 93.7500 (93.7500)	lr 5.742207e-04
+epoch [34/50][2/2]	time 0.133 (0.815)	data 0.000 (0.590)	eta 0:00:26	loss 0.2038 (0.2164) acc 93.7500 (93.7500)	lr 5.182463e-04
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 129
+* accuracy: 80.62%
+* error: 19.38%
+* macro_f1: 80.47%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 11	acc: 68.75%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 13	acc: 81.25%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 15	acc: 93.75%
+* average: 80.62%
+worst10 classes: 
+dog: 56.25%
+deer: 62.50%
+cat: 68.75%
+bird: 75.00%
+frog: 81.25%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 93.75%
+epoch [35/50][1/2]	time 1.645 (1.645)	data 1.320 (1.320)	eta 0:00:50	loss 0.1968 (0.1968) acc 92.9688 (92.9688)	lr 5.182463e-04
+epoch [35/50][2/2]	time 0.132 (0.889)	data 0.001 (0.661)	eta 0:00:26	loss 0.3042 (0.2505) acc 93.7500 (93.3594)	lr 4.641732e-04
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 128
+* accuracy: 80.00%
+* error: 20.00%
+* macro_f1: 79.87%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 12	acc: 75.00%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 80.00%
+worst10 classes: 
+dog: 56.25%
+cat: 62.50%
+deer: 62.50%
+bird: 75.00%
+frog: 75.00%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [36/50][1/2]	time 1.625 (1.625)	data 1.290 (1.290)	eta 0:00:47	loss 0.1972 (0.1972) acc 92.9688 (92.9688)	lr 4.641732e-04
+epoch [36/50][2/2]	time 0.139 (0.882)	data 0.001 (0.645)	eta 0:00:24	loss 0.2811 (0.2392) acc 93.7500 (93.3594)	lr 4.122147e-04
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 128
+* accuracy: 80.00%
+* error: 20.00%
+* macro_f1: 79.87%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 12	acc: 75.00%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 80.00%
+worst10 classes: 
+dog: 56.25%
+cat: 62.50%
+deer: 62.50%
+bird: 75.00%
+frog: 75.00%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [37/50][1/2]	time 1.621 (1.621)	data 1.293 (1.293)	eta 0:00:43	loss 0.2070 (0.2070) acc 92.1875 (92.1875)	lr 4.122147e-04
+epoch [37/50][2/2]	time 0.127 (0.874)	data 0.001 (0.647)	eta 0:00:22	loss 0.2238 (0.2154) acc 96.8750 (94.5312)	lr 3.625760e-04
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 127
+* accuracy: 79.38%
+* error: 20.62%
+* macro_f1: 79.28%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 11	acc: 68.75%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 79.38%
+worst10 classes: 
+dog: 56.25%
+cat: 62.50%
+deer: 62.50%
+frog: 68.75%
+bird: 75.00%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [38/50][1/2]	time 1.570 (1.570)	data 1.243 (1.243)	eta 0:00:39	loss 0.2018 (0.2018) acc 92.1875 (92.1875)	lr 3.625760e-04
+epoch [38/50][2/2]	time 0.122 (0.846)	data 0.000 (0.622)	eta 0:00:20	loss 0.2282 (0.2150) acc 96.8750 (94.5312)	lr 3.154529e-04
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 127
+* accuracy: 79.38%
+* error: 20.62%
+* macro_f1: 79.30%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 11	acc: 68.75%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 10	acc: 62.50%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 79.38%
+worst10 classes: 
+dog: 56.25%
+cat: 62.50%
+frog: 62.50%
+deer: 68.75%
+bird: 75.00%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [39/50][1/2]	time 1.502 (1.502)	data 1.188 (1.188)	eta 0:00:34	loss 0.2057 (0.2057) acc 92.9688 (92.9688)	lr 3.154529e-04
+epoch [39/50][2/2]	time 0.131 (0.817)	data 0.000 (0.594)	eta 0:00:17	loss 0.2002 (0.2029) acc 96.8750 (94.9219)	lr 2.710314e-04
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 127
+* accuracy: 79.38%
+* error: 20.62%
+* macro_f1: 79.30%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 11	acc: 68.75%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 10	acc: 62.50%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 79.38%
+worst10 classes: 
+dog: 56.25%
+cat: 62.50%
+frog: 62.50%
+deer: 68.75%
+bird: 75.00%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [40/50][1/2]	time 1.555 (1.555)	data 1.242 (1.242)	eta 0:00:32	loss 0.1930 (0.1930) acc 94.5312 (94.5312)	lr 2.710314e-04
+epoch [40/50][2/2]	time 0.143 (0.849)	data 0.001 (0.621)	eta 0:00:16	loss 0.2407 (0.2169) acc 90.6250 (92.5781)	lr 2.294868e-04
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 127
+* accuracy: 79.38%
+* error: 20.62%
+* macro_f1: 79.30%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 11	acc: 68.75%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 10	acc: 62.50%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 79.38%
+worst10 classes: 
+dog: 56.25%
+cat: 62.50%
+frog: 62.50%
+deer: 68.75%
+bird: 75.00%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [41/50][1/2]	time 1.494 (1.494)	data 1.177 (1.177)	eta 0:00:28	loss 0.1974 (0.1974) acc 93.7500 (93.7500)	lr 2.294868e-04
+epoch [41/50][2/2]	time 0.126 (0.810)	data 0.001 (0.589)	eta 0:00:14	loss 0.2161 (0.2067) acc 93.7500 (93.7500)	lr 1.909830e-04
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 126
+* accuracy: 78.75%
+* error: 21.25%
+* macro_f1: 78.74%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 10	acc: 62.50%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 78.75%
+worst10 classes: 
+dog: 56.25%
+cat: 62.50%
+deer: 62.50%
+frog: 62.50%
+bird: 75.00%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [42/50][1/2]	time 1.511 (1.511)	data 1.199 (1.199)	eta 0:00:25	loss 0.1797 (0.1797) acc 96.0938 (96.0938)	lr 1.909830e-04
+epoch [42/50][2/2]	time 0.139 (0.825)	data 0.001 (0.600)	eta 0:00:13	loss 0.2876 (0.2337) acc 84.3750 (90.2344)	lr 1.556721e-04
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 126
+* accuracy: 78.75%
+* error: 21.25%
+* macro_f1: 78.74%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 10	acc: 62.50%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 78.75%
+worst10 classes: 
+dog: 56.25%
+cat: 62.50%
+deer: 62.50%
+frog: 62.50%
+bird: 75.00%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [43/50][1/2]	time 1.671 (1.671)	data 1.339 (1.339)	eta 0:00:25	loss 0.1996 (0.1996) acc 94.5312 (94.5312)	lr 1.556721e-04
+epoch [43/50][2/2]	time 0.135 (0.903)	data 0.001 (0.670)	eta 0:00:12	loss 0.2031 (0.2014) acc 90.6250 (92.5781)	lr 1.236933e-04
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 126
+* accuracy: 78.75%
+* error: 21.25%
+* macro_f1: 78.74%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 10	acc: 62.50%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 78.75%
+worst10 classes: 
+dog: 56.25%
+cat: 62.50%
+deer: 62.50%
+frog: 62.50%
+bird: 75.00%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [44/50][1/2]	time 1.704 (1.704)	data 1.376 (1.376)	eta 0:00:22	loss 0.1922 (0.1922) acc 93.7500 (93.7500)	lr 1.236933e-04
+epoch [44/50][2/2]	time 0.138 (0.921)	data 0.000 (0.688)	eta 0:00:11	loss 0.2286 (0.2104) acc 93.7500 (93.7500)	lr 9.517295e-05
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 126
+* accuracy: 78.75%
+* error: 21.25%
+* macro_f1: 78.74%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 10	acc: 62.50%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 78.75%
+worst10 classes: 
+dog: 56.25%
+cat: 62.50%
+deer: 62.50%
+frog: 62.50%
+bird: 75.00%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [45/50][1/2]	time 1.605 (1.605)	data 1.278 (1.278)	eta 0:00:17	loss 0.2076 (0.2076) acc 92.9688 (92.9688)	lr 9.517295e-05
+epoch [45/50][2/2]	time 0.185 (0.895)	data 0.001 (0.639)	eta 0:00:08	loss 0.1638 (0.1857) acc 96.8750 (94.9219)	lr 7.022351e-05
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 126
+* accuracy: 78.75%
+* error: 21.25%
+* macro_f1: 78.74%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 10	acc: 62.50%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 78.75%
+worst10 classes: 
+dog: 56.25%
+cat: 62.50%
+deer: 62.50%
+frog: 62.50%
+bird: 75.00%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [46/50][1/2]	time 1.698 (1.698)	data 1.373 (1.373)	eta 0:00:15	loss 0.1968 (0.1968) acc 95.3125 (95.3125)	lr 7.022351e-05
+epoch [46/50][2/2]	time 0.135 (0.917)	data 0.000 (0.687)	eta 0:00:07	loss 0.2046 (0.2007) acc 87.5000 (91.4062)	lr 4.894348e-05
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 126
+* accuracy: 78.75%
+* error: 21.25%
+* macro_f1: 78.67%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 10	acc: 62.50%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 78.75%
+worst10 classes: 
+dog: 56.25%
+cat: 62.50%
+deer: 62.50%
+frog: 62.50%
+bird: 75.00%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [47/50][1/2]	time 1.867 (1.867)	data 1.543 (1.543)	eta 0:00:13	loss 0.2074 (0.2074) acc 92.1875 (92.1875)	lr 4.894348e-05
+epoch [47/50][2/2]	time 0.146 (1.007)	data 0.001 (0.772)	eta 0:00:06	loss 0.1616 (0.1845) acc 100.0000 (96.0938)	lr 3.141684e-05
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 126
+* accuracy: 78.75%
+* error: 21.25%
+* macro_f1: 78.67%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 10	acc: 62.50%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 78.75%
+worst10 classes: 
+dog: 56.25%
+cat: 62.50%
+deer: 62.50%
+frog: 62.50%
+bird: 75.00%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [48/50][1/2]	time 1.589 (1.589)	data 1.272 (1.272)	eta 0:00:07	loss 0.1943 (0.1943) acc 96.0938 (96.0938)	lr 3.141684e-05
+epoch [48/50][2/2]	time 0.123 (0.856)	data 0.001 (0.637)	eta 0:00:03	loss 0.2105 (0.2024) acc 84.3750 (90.2344)	lr 1.771275e-05
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 126
+* accuracy: 78.75%
+* error: 21.25%
+* macro_f1: 78.67%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 10	acc: 62.50%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 78.75%
+worst10 classes: 
+dog: 56.25%
+cat: 62.50%
+deer: 62.50%
+frog: 62.50%
+bird: 75.00%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [49/50][1/2]	time 1.539 (1.539)	data 1.227 (1.227)	eta 0:00:04	loss 0.1964 (0.1964) acc 95.3125 (95.3125)	lr 1.771275e-05
+epoch [49/50][2/2]	time 0.119 (0.829)	data 0.001 (0.614)	eta 0:00:01	loss 0.2037 (0.2000) acc 87.5000 (91.4062)	lr 7.885299e-06
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 126
+* accuracy: 78.75%
+* error: 21.25%
+* macro_f1: 78.67%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 10	acc: 62.50%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 78.75%
+worst10 classes: 
+dog: 56.25%
+cat: 62.50%
+deer: 62.50%
+frog: 62.50%
+bird: 75.00%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+epoch [50/50][1/2]	time 1.634 (1.634)	data 1.313 (1.313)	eta 0:00:01	loss 0.1727 (0.1727) acc 94.5312 (94.5312)	lr 7.885299e-06
+epoch [50/50][2/2]	time 0.127 (0.880)	data 0.001 (0.657)	eta 0:00:00	loss 0.2941 (0.2334) acc 90.6250 (92.5781)	lr 1.973272e-06
+Do evaluation on val set
+=> result
+* total: 160
+* correct: 126
+* accuracy: 78.75%
+* error: 21.25%
+* macro_f1: 78.67%
+=> per-class result
+* class: 0 (airplane)	total: 16	correct: 14	acc: 87.50%
+* class: 1 (automobile)	total: 16	correct: 15	acc: 93.75%
+* class: 2 (bird)	total: 16	correct: 12	acc: 75.00%
+* class: 3 (cat)	total: 16	correct: 10	acc: 62.50%
+* class: 4 (deer)	total: 16	correct: 10	acc: 62.50%
+* class: 5 (dog)	total: 16	correct: 9	acc: 56.25%
+* class: 6 (frog)	total: 16	correct: 10	acc: 62.50%
+* class: 7 (horse)	total: 16	correct: 15	acc: 93.75%
+* class: 8 (ship)	total: 16	correct: 15	acc: 93.75%
+* class: 9 (truck)	total: 16	correct: 16	acc: 100.00%
+* average: 78.75%
+worst10 classes: 
+dog: 56.25%
+cat: 62.50%
+deer: 62.50%
+frog: 62.50%
+bird: 75.00%
+airplane: 87.50%
+automobile: 93.75%
+horse: 93.75%
+ship: 93.75%
+truck: 100.00%
+Checkpoint saved to ./output/cifar-10/UPLTrainer/debuging9.26/rn101_nctx16_cscFalse_ctpend_fp0_PLL01-rc_rc_no-tfm/seed2/prompt_learner/model-best-0.pth.tar
+Finished training
+Deploy the model with the best val performance
+Loading weights to prompt_learner from "./output/cifar-10/UPLTrainer/debuging9.26/rn101_nctx16_cscFalse_ctpend_fp0_PLL01-rc_rc_no-tfm/seed2/prompt_learner/model-best-0.pth.tar" (epoch = 50)
+Do evaluation on test set
+=> result
+* total: 10,000
+* correct: 8,175
+* accuracy: 81.75%
+* error: 18.25%
+* macro_f1: 81.85%
+=> per-class result
+* class: 0 (airplane)	total: 1,000	correct: 802	acc: 80.20%
+* class: 1 (automobile)	total: 1,000	correct: 923	acc: 92.30%
+* class: 2 (bird)	total: 1,000	correct: 699	acc: 69.90%
+* class: 3 (cat)	total: 1,000	correct: 815	acc: 81.50%
+* class: 4 (deer)	total: 1,000	correct: 782	acc: 78.20%
+* class: 5 (dog)	total: 1,000	correct: 694	acc: 69.40%
+* class: 6 (frog)	total: 1,000	correct: 751	acc: 75.10%
+* class: 7 (horse)	total: 1,000	correct: 875	acc: 87.50%
+* class: 8 (ship)	total: 1,000	correct: 914	acc: 91.40%
+* class: 9 (truck)	total: 1,000	correct: 920	acc: 92.00%
+* average: 81.75%
+worst10 classes: 
+dog: 69.40%
+bird: 69.90%
+frog: 75.10%
+deer: 78.20%
+airplane: 80.20%
+cat: 81.50%
+horse: 87.50%
+ship: 91.40%
+truck: 92.00%
+automobile: 92.30%
+Elapsed: 0:03:20
