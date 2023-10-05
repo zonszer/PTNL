@@ -30,7 +30,11 @@ files_all_evalsetACC = sorted(glob.glob(path2 +'/*.json'), key=lambda x: int(re.
 files_all_dict = {i:file.split("/")[-1] for i, file in enumerate(files_all_evalsetACC)}
 
 #1. select the file name:
-file_plot_evalsetACC = files_all_evalsetACC[0]            #NOTE also need to set here manually, bseline ACC (PLL0)
+file_plot_evalsetACC = files_all_evalsetACC[163];  #can see files_all_dict #NOTE also need to set here manually, bseline ACC (PLL0)
+for i, item in enumerate(files_all_evalsetACC):
+    if 'SSOxfordPets-16-0-2-PLL0.3_rc_cav_beta0.2.json' in item:    #SSUCF101-16-0-2-PLL0.3_rc_cav_beta0.3.json
+        print('found id:', i, ' ' +item)
+
 with open(file_plot_evalsetACC, "r") as file:      
     data = json.load(file)
 print(f'data={file_plot_evalsetACC}', f'len={len(data)}' , data)
@@ -105,7 +109,7 @@ import seaborn as sns
 data_box = np.array([[v for v in d.values()] for d in data_classes])  # shape: (51, 100)  
 
 # Create a figure and axis
-fig, ax = plt.subplots(figsize=(10, 6))
+fig, ax = plt.subplots(figsize=(14, 8))
 
 # Create a boxplot using the avg_data
 boxplot = ax.boxplot(data_box.T, notch=True, widths=0.5)

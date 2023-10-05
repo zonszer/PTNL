@@ -72,6 +72,8 @@ CUSTOM_TEMPLATES = {
     "SSCaltech101": "a photo of a {}.",
     "SSUCF101": "a photo of a person doing {}.",
     "SSImageNet": "a photo of a {}.",
+    # ElevaterDatasets:
+    'cifar-100': "a photo of a {}.",
 }
 
 OriginDatasets = {
@@ -288,6 +290,21 @@ class CustomCLIP(nn.Module):
         logit_scale = self.logit_scale.exp()
         logits = logit_scale * image_features @ text_features.t()
 
+        if self.cfg.TRAINER.PLL.USE_REGULAR:
+            if hasattr(self, 'text_regular_feat'):
+                self.regular = logit_scale * self.text_regular_feat @ text_features.t()
+            else:
+                temp = CUSTOM_TEMPLATES[self.cfg.DATASET.NAME]
+                prompts = [temp.format(c.replace("_", " ")) for c in self.classnames]
+                prompts = torch.cat([clip.tokenize(p) for p in prompts])
+                prompts = prompts.to(logits.device)    #shape=torch.Size([100, 77])
+                with torch.no_grad():
+                    text_features_fixed = self.clip.encode_text(prompts)
+                    text_features_fixed = text_features_fixed / text_features_fixed.norm(dim=-1, keepdim=True)
+                self.text_regular_feat = text_features_fixed        
+                self.regular_label = torch.arange(0, len(self.classnames)).to(logits.device)
+                self.regular = logit_scale * self.text_regular_feat @ text_features.t()         #TODO 这里搞一个random sample self.text_regular_feat等价于 batch
+
         return logits, image_features, text_features
 
     def zero_shot_forward(self, image, device):
@@ -320,7 +337,7 @@ class UPLTrainer(TrainerX):
         assert cfg.TRAINER.UPLTrainer.PREC in ["fp16", "fp32", "amp"]
 
     def build_loss(self):
-        if self.cfg.TRAINER.LOSS_TYPE == '':
+        if self.cfg.TRAINER.LOSS_TYPE == 'CE':
             criterion = torch.nn.CrossEntropyLoss()
             criterion.cfg = self.cfg.TRAINER.PLL
         else:
@@ -465,6 +482,9 @@ class UPLTrainer(TrainerX):
             # loss = self.GCE_loss(output, label)
             self.criterion.model = self.model
             loss = self.criterion(output, label, index)
+            if self.cfg.TRAINER.PLL.USE_REGULAR:
+                loss_regular = F.cross_entropy(self.model.regular, self.model.regular_label)
+                loss = loss + self.cfg.TRAINER.PLL.BETA*loss_regular
             self.model_backward_and_update(loss)
             if hasattr(self.criterion, 'check_update'):
                 self.criterion.check_update(image, label, index)   
@@ -579,7 +599,7 @@ class UPLTrainer(TrainerX):
         names = self.get_model_names()
 
         # By default, the best model is loaded
-        model_file = "model-best.pth.tar"
+        model_file = "model-best.pth.tar"   #or model-last.pth.tar
 
         if epoch is not None:
             model_file = "model.pth.tar-" + str(epoch)
@@ -589,8 +609,11 @@ class UPLTrainer(TrainerX):
 
             if not osp.exists(model_path):
                 raise FileNotFoundError('Model not found at "{}"'.format(model_path))
+            try:
+                checkpoint = load_checkpoint(model_path)
+            except:
+                checkpoint = load_checkpoint(model_path.replace('best', 'last'))
 
-            checkpoint = load_checkpoint(model_path)
             state_dict = checkpoint["state_dict"]
             epoch = checkpoint["epoch"]
 
@@ -704,29 +727,29 @@ class UPLTrainer(TrainerX):
         #0. save loged logits and conf: 
         # if True or log_conf == True:
         #     self.criterion.log_conf(all_logits=torch.cat(outputs_all, dim=0), all_labels=torch.cat(label_all, dim=0))
-        # if split == 'test':
-            ##1. save class_acc_sumlist and evalset_acc_sumlist:        #NOTE before uncomment remember to changed the name, otherwise the original file will be overwritten
-            # filename = f'analyze_result_temp/class_acc_sumlist/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.cfg.TRAINER.PLL.PARTIAL_RATE}_{self.cfg.TRAINER.LOSS_TYPE}.json'
-            # with open(filename, "w") as file:
-            #     json.dump(self.evaluator.class_acc_sumlist, file)
-            # filename = f'analyze_result_temp/evalset_acc_sumlist/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.cfg.TRAINER.PLL.PARTIAL_RATE}_{self.cfg.TRAINER.LOSS_TYPE}.json'
-            # with open(filename, "w") as file:
-            #     json.dump(self.evaluator.evalset_acc_sumlist, file)
+        if split == 'test':
+            #1. save class_acc_sumlist and evalset_acc_sumlist:        #NOTE before uncomment remember to changed the name, otherwise the original file will be overwritten
+            filename = f'analyze_result_temp/class_acc_sumlist/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.cfg.TRAINER.PLL.PARTIAL_RATE}_{self.cfg.TRAINER.LOSS_TYPE}_beta{self.cfg.TRAINER.PLL.BETA}.json'
+            with open(filename, "w") as file:
+                json.dump(self.evaluator.class_acc_sumlist, file)
+            filename = f'analyze_result_temp/evalset_acc_sumlist/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.cfg.TRAINER.PLL.PARTIAL_RATE}_{self.cfg.TRAINER.LOSS_TYPE}_beta{self.cfg.TRAINER.PLL.BETA}.json'
+            with open(filename, "w") as file:
+                json.dump(self.evaluator.evalset_acc_sumlist, file)
         #     #2. save grad_ratios_dict:
         #     filename = f'analyze_result_temp/grad_ratios_dict/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.criterion.cfg.PARTIAL_RATE}_{self.criterion.losstype}.json'
         #     with open(filename, "w") as file:
         #         json.dump(self.grad_ratios_dict, file)
-        if split in ['all', 'train', 'test', 'novel', 'base']:
-            if len(outputs_all) != 0:
-                outputs_all = torch.cat(outputs_all, dim=0)
-                label_all = torch.cat(label_all, dim=0)
-                image_features_all = torch.cat(image_features_all, dim=0)
-                text_features_all = text_features_all[0]
-                torch.save(image_features_all, os.path.join(save_path, '{}_v_features.pt'.format(split)))
-                torch.save(image_features_all, os.path.join(save_path, '{}_targets.pt'.format(split)))
-                torch.save(outputs_all, os.path.join(save_path, '{}_logits.pt'.format(split)))
-                torch.save(text_features_all, os.path.join(save_path, '{}_l_features.pt'.format(split)))
-                torch.save(label_all, os.path.join(save_path, '{}_labels.pt'.format(split)))
+        # if split in ['all', 'train', 'test', 'novel', 'base']:
+        #     if len(outputs_all) != 0:
+        #         outputs_all = torch.cat(outputs_all, dim=0)
+        #         label_all = torch.cat(label_all, dim=0)
+        #         image_features_all = torch.cat(image_features_all, dim=0)
+        #         text_features_all = text_features_all[0]
+        #         torch.save(image_features_all, os.path.join(save_path, '{}_v_features.pt'.format(split)))
+        #         torch.save(image_features_all, os.path.join(save_path, '{}_targets.pt'.format(split)))
+        #         torch.save(outputs_all, os.path.join(save_path, '{}_logits.pt'.format(split)))
+        #         torch.save(text_features_all, os.path.join(save_path, '{}_l_features.pt'.format(split)))
+        #         torch.save(label_all, os.path.join(save_path, '{}_labels.pt'.format(split)))
 
 
         self.per_image_txt_writer.close()
@@ -1066,7 +1089,7 @@ class UPLTrainer(TrainerX):
             self.save_model(
                     self.epoch,
                     self.output_dir,
-                    model_name="model-best-{}.pth.tar".format(model_id)
+                    model_name="model-last-{}.pth.tar".format(model_id)
                 )
 
     def after_train(self, model_id):

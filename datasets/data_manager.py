@@ -71,6 +71,11 @@ class ElevaterDataManager(DataManager):
         else:
             print(f"* Using custom transform for testing: \n{custom_tfm_test}")
             tfm_test = custom_tfm_test
+        # if custom_tfm_train is None:
+        #     tfm_train = build_transform(cfg, is_train=True)
+        # else:
+        #     print("* Using custom transform for training")
+        #     tfm_train = custom_tfm_train
 
         # Load dataset:
         train_loader_x, val_loader, test_loader, class_map, train_dataset = construct_dataloader(cfg, tfm_train=tfm_test, tfm_test=tfm_test)  

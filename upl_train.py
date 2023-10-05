@@ -23,6 +23,7 @@ import datasets.imagenet
 
 import trainers.upltrainer
 import trainers.hhzsclip
+torch.set_num_threads(4) # To maximize efficiency, please tune the number of threads for your machine
 
 def print_args(args, cfg):
     print('***************')

@@ -15,8 +15,8 @@ all_data_no_true = []
 all_data_true = []
 ##================set params:
 path = '../analyze_result_temp/class_acc_sumlist'
-# Number of worst-performing classes to display
-num_worst_classes = 5
+# Number of worst-performing classes to display``
+num_worst_classes = 6
 
 # Whether to compare data and data_PLL:
 compare_data_PLL = True
@@ -28,13 +28,22 @@ additional_classes = [ ]
 files_all = sorted(glob.glob(path +'/*.json'), key=lambda x: int(re.findall('(\d+)', x)[-1]))
 files_all_dict = {i:file.split("/")[-1] for i, file in enumerate(files_all)}
 #+++++++=========== select the file name:
-file_plot = files_all[0]                            #NOTE also need to set here manually, bseline ACC (PLL0)
+#1. select the file name:
+file_plot = files_all[49]  #can see files_all_dict #NOTE also need to set here manually, bseline ACC (PLL0)
+for i, item in enumerate(files_all):
+    if 'SSUCF101-16-0-1-PLL1e-30_CE_beta0.0.json' in item:
+        print('found id data:', i, ' '+item)
+    if 'SSUCF101-16-0-2-PLL0.3_rc_cav_beta0.0.json' in item:
+        print('found id PLL:', i, ' '+item)
+    if 'SSUCF101-16-0-2-PLL0.3_rc_cav_beta0.5.json' in item:
+        print('found id PLL_beta03:', i, ' '+item)
+
 with open(file_plot, "r") as file:      
     data = json.load(file)
 print(f'data={file_plot}', f'len={len(data)}' , data)
 
 if compare_data_PLL == True:
-    file_plot_PLL = files_all[7]                    #NOTE also need to set here manually
+    file_plot_PLL = files_all[24]                    #NOTE also need to set here manually
     with open(file_plot_PLL, "r") as file:
         data_PLL = json.load(file)
     print(f'data_PLL={file_plot_PLL}', f'len={len(data_PLL)}' , data_PLL)

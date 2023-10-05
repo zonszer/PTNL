@@ -68,7 +68,7 @@ class PLL_loss(nn.Module):
         else:
             return
 
-    def forward_gce(self, x, y, index):
+    def forward_gce(self, x, y, index=None):
         """y is shape of (batch_size, num_classes (0 ~ 1.)), one-hot vector"""
         p = F.softmax(x, dim=1)      #outputs are logits
         # Create a tensor filled with a very small number to represent 'masked' positions
@@ -101,13 +101,13 @@ class PLL_loss(nn.Module):
             raise FloatingPointError("Loss is infinite or NaN!")
         return loss
     
-    def forward_cc(self, x, y, index):
+    def forward_cc(self, x, y, index=None):
         sm_outputs = F.softmax(x, dim=1)      #outputs are logits
         final_outputs = sm_outputs * y
         loss = - torch.log(final_outputs.sum(dim=1))     #NOTE: add / y.sum(dim=1)
         return loss
     
-    def forward_ce(self, x, y, index):
+    def forward_ce(self, x, y, index=None):
         sm_outputs = F.log_softmax(x, dim=1)
         final_outputs = sm_outputs * y
         loss = - final_outputs.sum(dim=1)        #NOTE: add y.sum(dim=1)

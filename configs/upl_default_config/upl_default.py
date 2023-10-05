@@ -299,8 +299,9 @@ _C.TRAINER.PLL.USE_PLL = False  # whether to use PLL
 _C.TRAINER.PLL.PARTIAL_RATE = 0.0  # how many data to use for PLL
 _C.TRAINER.PLL.BETA = 0.0  # hyper-parameter for PLL RC+ loss
 _C.TRAINER.PLL.CONF_LOSS_TYPE = ''  # loss type for confidence loss
+_C.TRAINER.PLL.USE_REGULAR = False	# whether to use regular term in loss
 # loss:
-_C.TRAINER.LOSS_TYPE = ''
+_C.TRAINER.LOSS_TYPE = 'CE'
 # _C.TRAINER.PLL.STRONG_TRANSFORMS = ()
 
 
