@@ -13,7 +13,7 @@ class UPLClassification(Classification):
     class_acc_sumlist = []
     evalset_acc_sumlist = []
 
-    def process(self, mo, gt, per_image_txt_writer, per_class_txt_writer):
+    def process(self, mo, gt, per_image_txt_writer=None, per_class_txt_writer=None):
         # mo (torch.Tensor): model output [batch, num_classes]
         # gt (torch.LongTensor): ground truth [batch]
         self.per_image_txt_writer = per_image_txt_writer
@@ -34,7 +34,7 @@ class UPLClassification(Classification):
                 self._per_class_res[label].append(matches_i)
                 # print(i, label_name, label, matches_i, pred.data.cpu().numpy().tolist())
                 write_line = str(i) + "," + str(label_name) + "," + str(label) + "," + str(matches_i) + "," + str(pred.data.cpu().numpy().tolist())
-                self.per_image_txt_writer.write(write_line+'\n')
+                self.per_image_txt_writer.write(write_line+'\n') if self.per_image_txt_writer != None else None
 
     def evaluate(self):
         results = OrderedDict()
@@ -85,7 +85,8 @@ class UPLClassification(Classification):
                     )
                 )
                 write_line = "* class: {} ({}), total: {:,}, correct: {:,}, acc: {:.2f}% \n".format(label, classname, total, correct, acc)
-                self.per_class_txt_writer.write(write_line)
+                
+                self.per_class_txt_writer.write(write_line) if self.per_image_txt_writer != None else None
             mean_acc = np.mean(accs)
             print("* average: {:.2f}%".format(mean_acc))
             print_worst10_item = lambda x: print(f'worst10 classes: \n' 

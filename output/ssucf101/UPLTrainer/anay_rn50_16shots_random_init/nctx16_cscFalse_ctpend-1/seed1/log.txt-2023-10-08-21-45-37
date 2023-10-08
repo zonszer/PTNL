@@ -1,0 +1,387 @@
+***************
+** Arguments **
+***************
+backbone: 
+config_file: configs/trainers/UPLTrainer/anay_rn50.yaml
+dataset_config_file: configs/datasets/ssucf101.yaml
+eval_only: False
+head: 
+hh_config_file: 
+load_epoch: None
+model_dir: 
+no_train: False
+opts: ['TRAINER.UPLTrainer.N_CTX', '16', 'TRAINER.UPLTrainer.CSC', 'False', 'TRAINER.UPLTrainer.CLASS_TOKEN_POSITION', 'end', 'DATASET.NUM_SHOTS', '16']
+output_dir: ./output/ssucf101/UPLTrainer/anay_rn50_16shots_random_init/nctx16_cscFalse_ctpend-1/seed1
+resume: False
+root: ./data
+seed: 1
+source_domains: None
+tag: -1
+target_domains: None
+trainer: UPLTrainer
+transforms: None
+************
+** Config **
+************
+DATALOADER:
+  K_TRANSFORMS: 1
+  NUM_WORKERS: 8
+  OPEN_SETTING: False
+  RETURN_IMG0: False
+  TEST:
+    BATCH_SIZE: 100
+    SAMPLER: SequentialSampler
+    SHUFFLE: False
+  TRAIN_U:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAME_AS_X: True
+    SAMPLER: RandomSampler
+  TRAIN_X:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAMPLER: RandomSampler
+    SHUFFLE: True
+  VAL:
+    BATCH_SIZE: 50
+    SHUFFLE: False
+DATASET:
+  ALL_AS_UNLABELED: False
+  CIFAR_C_LEVEL: 1
+  CIFAR_C_TYPE: 
+  CLASS_EQULE: True
+  CONF_THRESHOLD: 0.9
+  IGNORE_FILE: 
+  IGNORE_NUM: 0
+  NAME: SSUCF101
+  NUM_LABELED: -1
+  NUM_SHOTS: 16
+  ROOT: ./data
+  SOURCE_DOMAINS: ()
+  STL10_FOLD: -1
+  TARGET_DOMAINS: ()
+  VAL_PERCENT: 0.1
+INPUT:
+  COLORJITTER_B: 0.4
+  COLORJITTER_C: 0.4
+  COLORJITTER_H: 0.1
+  COLORJITTER_S: 0.4
+  CROP_PADDING: 4
+  CUTOUT_LEN: 16
+  CUTOUT_N: 1
+  GB_K: 21
+  GB_P: 0.5
+  GN_MEAN: 0.0
+  GN_STD: 0.15
+  INTERPOLATION: bicubic
+  NO_TRANSFORM: False
+  PIXEL_MEAN: [0.48145466, 0.4578275, 0.40821073]
+  PIXEL_STD: [0.26862954, 0.26130258, 0.27577711]
+  RANDAUGMENT_M: 10
+  RANDAUGMENT_N: 2
+  RGS_P: 0.2
+  RRCROP_SCALE: (0.08, 1.0)
+  SIZE: (224, 224)
+  TRANSFORMS: ('random_resized_crop', 'random_flip', 'normalize')
+MODEL:
+  BACKBONE:
+    NAME: RN50
+    PRETRAINED: True
+  HEAD:
+    ACTIVATION: relu
+    BN: True
+    DROPOUT: 0.0
+    HIDDEN_LAYERS: ()
+    NAME: 
+  INIT_WEIGHTS: 
+  PSEUDO_LABEL_MODELS: []
+OPTIM:
+  ADAM_BETA1: 0.9
+  ADAM_BETA2: 0.999
+  BASE_LR_MULT: 0.1
+  GAMMA: 0.1
+  LR: 0.002
+  LR_SCHEDULER: cosine
+  MAX_EPOCH: 50
+  MOMENTUM: 0.9
+  NAME: sgd
+  NEW_LAYERS: ()
+  RMSPROP_ALPHA: 0.99
+  SGD_DAMPNING: 0
+  SGD_NESTEROV: False
+  STAGED_LR: False
+  STEPSIZE: (-1,)
+  WARMUP_CONS_LR: 1e-05
+  WARMUP_EPOCH: 1
+  WARMUP_MIN_LR: 1e-05
+  WARMUP_RECOUNT: True
+  WARMUP_TYPE: constant
+  WEIGHT_DECAY: 0.0005
+OUTPUT_DIR: ./output/ssucf101/UPLTrainer/anay_rn50_16shots_random_init/nctx16_cscFalse_ctpend-1/seed1
+RESUME: False
+SEED: 1
+TEST:
+  Analyze_Result_Path: ./analysis_results_test/
+  COMPUTE_CMAT: False
+  EVALUATOR: UPLClassification
+  FINAL_MODEL: last_val
+  NO_TEST: False
+  PER_CLASS_RESULT: True
+  SPLIT: test
+TRAIN:
+  CHECKPOINT_FREQ: 0
+  COUNT_ITER: train_x
+  PRINT_FREQ: 5
+TRAINER:
+  CG:
+    ALPHA_D: 0.5
+    ALPHA_F: 0.5
+    EPS_D: 1.0
+    EPS_F: 1.0
+  DAEL:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DDAIG:
+    ALPHA: 0.5
+    CLAMP: False
+    CLAMP_MAX: 1.0
+    CLAMP_MIN: -1.0
+    G_ARCH: 
+    LMDA: 0.3
+    WARMUP: 0
+  ENSEMBLE_NUM: 1
+  ENTMIN:
+    LMDA: 0.001
+  FIXMATCH:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 1.0
+  LOSS_TYPE: CE
+  M3SDA:
+    LMDA: 0.5
+    N_STEP_F: 4
+  MCD:
+    N_STEP_F: 4
+  MEANTEA:
+    EMA_ALPHA: 0.999
+    RAMPUP: 5
+    WEIGHT_U: 1.0
+  MIXMATCH:
+    MIXUP_BETA: 0.75
+    RAMPUP: 20000
+    TEMP: 2.0
+    WEIGHT_U: 100.0
+  MME:
+    LMDA: 0.1
+  NAME: UPLTrainer
+  PLL:
+    BETA: 0.0
+    CONF_LOSS_TYPE: 
+    PARTIAL_RATE: 0.0
+    USE_PLL: False
+    USE_REGULAR: False
+  SE:
+    CONF_THRE: 0.95
+    EMA_ALPHA: 0.999
+    RAMPUP: 300
+  UPLTrainer:
+    CLASS_TOKEN_POSITION: end
+    CSC: False
+    CTX_INIT: a photo of a
+    N_CTX: 16
+    PREC: fp16
+    TAG: -1
+USE_CUDA: True
+VERBOSE: True
+VERSION: 1
+Collecting env info ...
+** System info **
+PyTorch version: 1.12.1+cu113
+Is debug build: False
+CUDA used to build PyTorch: 11.3
+ROCM used to build PyTorch: N/A
+
+OS: Ubuntu 22.04.2 LTS (x86_64)
+GCC version: (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+Clang version: Could not collect
+CMake version: version 3.22.1
+Libc version: glibc-2.35
+
+Python version: 3.9.17 | packaged by conda-forge | (main, Aug 10 2023, 07:02:31)  [GCC 12.3.0] (64-bit runtime)
+Python platform: Linux-6.2.0-33-generic-x86_64-with-glibc2.35
+Is CUDA available: True
+CUDA runtime version: 11.5.119
+GPU models and configuration: 
+GPU 0: NVIDIA A100-PCIE-40GB
+GPU 1: Tesla V100-PCIE-16GB
+GPU 2: Tesla V100-PCIE-16GB
+
+Nvidia driver version: Could not collect
+cuDNN version: Could not collect
+HIP runtime version: N/A
+MIOpen runtime version: N/A
+Is XNNPACK available: True
+
+Versions of relevant libraries:
+[pip3] numpy==1.24.3
+[pip3] torch==1.12.1+cu113
+[pip3] torch-tb-profiler==0.2.0
+[pip3] torchaudio==0.12.1+cu113
+[pip3] torchvision==0.13.1+cu113
+[conda] numpy                     1.24.3                   pypi_0    pypi
+[conda] torch                     1.12.1+cu113             pypi_0    pypi
+[conda] torch-tb-profiler         0.2.0                    pypi_0    pypi
+[conda] torchaudio                0.12.1+cu113             pypi_0    pypi
+[conda] torchvision               0.13.1+cu113             pypi_0    pypi
+        Pillow (10.0.0)
+
+Loading trainer: UPLTrainer
+Loading dataset: SSUCF101
+Reading split from /mnt/disk2/zjh/projects7.12/PTNL/data/ucf101/split_zhou_UCF101.json
+Reading split from /mnt/disk2/zjh/projects7.12/PTNL/data/ucf101/split_zhou_UCF101.json
+* Using custom transform for testing
+Building transform_train
++ random resized crop (size=(224, 224), scale=(0.08, 1.0))
++ random flip
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+---------  --------
+Dataset    SSUCF101
+# classes  101
+# train_x  7,639
+# val      1,898
+# test     3,783
+---------  --------
+Loading CLIP (backbone: RN50)
+Building custom CLIP
+Initial context: "a photo of a"
+Number of context words (tokens): 4
+Turning off gradients in both the image and the text encoder
+Loading evaluator: UPLClassification
+Loaded training GT labels from /mnt/disk2/zjh/projects7.12/PTNL/data/ucf101/SSUCF101_GTlabels.json
+
+test loader:
+=> result
+* total: 3,783
+* correct: 2,227
+* accuracy: 58.87%
+* error: 41.13%
+* macro_f1: 55.61%
+=> per-class result
+* class: 0 (Apply_Eye_Makeup)   total: 44       correct: 33     acc: 75.00%
+* class: 1 (Apply_Lipstick)     total: 32       correct: 8      acc: 25.00%
+* class: 2 (Archery)    total: 41       correct: 31     acc: 75.61%
+* class: 3 (Baby_Crawling)      total: 35       correct: 34     acc: 97.14%
+* class: 4 (Balance_Beam)       total: 31       correct: 0      acc: 0.00%
+* class: 5 (Band_Marching)      total: 43       correct: 38     acc: 88.37%
+* class: 6 (Baseball_Pitch)     total: 43       correct: 32     acc: 74.42%
+* class: 7 (Basketball) total: 35       correct: 3      acc: 8.57%
+* class: 8 (Basketball_Dunk)    total: 37       correct: 36     acc: 97.30%
+* class: 9 (Bench_Press)        total: 48       correct: 42     acc: 87.50%
+* class: 10 (Biking)    total: 38       correct: 32     acc: 84.21%
+* class: 11 (Billiards) total: 40       correct: 36     acc: 90.00%
+* class: 12 (Blow_Dry_Hair)     total: 38       correct: 22     acc: 57.89%
+* class: 13 (Blowing_Candles)   total: 33       correct: 33     acc: 100.00%
+* class: 14 (Body_Weight_Squats)        total: 30       correct: 9      acc: 30.00%
+* class: 15 (Bowling)   total: 43       correct: 43     acc: 100.00%
+* class: 16 (Boxing_Punching_Bag)       total: 49       correct: 26     acc: 53.06%
+* class: 17 (Boxing_Speed_Bag)  total: 37       correct: 7      acc: 18.92%
+* class: 18 (Breast_Stroke)     total: 28       correct: 19     acc: 67.86%
+* class: 19 (Brushing_Teeth)    total: 36       correct: 31     acc: 86.11%
+* class: 20 (Clean_And_Jerk)    total: 33       correct: 27     acc: 81.82%
+* class: 21 (Cliff_Diving)      total: 39       correct: 28     acc: 71.79%
+* class: 22 (Cricket_Bowling)   total: 36       correct: 13     acc: 36.11%
+* class: 23 (Cricket_Shot)      total: 49       correct: 2      acc: 4.08%
+* class: 24 (Cutting_In_Kitchen)        total: 33       correct: 30     acc: 90.91%
+* class: 25 (Diving)    total: 45       correct: 25     acc: 55.56%
+* class: 26 (Drumming)  total: 45       correct: 36     acc: 80.00%
+* class: 27 (Fencing)   total: 34       correct: 18     acc: 52.94%
+* class: 28 (Field_Hockey_Penalty)      total: 40       correct: 36     acc: 90.00%
+* class: 29 (Floor_Gymnastics)  total: 36       correct: 12     acc: 33.33%
+* class: 30 (Frisbee_Catch)     total: 37       correct: 1      acc: 2.70%
+* class: 31 (Front_Crawl)       total: 37       correct: 23     acc: 62.16%
+* class: 32 (Golf_Swing)        total: 39       correct: 31     acc: 79.49%
+* class: 33 (Haircut)   total: 33       correct: 8      acc: 24.24%
+* class: 34 (Hammering) total: 33       correct: 5      acc: 15.15%
+* class: 35 (Hammer_Throw)      total: 45       correct: 25     acc: 55.56%
+* class: 36 (Handstand_Pushups) total: 28       correct: 25     acc: 89.29%
+* class: 37 (Handstand_Walking) total: 34       correct: 11     acc: 32.35%
+* class: 38 (Head_Massage)      total: 41       correct: 31     acc: 75.61%
+* class: 39 (High_Jump) total: 37       correct: 11     acc: 29.73%
+* class: 40 (Horse_Race)        total: 35       correct: 31     acc: 88.57%
+* class: 41 (Horse_Riding)      total: 49       correct: 48     acc: 97.96%
+* class: 42 (Hula_Hoop) total: 34       correct: 17     acc: 50.00%
+* class: 43 (Ice_Dancing)       total: 46       correct: 46     acc: 100.00%
+* class: 44 (Javelin_Throw)     total: 31       correct: 9      acc: 29.03%
+* class: 45 (Juggling_Balls)    total: 40       correct: 12     acc: 30.00%
+* class: 46 (Jumping_Jack)      total: 37       correct: 3      acc: 8.11%
+* class: 47 (Jump_Rope) total: 38       correct: 1      acc: 2.63%
+* class: 48 (Kayaking)  total: 36       correct: 13     acc: 36.11%
+* class: 49 (Knitting)  total: 34       correct: 23     acc: 67.65%
+* class: 50 (Long_Jump) total: 39       correct: 21     acc: 53.85%
+* class: 51 (Lunges)    total: 37       correct: 1      acc: 2.70%
+* class: 52 (Military_Parade)   total: 33       correct: 31     acc: 93.94%
+* class: 53 (Mixing)    total: 45       correct: 6      acc: 13.33%
+* class: 54 (Mopping_Floor)     total: 34       correct: 30     acc: 88.24%
+* class: 55 (Nunchucks) total: 35       correct: 0      acc: 0.00%
+* class: 56 (Parallel_Bars)     total: 37       correct: 0      acc: 0.00%
+* class: 57 (Pizza_Tossing)     total: 33       correct: 13     acc: 39.39%
+* class: 58 (Playing_Cello)     total: 44       correct: 32     acc: 72.73%
+* class: 59 (Playing_Daf)       total: 41       correct: 0      acc: 0.00%
+* class: 60 (Playing_Dhol)      total: 49       correct: 43     acc: 87.76%
+* class: 61 (Playing_Flute)     total: 48       correct: 39     acc: 81.25%
+* class: 62 (Playing_Guitar)    total: 43       correct: 43     acc: 100.00%
+* class: 63 (Playing_Piano)     total: 28       correct: 25     acc: 89.29%
+* class: 64 (Playing_Sitar)     total: 44       correct: 38     acc: 86.36%
+* class: 65 (Playing_Tabla)     total: 31       correct: 21     acc: 67.74%
+* class: 66 (Playing_Violin)    total: 28       correct: 22     acc: 78.57%
+* class: 67 (Pole_Vault)        total: 40       correct: 13     acc: 32.50%
+* class: 68 (Pommel_Horse)      total: 35       correct: 17     acc: 48.57%
+* class: 69 (Pull_Ups)  total: 28       correct: 21     acc: 75.00%
+* class: 70 (Punch)     total: 39       correct: 33     acc: 84.62%
+* class: 71 (Push_Ups)  total: 30       correct: 6      acc: 20.00%
+* class: 72 (Rafting)   total: 28       correct: 23     acc: 82.14%
+* class: 73 (Rock_Climbing_Indoor)      total: 41       correct: 33     acc: 80.49%
+* class: 74 (Rope_Climbing)     total: 34       correct: 5      acc: 14.71%
+* class: 75 (Rowing)    total: 36       correct: 31     acc: 86.11%
+* class: 76 (Salsa_Spin)        total: 43       correct: 27     acc: 62.79%
+* class: 77 (Shaving_Beard)     total: 43       correct: 32     acc: 74.42%
+* class: 78 (Shotput)   total: 46       correct: 4      acc: 8.70%
+* class: 79 (Skate_Boarding)    total: 32       correct: 25     acc: 78.12%
+* class: 80 (Skiing)    total: 40       correct: 26     acc: 65.00%
+* class: 81 (Skijet)    total: 28       correct: 2      acc: 7.14%
+* class: 82 (Sky_Diving)        total: 31       correct: 27     acc: 87.10%
+* class: 83 (Soccer_Juggling)   total: 39       correct: 23     acc: 58.97%
+* class: 84 (Soccer_Penalty)    total: 41       correct: 41     acc: 100.00%
+* class: 85 (Still_Rings)       total: 32       correct: 0      acc: 0.00%
+* class: 86 (Sumo_Wrestling)    total: 34       correct: 32     acc: 94.12%
+* class: 87 (Surfing)   total: 33       correct: 31     acc: 93.94%
+* class: 88 (Swing)     total: 42       correct: 16     acc: 38.10%
+* class: 89 (Table_Tennis_Shot) total: 39       correct: 39     acc: 100.00%
+* class: 90 (Tai_Chi)   total: 28       correct: 25     acc: 89.29%
+* class: 91 (Tennis_Swing)      total: 49       correct: 33     acc: 67.35%
+* class: 92 (Throw_Discus)      total: 38       correct: 4      acc: 10.53%
+* class: 93 (Trampoline_Jumping)        total: 32       correct: 23     acc: 71.88%
+* class: 94 (Typing)    total: 43       correct: 43     acc: 100.00%
+* class: 95 (Uneven_Bars)       total: 28       correct: 15     acc: 53.57%
+* class: 96 (Volleyball_Spiking)        total: 35       correct: 15     acc: 42.86%
+* class: 97 (Walking_With_Dog)  total: 36       correct: 24     acc: 66.67%
+* class: 98 (Wall_Pushups)      total: 35       correct: 13     acc: 37.14%
+* class: 99 (Writing_On_Board)  total: 45       correct: 39     acc: 86.67%
+* class: 100 (Yo_Yo)    total: 36       correct: 5      acc: 13.89%
+* average: 58.19%
+worst10 classes: 
+Balance_Beam: 0.00%
+Nunchucks: 0.00%
+Parallel_Bars: 0.00%
+Playing_Daf: 0.00%
+Still_Rings: 0.00%
+Jump_Rope: 2.63%
+Frisbee_Catch: 2.70%
+Lunges: 2.70%
+Cricket_Shot: 4.08%
+Skijet: 7.14%
+

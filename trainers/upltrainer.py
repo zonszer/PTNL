@@ -303,6 +303,7 @@ class CustomCLIP(nn.Module):
                     text_features_fixed = text_features_fixed / text_features_fixed.norm(dim=-1, keepdim=True)
                 self.text_regular_feat = text_features_fixed        
                 self.regular_label = torch.arange(0, len(self.classnames)).to(logits.device)
+                # self.regular_dict = {self.regular_label[i]: self.text_regular_feat[i] for i in range(len(self.classnames))}
                 self.regular = logit_scale * self.text_regular_feat @ text_features.t()         #TODO 这里搞一个random sample self.text_regular_feat等价于 batch
 
         return logits, image_features, text_features
@@ -483,8 +484,11 @@ class UPLTrainer(TrainerX):
             self.criterion.model = self.model
             loss = self.criterion(output, label, index)
             if self.cfg.TRAINER.PLL.USE_REGULAR:
-                loss_regular = F.cross_entropy(self.model.regular, self.model.regular_label)
+                loss_regular = F.cross_entropy(self.model.regular, self.model.regular_label, )
                 loss = loss + self.cfg.TRAINER.PLL.BETA*loss_regular
+                # self.regular = self.text_regular_feat @ text_features.t()     
+                # image_features @ self.model.text_regular_feat.t()       #TODO 最好有一种可以衡量logits熵的方法测得到当前预测的confidence  
+                # label.int()
             self.model_backward_and_update(loss)
             if hasattr(self.criterion, 'check_update'):
                 self.criterion.check_update(image, label, index)   
@@ -675,15 +679,14 @@ class UPLTrainer(TrainerX):
 
         self.set_model_mode("eval")
         self.evaluator.reset()
-
         save_path = os.path.join(self.cfg.TEST.Analyze_Result_Path, self.cfg.DATASET.NAME, 'fp'+str(self.cfg.TRAINER.UPLTrainer.NUM_FP),
         str(self.cfg.OPTIM.MAX_EPOCH)+'_'+str(self.cfg.SEED)+'_'+str(self.cfg.DATASET.NUM_SHOTS)+'_random_init'+str(self.cfg.TRAINER.UPLTrainer.CLASS_TOKEN_POSITION))
         if not os.path.exists(save_path):
             os.makedirs(save_path)
 
         results_id = 0
-        while os.path.exists(os.path.join(save_path, 'per_image_results_{}_{}.txt'.format(split, results_id))):     #Toorg: how to save a result file without overwritten (also used in dassl)
-            results_id += 1
+        while os.path.exists(os.path.join(save_path, 'per_image_results_{}_{}.txt'.format(split, results_id))):     #TOorg: how to save a result file without overwritten (also used in dassl)
+            results_id += 1 
         self.per_image_txt_writer = open(os.path.join(save_path, 'per_image_results_{}_{}.txt'.format(split, results_id)), 'w')
         self.per_class_txt_writer = open(os.path.join(save_path, 'per_class_results_{}_{}.txt'.format(split, results_id)), 'w')
 
@@ -727,7 +730,7 @@ class UPLTrainer(TrainerX):
         #0. save loged logits and conf: 
         # if True or log_conf == True:
         #     self.criterion.log_conf(all_logits=torch.cat(outputs_all, dim=0), all_labels=torch.cat(label_all, dim=0))
-        if split == 'test':
+        if False and split == 'test':
             #1. save class_acc_sumlist and evalset_acc_sumlist:        #NOTE before uncomment remember to changed the name, otherwise the original file will be overwritten
             filename = f'analyze_result_temp/class_acc_sumlist/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.cfg.TRAINER.PLL.PARTIAL_RATE}_{self.cfg.TRAINER.LOSS_TYPE}_beta{self.cfg.TRAINER.PLL.BETA}.json'
             with open(filename, "w") as file:
@@ -751,10 +754,8 @@ class UPLTrainer(TrainerX):
         #         torch.save(text_features_all, os.path.join(save_path, '{}_l_features.pt'.format(split)))
         #         torch.save(label_all, os.path.join(save_path, '{}_labels.pt'.format(split)))
 
-
         self.per_image_txt_writer.close()
         self.per_class_txt_writer.close()
-
 
         for k, v in results.items():
             tag = "{}/{}".format(split, k)
@@ -768,6 +769,25 @@ class UPLTrainer(TrainerX):
         self.set_model_mode("eval")
         self.model.eval()
         self.evaluator.reset()
+
+        # outputs_all = []
+        # label_all = []
+        # image_features_all = []
+        # text_features_all = []
+        # for batch_idx, batch in enumerate(self.test_loader):
+        #     input, label = self.parse_batch_test(batch)
+        #     if trainer_list is None or len(trainer_list)==1:
+        #         output, image_features, text_features = self.model_inference(input)
+        #         image_features_all.append(image_features)
+        #         text_features_all.append(text_features)
+        #     else:
+        #         # ensemble
+        #         outputs = [t.model_inference(input)[0] for t in trainer_list]
+        #         output = sum(outputs) / len(outputs)
+        #     self.evaluator.process(output, label)
+        #     outputs_all.append(output)
+        #     label_all.append(label)
+        # results = self.evaluator.evaluate()
 
         data_loader = self.train_loader_sstrain
         # data_loader = self.test_loader
@@ -795,8 +815,8 @@ class UPLTrainer(TrainerX):
         predict_label_dict, _ = select_top_k_similarity_per_class(sstrain_outputs, sstrain_img_paths, -1, image_features, True)     #选择每个类别visual emb和text emb最相似的K个样本，对每个样本取预测的vector，最后加到info dict中（k>=0时）。 对每个样本取预测的vector，然后加到所有训练样本的info dict中（k=-1时）
         if data_loader is self.train_loader_sstrain:
             save_outputs(self.train_loader_x, self, predict_label_dict, self.cfg.DATASET.NAME, text_features, backbone_name=self.cfg.MODEL.BACKBONE.NAME)
-        caculate_noise_rate_analyze(predict_label_dict, train_loader=self.train_loader_x, trainer=self)
         # caculate_noise_rate_analyze(predict_label_dict, train_loader=self.test_loader, trainer=self)
+        caculate_noise_rate_analyze(predict_label_dict, train_loader=self.train_loader_x, trainer=self)
         return predict_label_dict
 
 

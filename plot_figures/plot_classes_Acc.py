@@ -29,13 +29,13 @@ files_all = sorted(glob.glob(path +'/*.json'), key=lambda x: int(re.findall('(\d
 files_all_dict = {i:file.split("/")[-1] for i, file in enumerate(files_all)}
 #+++++++=========== select the file name:
 #1. select the file name:
-file_plot = files_all[49]  #can see files_all_dict #NOTE also need to set here manually, bseline ACC (PLL0)
+file_plot = files_all[45]  #can see files_all_dict #NOTE also need to set here manually, bseline ACC (PLL0)
 for i, item in enumerate(files_all):
     if 'SSUCF101-16-0-1-PLL1e-30_CE_beta0.0.json' in item:
         print('found id data:', i, ' '+item)
-    if 'SSUCF101-16-0-2-PLL0.3_rc_cav_beta0.0.json' in item:
+    if 'SSUCF101-16-0-2-PLL0.3_cc_beta0.0.json' in item:
         print('found id PLL:', i, ' '+item)
-    if 'SSUCF101-16-0-2-PLL0.3_rc_cav_beta0.5.json' in item:
+    if 'SSUCF101-16-0-2-PLL0.3_cc_beta0.3.json' in item:
         print('found id PLL_beta03:', i, ' '+item)
 
 with open(file_plot, "r") as file:      
@@ -43,7 +43,7 @@ with open(file_plot, "r") as file:
 print(f'data={file_plot}', f'len={len(data)}' , data)
 
 if compare_data_PLL == True:
-    file_plot_PLL = files_all[24]                    #NOTE also need to set here manually
+    file_plot_PLL = files_all[268]                    #NOTE also need to set here manually
     with open(file_plot_PLL, "r") as file:
         data_PLL = json.load(file)
     print(f'data_PLL={file_plot_PLL}', f'len={len(data_PLL)}' , data_PLL)

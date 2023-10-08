@@ -24,7 +24,8 @@ def extract_info(file_name):
 
     return data
 
-data_dict = extract_info('log_10-04_14-06-35_ssoxford_pets.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssoxford_pets.txt
+# data_dict = extract_info('log_10-04_14-06-35_ssoxford_pets.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssoxford_pets.txt
+data_dict = extract_info('log_10-06_01-40-02_cifar-100.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssoxford_pets.txt
 new_dict = {}
 for key, value in data_dict.items():
     new_key = key.split(" ")[1]
@@ -35,13 +36,9 @@ for key, value in data_dict.items():
     new_dict[new_key] = value
 data_dict = new_dict
 print(len(data_dict), data_dict)
-#%%
-import os
-import json
-import pandas as pd
-import matplotlib.pyplot as plt
 
 import pandas as pd
+import matplotlib.pyplot as plt
 
 # Step 1: Parse the hyperparameters from the ids and store them in a list of dictionaries
 data = []
@@ -60,7 +57,14 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 #----------------------settings----------------------
 # Select the rows where beta == 1.5 and bs == 32
-select_condiction = "(df['loss']=='rc cav') &  (df['beta']=='0.0')"
+# loss = "(df['loss']!='CE')"
+# loss = "(df['loss']=='cc')"
+loss = "(df['loss']=='rc cav')"
+# beta = "(df['beta']=='0.0')"
+PLL_ratio = "(df['usePLLTrue']=='0.3')"
+select_condiction = PLL_ratio + '&' + loss                  # + &
+
+
 if select_condiction == 'None':
     selected_rows = df
 else:

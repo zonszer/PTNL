@@ -128,4 +128,31 @@ plt.title('Cosine Similarity Matrix between Image and Text Features')
 plt.show()
 
 
+#%%
+#---------------------for calculate beta weight from ucf101_zero-shot_testdata--------------------
+import re
+import numpy as np
+
+# Initialize an empty list to store the accuracy values
+
+# Open the text file and read the data
+path = 'oxfordpets_zero-shot_testdata.txt' #'ucf101_zero-shot_testdata.txt' 'ucf101_bestTrain_testdata.txt'    oxfordpets_zero-shot_testdata.txt
+def get_regular_weight(path):
+    acc_values = []
+    with open(path, 'r') as f:
+        lines = f.readlines()
+
+    # For each line, find the accuracy value and append it to the list
+        for line in lines:
+            match = re.search(r'acc: (\d+\.\d+)%', line)
+            if match:
+                acc_value = float(match.group(1))
+                acc_values.append(acc_value)
+    return np.array(acc_values)
+
+acc_array = get_regular_weight(path)
+print(acc_array)
+# print(acc_values_)
+
 # %%
+aaa = (beta / np.median(acc_array)) * acc_array
