@@ -15,7 +15,7 @@ else:
 
 class PLL_loss(nn.Module):
     def __init__(self, type=None, PartialY=None,
-                 eps=1e-6, cfg=None):
+                 eps=1e-8, cfg=None):
         super(PLL_loss, self).__init__()
         self.eps = eps
         self.losstype = type
@@ -27,6 +27,7 @@ class PLL_loss(nn.Module):
         self.num = 0
         if 'rc' in type or 'rc' in self.cfg.CONF_LOSS_TYPE:
             self.confidence = self.init_confidence(PartialY)
+            self.T = self.cfg.TEMPERATURE
             if type == 'rc+':
                 self.beta = self.cfg.BETA
         if 'gce' in type or 'gce' in self.cfg.CONF_LOSS_TYPE:
@@ -113,15 +114,15 @@ class PLL_loss(nn.Module):
         loss = - final_outputs.sum(dim=1)        #NOTE: add y.sum(dim=1)
         return loss
     
-    def forward_rc(self, x, y, index):
+    def forward_rc_bef(self, x, y, index):
         logsm_outputs = F.log_softmax(x, dim=1)         #x is the model ouputs
-        final_outputs = logsm_outputs * self.confidence[index, :]
+        final_outputs = logsm_outputs * (self.confidence[index, :] + self.eps)
         loss = - final_outputs.sum(dim=1)    #final_outputs=torch.Size([256, 10]) -> Q: why use negative? A:  
         return loss     
 
-    def forward_rc_(self, x, y, index):
-        logsm_outputs = F.softmax(x, dim=1)         #x is the model ouputs
-        final_outputs = logsm_outputs * self.confidence[index, :]
+    def forward_rc(self, x, y, index):
+        logsm_outputs = F.softmax(x / self.T, dim=1)         #x is the model ouputs
+        final_outputs = logsm_outputs * (self.confidence[index, :] + self.eps)
         loss = - torch.log((final_outputs).sum(dim=1))    #final_outputs=torch.Size([256, 10]) -> Q: why use negative? A:  
         return loss 
         
@@ -163,7 +164,7 @@ class PLL_loss(nn.Module):
         with torch.no_grad():
             if conf_type == 'rc':
                 outputs, image_features, text_features = model(images)
-                temp_un_conf = F.softmax(outputs, dim=1)
+                temp_un_conf = F.softmax(outputs / self.T, dim=1)
                 conf_selected = temp_un_conf * batchY # un_confidence stores the weight of each example
                 base_value = conf_selected.sum(dim=1).unsqueeze(1).repeat(1, conf_selected.shape[1])
                 self.confidence[batch_index, :] = conf_selected/base_value  # use maticx for element-wise division

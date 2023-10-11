@@ -1,4 +1,3 @@
-import imp
 from random import sample
 from dassl.engine import TRAINER_REGISTRY, TrainerX
 import os.path as osp
@@ -687,8 +686,8 @@ class UPLTrainer(TrainerX):
         results_id = 0
         while os.path.exists(os.path.join(save_path, 'per_image_results_{}_{}.txt'.format(split, results_id))):     #TOorg: how to save a result file without overwritten (also used in dassl)
             results_id += 1 
-        self.per_image_txt_writer = open(os.path.join(save_path, 'per_image_results_{}_{}.txt'.format(split, results_id)), 'w')
-        self.per_class_txt_writer = open(os.path.join(save_path, 'per_class_results_{}_{}.txt'.format(split, results_id)), 'w')
+        self.per_image_txt_writer = open(os.path.join(save_path, 'per_image_results_{}_{}.txt'.format(split, results_id)), 'w') if split=='test' else None
+        self.per_class_txt_writer = open(os.path.join(save_path, 'per_class_results_{}_{}.txt'.format(split, results_id)), 'w') if split=='test' else None
 
         if split is None:
             split = self.cfg.TEST.SPLIT
@@ -754,8 +753,8 @@ class UPLTrainer(TrainerX):
         #         torch.save(text_features_all, os.path.join(save_path, '{}_l_features.pt'.format(split)))
         #         torch.save(label_all, os.path.join(save_path, '{}_labels.pt'.format(split)))
 
-        self.per_image_txt_writer.close()
-        self.per_class_txt_writer.close()
+        self.per_image_txt_writer.close() if self.per_image_txt_writer != None else None
+        self.per_class_txt_writer.close() if self.per_class_txt_writer != None else None
 
         for k, v in results.items():
             tag = "{}/{}".format(split, k)
@@ -835,23 +834,23 @@ class UPLTrainer(TrainerX):
         else:
             for model in model_names:
                 model_path = os.path.join(file_path, model)
-                logist_path = os.path.join(model_path, '{}_logits.pt'.format(self.cfg.DATASET.NAME))
+                logist_path = os.path.join(model_path, '{}_logits.pt'.format(self.cfg.DATASET.NAME))    #sequential order
                 if logits is None:
                     logits = torch.load(logist_path)
                 else:
                     logits += torch.load(logist_path)
 
-                info_path = os.path.join(model_path, '{}.json'.format(self.cfg.DATASET.NAME))
+                info_path = os.path.join(model_path, '{}.json'.format(self.cfg.DATASET.NAME))       #sequential order
                 info = json.load(open(info_path))       
                 items = []
-                for c in info:
-                    for img_path in info[c]:
-                        item = info[c][img_path]
-                        items.append([img_path, int(item[3])]) # 路径 序号
-                sorted(items, key=(lambda x:x[1]))
+                for label in info:
+                    for img_path in info[label]:
+                        item = info[label][img_path]
+                        items.append([img_path, int(item[3])]) # 路径 pred_label    #sequential order
+                _ = sorted(items, key=(lambda x:x[1]))
                 sstrain_img_paths = np.array(items)[:,0]        #shape is (4128,), why not directly use existing loaded dataset?
 
-            logits /= len(model_names)
+            logits /= len(model_names)          #TODO extract Pseudo-labels here 
             predict_label_dict = select_top_k_similarity_per_class_with_noisy_label(img_paths=sstrain_img_paths,
                                                                                     K=self.cfg.DATASET.NUM_SHOTS,
                                                                                     random_seed=self.cfg.SEED, 
@@ -860,7 +859,22 @@ class UPLTrainer(TrainerX):
             if self.cfg.TRAINER.PLL.USE_PLL:
                 predict_label_dict, partialY, labels_true = add_partial_labels(label_dict=predict_label_dict,
                                                         partial_rate=self.cfg.TRAINER.PLL.PARTIAL_RATE)
-            
+
+            if self.cfg.TRAINER.PLL.USE_LABEL_FILTER:
+                partialY_ = []; T = 1                       #TODO change T and do Label Smoothing
+                for i, (ip, label_pl) in enumerate(predict_label_dict.items()):
+                    labels_dict = info[str(labels_true[i].item())]
+                    sequential_idx = labels_dict[ip][0]             #assert ip in labels_dict.keys()
+                    zeroshot_label_pl = F.softmax(logits[sequential_idx].float() / T, dim=-1) * label_pl
+                    base_value = zeroshot_label_pl.sum(dim=0)           #base_value can use for sth
+                    zeroshot_label_pl = zeroshot_label_pl/base_value    
+
+                    #assign attributes:
+                    predict_label_dict[ip] = zeroshot_label_pl
+                for k, v in predict_label_dict.items():
+                    partialY_.append(v.unsqueeze(0))
+                partialY = torch.cat(partialY_, dim=0)
+
         # Attributes:
         self.partialY = partialY
         return predict_label_dict 

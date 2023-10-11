@@ -136,7 +136,7 @@ import numpy as np
 # Initialize an empty list to store the accuracy values
 
 # Open the text file and read the data
-path = 'oxfordpets_zero-shot_testdata.txt' #'ucf101_zero-shot_testdata.txt' 'ucf101_bestTrain_testdata.txt'    oxfordpets_zero-shot_testdata.txt
+path = 'zero-shot_testdata_SSUCF101.txt' #'ucf101_zero-shot_testdata.txt' 'ucf101_bestTrain_testdata.txt'    oxfordpets_zero-shot_testdata.txt
 def get_regular_weight(path):
     acc_values = []
     with open(path, 'r') as f:
@@ -156,3 +156,4 @@ print(acc_array)
 
 # %%
 aaa = (beta / np.median(acc_array)) * acc_array
+

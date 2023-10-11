@@ -45,6 +45,99 @@
               // "gce_rc",
               // "TRAINER.UPLTrainer.CTX_INIT",
               // "a photo of a "
+              "TRAINER.PLL.USE_LABEL_FILTER",
+              "True",
+              "TRAINER.PLL.TEMPERATURE",
+              "2.0",
+            ]
+          },
+          {
+            "name": "upl_train.py-ucf101-debug_worstClasses",
+            "type": "python",
+            "request": "launch",
+            "program": "upl_train.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+              "CUDA_VISIBLE_DEVICES": "1"
+            },
+            "args": [
+              "--root=./data",
+              "--seed=2",
+              "--trainer=UPLTrainer",
+              "--dataset-config-file=configs/datasets/ssucf101.yaml",
+              "--config-file=configs/trainers/UPLTrainer/rn50_ep50.yaml",
+              "--output-dir=./output/ssucf101/UPLTrainer/rn50_ep50_16shots-test_beta_and_rc_rc-10.10/SEED2/data-ssucf101_model-rn50_ep50_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_seed-2_beta-0.0_FILTER-True_T-1.0",
+              "--num-fp=0",
+              "--loss_type=cc",
+              "TRAINER.UPLTrainer.N_CTX",
+              "16",
+              "TRAINER.UPLTrainer.CSC",
+              "False",
+              "TRAINER.UPLTrainer.CLASS_TOKEN_POSITION",
+              "end",
+              "DATASET.NUM_SHOTS",
+              "16",
+              "DATASET.CLASS_EQULE",
+              "True",
+              "TRAINER.PLL.USE_PLL",
+              "True",
+              "TRAINER.PLL.PARTIAL_RATE",
+              "0.1",
+              "TRAINER.PLL.BETA",
+              "0.0",
+              "TEST.FINAL_MODEL",
+              "best_val",
+              "TRAINER.PLL.USE_LABEL_FILTER",
+              "True",
+              "TRAINER.PLL.TEMPERATURE",
+              "1.0",
+            ]
+          }
+
+          {
+            "name": "upl_train.py-ssucf101-rn50-useregular",
+            "type": "python",
+            "request": "launch",
+            "program": "upl_train.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+              "CUDA_VISIBLE_DEVICES": "1"
+            },
+            "args": [
+              "--root=./data",
+              "--seed=1",
+              "--trainer=UPLTrainer",
+              "--dataset-config-file=configs/datasets/ssucf101.yaml",
+              "--config-file=configs/trainers/UPLTrainer/rn50_ep50.yaml",
+              "--output-dir=./output/ssucf101/UPLTrainer/rn50_ep50_16shots_EQULE_True_09-16_00-21-37/debug_regular/seed1",
+              "--num-fp=0",
+              // "--loss_type=cc",
+              "TRAINER.UPLTrainer.N_CTX",
+              "16",
+              "TRAINER.UPLTrainer.CSC",
+              "False",
+              "TRAINER.UPLTrainer.CLASS_TOKEN_POSITION",
+              "end",
+              "DATASET.NUM_SHOTS",
+              "16",
+              "DATASET.CLASS_EQULE",
+              "True",
+              "TRAINER.PLL.USE_PLL",
+              "True",
+              "TRAINER.PLL.PARTIAL_RATE",
+              "0.3",
+              "TEST.FINAL_MODEL",
+              "best_val",
+              "TRAINER.PLL.BETA",           //1
+              "0.2",
+              // "TRAINER.PLL.CONF_LOSS_TYPE",
+              // "gce_rc",
+              // "TRAINER.UPLTrainer.CTX_INIT",
+              // "a photo of a "
+              "TRAINER.PLL.USE_REGULAR",    //2
+              "True",
             ]
           },
           //===================== for Elevator datamanager:
@@ -84,7 +177,7 @@
               "TEST.FINAL_MODEL",
               "best_val",
               "TRAINER.PLL.BETA",           //1
-              "0.1",
+              "0.2",
               // "TRAINER.PLL.CONF_LOSS_TYPE",
               // "gce_rc",
               // "TRAINER.UPLTrainer.CTX_INIT",
@@ -329,6 +422,34 @@
             "--dataset-config-file=configs/datasets/ssucf101.yaml",   //
             "--config-file=configs/trainers/UPLTrainer/anay_rn50.yaml",
             "--output-dir=./output/ssucf101/UPLTrainer/anay_rn50_16shots_random_init/nctx16_cscFalse_ctpend-1/seed1",
+            "--tag=-1",
+            "TRAINER.UPLTrainer.N_CTX",
+            "16",
+            "TRAINER.UPLTrainer.CSC",
+            "False",
+            "TRAINER.UPLTrainer.CLASS_TOKEN_POSITION",
+            "end",
+            "DATASET.NUM_SHOTS",
+            "16"
+        ]
+        },
+        {
+        "name": "get_info.py-rn101-CIFAR100",
+        "type": "python",
+        "request": "launch",
+        "program": "get_info.py",
+        "console": "integratedTerminal",
+        "justMyCode": false,
+        "env": {
+            "CUDA_VISIBLE_DEVICES": "0"
+        },
+        "args": [
+            "--root=./data/Elevater_datasets",
+            "--seed=1",
+            "--trainer=UPLTrainer",
+            "--dataset-config-file=configs/datasets/cifar-100.yaml",
+            "--config-file=configs/trainers/UPLTrainer/anay_rn101.yaml",
+            "--output-dir=./output/CIFAR100/UPLTrainer/anay_rn50_16shots_random_init/nctx16_cscFalse_ctpend-1/seed1",
             "--tag=-1",
             "TRAINER.UPLTrainer.N_CTX",
             "16",

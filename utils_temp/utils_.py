@@ -11,6 +11,7 @@ import csv
 import torch
 from typing import List
 import os
+import re
 
 def restore_pic(x):
     """
@@ -26,6 +27,31 @@ def restore_pic(x):
     x = x.astype(jnp.uint8)
     x = jnp.transpose(x, (0, 2, 3, 1))
     return x
+
+def get_regular_weight(dataset:str, beta_median:float) -> np.ndarray:
+    """
+    Read a file and extract accuracy values.
+    Args:
+        path (str): The path to the file.
+    Returns:
+        np.ndarray: An array of accuracy values.
+    """
+    path = 'zero-shot_testdata_' + dataset + '.txt'
+    acc_values = []
+    with open(path, 'r') as f:
+        lines = f.readlines()
+
+    # For each line, find the accuracy value and append it to the list
+    for line in lines:
+        match = re.search(r'acc: (\d+\.\d+)%', line)
+        if match:
+            acc_value = float(match.group(1))
+            acc_values.append(acc_value)
+    acc_array = np.array(acc_values, dtype=np.float16)
+    acc_array_ = -(beta_median / np.median(acc_array)) * acc_array 
+    acc_array_ = acc_array_ + (-acc_array_.min()-acc_array_.max())
+    return acc_array_
+
 
 
 def slice_idxlist(start, end, array_length, need_slice_remain=True):

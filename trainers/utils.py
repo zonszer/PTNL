@@ -411,7 +411,7 @@ def caculate_noise_rate_analyze(predict_label_dict, train_loader, trainer, sampl
 def save_outputs(train_loader, trainer, predict_label_dict, dataset_name, text_features, backbone_name=None, tag='', seed =''):
     backbone_name = backbone_name.replace('/', '-')
     gt_pred_label_dict = {}
-    for batch_idx, batch in enumerate(train_loader):
+    for batch_idx, batch in enumerate(train_loader):    #sequential order
         input, label, impath = trainer.parse_batch_test_with_impath(batch)  
         for l, ip in zip(label, impath):
             l = l.item()
@@ -429,7 +429,7 @@ def save_outputs(train_loader, trainer, predict_label_dict, dataset_name, text_f
                 pred_v_feature = predict_label_dict[ip][1]
                 conf = predict_label_dict[ip][2]
                 logits = predict_label_dict[ip][3]
-                gt_pred_label_dict[l].append([ip, pred_label, pred_v_feature, conf, logits])
+                gt_pred_label_dict[l].append([ip, pred_label, pred_v_feature, conf, logits])    #gt_pred_label_dict is sequential order
 
     idx = 0
     v_distance_dict = {}
@@ -450,9 +450,9 @@ def save_outputs(train_loader, trainer, predict_label_dict, dataset_name, text_f
             v_features.append(pred_v_feature)
             logits_list.append(logits)
             v_dis = torch.dist(avg_feature, pred_v_feature, p=2)
-            v_distance_dict_per_class[impath] = [idx, v_dis.item(), conf.item(), pred_label] # id, visual distance, confidence, predicted label
+            v_distance_dict_per_class[impath] = [idx, v_dis.item(), conf.item(), pred_label] # idx, visual distance, confidence, predicted label
             idx += 1
-        v_distance_dict[label] = v_distance_dict_per_class
+        v_distance_dict[label] = v_distance_dict_per_class      #v_distance_dict is sequential order
 
     v_features = torch.vstack(v_features)   #shape=torch.Size([4128, 1024])
     logits_tensor = torch.vstack(logits_list)       #torch.Size([4128, 100])

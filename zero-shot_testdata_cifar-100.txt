@@ -1,0 +1,100 @@
+* class: 0 (chimpanzee) total: 100      correct: 65     acc: 65.00%
+* class: 1 (trout)      total: 100      correct: 21     acc: 21.00%
+* class: 2 (skunk)      total: 100      correct: 31     acc: 31.00%
+* class: 3 (spider)     total: 100      correct: 42     acc: 42.00%
+* class: 4 (chair)      total: 100      correct: 89     acc: 89.00%
+* class: 5 (tank)       total: 100      correct: 38     acc: 38.00%
+* class: 6 (keyboard)   total: 100      correct: 88     acc: 88.00%
+* class: 7 (man)        total: 100      correct: 40     acc: 40.00%
+* class: 8 (whale)      total: 100      correct: 44     acc: 44.00%
+* class: 9 (lobster)    total: 100      correct: 10     acc: 10.00%
+* class: 10 (house)     total: 100      correct: 81     acc: 81.00%
+* class: 11 (beetle)    total: 100      correct: 43     acc: 43.00%
+* class: 12 (bear)      total: 100      correct: 33     acc: 33.00%
+* class: 13 (shrew)     total: 100      correct: 25     acc: 25.00%
+* class: 14 (bottle)    total: 100      correct: 86     acc: 86.00%
+* class: 15 (cup)       total: 100      correct: 35     acc: 35.00%
+* class: 16 (bus)       total: 100      correct: 53     acc: 53.00%
+* class: 17 (orange)    total: 100      correct: 84     acc: 84.00%
+* class: 18 (sea)       total: 100      correct: 69     acc: 69.00%
+* class: 19 (oak tree)  total: 100      correct: 60     acc: 60.00%
+* class: 20 (bed)       total: 100      correct: 48     acc: 48.00%
+* class: 21 (tulip)     total: 100      correct: 51     acc: 51.00%
+* class: 22 (rabbit)    total: 100      correct: 62     acc: 62.00%
+* class: 23 (skyscraper)        total: 100      correct: 75     acc: 75.00%
+* class: 24 (apple)     total: 100      correct: 84     acc: 84.00%
+* class: 25 (maple tree)        total: 100      correct: 29     acc: 29.00%
+* class: 26 (pine tree) total: 100      correct: 41     acc: 41.00%
+* class: 27 (snail)     total: 100      correct: 46     acc: 46.00%
+* class: 28 (pear)      total: 100      correct: 64     acc: 64.00%
+* class: 29 (bridge)    total: 100      correct: 40     acc: 40.00%
+* class: 30 (train)     total: 100      correct: 62     acc: 62.00%
+* class: 31 (mountain)  total: 100      correct: 85     acc: 85.00%
+* class: 32 (caterpillar)       total: 100      correct: 16     acc: 16.00%
+* class: 33 (crocodile) total: 100      correct: 19     acc: 19.00%
+* class: 34 (snake)     total: 100      correct: 38     acc: 38.00%
+* class: 35 (kangaroo)  total: 100      correct: 31     acc: 31.00%
+* class: 36 (dolphin)   total: 100      correct: 38     acc: 38.00%
+* class: 37 (cattle)    total: 100      correct: 77     acc: 77.00%
+* class: 38 (raccoon)   total: 100      correct: 34     acc: 34.00%
+* class: 39 (mushroom)  total: 100      correct: 46     acc: 46.00%
+* class: 40 (hamster)   total: 100      correct: 61     acc: 61.00%
+* class: 41 (bowl)      total: 100      correct: 36     acc: 36.00%
+* class: 42 (lamp)      total: 100      correct: 63     acc: 63.00%
+* class: 43 (rocket)    total: 100      correct: 73     acc: 73.00%
+* class: 44 (pickup truck)      total: 100      correct: 88     acc: 88.00%
+* class: 45 (wolf)      total: 100      correct: 29     acc: 29.00%
+* class: 46 (worm)      total: 100      correct: 46     acc: 46.00%
+* class: 47 (otter)     total: 100      correct: 4      acc: 4.00%
+* class: 48 (sunflower) total: 100      correct: 95     acc: 95.00%
+* class: 49 (leopard)   total: 100      correct: 10     acc: 10.00%
+* class: 50 (ray)       total: 100      correct: 9      acc: 9.00%
+* class: 51 (lawn mower)        total: 100      correct: 87     acc: 87.00%
+* class: 52 (motorcycle)        total: 100      correct: 86     acc: 86.00%
+* class: 53 (boy)       total: 100      correct: 48     acc: 48.00%
+* class: 54 (fox)       total: 100      correct: 66     acc: 66.00%
+* class: 55 (palm tree) total: 100      correct: 85     acc: 85.00%
+* class: 56 (cloud)     total: 100      correct: 23     acc: 23.00%
+* class: 57 (dinosaur)  total: 100      correct: 40     acc: 40.00%
+* class: 58 (turtle)    total: 100      correct: 9      acc: 9.00%
+* class: 59 (forest)    total: 100      correct: 47     acc: 47.00%
+* class: 60 (couch)     total: 100      correct: 45     acc: 45.00%
+* class: 61 (poppy)     total: 100      correct: 51     acc: 51.00%
+* class: 62 (rose)      total: 100      correct: 44     acc: 44.00%
+* class: 63 (bee)       total: 100      correct: 38     acc: 38.00%
+* class: 64 (girl)      total: 100      correct: 47     acc: 47.00%
+* class: 65 (clock)     total: 100      correct: 78     acc: 78.00%
+* class: 66 (can)       total: 100      correct: 49     acc: 49.00%
+* class: 67 (table)     total: 100      correct: 42     acc: 42.00%
+* class: 68 (road)      total: 100      correct: 95     acc: 95.00%
+* class: 69 (orchid)    total: 100      correct: 68     acc: 68.00%
+* class: 70 (streetcar) total: 100      correct: 62     acc: 62.00%
+* class: 71 (squirrel)  total: 100      correct: 19     acc: 19.00%
+* class: 72 (crab)      total: 100      correct: 45     acc: 45.00%
+* class: 73 (butterfly) total: 100      correct: 45     acc: 45.00%
+* class: 74 (tractor)   total: 100      correct: 60     acc: 60.00%
+* class: 75 (beaver)    total: 100      correct: 6      acc: 6.00%
+* class: 76 (willow tree)       total: 100      correct: 45     acc: 45.00%
+* class: 77 (camel)     total: 100      correct: 49     acc: 49.00%
+* class: 78 (plain)     total: 100      correct: 29     acc: 29.00%
+* class: 79 (mouse)     total: 100      correct: 27     acc: 27.00%
+* class: 80 (elephant)  total: 100      correct: 56     acc: 56.00%
+* class: 81 (flatfish)  total: 100      correct: 31     acc: 31.00%
+* class: 82 (sweet pepper)      total: 100      correct: 63     acc: 63.00%
+* class: 83 (plate)     total: 100      correct: 39     acc: 39.00%
+* class: 84 (television)        total: 100      correct: 68     acc: 68.00%
+* class: 85 (aquarium fish)     total: 100      correct: 29     acc: 29.00%
+* class: 86 (wardrobe)  total: 100      correct: 65     acc: 65.00%
+* class: 87 (seal)      total: 100      correct: 33     acc: 33.00%
+* class: 88 (lizard)    total: 100      correct: 47     acc: 47.00%
+* class: 89 (cockroach) total: 100      correct: 28     acc: 28.00%
+* class: 90 (porcupine) total: 100      correct: 3      acc: 3.00%
+* class: 91 (woman)     total: 100      correct: 71     acc: 71.00%
+* class: 92 (possum)    total: 100      correct: 19     acc: 19.00%
+* class: 93 (baby)      total: 100      correct: 65     acc: 65.00%
+* class: 94 (tiger)     total: 100      correct: 29     acc: 29.00%
+* class: 95 (telephone) total: 100      correct: 46     acc: 46.00%
+* class: 96 (shark)     total: 100      correct: 51     acc: 51.00%
+* class: 97 (lion)      total: 100      correct: 47     acc: 47.00%
+* class: 98 (castle)    total: 100      correct: 62     acc: 62.00%
+* class: 99 (bicycle)   total: 100      correct: 74     acc: 74.00%
