@@ -15,7 +15,7 @@ else:
 
 class PLL_loss(nn.Module):
     def __init__(self, type=None, PartialY=None,
-                 eps=1e-8, cfg=None):
+                 eps=1e-7, cfg=None):
         super(PLL_loss, self).__init__()
         self.eps = eps
         self.losstype = type
@@ -25,6 +25,7 @@ class PLL_loss(nn.Module):
         self.model = None
         #PLL items: 
         self.num = 0
+        self.loss_min = self.cfg.LOSS_MIN
         if 'rc' in type or 'rc' in self.cfg.CONF_LOSS_TYPE:
             self.confidence = self.init_confidence(PartialY)
             self.T = self.cfg.TEMPERATURE
@@ -56,6 +57,8 @@ class PLL_loss(nn.Module):
             loss = self.forward_rc_plus(*args)
         else:
             raise ValueError
+        
+        loss = torch.clamp(loss - self.loss_min, min=0.0) 
         return loss.mean()
 
     def check_update(self, images, y, index):
@@ -122,8 +125,8 @@ class PLL_loss(nn.Module):
 
     def forward_rc(self, x, y, index):
         logsm_outputs = F.softmax(x / self.T, dim=1)         #x is the model ouputs
-        final_outputs = logsm_outputs * (self.confidence[index, :] + self.eps)
-        loss = - torch.log((final_outputs).sum(dim=1))    #final_outputs=torch.Size([256, 10]) -> Q: why use negative? A:  
+        final_outputs = logsm_outputs * (self.confidence[index, :])
+        loss = - torch.log((final_outputs + self.eps).sum(dim=1))    #final_outputs=torch.Size([256, 10]) -> Q: why use negative? A:  
         return loss 
         
     def update_partial_labels(self, y, conf_matrix, index):

@@ -37,7 +37,7 @@ def formatting_data(data_dict):
     return new_dict
 
 # data_dict = extract_info('log_10-04_14-06-35_ssoxford_pets.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssoxford_pets.txt
-data_dict_new = extract_info('log_test_rc_rc_T-10.11_ssoxford_pets.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
+data_dict_new = extract_info('log_test_cc_cav_TandBeta-10.11_ssoxford_pets.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
 data_dict_old = extract_info('log_10-04_17-35-17_ssucf101-contain-no-beta.txt')
 data_dict_new = formatting_data(data_dict_new)
 data_dict_old = formatting_data(data_dict_old)
@@ -86,9 +86,9 @@ loss = "(df['loss']!='CE')"
 # loss = "(df['loss']=='cc')"
 # loss = "(df['loss']=='rc cav')"
 # beta = "(df['beta']=='0.0')"
-# PLL_ratio = "(df['usePLLTrue']=='0.3')"
+PLL_ratio = "(df['usePLLTrue']=='0.3')"
 # seed = "(~((df['seed']=='3') & (df['loss']=='rc cav') & (df['usePLLTrue']=='0.3')))"
-select_condiction =   loss + '&' + change   #PLL_ratio  + '&' +
+select_condiction =   loss + '&' + change  + '&' + PLL_ratio  
 
 if select_condiction == 'None':
     selected_rows = df
@@ -97,7 +97,7 @@ else:
 #----------------------settings----------------------
 
 # Group by Variables
-grouped_vars = ["T", "change", "usePLLTrue"]        
+grouped_vars = ["T", "beta", "loss"]        
 compar_var = 'accuracy'
 grouped_data = selected_rows.groupby(grouped_vars)[compar_var].mean().reset_index()
 # Convert the "usePLLTrue" column to float
@@ -111,16 +111,24 @@ grouped_data[color_axis_var] = pd.Categorical(grouped_data[color_axis_var], cate
 if len(grouped_vars) == 1:
     g = sns.catplot(data = grouped_data, x = x_axis_var, y = compar_var, kind = 'bar')
     ax = g.ax  # Extract the Axes object from the FacetGrid for further customization
+    ax.set_xlabel(x_axis_var)  # Set x-axis label
+    ax.set_ylabel(compar_var)  # Set y-axis label
+    ax.legend(title=color_axis_var, prop={'size': 6})  # Add legend
 elif len(grouped_vars) == 2:
     g = sns.catplot(data = grouped_data, x = x_axis_var, y = compar_var, hue=color_axis_var, kind = 'bar')
     ax = g.ax
+    ax.set_xlabel(x_axis_var)  # Set x-axis label
+    ax.set_ylabel(compar_var)  # Set y-axis label
+    ax.legend(title=color_axis_var, prop={'size': 6})  # Add legend
 else:
     g = sns.FacetGrid(grouped_data, col=sub_fig_var, col_wrap=3, height=4, aspect=1)
     g.map_dataframe(lambda data, color: sns.barplot(x=x_axis_var, y=compar_var, hue=color_axis_var, data=data, palette='viridis'))
     ax = None  # Set to None as there are multiple axes in FacetGrid
-    # Add a legend to each subplot
+    # Add a legend and axis labels to each subplot
     for axes in g.axes.flat:
-        axes.legend(loc='lower right')
+        axes.legend(loc='upper left', title=color_axis_var, prop={'size': 6})
+        axes.set_xlabel(x_axis_var)  # Set x-axis label
+        axes.set_ylabel(compar_var)  # Set y-axis label
 
 # Despine and add a grid
 sns.despine(left=True)
@@ -137,7 +145,7 @@ if ax:
     # Customize the y ticks
     ax.yaxis.set_major_locator(ticker.MaxNLocator(10))  # Set the number of major ticks
     ax.yaxis.set_minor_locator(ticker.MaxNLocator(50))  # Set the number of minor ticks
-    ax.legend(loc='lower right')
+    ax.legend(loc='lower left')
 
 else:
     for axes in g.axes.flat:
