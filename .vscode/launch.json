@@ -93,7 +93,7 @@
               "TRAINER.PLL.TEMPERATURE",
               "1.0",
             ]
-          }
+          },
 
           {
             "name": "upl_train.py-ssucf101-rn50-useregular",

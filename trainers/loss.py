@@ -14,20 +14,23 @@ else:
 
 
 class PLL_loss(nn.Module):
+    softmax = nn.Softmax(dim=1)
+    # opt params (assigned during code running)
+    model: nn.Module
+    cls_pools_dict: dict = {}
+
     def __init__(self, type=None, PartialY=None,
                  eps=1e-7, cfg=None):
         super(PLL_loss, self).__init__()
         self.eps = eps
         self.losstype = type
         self.device = device
-        self.softmax = nn.Softmax(dim=1)
         self.cfg = cfg
-        self.model = None
-        #PLL items: 
         self.num = 0
+        #PLL items: 
         self.loss_min = self.cfg.LOSS_MIN
         if 'rc' in type or 'rc' in self.cfg.CONF_LOSS_TYPE:
-            self.confidence = self.init_confidence(PartialY)
+            self.conf = self.init_confidence(PartialY)
             self.T = self.cfg.TEMPERATURE
             if type == 'rc+':
                 self.beta = self.cfg.BETA
@@ -53,12 +56,14 @@ class PLL_loss(nn.Module):
             loss = self.forward_gce(*args)
         elif self.losstype in ['rc_rc', 'rc_cav']:      #can add gce_rc
             loss = self.forward_rc(*args)
+        elif self.losstype in ['cc_rc', 'cc_refine']:      
+            loss = self.forward_cc_plus(*args)
         elif self.losstype == 'rc+':
             loss = self.forward_rc_plus(*args)
         else:
             raise ValueError
         
-        loss = torch.clamp(loss - self.loss_min, min=0.0) 
+        loss = torch.clamp(loss - self.loss_min, min=0.0)       #TODO: remove here 
         return loss.mean()
 
     def check_update(self, images, y, index):
@@ -67,10 +72,11 @@ class PLL_loss(nn.Module):
                 conf_type = self.cfg.CONF_LOSS_TYPE.split('_')[-1]
             else:
                 conf_type = self.losstype.split('_')[-1]
-            assert conf_type in ['rc', 'cav']
-            self.update_confidence(self.model, self.confidence, images, y, index, conf_type)
+            assert conf_type in ['rc', 'cav', 'refine'], 'conf_type not supported'
+            self.update_confidence(self.model, self.conf, images, y, index, conf_type)
         else:
             return
+    
 
     def forward_gce(self, x, y, index=None):
         """y is shape of (batch_size, num_classes (0 ~ 1.)), one-hot vector"""
@@ -100,7 +106,7 @@ class PLL_loss(nn.Module):
         # Adjust masked positions to avoid undefined gradients by adding epsilon
         masked_p[y.bool()] = (1 - masked_p[y.bool()] ** self.q) / self.q        
         masked_p[~y.bool()] = self.eps 
-        loss = (masked_p * self.confidence[index, :]).sum(dim=1)    #NOTE add multiple conf here   
+        loss = (masked_p * self.conf[index, :]).sum(dim=1)    #NOTE add multiple conf here   
         if not torch.isfinite(loss).all():
             raise FloatingPointError("Loss is infinite or NaN!")
         return loss
@@ -117,22 +123,18 @@ class PLL_loss(nn.Module):
         loss = - final_outputs.sum(dim=1)        #NOTE: add y.sum(dim=1)
         return loss
     
-    def forward_rc_bef(self, x, y, index):
+    def forward_rc(self, x, y, index):
         logsm_outputs = F.log_softmax(x, dim=1)         #x is the model ouputs
-        final_outputs = logsm_outputs * (self.confidence[index, :] + self.eps)
+        final_outputs = logsm_outputs * (self.conf[index, :] + self.eps)
         loss = - final_outputs.sum(dim=1)    #final_outputs=torch.Size([256, 10]) -> Q: why use negative? A:  
         return loss     
 
-    def forward_rc(self, x, y, index):
+    def forward_cc_plus(self, x, y, index):
         logsm_outputs = F.softmax(x / self.T, dim=1)         #x is the model ouputs
-        final_outputs = logsm_outputs * (self.confidence[index, :])
+        final_outputs = logsm_outputs * (self.conf[index, :])
         loss = - torch.log((final_outputs + self.eps).sum(dim=1))    #final_outputs=torch.Size([256, 10]) -> Q: why use negative? A:  
         return loss 
         
-    def update_partial_labels(self, y, conf_matrix, index):
-        # conf_matrix[index, :].max(dim=1)
-        # conf_matrix.shape[1]
-        return y * conf_matrix[index, :]
 
     def forward_rc_plus(self, x, y, index):
         logsm_outputs = F.softmax(x, dim=1)         #x is the model ouputs
@@ -162,31 +164,48 @@ class PLL_loss(nn.Module):
             raise ValueError('conf_loss type not supported')
         return conf_loss  
 
+    @torch.no_grad()
+    def update_confidence(self, model, confidence, images, labels, batch_idxs, conf_type):
+        outputs, image_features, text_features = model(images)
+        if conf_type == 'rc':
+            temp_un_conf = F.softmax(outputs / self.T, dim=1)
+            conf_selected = temp_un_conf * labels # un_confidence stores the weight of each example
+            base_value = conf_selected.sum(dim=1).unsqueeze(1).repeat(1, conf_selected.shape[1])
+            self.conf[batch_idxs, :] = conf_selected/base_value  # use maticx for element-wise division
+        elif conf_type == 'cav':
+            cav = (outputs * torch.abs(1 - outputs)) * labels
+            cav_pred = torch.max(cav, dim=1)[1]
+            gt_label = F.one_hot(cav_pred, labels.shape[1]) # label_smoothing() could be used to further improve the performance for some datasets
+            self.conf[batch_idxs, :] = gt_label.float()
+        elif conf_type == 'refine':
+            cav = (outputs * torch.abs(1 - outputs)) * labels
+            cav_pred = torch.max(cav, dim=1)[1]
+            unc = self.cal_uncertainty(outputs, cav_pred)
+            unc_idxs = torch.argsort(unc, descending=False)     #sort from small to large
+            # gt_label = F.one_hot(cav_pred, batchY.shape[1]) 
+            cav_pred_, batch_idxs_, unc_, labels_ = (cav_pred[unc_idxs], batch_idxs[unc_idxs], 
+                                                     unc[unc_idxs], labels[unc_idxs])
+            in_pool = torch.empty(0, dtype=torch.bool)
+            for i, cls_idx in enumerate(cav_pred_):
+                pool = self.cls_pools_dict[cls_idx.item()]
+                in_pool_ = pool.update({batch_idxs_[i]: unc_[i]})
+                in_pool = torch.cat((in_pool, in_pool_))
+            self.conf[batch_idxs_[in_pool], :] = F.one_hot(cav_pred_[in_pool], labels.shape[1]).float()
+            self.conf[batch_idxs_[~in_pool], :] = labels_[~in_pool]     #TODO can ehance here, if not in pool how to change the conf
 
-    def update_confidence(self, model, confidence, images, batchY, batch_index, conf_type):
-        with torch.no_grad():
-            if conf_type == 'rc':
-                outputs, image_features, text_features = model(images)
-                temp_un_conf = F.softmax(outputs / self.T, dim=1)
-                conf_selected = temp_un_conf * batchY # un_confidence stores the weight of each example
-                base_value = conf_selected.sum(dim=1).unsqueeze(1).repeat(1, conf_selected.shape[1])
-                self.confidence[batch_index, :] = conf_selected/base_value  # use maticx for element-wise division
-            elif conf_type == 'cav':
-                outputs, image_features, text_features = model(images)         
-                cav = (outputs * torch.abs(1 - outputs)) * batchY
-                cav_pred = torch.max(cav, dim=1)[1]
-                gt_label = F.one_hot(cav_pred, batchY.shape[1]) # label_smoothing() could be used to further improve the performance for some datasets
-                self.confidence[batch_index, :] = gt_label.float()
-            else:
-                raise ValueError('conf_type not supported in the update method')
 
+    @torch.no_grad()
+    def cal_uncertainty(self, output, label, index=None):
+        """calculate uncertainty for each sample in batch"""
+        unc = F.cross_entropy(output, label, reduction='none')
+        return unc
 
     def log_conf(self, all_logits=None, all_labels=None):
         log_id = 'PLL' + str(self.cfg.PARTIAL_RATE)
         if self.num % 2 == 0 and self.num != 50:        #50 is the last epoch (test dataset)
             print(f'save logits -> losstype: {self.losstype}, save id: {self.num}')
             if self.losstype == 'rc_rc--':      # need to run 2 times for getting conf
-                torch.save(self.confidence, f'analyze_result_temp/logits&labels/confidence_true-{self.losstype.upper()+self.cfg.CONF_LOSS_TYPE}_{log_id}-{self.num}.pt')
+                torch.save(self.conf, f'analyze_result_temp/logits&labels/confidence_true-{self.losstype.upper()+self.cfg.CONF_LOSS_TYPE}_{log_id}-{self.num}.pt')
             elif all_logits != None:
                 all_logits = F.softmax(all_logits, dim=1)    
                 all_labels = F.one_hot(all_labels)

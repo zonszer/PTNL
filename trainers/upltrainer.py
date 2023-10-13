@@ -35,7 +35,8 @@ from .hhzsclip import ZeroshotCLIP
 from .utils import (select_top_k_similarity_per_class, caculate_noise_rate, save_outputs,
 select_top_k_similarity, select_top_by_value, caculate_noise_rate_analyze, 
 select_top_k_similarity_per_class_with_noisy_label,
-add_partial_labels, generate_uniform_cv_candidate_labels
+add_partial_labels, generate_uniform_cv_candidate_labels,
+select_top_k_certainty_per_class,
 )
 
 from utils_temp.utils_ import dict_add
@@ -529,10 +530,10 @@ class UPLTrainer(TrainerX):
         # HACK this func assert loss_type == 'cc'
         output, image_features, text_features = self.model(image)
         if hasattr(self.criterion, 'confidence'):
-            conf_tmp = deepcopy(self.criterion.confidence)
+            conf_tmp = deepcopy(self.criterion.conf)
         loss = self.criterion(output, label, index)
         if hasattr(self.criterion, 'confidence'):
-            self.criterion.confidence = conf_tmp
+            self.criterion.conf = conf_tmp
 
         if not torch.isfinite(loss).all():
             return ratios
@@ -552,10 +553,10 @@ class UPLTrainer(TrainerX):
         # 2. Repeat the process for non-gt labels and calculate the ratio
         output, i_features, t_features = self.model(image)
         if hasattr(self.criterion, 'confidence'):
-            conf_tmp = deepcopy(self.criterion.confidence)
+            conf_tmp = deepcopy(self.criterion.conf)
         loss = self.criterion(output, other_label, index)
         if hasattr(self.criterion, 'confidence'):
-            self.criterion.confidence = conf_tmp
+            self.criterion.conf = conf_tmp
         
         if not torch.isfinite(loss).all():
             return ratios
@@ -580,6 +581,7 @@ class UPLTrainer(TrainerX):
             ratios[name] = ratio_list
         return ratios
 
+
     def parse_batch_train(self, batch):
         if isinstance(batch, dict):
             input = batch["img"]
@@ -593,6 +595,50 @@ class UPLTrainer(TrainerX):
         input = input.to(self.device)
         label = label.to(self.device)
         return input, label, index
+    
+    def parse_batch_train_with_impath(self, batch):
+        if isinstance(batch, dict):
+            input = batch["img"]
+            label = batch["label"]
+            index = batch["index"]
+            impath = batch["impath"]
+        elif isinstance(batch, list):
+            input = batch[0]
+            label = batch[1]
+            index = [eval(i) for i in batch[2]]
+            impath = None
+
+        input = input.to(self.device)
+        label = label.to(self.device)
+        return input, label, index, impath
+    
+    def parse_batch_test(self, batch):
+        if isinstance(batch, dict):
+            input = batch["img"]
+            label = batch["label"]
+        elif isinstance(batch, list):
+            input = batch[0]
+            label = batch[1]
+
+        input = input.to(self.device)
+        label = label.to(self.device)
+        return input, label
+
+    def parse_batch_test_with_impath(self, batch):
+        impath, idx = None, None
+        if isinstance(batch, dict):
+            input = batch["img"]
+            label = batch["label"]
+            impath = batch["impath"]
+        elif isinstance(batch, list):
+            input = batch[0]
+            label = batch[1]
+            idx = batch[2]
+
+        input = input.to(self.device)
+        label = label.to(self.device)
+        return input, label, impath or idx
+    
 
     def load_model(self, directory, epoch=None):
         if not directory:
@@ -865,12 +911,12 @@ class UPLTrainer(TrainerX):
                 for i, (ip, label_pl) in enumerate(predict_label_dict.items()):
                     labels_dict = info[str(labels_true[i].item())]
                     sequential_idx = labels_dict[ip][0]             #assert ip in labels_dict.keys()
-                    zeroshot_label_pl = F.softmax(logits[sequential_idx].float() / T, dim=-1) * label_pl
-                    base_value = zeroshot_label_pl.sum(dim=0)           #base_value can use for sth
-                    zeroshot_label_pl = zeroshot_label_pl/base_value    
+                    zeroshot_label_plb = F.softmax(logits[sequential_idx].float() / T, dim=-1) * label_pl
+                    base_value = zeroshot_label_plb.sum(dim=0)           #base_value can use for sth
+                    zeroshot_label_plb = zeroshot_label_plb/base_value    
 
                     #assign attributes:
-                    predict_label_dict[ip] = zeroshot_label_pl
+                    predict_label_dict[ip] = zeroshot_label_plb
                 for k, v in predict_label_dict.items():
                     partialY_.append(v.unsqueeze(0))
                 partialY = torch.cat(partialY_, dim=0)
@@ -1125,6 +1171,45 @@ class UPLTrainer(TrainerX):
                     self.output_dir,
                     model_name="model-last-{}.pth.tar".format(model_id)
                 )
+        
+        if 'refine' in self.criterion.losstype:
+            if self.epoch == 0:                 #TODO check epoch
+                self.criterion.cls_pools_dict = self.init_cls_pools(split="train")
+            else:
+                for cls_idx, pool in self.criterion.cls_pools_dict.items():
+                    cls_acc = self.evaluator._class_acc_sumlist[cls_idx]        ##TODO check cls_acc in evaluator
+                    pool.enlarge_pool(max_num=int(self.cfg.DATASET.NUM_SHOTS*cls_acc))
+
+    @torch.no_grad()                            #TODO check if can be used
+    def init_cls_pools(self, split="train"):
+        self.set_model_mode("eval")
+        self.model.eval()
+
+        data_loader = self.train_loader_sstrain
+        # data_loader = self.test_loader
+        outputs = []; image_features_list = []; img_paths = []
+        uncertainty, index_list = [], []
+        from tqdm import tqdm
+        for batch_idx, batch in tqdm(enumerate(data_loader)):
+            image, label, index, impath = self.parse_batch_train_with_impath(batch)
+            output, image_features, text_features = self.model(image)
+            unc = self.criterion.cal_uncertainty(output, label, index)
+
+            uncertainty.append(unc)
+            index_list.append(index)
+            img_paths.append(impath)
+
+        # sstrain_outputs = torch.cat(outputs, dim=0)         #torch.Size([4128, 100])
+        uncertainty = np.concatenate(uncertainty, axis=0)   #(4128,)
+        index_list = np.concatenate(index_list, axis=0)   #(4128,)
+        sstrain_img_paths = np.concatenate(img_paths, axis=0)   #(4128,)
+        # image_features = torch.cat(image_features_list, axis=0) #torch.Size([4128, 1024])
+        # text_features = torch.cat(text_features, axis=0)
+        pools_dict = select_top_k_certainty_per_class(unc=uncertainty, img_paths=sstrain_img_paths, 
+                                                      idxs=index_list, k=max(self.cfg.DATASET.NUM_SHOTS*0.6, 2))     #选择每个类别visual emb和text emb最相似的K个样本，对每个样本取预测的vector，最后加到info dict中（k>=0时）。 对每个样本取预测的vector，然后加到所有训练样本的info dict中（k=-1时）
+
+        return pools_dict
+    
 
     def after_train(self, model_id):
         print("Finished training")
@@ -1139,7 +1224,6 @@ class UPLTrainer(TrainerX):
             # self.test(split='train')
             self.test(split='test')
 
-
         # Show elapsed time
         elapsed = round(time.time() - self.time_start)
         elapsed = str(datetime.timedelta(seconds=elapsed))
@@ -1148,37 +1232,8 @@ class UPLTrainer(TrainerX):
         # Close writer
         self.close_writer()
 
-    def parse_batch_test(self, batch):
-        if isinstance(batch, dict):
-            input = batch["img"]
-            label = batch["label"]
-        elif isinstance(batch, list):
-            input = batch[0]
-            label = batch[1]
-
-        input = input.to(self.device)
-        label = label.to(self.device)
-        return input, label
-
-    def parse_batch_test_with_impath(self, batch):
-        impath, idx = None, None
-        if isinstance(batch, dict):
-            input = batch["img"]
-            label = batch["label"]
-            impath = batch["impath"]
-        elif isinstance(batch, list):
-            input = batch[0]
-            label = batch[1]
-            idx = batch[2]
-
-        input = input.to(self.device)
-        label = label.to(self.device)
-        # impath = impath.to(self.device)
-        return input, label, impath or idx
-
     @torch.no_grad()
     def test_with_existing_logits(self, logits, split='test'):
-
         self.set_model_mode("eval")
         self.evaluator.reset()
 

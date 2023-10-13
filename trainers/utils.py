@@ -10,6 +10,7 @@ import random
 import time
 import pdb
 import math
+from utils_temp.utils_ import ClassLabelPool
 
 def plotLogitsMap(outputs, label, save_path, fig_title, max_lines=1000):
     fig, ax = plt.subplots(figsize=(5, 200))
@@ -139,6 +140,54 @@ def select_top_k_similarity_per_class(outputs, img_paths, K=1, image_features=No
                     predict_label_dict[img_path] = id
                     predict_conf_dict[img_path] = conf
     return predict_label_dict, predict_conf_dict
+
+
+def select_top_k_certainty_per_class(unc, img_paths, idxs, K=1, max_capacity_perclass=None):
+    """
+    Select the top-K samples with the highest certainty per class. 
+    Get label class name from img_paths and transform it to a class_id. 
+    Then collect the indices (idxs) that have the same class_id and select the top-K indices 
+    with the highest certainty. 
+    Then store the top-K indices in a ClassLabelPool instance.
+
+    Args:
+        unc (torch.Tensor)     : Tensor of uncertainty measurements per sample. 
+                                  Expected shape is (num_samples, ).
+        img_paths (list of str): List of image file paths. Class label can be extracted from each path.
+        idxs (list of int)     : List of index values corresponding to each image.  
+        K (int)                : Number of top samples to select per class.
+        max_capacity_per_class (dict): Maximum capacity per class. 
+
+    Returns:
+        dict                    : Dictionary mapping class_ids to corresponding ClassLabelPool instances 
+                                  storing top-K samples.
+    """
+    # Extract class_ids from image paths (assuming class's name is mentioned in each path's directory)
+    class_ids = [os.path.dirname(path).split('/')[-1] for path in img_paths]        #TODO debug here
+    cls_list = set(class_ids)
+    pools_dict = dict()
+    if max_capacity_perclass is None:   
+        max_capacity_perclass = {cls: K for cls in cls_list}
+
+    # Loop through each unique class id
+    for cls in cls_list:
+        # Get the indices where class_ids list equals to current class 
+        indices = np.where(np.array(class_ids) == cls)
+        
+        # Select the unc and idx values for the current class
+        unc_current_class = unc[indices]
+        idxs_current_class = idxs[indices]
+
+        # Select the Top-K indices based on sorted uncertainty values
+        top_k_indices = np.argsort(unc_current_class)[-max_capacity_perclass[cls]:]
+
+        # Append a new ClassLabelPool for each class with the selected items to pools_dict
+        pools_dict[cls] = ClassLabelPool(max_capacity = max_capacity_perclass[cls], 
+                        items_idx = list(idxs_current_class[top_k_indices]), 
+                        items_unc = list(unc_current_class[top_k_indices]))
+
+    return pools_dict 
+
 
 def select_top_k_similarity_per_class_with_noisy_label(img_paths, K=1, random_seed=1, gt_label_dict=None, num_fp=0):
     if gt_label_dict is not None:

@@ -13,6 +13,84 @@ from typing import List
 import os
 import re
 
+class ClassLabelPool:
+    """
+    Store the average and current values for uncertainty of each class samples and the max capacity of the pool.
+    """
+
+    def __init__(self, max_capacity: int, items_idx: list, items_unc: list):
+        """
+        Initialize the ClassLabelPool.
+        Args:
+            max_capacity (int): The maximum capacity of the pool.
+            items_idx (list): A list of item indices.
+            items_unc (list): A list of item uncertainties.
+        """
+        self.pool_max_capacity = max_capacity
+        self.pool_capacity = len(items_idx)
+        self.pool = {idx: unc for idx, unc in zip(items_idx, items_unc)}
+        self._update_pool_attr()
+
+    def _update_pool_attr(self):
+        """
+        Update the pool attributes.
+        """
+        self.pool = {k: v for k, v in sorted(self.pool.items(), key=lambda item: item[1])}
+        self.unc_avg = sum(self.pool.values()) / len(self.pool)
+        self.unc_max = max(self.pool.values())
+    
+    def enlarge_pool(self, max_num: int):
+        """
+        Enlarge the pool capacity. (if the pool capacity is smaller than the max_num given, remain unchanged)
+        Args:
+            enlarge_factor (int): The enlarge factor.
+        """
+        if self.pool_max_capacity < max_num:
+            self.pool_max_capacity = max_num
+        else:
+            return
+
+    def update(self, input_dict):
+        """
+        Update the pool with new values.
+        Args:
+            input_dict (dict): A dictionary {k(feat_idx): v(current_unc)}.
+        Raises:
+            TypeError: If the input is not a dictionary.
+        """
+        if not isinstance(input_dict, dict):
+            raise TypeError("Input to ClassLabelPool.update() must be a dictionary")
+        in_pool = torch.empty(0, dtype=torch.bool)
+
+        for k, v in input_dict.items():
+            if isinstance(v, torch.Tensor):
+                v = v.item()
+
+            if k in self.pool.keys():
+                self.pool[k] = v
+                in_pool = torch.cat((in_pool, torch.tensor([True])))
+            else:
+                if self.pool_capacity < self.pool_max_capacity:
+                    self.pool[k] = v
+                    self.pool_capacity += 1
+                    in_pool = torch.cat((in_pool, torch.tensor([True])))
+                else:
+                    if self.unc_max <= v:
+                        in_pool = torch.cat((in_pool, torch.tensor([False])))
+                        continue
+                    else:
+                        self.pool.popitem()  # remove the last item(unc_max)
+                        self.pool[k] = v
+                        in_pool = torch.cat((in_pool, torch.tensor([True])))
+            self._update_pool_attr()
+
+        return in_pool
+        
+
+    def __str__(self):
+        return f"unc_avg: {self.unc_avg:.4f}, unc_max: {self.unc_max:.4f}, pool_capacity: {self.pool_capacity}/{self.pool_max_capacity}"
+
+
 def restore_pic(x):
     """
     A function to restore image data from a normalized and rearranged format back to its original format.
