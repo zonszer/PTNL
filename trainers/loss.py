@@ -2,6 +2,7 @@ import math
 import torch.nn.functional as F
 import torch
 import torch.nn as nn
+from collections import defaultdict
 
 if torch.cuda.is_available():
     torch.backends.cudnn.benchmark = True
@@ -18,6 +19,8 @@ class PLL_loss(nn.Module):
     # opt params (assigned during code running)
     model: nn.Module
     cls_pools_dict: dict = {}
+    pred_label_dict = defaultdict(list)
+    gt_label_dict: dict = {}
 
     def __init__(self, type=None, PartialY=None,
                  eps=1e-7, cfg=None):
@@ -29,17 +32,22 @@ class PLL_loss(nn.Module):
         self.num = 0
         #PLL items: 
         self.loss_min = self.cfg.LOSS_MIN
-        if 'rc' in type or 'rc' in self.cfg.CONF_LOSS_TYPE:
+        self.T = self.cfg.TEMPERATURE
+        if '_' in type or '_' in self.cfg.CONF_LOSS_TYPE:   #means need to update conf
             self.conf = self.init_confidence(PartialY)
-            self.T = self.cfg.TEMPERATURE
             if type == 'rc+':
                 self.beta = self.cfg.BETA
+
+        if '_refine' in type:
+            self.init_epoch = self.cfg.INIT_EPOCH
+            self.losstype = self.losstype.split('_')[0] + f'-{self.init_epoch}-epoch'
+
         if 'gce' in type or 'gce' in self.cfg.CONF_LOSS_TYPE:
             self.q = 0.7
 
     def init_confidence(self, PartialY):        #TODO: remove this init for convience
         tempY = PartialY.sum(dim=1, keepdim=True).repeat(1, PartialY.shape[1])   #repeat train_givenY.shape[1] times in dim 1
-        confidence = PartialY.float()/tempY
+        confidence = (PartialY/tempY).float()
         confidence = confidence.to(self.device)
         return confidence
     
@@ -48,13 +56,13 @@ class PLL_loss(nn.Module):
         x: outputs logits
         y: targets (multi-label binarized vector)
         """
-        if self.losstype == 'cc':
+        if self.losstype == 'cc' or 'epoch' in self.losstype:
             loss = self.forward_cc(*args)
         elif self.losstype == 'ce':
             loss = self.forward_ce(*args)
         elif self.losstype == 'gce':
             loss = self.forward_gce(*args)
-        elif self.losstype in ['rc_rc', 'rc_cav']:      #can add gce_rc
+        elif self.losstype in ['rc_rc', 'rc_cav', 'rc_refine']:      #can add gce_rc
             loss = self.forward_rc(*args)
         elif self.losstype in ['cc_rc', 'cc_refine']:      
             loss = self.forward_cc_plus(*args)
@@ -62,8 +70,7 @@ class PLL_loss(nn.Module):
             loss = self.forward_rc_plus(*args)
         else:
             raise ValueError
-        
-        loss = torch.clamp(loss - self.loss_min, min=0.0)       #TODO: remove here 
+        # loss = torch.clamp(loss - self.loss_min, min=0.0)       #TODO: remove here 
         return loss.mean()
 
     def check_update(self, images, y, index):
@@ -99,7 +106,7 @@ class PLL_loss(nn.Module):
         # Create a tensor filled with a very small number to represent 'masked' positions
         masked_p = p.new_full(p.size(), float('-inf'))
 
-        # p = p.float()                                               #HACK solution here
+        # p = p.float16()                                               #HACK solution here
         # masked_p = masked_p * self.confidence[index, :]       #NOTE add multiple conf here    
         # Apply the mask
         masked_p[y.bool()] = p[y.bool()] + self.eps      
@@ -181,17 +188,17 @@ class PLL_loss(nn.Module):
             cav = (outputs * torch.abs(1 - outputs)) * labels
             cav_pred = torch.max(cav, dim=1)[1]
             unc = self.cal_uncertainty(outputs, cav_pred)
-            unc_idxs = torch.argsort(unc, descending=False)     #sort from small to large
-            # gt_label = F.one_hot(cav_pred, batchY.shape[1]) 
-            cav_pred_, batch_idxs_, unc_, labels_ = (cav_pred[unc_idxs], batch_idxs[unc_idxs], 
-                                                     unc[unc_idxs], labels[unc_idxs])
             in_pool = torch.empty(0, dtype=torch.bool)
-            for i, cls_idx in enumerate(cav_pred_):
+
+            for i, cls_idx in enumerate(cav_pred):
                 pool = self.cls_pools_dict[cls_idx.item()]
-                in_pool_ = pool.update({batch_idxs_[i]: unc_[i]})
+                in_pool_ = pool.update(feat_idxs=batch_idxs[i].unsqueeze(0), feat_unc=unc[i].cpu().unsqueeze(0))
                 in_pool = torch.cat((in_pool, in_pool_))
-            self.conf[batch_idxs_[in_pool], :] = F.one_hot(cav_pred_[in_pool], labels.shape[1]).float()
-            self.conf[batch_idxs_[~in_pool], :] = labels_[~in_pool]     #TODO can ehance here, if not in pool how to change the conf
+                # if in_pool_.item():
+                #     self.pred_label_dict.update({batch_idxs[i].item(): [cls_idx.cpu().item(), unc[i].cpu().item()]})
+
+            self.conf[batch_idxs[in_pool], :] = F.one_hot(cav_pred[in_pool], labels.shape[1]).float()
+            self.conf[batch_idxs[~in_pool], :] = labels[~in_pool]     #TODO can ehance here, if not in pool how to change the conf
 
 
     @torch.no_grad()
@@ -202,10 +209,19 @@ class PLL_loss(nn.Module):
 
     def log_conf(self, all_logits=None, all_labels=None):
         log_id = 'PLL' + str(self.cfg.PARTIAL_RATE)
-        if self.num % 2 == 0 and self.num != 50:        #50 is the last epoch (test dataset)
+        if self.num % 1 == 0 and self.num != 50:        #50 is the last epoch (test dataset)
             print(f'save logits -> losstype: {self.losstype}, save id: {self.num}')
-            if self.losstype == 'rc_rc--':      # need to run 2 times for getting conf
-                torch.save(self.conf, f'analyze_result_temp/logits&labels/confidence_true-{self.losstype.upper()+self.cfg.CONF_LOSS_TYPE}_{log_id}-{self.num}.pt')
+            if self.losstype == 'cc_refine' or 'epoch' in self.losstype:      # need to run 2 times for getting conf
+                if not hasattr(self, 'save_type'):
+                    self.save_type = f'cc_refine_{self.losstype.split("-")[1]}epoch'
+
+                torch.save(self.conf, f'analyze_result_temp/logits&labels_10.14/conf-{self.save_type}_{log_id}-{self.num}.pt')
+                torch.save(self.pred_label_dict, f'analyze_result_temp/logits&labels_10.14_pool/pred_label-{self.save_type}_{log_id}-{self.num}.pt')
+                torch.save(self.gt_label_dict, f'analyze_result_temp/logits&labels_10.14_pool/gt_label-{self.save_type}_{log_id}-{self.num}.pt')
+                self.save_label_pools()
+                self.pred_label_dict = defaultdict(list)
+                self.gt_label_dict = {}
+
             elif all_logits != None:
                 all_logits = F.softmax(all_logits, dim=1)    
                 all_labels = F.one_hot(all_labels)
@@ -213,6 +229,9 @@ class PLL_loss(nn.Module):
                 torch.save(all_labels,  f'analyze_result_temp/logits&labels/labels_{self.losstype.upper()+self.cfg.CONF_LOSS_TYPE}_{log_id}-{self.num}.pt')
         self.num += 1
 
+    def save_label_pools(self):
+        log_id = 'PLL' + str(self.cfg.PARTIAL_RATE)
+        torch.save(self.cls_pools_dict, f'analyze_result_temp/logits&labels_10.14_pool/pools_dict-{self.save_type}_{log_id}-{self.num}.pt')
 
 class GeneralizedCrossEntropy(nn.Module):
     """Computes the generalized cross-entropy loss, from `

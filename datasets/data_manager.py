@@ -303,5 +303,6 @@ class UPLDataManager(DataManager):
             tfm=self.tfm_train,
             is_train=True,
             dataset_wrapper=self.dataset_wrapper,
+            tag='sstrain',
         )
         self.train_loader_sstrain = train_loader_sstrain

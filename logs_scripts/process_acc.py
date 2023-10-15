@@ -32,13 +32,16 @@ def formatting_data(data_dict):
         new_key = new_key.replace('rn50_ep50', 'rn50ep50')
         new_key = new_key.replace('ssoxford_pets', 'ssoxfordpets')
         new_key = new_key.replace('loss-rc_cav', 'loss-rc cav')
+        new_key = new_key.replace('loss-rc_refine', 'loss-rc refine')
+        new_key = new_key.replace('loss-cc_rc', 'loss-cc rc')
+        new_key = new_key.replace('loss-cc_refine', 'loss-cc refine')
         new_key = new_key.replace('loss-rc_rc', 'loss-rc rc')
         new_dict[new_key] = value
     return new_dict
 
 # data_dict = extract_info('log_10-04_14-06-35_ssoxford_pets.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssoxford_pets.txt
-data_dict_new = extract_info('log_test_cc_cav_TandBeta-10.11_ssoxford_pets.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
-data_dict_old = extract_info('log_10-04_17-35-17_ssucf101-contain-no-beta.txt')
+data_dict_new = extract_info('log_10.13-test_cc_refine_ssucf101.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
+data_dict_old = extract_info('log_10-04_17-35-17_ssucf101-contain-no-beta.txt')      #contain-no-beta is baseline
 data_dict_new = formatting_data(data_dict_new)
 data_dict_old = formatting_data(data_dict_old)
 
@@ -87,8 +90,10 @@ loss = "(df['loss']!='CE')"
 # loss = "(df['loss']=='rc cav')"
 # beta = "(df['beta']=='0.0')"
 PLL_ratio = "(df['usePLLTrue']=='0.3')"
+# Iepoch = "(df['Iepoch']=='1') | (df['Iepoch'].isna())" 
 # seed = "(~((df['seed']=='3') & (df['loss']=='rc cav') & (df['usePLLTrue']=='0.3')))"
-select_condiction =   loss + '&' + change  + '&' + PLL_ratio  
+seed = "(df['seed']=='1')"
+select_condiction =   loss + '&' + seed  + '&' + PLL_ratio  + '&' + change
 
 if select_condiction == 'None':
     selected_rows = df
@@ -97,7 +102,7 @@ else:
 #----------------------settings----------------------
 
 # Group by Variables
-grouped_vars = ["T", "beta", "loss"]        
+grouped_vars = ["Iepoch","beta",  "loss"]        
 compar_var = 'accuracy'
 grouped_data = selected_rows.groupby(grouped_vars)[compar_var].mean().reset_index()
 # Convert the "usePLLTrue" column to float

@@ -13,32 +13,37 @@ from typing import List
 import os
 import re
 
+import torch
+
 class ClassLabelPool:
     """
     Store the average and current values for uncertainty of each class samples and the max capacity of the pool.
     """
 
-    def __init__(self, max_capacity: int, items_idx: list, items_unc: list):
+    def __init__(self, max_capacity: int, items_idx: torch.Tensor, items_unc: torch.Tensor):
         """
         Initialize the ClassLabelPool.
         Args:
             max_capacity (int): The maximum capacity of the pool.
-            items_idx (list): A list of item indices.
-            items_unc (list): A list of item uncertainties.
+            items_idx (torch.Tensor): A tensor of item indices.
+            items_unc (torch.Tensor): A tensor of item uncertainties.
         """
         self.pool_max_capacity = max_capacity
         self.pool_capacity = len(items_idx)
-        self.pool = {idx: unc for idx, unc in zip(items_idx, items_unc)}
+        sorted_indices = torch.argsort(items_unc)   
+        self.pool_idx = items_idx[sorted_indices]
+        self.pool_unc = items_unc[sorted_indices]
         self._update_pool_attr()
 
     def _update_pool_attr(self):
         """
         Update the pool attributes.
         """
-        self.pool = {k: v for k, v in sorted(self.pool.items(), key=lambda item: item[1])}
-        self.unc_avg = sum(self.pool.values()) / len(self.pool)
-        self.unc_max = max(self.pool.values())
-    
+        # self.unc_avg = torch.mean(self.pool_unc)
+        self.unc_max, self.unc_max_idx = torch.max(self.pool_unc, dim=0)
+        assert self.pool_unc.shape == self.pool_unc.shape
+        assert self.pool_unc.shape[0] <= self.pool_max_capacity
+
     def enlarge_pool(self, max_num: int):
         """
         Enlarge the pool capacity. (if the pool capacity is smaller than the max_num given, remain unchanged)
@@ -50,45 +55,48 @@ class ClassLabelPool:
         else:
             return
 
-    def update(self, input_dict):
+    def update(self, feat_idxs: torch.Tensor, feat_unc: torch.Tensor):
         """
         Update the pool with new values.
         Args:
-            input_dict (dict): A dictionary {k(feat_idx): v(current_unc)}.
-        Raises:
-            TypeError: If the input is not a dictionary.
+            feat_idxs (torch.Tensor): A tensor of feature indices, better to be ascending order.
+            feat_unc (torch.Tensor): A tensor of feature uncertainties.
         """
-        if not isinstance(input_dict, dict):
-            raise TypeError("Input to ClassLabelPool.update() must be a dictionary")
-        in_pool = torch.empty(0, dtype=torch.bool)
+        in_pool = torch.zeros_like(feat_idxs, dtype=torch.bool)
 
-        for k, v in input_dict.items():
-            if isinstance(v, torch.Tensor):
-                v = v.item()
+        for idx, unc in zip(feat_idxs, feat_unc):
+            idx_position = (self.pool_idx == idx).nonzero(as_tuple=True)
+            num_inpool = idx_position[0].numel() 
 
-            if k in self.pool.keys():
-                self.pool[k] = v
-                in_pool = torch.cat((in_pool, torch.tensor([True])))
+            if num_inpool > 0:
+                assert num_inpool == 1
+                self.pool_unc[idx_position[0]] = unc
+                in_pool[idx == feat_idxs] = True
             else:
                 if self.pool_capacity < self.pool_max_capacity:
-                    self.pool[k] = v
+                    self.pool_idx = torch.cat((idx.unsqueeze(0), self.pool_idx))
+                    self.pool_unc = torch.cat((unc.unsqueeze(0), self.pool_unc))
                     self.pool_capacity += 1
-                    in_pool = torch.cat((in_pool, torch.tensor([True])))
+                    in_pool[idx == feat_idxs] = True
                 else:
-                    if self.unc_max <= v:
-                        in_pool = torch.cat((in_pool, torch.tensor([False])))
+                    if self.unc_max <= unc:
+                        in_pool[idx == feat_idxs] = False
                         continue
                     else:
-                        self.pool.popitem()  # remove the last item(unc_max)
-                        self.pool[k] = v
-                        in_pool = torch.cat((in_pool, torch.tensor([True])))
-            self._update_pool_attr()
+                        self.pool_idx[self.unc_max_idx] = idx
+                        self.pool_unc[self.unc_max_idx] = unc
+                        in_pool[idx == feat_idxs] = True
+            if any(in_pool):
+                self._update_pool_attr()
 
         return in_pool
-        
 
     def __str__(self):
-        return f"unc_avg: {self.unc_avg:.4f}, unc_max: {self.unc_max:.4f}, pool_capacity: {self.pool_capacity}/{self.pool_max_capacity}"
+        str_ = ''
+        if hasattr(self, 'unc_avg'):
+            str_ += f"unc_avg: {self.unc_avg:.4f}, "
+        return str_ + f"unc_max: {self.unc_max:.4f}, pool_capacity: {self.pool_capacity}/{self.pool_max_capacity}"
+    
 
 
 def restore_pic(x):

@@ -149,7 +149,7 @@ fig = plt.figure(figsize=(20,20))
 for i in range(num_figures):
     ax = fig.add_subplot(rows, cols, i+1, projection='3d')
 
-    xpos, ypos = np.meshgrid(np.arange(1, 101, 1), np.arange(num_epochs))
+    xpos, ypos = np.meshgrid(np.arange(1, num_dims+1, 1), np.arange(num_epochs))
     xpos = xpos.flatten('F')
     ypos = ypos.flatten('F')
     zpos = np.zeros_like(xpos)
@@ -185,42 +185,5 @@ plt.tight_layout()
 
 
 # %%
-
-# Create a new 2D-figure for the max_z conf plot
-fig2 = plt.figure(figsize=(10, 5))
-ax2 = fig2.add_subplot(111)
-fig_idx = 1  #NOTE fill the wanted fig index here(start from 0)
-
-
-# Plot max_z values for each figure
-for i in range(fig_idx, fig_idx+1):                        
-    max_z = np.max(data[i], axis=1)
-    ax2.plot(np.arange(num_epochs), max_z, label=f'Example {i+1} of ({figure_type}) indexed {i+1}')
-
-# ax2.set_xlabel('Epochs')
-# ax2.set_ylabel('Max Confidence Values')
-# ax2.set_title('Max Confidence Values for Each Example')
-# ax2.legend()
-
-# plt.tight_layout()
-# plt.show()
-
-# # %%
-# # Create a new figure for the true_z conf plot
-# fig2 = plt.figure(figsize=(10, 5))
-# ax2 = fig2.add_subplot(111)
-
-# true_z conf plot
-for i in range(fig_idx, fig_idx+1):
-    true_z = data[data_taget_label_idx].reshape(sub_figure_num, -1)[i]
-    ax2.plot(np.arange(num_epochs), true_z, linestyle='--', label=f'Example {i+1} of ({figure_type}) indexed {i+1}')
-
-ax2.set_xlabel('Epochs')
-ax2.set_ylabel('Max Confidence Values')
-ax2.set_title('True label Confidence Values for Each Example')
-ax2.legend()
-
-plt.tight_layout()
-plt.show()
 
 # %%

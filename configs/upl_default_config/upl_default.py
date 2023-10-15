@@ -303,10 +303,11 @@ _C.TRAINER.PLL.USE_REGULAR = False	# whether to use regular term in loss
 _C.TRAINER.PLL.USE_LABEL_FILTER = False	# whether to use regular term in loss
 _C.TRAINER.PLL.TEMPERATURE = 1.0  # temperature for sharpening the probability
 _C.TRAINER.PLL.LOSS_MIN = 0.0  # minimum loss for clamp 
+_C.TRAINER.PLL.INIT_EPOCH = 1 # epoch to start refine_loss
+
 # loss:
 _C.TRAINER.LOSS_TYPE = 'CE'
 # _C.TRAINER.PLL.STRONG_TRANSFORMS = ()
-
 
 def get_cfg_default():
 	return _C.clone()

@@ -122,7 +122,7 @@ def plot_logitsDistri(output_teacher_batch, labels_batch, do_softmax=True, max_n
     bars = axs[-1, -1].bar(classes, counts, color='green')
     for bar, class_, count_ in zip(bars, classes, counts):
         height = bar.get_height()
-        axs[-1, -1].text(bar.get_x() + bar.get_width() / 2, height, f'Class: {class_}->{count_}', ha='center', va='bottom')
+        axs[-1, -1].text(bar.get_x() + bar.get_width() / 2, height, f'Class: {class_}->{count_}', ha='center', va='bottom', fontsize=10)
     axs[-1, -1].set_title("Top 5 wrong predictions")
     axs[-1, -1].set_xlabel("Classes")
     axs[-1, -1].set_ylabel("Count")
@@ -138,6 +138,7 @@ def plot_logitsDistri(output_teacher_batch, labels_batch, do_softmax=True, max_n
     plt.show()
 
 
+index_cls_worst = np.argsort(acc_array)[:10]
 index_cls_worst = np.argsort(acc_array)[:10]
 index_cls_best = np.argsort(acc_array)[-10:]
 

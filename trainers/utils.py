@@ -142,7 +142,7 @@ def select_top_k_similarity_per_class(outputs, img_paths, K=1, image_features=No
     return predict_label_dict, predict_conf_dict
 
 
-def select_top_k_certainty_per_class(unc, img_paths, idxs, K=1, max_capacity_perclass=None):
+def select_top_k_certainty_per_class(unc, class_ids, idxs, K=1, max_capacity_perclass=None):
     """
     Select the top-K samples with the highest certainty per class. 
     Get label class name from img_paths and transform it to a class_id. 
@@ -163,28 +163,29 @@ def select_top_k_certainty_per_class(unc, img_paths, idxs, K=1, max_capacity_per
                                   storing top-K samples.
     """
     # Extract class_ids from image paths (assuming class's name is mentioned in each path's directory)
-    class_ids = [os.path.dirname(path).split('/')[-1] for path in img_paths]        #TODO debug here
-    cls_list = set(class_ids)
-    pools_dict = dict()
+    cls_set = np.unique(class_ids)
+    pools_dict = {}
     if max_capacity_perclass is None:   
-        max_capacity_perclass = {cls: K for cls in cls_list}
+        max_capacity_perclass = {cls: K for cls in cls_set}
 
     # Loop through each unique class id
-    for cls in cls_list:
+    for cls in cls_set:
         # Get the indices where class_ids list equals to current class 
-        indices = np.where(np.array(class_ids) == cls)
+        indices = np.where(class_ids == cls)
         
         # Select the unc and idx values for the current class
         unc_current_class = unc[indices]
         idxs_current_class = idxs[indices]
 
-        # Select the Top-K indices based on sorted uncertainty values
-        top_k_indices = np.argsort(unc_current_class)[-max_capacity_perclass[cls]:]
+        # Select the Top-K indices based on sorted uncertainty values (select the Top-min K values)
+        top_k_indices = np.argsort(unc_current_class)
+        idxs_current_class_ = idxs_current_class[top_k_indices][:max_capacity_perclass[cls]]
+        unc_current_class_ = unc_current_class[top_k_indices][:max_capacity_perclass[cls]]
 
         # Append a new ClassLabelPool for each class with the selected items to pools_dict
         pools_dict[cls] = ClassLabelPool(max_capacity = max_capacity_perclass[cls], 
-                        items_idx = list(idxs_current_class[top_k_indices]), 
-                        items_unc = list(unc_current_class[top_k_indices]))
+                            items_idx = torch.from_numpy(idxs_current_class_),          #TODO check
+                            items_unc = torch.from_numpy(unc_current_class_).half())
 
     return pools_dict 
 
@@ -457,7 +458,7 @@ def caculate_noise_rate_analyze(predict_label_dict, train_loader, trainer, sampl
     print('Acc Rate {:.4f}'.format(correct/total))
 
 
-def save_outputs(train_loader, trainer, predict_label_dict, dataset_name, text_features, backbone_name=None, tag='', seed =''):
+def save_outputs(train_loader, trainer, predict_label_dict, dataset_name, text_features, backbone_name=None, tag=''):
     backbone_name = backbone_name.replace('/', '-')
     gt_pred_label_dict = {}
     for batch_idx, batch in enumerate(train_loader):    #sequential order
@@ -509,12 +510,12 @@ def save_outputs(train_loader, trainer, predict_label_dict, dataset_name, text_f
     if not os.path.exists('./analyze_results/{}{}/'.format(backbone_name, tag)):
         os.makedirs('./analyze_results/{}{}/'.format(backbone_name, tag))
 
-    torch.save(v_features, './analyze_results/{}{}/{}_v_feature.pt'.format(backbone_name, tag, dataset_name, seed))
-    torch.save(text_features, './analyze_results/{}{}/{}_l_feature{}.pt'.format(backbone_name, tag, dataset_name, seed))
-    torch.save(logits_tensor, './analyze_results/{}{}/{}_logits{}.pt'.format(backbone_name, tag, dataset_name, seed))
+    torch.save(v_features, './analyze_results/{}{}/_v_feature.pt'.format(backbone_name, tag, dataset_name))
+    torch.save(text_features, './analyze_results/{}{}/{}_l_feature.pt'.format(backbone_name, tag, dataset_name))
+    torch.save(logits_tensor, './analyze_results/{}{}/{}_logits.pt'.format(backbone_name, tag, dataset_name))
 
 
-    with open("./analyze_results/{}{}/{}{}.json".format(backbone_name, tag, dataset_name, seed), "w") as outfile:
+    with open("./analyze_results/{}{}/{}.json".format(backbone_name, tag, dataset_name), "w") as outfile:
         json.dump(v_distance_dict, outfile) #train data的每个类别中(按gt分), model预测的图片的emb和avg_emb的距离
 
 
