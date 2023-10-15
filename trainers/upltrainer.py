@@ -1184,6 +1184,7 @@ class UPLTrainer(TrainerX):
                 for cls_idx, pool in self.criterion.cls_pools_dict.items():
                     cls_acc = acc_dict[self.evaluator._lab2cname[cls_idx]]       
                     pool.enlarge_pool(max_num=round(self.cfg.DATASET.NUM_SHOTS * cls_acc/100))
+                    pool.reset()
             else:
                 pass
 

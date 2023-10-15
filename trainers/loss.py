@@ -35,6 +35,7 @@ class PLL_loss(nn.Module):
         self.T = self.cfg.TEMPERATURE
         if '_' in type or '_' in self.cfg.CONF_LOSS_TYPE:   #means need to update conf
             self.conf = self.init_confidence(PartialY)
+            self.conf_momn = self.cfg.CONF_MOMN
             if type == 'rc+':
                 self.beta = self.cfg.BETA
 
@@ -178,28 +179,43 @@ class PLL_loss(nn.Module):
             temp_un_conf = F.softmax(outputs / self.T, dim=1)
             conf_selected = temp_un_conf * labels # un_confidence stores the weight of each example
             base_value = conf_selected.sum(dim=1).unsqueeze(1).repeat(1, conf_selected.shape[1])
-            self.conf[batch_idxs, :] = conf_selected/base_value  # use maticx for element-wise division
+            self.conf[batch_idxs, :] = conf_selected / base_value  # use maticx for element-wise division
         elif conf_type == 'cav':
             cav = (outputs * torch.abs(1 - outputs)) * labels
             cav_pred = torch.max(cav, dim=1)[1]
             gt_label = F.one_hot(cav_pred, labels.shape[1]) # label_smoothing() could be used to further improve the performance for some datasets
             self.conf[batch_idxs, :] = gt_label.float()
         elif conf_type == 'refine':
+            batch_idxs = batch_idxs.to(self.device)
             cav = (outputs * torch.abs(1 - outputs)) * labels
-            cav_pred = torch.max(cav, dim=1)[1]
-            unc = self.cal_uncertainty(outputs, cav_pred)
+            max_idx, cav_pred = torch.max(cav, dim=1)
+            unc = self.cal_uncertainty(outputs, cav_pred); unc_min = unc.min()
+            unc_norm = (unc -  unc_min) / (unc.max() - unc_min)         #TODO: debug here
+            conf_increment = (1 - self.conf_momn) * (1 - unc_norm*0.5)             #0.5 is scale factor
+
             in_pool = torch.empty(0, dtype=torch.bool)
 
             for i, cls_idx in enumerate(cav_pred):
                 pool = self.cls_pools_dict[cls_idx.item()]
-                in_pool_ = pool.update(feat_idxs=batch_idxs[i].unsqueeze(0), feat_unc=unc[i].cpu().unsqueeze(0))
+                in_pool_ = pool.update(feat_idxs=batch_idxs[i].unsqueeze(0), feat_unc=unc[i].unsqueeze(0))
                 in_pool = torch.cat((in_pool, in_pool_))
                 # if in_pool_.item():
                 #     self.pred_label_dict.update({batch_idxs[i].item(): [cls_idx.cpu().item(), unc[i].cpu().item()]})
 
-            self.conf[batch_idxs[in_pool], :] = F.one_hot(cav_pred[in_pool], labels.shape[1]).float()
-            self.conf[batch_idxs[~in_pool], :] = labels[~in_pool]     #TODO can ehance here, if not in pool how to change the conf
+            pred_conf_value = self.conf[batch_idxs, :][cav_pred]
+            pred_conf_value_ = pred_conf_value[in_pool] * self.conf_momn + conf_increment[in_pool]
+            base_value = pred_conf_value_ - pred_conf_value + 1
+            assert base_value >= 1, 'base_value should larger than 1'
+            self.conf[batch_idxs[in_pool], :] = self.conf[batch_idxs[in_pool], :] / base_value
+            if self.cfg.TOP_POOLS != 1:
+                pass                        #TODO add recursion here
+            else:
+                self.conf[batch_idxs[~in_pool], :] = labels[~in_pool]     #TODO can ehance here, if not in pool how to change the conf
 
+
+    def search_pools(self):
+        pass
+    
 
     @torch.no_grad()
     def cal_uncertainty(self, output, label, index=None):

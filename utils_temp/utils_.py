@@ -25,7 +25,7 @@ class ClassLabelPool:
         Initialize the ClassLabelPool.
         Args:
             max_capacity (int): The maximum capacity of the pool.
-            items_idx (torch.Tensor): A tensor of item indices.
+            items_idx (torch.LongTensor): A tensor of item indices.
             items_unc (torch.Tensor): A tensor of item uncertainties.
         """
         self.pool_max_capacity = max_capacity
@@ -43,6 +43,15 @@ class ClassLabelPool:
         self.unc_max, self.unc_max_idx = torch.max(self.pool_unc, dim=0)
         assert self.pool_unc.shape == self.pool_unc.shape
         assert self.pool_unc.shape[0] <= self.pool_max_capacity
+    
+    def reset(self):
+        """
+        Reset the pool.
+        """
+        self.pool_idx = torch.LongTensor([]).to(self.pool_idx.device)
+        self.pool_unc = torch.Tensor([]).type(self.pool_unc.dtype).to(self.pool_idx.device)
+        self.pool_capacity = 0
+        self.unc_max = -1
 
     def enlarge_pool(self, max_num: int):
         """
@@ -55,7 +64,7 @@ class ClassLabelPool:
         else:
             return
 
-    def update(self, feat_idxs: torch.Tensor, feat_unc: torch.Tensor):
+    def update(self, feat_idxs: torch.LongTensor, feat_unc: torch.Tensor):
         """
         Update the pool with new values.
         Args:

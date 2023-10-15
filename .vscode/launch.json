@@ -140,6 +140,11 @@
               // "a photo of a "
               "TRAINER.PLL.USE_REGULAR",    //2
               "True",
+              "TRAINER.PLL.CONF_MOMN",
+              "0.95",
+              "TRAINER.PLL.TOP_POOLS",
+              "1",
+
             ]
           },
           //===================== for Elevator datamanager:

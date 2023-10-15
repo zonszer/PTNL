@@ -184,8 +184,8 @@ def select_top_k_certainty_per_class(unc, class_ids, idxs, K=1, max_capacity_per
 
         # Append a new ClassLabelPool for each class with the selected items to pools_dict
         pools_dict[cls] = ClassLabelPool(max_capacity = max_capacity_perclass[cls], 
-                            items_idx = torch.from_numpy(idxs_current_class_),          #TODO check
-                            items_unc = torch.from_numpy(unc_current_class_).half())
+                            items_idx = torch.from_numpy(idxs_current_class_).to(unc.device),         
+                            items_unc = torch.from_numpy(unc_current_class_).half().to(unc.device))
 
     return pools_dict 
 

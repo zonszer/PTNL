@@ -304,6 +304,8 @@ _C.TRAINER.PLL.USE_LABEL_FILTER = False	# whether to use regular term in loss
 _C.TRAINER.PLL.TEMPERATURE = 1.0  # temperature for sharpening the probability
 _C.TRAINER.PLL.LOSS_MIN = 0.0  # minimum loss for clamp 
 _C.TRAINER.PLL.INIT_EPOCH = 1 # epoch to start refine_loss
+_C.TRAINER.PLL.CONF_MOMN = 0.95 # momentum for updating confidence
+_C.TRAINER.PLL.TOP_POOLS = 1 # number of top pools to use
 
 # loss:
 _C.TRAINER.LOSS_TYPE = 'CE'
