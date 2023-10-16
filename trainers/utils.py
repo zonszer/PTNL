@@ -154,7 +154,7 @@ def select_top_k_certainty_per_class(unc, class_ids, idxs, K=1, max_capacity_per
         unc (torch.Tensor)     : Tensor of uncertainty measurements per sample. 
                                   Expected shape is (num_samples, ).
         img_paths (list of str): List of image file paths. Class label can be extracted from each path.
-        idxs (list of int)     : List of index values corresponding to each image.  
+        idxs (torch.Tensor)    : Tensor of index values corresponding to each image.  
         K (int)                : Number of top samples to select per class.
         max_capacity_per_class (dict): Maximum capacity per class. 
 
@@ -163,31 +163,31 @@ def select_top_k_certainty_per_class(unc, class_ids, idxs, K=1, max_capacity_per
                                   storing top-K samples.
     """
     # Extract class_ids from image paths (assuming class's name is mentioned in each path's directory)
-    cls_set = np.unique(class_ids)
+    cls_set = torch.unique(class_ids)
     pools_dict = {}
-    if max_capacity_perclass is None:   
-        max_capacity_perclass = {cls: K for cls in cls_set}
+    if max_capacity_perclass is None:
+        max_capacity_perclass = {cls: K for cls in cls_set.tolist()}
+
+    # Convert max_capacity_perclass to a tensor for efficient computation
+    max_capacity_perclass = torch.LongTensor([max_capacity_perclass[cls.item()] for cls in cls_set])
 
     # Loop through each unique class id
-    for cls in cls_set:
+    for i, cls in enumerate(cls_set):                                   #TODO sort can be removed 
         # Get the indices where class_ids list equals to current class 
-        indices = np.where(class_ids == cls)
+        # indices = torch.where(class_ids == cls) 
         
         # Select the unc and idx values for the current class
-        unc_current_class = unc[indices]
-        idxs_current_class = idxs[indices]
+        unc_sample = unc[0]
 
         # Select the Top-K indices based on sorted uncertainty values (select the Top-min K values)
-        top_k_indices = np.argsort(unc_current_class)
-        idxs_current_class_ = idxs_current_class[top_k_indices][:max_capacity_perclass[cls]]
-        unc_current_class_ = unc_current_class[top_k_indices][:max_capacity_perclass[cls]]
+        # top_k_indices = torch.argsort(unc_current_class)
+        # idxs_current_class_ = idxs_current_class[top_k_indices][:max_capacity_perclass[cls]]
+        # unc_current_class_ = unc_current_class[top_k_indices][:max_capacity_perclass[cls]]
 
         # Append a new ClassLabelPool for each class with the selected items to pools_dict
-        pools_dict[cls] = ClassLabelPool(max_capacity = max_capacity_perclass[cls], 
-                            items_idx = torch.from_numpy(idxs_current_class_).to(unc.device),         
-                            items_unc = torch.from_numpy(unc_current_class_).half().to(unc.device))
-
-    return pools_dict 
+        pools_dict[cls.item()] = ClassLabelPool(max_capacity = max_capacity_perclass[i].item(),
+                                                unc_sample = unc_sample.half().to(unc.device)) 
+    return pools_dict
 
 
 def select_top_k_similarity_per_class_with_noisy_label(img_paths, K=1, random_seed=1, gt_label_dict=None, num_fp=0):

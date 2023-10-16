@@ -5,7 +5,7 @@ cd ..
 # custom config
 DATA=./data
 TRAINER=UPLTrainer
-exp_ID="10.14-test_cc_refine_ep100"    #NOTE +time
+exp_ID="10.15-test_cc_refine_ep100_plus"    #NOTE +time
 # TODO: 
 #1. test loss min and beta for rc and cc
 
@@ -88,8 +88,8 @@ TEMPERATURE=1.0
 LOSS_MIN=0.0
 declare -a BETAS=(0.0 0.1 0.2 0.3)
 # declare -a LOSS_MINs=(0.0)
-declare -a INIT_EPOCHs=(1 2 4)
-
+declare -a CONF_MOMNs=(0.95 0.97 0.99)
+TOP_POOLS=1
 
 
 for SEED in {1..3}
@@ -97,13 +97,13 @@ do
     for DATASET in 'ssucf101' 'ssoxford_pets'
     do
         LOG_FILE="logs_scripts/log_${TAG}_${DATASET}.txt"
-        for loss_type in 'rc_refine' 'cc_refine'
+        for loss_type in 'cc_refine'
         do
             for BETA in "${BETAS[@]}"
             do
-                for INIT_EPOCH in "${INIT_EPOCHs[@]}"
+                for CONF_MOMN in "${CONF_MOMNs[@]}"
                 do
-                    common_id="data-${DATASET}_model-${CFG}_shots-${SHOTS}_nctx-${NCTX}_ctp-${CTP}_fp-${FP}_usePLL${use_PLL}-${PLL_partial_rate}_loss-${loss_type}_seed-${SEED}_beta-${BETA}_FILT-${USE_LABEL_FILTER}_T-${TEMPERATURE}_Iepoch-${INIT_EPOCH}"
+                    common_id="data-${DATASET}_model-${CFG}_shots-${SHOTS}_nctx-${NCTX}_ctp-${CTP}_fp-${FP}_usePLL${use_PLL}-${PLL_partial_rate}_loss-${loss_type}_seed-${SEED}_beta-${BETA}_FILT-${USE_LABEL_FILTER}_T-${TEMPERATURE}_cMomn-${CONF_MOMN}_topP-${TOP_POOLS}"
                     DIR=./output/${DATASET}/${TRAINER}/${CFG}_${SHOTS}shots-${TAG}/SEED${SEED}/${common_id}
                     if [ -d "$DIR" ]; then
                         echo "Results are available in ${DIR}. Skip this job"
@@ -130,8 +130,9 @@ do
                         TRAINER.PLL.PARTIAL_RATE ${PLL_partial_rate} \
                         TRAINER.PLL.LOSS_MIN ${LOSS_MIN} \
                         TRAINER.PLL.USE_LABEL_FILTER ${USE_LABEL_FILTER} \
-                        TRAINER.PLL.INIT_EPOCH ${INIT_EPOCH} \
-                        TRAINER.PLL.TEMPERATURE ${TEMPERATURE}
+                        TRAINER.PLL.CONF_MOMN ${CONF_MOMN} \
+                        TRAINER.PLL.TEMPERATURE ${TEMPERATURE} \
+                        TRAINER.PLL.TOP_POOLS ${TOP_POOLS}
                         
                         ACCURACY=$(grep -A4 'Do evaluation on test set' ${DIR}/log.txt | grep 'accuracy:' | awk -F' ' '{print $3}')
                         RECORD="id: ${common_id} ----> test * accuracy: ${ACCURACY}"

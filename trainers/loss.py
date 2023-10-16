@@ -39,10 +39,6 @@ class PLL_loss(nn.Module):
             if type == 'rc+':
                 self.beta = self.cfg.BETA
 
-        if '_refine' in type:
-            self.init_epoch = self.cfg.INIT_EPOCH
-            self.losstype = self.losstype.split('_')[0] + f'-{self.init_epoch}-epoch'
-
         if 'gce' in type or 'gce' in self.cfg.CONF_LOSS_TYPE:
             self.q = 0.7
 
@@ -190,10 +186,10 @@ class PLL_loss(nn.Module):
             cav = (outputs * torch.abs(1 - outputs)) * labels
             max_idx, cav_pred = torch.max(cav, dim=1)
             unc = self.cal_uncertainty(outputs, cav_pred); unc_min = unc.min()
-            unc_norm = (unc -  unc_min) / (unc.max() - unc_min)         #TODO: debug here
-            conf_increment = (1 - self.conf_momn) * (1 - unc_norm*0.5)             #0.5 is scale factor
+            unc_norm = (unc -  unc_min) / (unc.max() - unc_min)         
+            conf_increment = (1 - self.conf_momn) * (1 - unc_norm*0.5)             #TODO: hyparams: 0.5 is scale factor
 
-            in_pool = torch.empty(0, dtype=torch.bool)
+            in_pool = torch.empty(0, dtype=torch.bool).to(self.device)
 
             for i, cls_idx in enumerate(cav_pred):
                 pool = self.cls_pools_dict[cls_idx.item()]
@@ -201,12 +197,14 @@ class PLL_loss(nn.Module):
                 in_pool = torch.cat((in_pool, in_pool_))
                 # if in_pool_.item():
                 #     self.pred_label_dict.update({batch_idxs[i].item(): [cls_idx.cpu().item(), unc[i].cpu().item()]})
-
-            pred_conf_value = self.conf[batch_idxs, :][cav_pred]
-            pred_conf_value_ = pred_conf_value[in_pool] * self.conf_momn + conf_increment[in_pool]
+            
+            conf_selected = self.conf[batch_idxs[in_pool], :]
+            pred_conf_value = self.conf[batch_idxs[in_pool], cav_pred[in_pool]]
+            pred_conf_value_ = pred_conf_value * self.conf_momn + conf_increment[in_pool]
             base_value = pred_conf_value_ - pred_conf_value + 1
-            assert base_value >= 1, 'base_value should larger than 1'
-            self.conf[batch_idxs[in_pool], :] = self.conf[batch_idxs[in_pool], :] / base_value
+            # assert (base_value >= 1).all(), 'base_value should larger than 1'     #TODO double check
+            self.conf[batch_idxs[in_pool], cav_pred[in_pool]] = pred_conf_value_
+            conf_selected = conf_selected / base_value.unsqueeze(1).repeat(1, self.conf.shape[1])
             if self.cfg.TOP_POOLS != 1:
                 pass                        #TODO add recursion here
             else:

@@ -59,7 +59,7 @@
             "console": "integratedTerminal",
             "justMyCode": false,
             "env": {
-              "CUDA_VISIBLE_DEVICES": "1"
+              "CUDA_VISIBLE_DEVICES": "0"
             },
             "args": [
               "--root=./data",
@@ -67,7 +67,7 @@
               "--trainer=UPLTrainer",
               "--dataset-config-file=configs/datasets/ssucf101.yaml",
               "--config-file=configs/trainers/UPLTrainer/rn50_ep50.yaml",
-              "--output-dir=./output/ssucf101/UPLTrainer/rn50_ep50_16shots-10.13-debug/10.14-debug_-__",
+              "--output-dir=./output/ssucf101/UPLTrainer/rn50_ep50_16shots-10.13-debug/10.15-debug_1",
               "--num-fp=0",
               "--loss_type=cc_refine",
               "TRAINER.UPLTrainer.N_CTX",
@@ -92,7 +92,11 @@
               "True",
               "TRAINER.PLL.TEMPERATURE",
               "1.0",
-              "TRAINER.PLL.INIT_EPOCH",
+              // "TRAINER.PLL.INIT_EPOCH",
+              // "0",
+              "TRAINER.PLL.CONF_MOMN",
+              "0.95",
+              "TRAINER.PLL.TOP_POOLS",
               "1",
             ]
           },
@@ -140,10 +144,7 @@
               // "a photo of a "
               "TRAINER.PLL.USE_REGULAR",    //2
               "True",
-              "TRAINER.PLL.CONF_MOMN",
-              "0.95",
-              "TRAINER.PLL.TOP_POOLS",
-              "1",
+
 
             ]
           },

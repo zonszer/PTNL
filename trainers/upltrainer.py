@@ -1174,19 +1174,21 @@ class UPLTrainer(TrainerX):
                     model_name="model-last-{}.pth.tar".format(model_id)
                 )
         
-        if hasattr(self.criterion, 'init_epoch'):
-            if self.epoch == self.criterion.init_epoch - 1:            #self.epoch start from 0
+
+    def before_epoch(self):
+        if 'refine' in self.criterion.losstype:
+            if self.epoch == 0:            #self.epoch start from 0
                 self.criterion.cls_pools_dict = self.init_cls_pools(split="train")
-                self.criterion.losstype = self.criterion.losstype.split('-')[0] + '_refine'
                 # self.evaluator._cname2lab = {v:k for k, v in self.evaluator._lab2cname.items()}
-            elif self.epoch > self.criterion.init_epoch - 1:
-                acc_dict = self.evaluator.class_acc_sumlist[self.epoch] 
+            elif self.epoch > 0:
+                acc_dict = self.evaluator.class_acc_sumlist[self.epoch - 1]     # the test result of past epoch
                 for cls_idx, pool in self.criterion.cls_pools_dict.items():
                     cls_acc = acc_dict[self.evaluator._lab2cname[cls_idx]]       
                     pool.enlarge_pool(max_num=round(self.cfg.DATASET.NUM_SHOTS * cls_acc/100))
                     pool.reset()
             else:
                 pass
+
 
     @torch.no_grad()                           
     def init_cls_pools(self, split="train"):
@@ -1216,8 +1218,8 @@ class UPLTrainer(TrainerX):
         for impath in sstrain_img_paths:
             label = self.gt_label_dict[impath.item()]
             labels.append(label)
-        pools_dict = select_top_k_certainty_per_class(unc=uncertainty.cpu().numpy(), class_ids=np.array(labels), 
-                                                      idxs=index_list.cpu().numpy(), K=int(max(self.cfg.DATASET.NUM_SHOTS*0.4, 2)))     #选择每个类别visual emb和text emb最相似的K个样本，对每个样本取预测的vector，最后加到info dict中（k>=0时）。 对每个样本取预测的vector，然后加到所有训练样本的info dict中（k=-1时）
+        pools_dict = select_top_k_certainty_per_class(unc=uncertainty, class_ids=torch.LongTensor(labels), 
+                                                      idxs=index_list, K=int(max(self.cfg.DATASET.NUM_SHOTS*0.4, 2)))     #选择每个类别visual emb和text emb最相似的K个样本，对每个样本取预测的vector，最后加到info dict中（k>=0时）。 对每个样本取预测的vector，然后加到所有训练样本的info dict中（k=-1时）
 
         return pools_dict
     

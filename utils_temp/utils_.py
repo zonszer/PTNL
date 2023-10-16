@@ -20,7 +20,7 @@ class ClassLabelPool:
     Store the average and current values for uncertainty of each class samples and the max capacity of the pool.
     """
 
-    def __init__(self, max_capacity: int, items_idx: torch.Tensor, items_unc: torch.Tensor):
+    def __init__(self, max_capacity: int, unc_sample=None):
         """
         Initialize the ClassLabelPool.
         Args:
@@ -29,10 +29,9 @@ class ClassLabelPool:
             items_unc (torch.Tensor): A tensor of item uncertainties.
         """
         self.pool_max_capacity = max_capacity
-        self.pool_capacity = len(items_idx)
-        sorted_indices = torch.argsort(items_unc)   
-        self.pool_idx = items_idx[sorted_indices]
-        self.pool_unc = items_unc[sorted_indices]
+        self.pool_capacity = 0
+        self.pool_idx = torch.LongTensor([]).to(unc_sample.device)
+        self.pool_unc = torch.Tensor([]).type(unc_sample.dtype).to(unc_sample.device)
         self._update_pool_attr()
 
     def _update_pool_attr(self):
@@ -40,7 +39,10 @@ class ClassLabelPool:
         Update the pool attributes.
         """
         # self.unc_avg = torch.mean(self.pool_unc)
-        self.unc_max, self.unc_max_idx = torch.max(self.pool_unc, dim=0)
+        if self.pool_capacity < self.pool_max_capacity:
+            pass
+        else:
+            self.unc_max, self.unc_max_idx = torch.max(self.pool_unc, dim=0)
         assert self.pool_unc.shape == self.pool_unc.shape
         assert self.pool_unc.shape[0] <= self.pool_max_capacity
     
@@ -74,27 +76,28 @@ class ClassLabelPool:
         in_pool = torch.zeros_like(feat_idxs, dtype=torch.bool)
 
         for idx, unc in zip(feat_idxs, feat_unc):
-            idx_position = (self.pool_idx == idx).nonzero(as_tuple=True)
-            num_inpool = idx_position[0].numel() 
+            # idx_position = (self.pool_idx == idx).nonzero(as_tuple=True)
+            # num_inpool = idx_position[0].numel() 
+            # if num_inpool > 0:      
+            #     assert False, 'should not be entered now'
+            #     assert num_inpool == 1
+            #     self.pool_unc[idx_position[0]] = unc
+            #     in_pool[idx == feat_idxs] = True
 
-            if num_inpool > 0:
-                assert num_inpool == 1
-                self.pool_unc[idx_position[0]] = unc
+            if self.pool_capacity < self.pool_max_capacity:
+                self.pool_idx = torch.cat((idx.unsqueeze(0), self.pool_idx))
+                self.pool_unc = torch.cat((unc.unsqueeze(0), self.pool_unc))
+                self.pool_capacity += 1
                 in_pool[idx == feat_idxs] = True
             else:
-                if self.pool_capacity < self.pool_max_capacity:
-                    self.pool_idx = torch.cat((idx.unsqueeze(0), self.pool_idx))
-                    self.pool_unc = torch.cat((unc.unsqueeze(0), self.pool_unc))
-                    self.pool_capacity += 1
-                    in_pool[idx == feat_idxs] = True
+                if self.unc_max <= unc:
+                    in_pool[idx == feat_idxs] = False
+                    continue
                 else:
-                    if self.unc_max <= unc:
-                        in_pool[idx == feat_idxs] = False
-                        continue
-                    else:
-                        self.pool_idx[self.unc_max_idx] = idx
-                        self.pool_unc[self.unc_max_idx] = unc
-                        in_pool[idx == feat_idxs] = True
+                    self.pool_idx[self.unc_max_idx] = idx
+                    self.pool_unc[self.unc_max_idx] = unc
+                    in_pool[idx == feat_idxs] = True
+                    
             if any(in_pool):
                 self._update_pool_attr()
 
