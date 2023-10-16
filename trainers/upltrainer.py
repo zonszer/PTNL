@@ -1185,8 +1185,11 @@ class UPLTrainer(TrainerX):
                 for cls_idx, pool in self.criterion.cls_pools_dict.items():
                     cls_acc = acc_dict[self.evaluator._lab2cname[cls_idx]]       
                     self.criterion.update_conf_epochend(pool_id=cls_idx)
-                    pool.enlarge_pool(max_num=round(self.cfg.DATASET.NUM_SHOTS * cls_acc/100 * 0.875))
+                    pool.enlarge_pool(max_num=round(self.cfg.DATASET.NUM_SHOTS * cls_acc/100 * self.cfg.TRAINER.PLL.POOL_ENLARGE_SCALE))
                     pool.reset()
+
+        if self.cfg.TRAINER.PLL.USE_PLL:
+            self.criterion.clean_conf()
 
 
     @torch.no_grad()                           

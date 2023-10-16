@@ -3,6 +3,7 @@ import torch.nn.functional as F
 import torch
 import torch.nn as nn
 from collections import defaultdict
+from copy import deepcopy
 
 if torch.cuda.is_available():
     torch.backends.cudnn.benchmark = True
@@ -18,7 +19,6 @@ class PLL_loss(nn.Module):
     softmax = nn.Softmax(dim=1)
     # opt params (assigned during code running)
     model: nn.Module
-    cls_pools_dict: dict = {}
     pred_label_dict = defaultdict(list)
     gt_label_dict: dict = {}
 
@@ -38,6 +38,11 @@ class PLL_loss(nn.Module):
             self.conf_momn = self.cfg.CONF_MOMN
             if type == 'rc+':
                 self.beta = self.cfg.BETA
+
+        if 'refine' in self.losstype:
+            self.not_inpool_idxs = torch.LongTensor([]).to(self.device)
+            self.origin_labels = deepcopy(self.conf)
+            self.cls_pools_dict = {}
 
         if 'gce' in type or 'gce' in self.cfg.CONF_LOSS_TYPE:
             self.q = 0.7
@@ -135,8 +140,10 @@ class PLL_loss(nn.Module):
 
     def forward_cc_plus(self, x, y, index):
         logsm_outputs = F.softmax(x / self.T, dim=1)         #x is the model ouputs
-        final_outputs = logsm_outputs * (self.conf[index, :])
-        loss = - torch.log((final_outputs + self.eps).sum(dim=1))    #final_outputs=torch.Size([256, 10]) -> Q: why use negative? A:  
+        final_outputs = logsm_outputs * self.conf[index, :]
+        loss = - torch.log((final_outputs).sum(dim=1))    #final_outputs=torch.Size([256, 10]) -> Q: why use negative? A:  
+        # if torch.where(torch.isnan(final_outputs))[0].shape[0] > 0:
+        #     raise FloatingPointError("Loss is infinite or NaN!")
         return loss 
         
 
@@ -185,10 +192,7 @@ class PLL_loss(nn.Module):
             batch_idxs = batch_idxs.to(self.device)
             cav = (outputs * torch.abs(1 - outputs)) * labels
             max_idx, cav_pred = torch.max(cav, dim=1)
-            unc = self.cal_uncertainty(outputs, cav_pred) 
-            # unc_min = unc.min()
-            # unc_norm = (unc -  unc_min) / (unc.max() - unc_min)         
-            # conf_increment = (1 - self.conf_momn) * (1 - unc_norm*0.5)          
+            unc = self.cal_uncertainty(outputs, cav_pred)      
 
             in_pool = torch.empty(0, dtype=torch.bool).to(self.device)
 
@@ -198,28 +202,40 @@ class PLL_loss(nn.Module):
                 in_pool = torch.cat((in_pool, in_pool_))
                 # if in_pool_.item():
                 #     self.pred_label_dict.update({batch_idxs[i].item(): [cls_idx.cpu().item(), unc[i].cpu().item()]})
-            
+
+            self.not_inpool_idxs = torch.cat((self.not_inpool_idxs, batch_idxs[~in_pool]))
+
             # if self.cfg.TOP_POOLS != 1:
             #     pass                        #TODO add recursion here
             # else:
             #     # self.conf[batch_idxs[~in_pool], :] = labels[~in_pool]     #TODO can ehance here, if not in pool how to change the conf
             #     pass
 
-    def update_conf_epochend(self, pool_id, scale_f=0.5):
+    def clean_conf(self):
+        if hasattr(self, 'origin_labels'):
+            self.conf[self.not_inpool_idxs, :] = self.origin_labels[self.not_inpool_idxs, :]
+        if hasattr(self, 'conf'):
+            self.conf = torch.where(self.conf < self.eps, torch.zeros_like(self.conf), self.conf)
+
+
+    def update_conf_epochend(self, pool_id, shrink_f=0.1):      # shrink_f larger means val of unc_norm has larger effect on momn
         assert 'refine' in self.losstype
         cur_pool = self.cls_pools_dict[pool_id]
 
-        pred_conf_value = self.conf[cur_pool.pool_idx, pool_id]         #TODO here may be bug
-
-        unc_norm = (cur_pool.pool_unc - cur_pool.pool_unc.min()) / (cur_pool.pool_unc.max() - cur_pool.pool_unc.min())
-        conf_increment = (1 - self.conf_momn) * (1 - unc_norm * scale_f) 
-        pred_conf_value_ = pred_conf_value * self.conf_momn + conf_increment
+        pred_conf_value = self.conf[cur_pool.pool_idx, pool_id]        
+        if cur_pool.pool_capacity > 1:
+            unc_norm = (cur_pool.pool_unc - cur_pool.pool_unc.min()) / (cur_pool.pool_unc.max() - cur_pool.pool_unc.min())
+            conf_increment = (1 - self.conf_momn) * (1 - unc_norm * shrink_f) 
+            pred_conf_value_ = pred_conf_value * self.conf_momn + conf_increment
+        else:
+            pred_conf_value_ = pred_conf_value * self.conf_momn + (1 - self.conf_momn)
         base_value = pred_conf_value_ - pred_conf_value + 1
 
         # assert (base_value >= 1).all(), 'base_value should larger than 1'     #TODO double check
         self.conf[cur_pool.pool_idx, pool_id] = pred_conf_value_
-        self.conf[cur_pool.pool_idx, :] = self.conf[cur_pool.pool_idx, :] / base_value.unsqueeze(1).repeat(1, self.conf.shape[1])   #TODO check sum here
-
+        self.conf[cur_pool.pool_idx, :] = self.conf[cur_pool.pool_idx, :] / base_value.unsqueeze(1).repeat(1, self.conf.shape[1])
+        # if torch.where(torch.isnan(self.conf[cur_pool.pool_idx, :]))[0].shape[0] > 0:
+        #     raise FloatingPointError("Loss is infinite or NaN!")
 
     def search_pools(self):
         pass
