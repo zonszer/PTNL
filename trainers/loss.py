@@ -185,9 +185,10 @@ class PLL_loss(nn.Module):
             batch_idxs = batch_idxs.to(self.device)
             cav = (outputs * torch.abs(1 - outputs)) * labels
             max_idx, cav_pred = torch.max(cav, dim=1)
-            unc = self.cal_uncertainty(outputs, cav_pred); unc_min = unc.min()
-            unc_norm = (unc -  unc_min) / (unc.max() - unc_min)         
-            conf_increment = (1 - self.conf_momn) * (1 - unc_norm*0.5)             #TODO: hyparams: 0.5 is scale factor
+            unc = self.cal_uncertainty(outputs, cav_pred) 
+            # unc_min = unc.min()
+            # unc_norm = (unc -  unc_min) / (unc.max() - unc_min)         
+            # conf_increment = (1 - self.conf_momn) * (1 - unc_norm*0.5)          
 
             in_pool = torch.empty(0, dtype=torch.bool).to(self.device)
 
@@ -198,17 +199,26 @@ class PLL_loss(nn.Module):
                 # if in_pool_.item():
                 #     self.pred_label_dict.update({batch_idxs[i].item(): [cls_idx.cpu().item(), unc[i].cpu().item()]})
             
-            conf_selected = self.conf[batch_idxs[in_pool], :]
-            pred_conf_value = self.conf[batch_idxs[in_pool], cav_pred[in_pool]]
-            pred_conf_value_ = pred_conf_value * self.conf_momn + conf_increment[in_pool]
-            base_value = pred_conf_value_ - pred_conf_value + 1
-            # assert (base_value >= 1).all(), 'base_value should larger than 1'     #TODO double check
-            self.conf[batch_idxs[in_pool], cav_pred[in_pool]] = pred_conf_value_
-            conf_selected = conf_selected / base_value.unsqueeze(1).repeat(1, self.conf.shape[1])
-            if self.cfg.TOP_POOLS != 1:
-                pass                        #TODO add recursion here
-            else:
-                self.conf[batch_idxs[~in_pool], :] = labels[~in_pool]     #TODO can ehance here, if not in pool how to change the conf
+            # if self.cfg.TOP_POOLS != 1:
+            #     pass                        #TODO add recursion here
+            # else:
+            #     # self.conf[batch_idxs[~in_pool], :] = labels[~in_pool]     #TODO can ehance here, if not in pool how to change the conf
+            #     pass
+
+    def update_conf_epochend(self, pool_id, scale_f=0.5):
+        assert 'refine' in self.losstype
+        cur_pool = self.cls_pools_dict[pool_id]
+
+        pred_conf_value = self.conf[cur_pool.pool_idx, pool_id]         #TODO here may be bug
+
+        unc_norm = (cur_pool.pool_unc - cur_pool.pool_unc.min()) / (cur_pool.pool_unc.max() - cur_pool.pool_unc.min())
+        conf_increment = (1 - self.conf_momn) * (1 - unc_norm * scale_f) 
+        pred_conf_value_ = pred_conf_value * self.conf_momn + conf_increment
+        base_value = pred_conf_value_ - pred_conf_value + 1
+
+        # assert (base_value >= 1).all(), 'base_value should larger than 1'     #TODO double check
+        self.conf[cur_pool.pool_idx, pool_id] = pred_conf_value_
+        self.conf[cur_pool.pool_idx, :] = self.conf[cur_pool.pool_idx, :] / base_value.unsqueeze(1).repeat(1, self.conf.shape[1])   #TODO check sum here
 
 
     def search_pools(self):

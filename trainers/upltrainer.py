@@ -1184,10 +1184,9 @@ class UPLTrainer(TrainerX):
                 acc_dict = self.evaluator.class_acc_sumlist[self.epoch - 1]     # the test result of past epoch
                 for cls_idx, pool in self.criterion.cls_pools_dict.items():
                     cls_acc = acc_dict[self.evaluator._lab2cname[cls_idx]]       
-                    pool.enlarge_pool(max_num=round(self.cfg.DATASET.NUM_SHOTS * cls_acc/100))
+                    self.criterion.update_conf_epochend(pool_id=cls_idx)
+                    pool.enlarge_pool(max_num=round(self.cfg.DATASET.NUM_SHOTS * cls_acc/100 * 0.875))
                     pool.reset()
-            else:
-                pass
 
 
     @torch.no_grad()                           

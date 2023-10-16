@@ -94,6 +94,8 @@
               "1.0",
               // "TRAINER.PLL.INIT_EPOCH",
               // "0",
+              "TRAINER.PLL.POOL_ENLARGE_SCALE",
+              "0.875",
               "TRAINER.PLL.CONF_MOMN",
               "0.95",
               "TRAINER.PLL.TOP_POOLS",
