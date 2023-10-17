@@ -9,8 +9,11 @@ def extract_info(file_name):
     exp_pattern = r'id: data-.*'
     acc_pattern = r'(\d+(\.\d{1,2})?%)$'
     key, value = '', ''
+    break_patten = r'------'
 
     for line in lines:                  #TOorg: The code is to store the last K v in the .txt file 
+        # if re.search(break_patten, line):
+        #     break
         if re.search(exp_pattern, line):
             if key and value:  # only store to dict if key and value are both not empty
                 data[key] = value
@@ -29,10 +32,14 @@ def formatting_data(data_dict):
     new_dict = {}
     for key, value in data_dict.items():
         new_key = key.split(" ")[1]
-        new_key = new_key.replace('rn50_ep50', 'rn50ep50')
+        new_key = new_key.replace('rn50_ep50', 'rn50ep50')      #NOTE that here amy need to change
+        new_key = new_key.replace('rn50_ep100', 'rn50ep100')
+        new_key = new_key.replace('rn50_ep200', 'rn50ep200')
+
         new_key = new_key.replace('ssoxford_pets', 'ssoxfordpets')
         new_key = new_key.replace('loss-rc_cav', 'loss-rc cav')
         new_key = new_key.replace('loss-rc_refine', 'loss-rc refine')
+        new_key = new_key.replace('loss-cc_refine', 'loss-cc refine')
         new_key = new_key.replace('loss-cc_rc', 'loss-cc rc')
         new_key = new_key.replace('loss-cc_refine', 'loss-cc refine')
         new_key = new_key.replace('loss-rc_rc', 'loss-rc rc')
@@ -40,7 +47,7 @@ def formatting_data(data_dict):
     return new_dict
 
 # data_dict = extract_info('log_10-04_14-06-35_ssoxford_pets.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssoxford_pets.txt
-data_dict_new = extract_info('log_10.13-test_cc_refine_ssucf101.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
+data_dict_new = extract_info('log_10.12-test_lossMin_ssucf101.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
 data_dict_old = extract_info('log_10-04_17-35-17_ssucf101-contain-no-beta.txt')      #contain-no-beta is baseline
 data_dict_new = formatting_data(data_dict_new)
 data_dict_old = formatting_data(data_dict_old)
@@ -84,16 +91,16 @@ import numpy as np
 #----------------------settings----------------------
 # Select the rows where beta == 1.5 and bs == 32
 change = "(df['change']=='new')"
-loss = "(df['loss']!='CE')"
-# loss = "(df['loss']=='CE')"
-# loss = "(df['loss']=='cc')"
+# loss = "(df['loss']!='CE')"
+# loss = "(df['loss']=='cc refine')"
+# loss = "(df['loss']=='cc') "
 # loss = "(df['loss']=='rc cav')"
 # beta = "(df['beta']=='0.0')"
 PLL_ratio = "(df['usePLLTrue']=='0.3')"
 # Iepoch = "(df['Iepoch']=='1') | (df['Iepoch'].isna())" 
 # seed = "(~((df['seed']=='3') & (df['loss']=='rc cav') & (df['usePLLTrue']=='0.3')))"
-seed = "(df['seed']=='1')"
-select_condiction =   loss + '&' + seed  + '&' + PLL_ratio  + '&' + change
+# seed = "(df['seed']=='1')"
+select_condiction =   PLL_ratio  + '&' + change
 
 if select_condiction == 'None':
     selected_rows = df
@@ -102,7 +109,7 @@ else:
 #----------------------settings----------------------
 
 # Group by Variables
-grouped_vars = ["Iepoch","beta",  "loss"]        
+grouped_vars = ["beta", "lossMin",  "loss"]        
 compar_var = 'accuracy'
 grouped_data = selected_rows.groupby(grouped_vars)[compar_var].mean().reset_index()
 # Convert the "usePLLTrue" column to float

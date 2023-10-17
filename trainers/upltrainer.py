@@ -776,7 +776,7 @@ class UPLTrainer(TrainerX):
         results = self.evaluator.evaluate()
         #0. save loged logits and conf: 
         # if True or log_conf == True:
-        #     self.criterion.log_conf(all_logits=torch.cat(outputs_all, dim=0), all_labels=torch.cat(label_all, dim=0))
+            # self.criterion.log_conf(all_logits=torch.cat(outputs_all, dim=0), all_labels=torch.cat(label_all, dim=0))
         if False and split == 'test':
             #1. save class_acc_sumlist and evalset_acc_sumlist:        #NOTE before uncomment remember to changed the name, otherwise the original file will be overwritten
             filename = f'analyze_result_temp/class_acc_sumlist/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.cfg.TRAINER.PLL.PARTIAL_RATE}_{self.cfg.TRAINER.LOSS_TYPE}_beta{self.cfg.TRAINER.PLL.BETA}.json'
@@ -1185,11 +1185,12 @@ class UPLTrainer(TrainerX):
                 for cls_idx, pool in self.criterion.cls_pools_dict.items():
                     cls_acc = acc_dict[self.evaluator._lab2cname[cls_idx]]       
                     self.criterion.update_conf_epochend(pool_id=cls_idx)
-                    pool.enlarge_pool(max_num=round(self.cfg.DATASET.NUM_SHOTS * cls_acc/100 * self.cfg.TRAINER.PLL.POOL_ENLARGE_SCALE))
+                    pool.enlarge_pool(max_num=round(self.cfg.TRAINER.PLL.MAX_POOLNUM * cls_acc/100 * self.cfg.TRAINER.PLL.POOL_ENLARGE_SCALE))
                     pool.reset()
-
-        if self.cfg.TRAINER.PLL.USE_PLL:
-            self.criterion.clean_conf()
+                    
+        if self.epoch != 0:            #self.epoch start from 0
+            if self.cfg.TRAINER.PLL.USE_PLL:
+                self.criterion.clean_conf()
 
 
     @torch.no_grad()                           

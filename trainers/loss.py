@@ -134,7 +134,7 @@ class PLL_loss(nn.Module):
     
     def forward_rc(self, x, y, index):
         logsm_outputs = F.log_softmax(x, dim=1)         #x is the model ouputs
-        final_outputs = logsm_outputs * (self.conf[index, :] + self.eps)
+        final_outputs = logsm_outputs * self.conf[index, :]
         loss = - final_outputs.sum(dim=1)    #final_outputs=torch.Size([256, 10]) -> Q: why use negative? A:  
         return loss     
 
@@ -191,44 +191,55 @@ class PLL_loss(nn.Module):
         elif conf_type == 'refine':
             batch_idxs = batch_idxs.to(self.device)
             cav = (outputs * torch.abs(1 - outputs)) * labels
-            max_idx, cav_pred = torch.max(cav, dim=1)
-            unc = self.cal_uncertainty(outputs, cav_pred)      
+            
+            def recursion(num_top_pools, output, cav_logits, not_in_pool):
+                if num_top_pools == 0 or (not_in_pool==False).all():
+                    return 
+                else:
+                    this_loop_idxs = torch.arange(0, output.shape[0])[not_in_pool]        #torch.arange(0, output.shape[0])[not_in_pool]
+                    # output[this_loop_idxs]; cav_logits[this_loop_idxs]
 
-            in_pool = torch.empty(0, dtype=torch.bool).to(self.device)
+                    max_val, cav_pred = torch.max(cav_logits[this_loop_idxs], dim=1)
+                    unc = self.cal_uncertainty(output[this_loop_idxs], cav_pred)      
 
-            for i, cls_idx in enumerate(cav_pred):
-                pool = self.cls_pools_dict[cls_idx.item()]
-                in_pool_ = pool.update(feat_idxs=batch_idxs[i].unsqueeze(0), feat_unc=unc[i].unsqueeze(0))
-                in_pool = torch.cat((in_pool, in_pool_))
-                # if in_pool_.item():
-                #     self.pred_label_dict.update({batch_idxs[i].item(): [cls_idx.cpu().item(), unc[i].cpu().item()]})
+                    for i, (cls_idx, idx) in enumerate(zip(cav_pred, this_loop_idxs)):
+                        pool = self.cls_pools_dict[cls_idx.item()]
+                        in_pool = pool.update(feat_idxs=batch_idxs[idx].unsqueeze(0), feat_unc=unc[i].unsqueeze(0))
+                        not_in_pool[idx] = ~in_pool
+                        # if in_pool.item():    #HACK： should change the position
+                            # self.pred_label_dict.update({batch_idxs[i].item(): [cls_idx.cpu().item(), unc[i].cpu().item()]})
 
-            self.not_inpool_idxs = torch.cat((self.not_inpool_idxs, batch_idxs[~in_pool]))
+                    cav_logits[this_loop_idxs, cav_pred] = -torch.inf
+                    recursion(num_top_pools-1, output, cav_logits, not_in_pool)
+                    return 
+            
+            not_in_pool_init = torch.ones(outputs.shape[0], dtype=torch.bool).to(self.device)
+            recursion(self.cfg.TOP_POOLS, outputs, cav, not_in_pool_init)
+            self.not_inpool_idxs = torch.cat((self.not_inpool_idxs, batch_idxs[not_in_pool_init]))
 
-            # if self.cfg.TOP_POOLS != 1:
-            #     pass                        #TODO add recursion here
-            # else:
-            #     # self.conf[batch_idxs[~in_pool], :] = labels[~in_pool]     #TODO can ehance here, if not in pool how to change the conf
-            #     pass
 
     def clean_conf(self):
-        if hasattr(self, 'origin_labels'):
-            self.conf[self.not_inpool_idxs, :] = self.origin_labels[self.not_inpool_idxs, :]
+        if hasattr(self, 'origin_labels') and hasattr(self, 'conf'):
+            # self.conf[self.not_inpool_idxs, :] = self.origin_labels[self.not_inpool_idxs, :]
+            print(f'<{self.not_inpool_idxs.shape[0]}> samples are not in pool')
+            self.not_inpool_idxs = torch.LongTensor([]).to(self.device)         #reset not_inpool_idxs
         if hasattr(self, 'conf'):
-            self.conf = torch.where(self.conf < self.eps, torch.zeros_like(self.conf), self.conf)
+            self.conf = torch.where(self.conf < (1/self.conf.shape[1]), torch.zeros_like(self.conf), self.conf)
+            base_value = self.conf.sum(dim=1).unsqueeze(1).repeat(1, self.conf.shape[1])
+            self.conf = self.conf / base_value
 
 
-    def update_conf_epochend(self, pool_id, shrink_f=0.1):      # shrink_f larger means val of unc_norm has larger effect on momn
+    def update_conf_epochend(self, pool_id, shrink_f=0.5):      # shrink_f larger means val of unc_norm has larger effect on momn
         assert 'refine' in self.losstype
         cur_pool = self.cls_pools_dict[pool_id]
 
-        pred_conf_value = self.conf[cur_pool.pool_idx, pool_id]        
-        if cur_pool.pool_capacity > 1:
+        pred_conf_value = self.conf[cur_pool.pool_idx, pool_id]       
+        if cur_pool.pool_capacity > 1: 
             unc_norm = (cur_pool.pool_unc - cur_pool.pool_unc.min()) / (cur_pool.pool_unc.max() - cur_pool.pool_unc.min())
             conf_increment = (1 - self.conf_momn) * (1 - unc_norm * shrink_f) 
-            pred_conf_value_ = pred_conf_value * self.conf_momn + conf_increment
-        else:
-            pred_conf_value_ = pred_conf_value * self.conf_momn + (1 - self.conf_momn)
+        if cur_pool.pool_capacity <= 1 or (torch.isnan(conf_increment)).any():
+            conf_increment = (1 - self.conf_momn)
+        pred_conf_value_ = pred_conf_value * self.conf_momn + conf_increment
         base_value = pred_conf_value_ - pred_conf_value + 1
 
         # assert (base_value >= 1).all(), 'base_value should larger than 1'     #TODO double check
@@ -253,7 +264,7 @@ class PLL_loss(nn.Module):
             print(f'save logits -> losstype: {self.losstype}, save id: {self.num}')
             if self.losstype == 'cc_refine' or 'epoch' in self.losstype:      # need to run 2 times for getting conf
                 if not hasattr(self, 'save_type'):
-                    self.save_type = f'cc_refine_{self.losstype.split("-")[1]}epoch'
+                    self.save_type = f'cc_refine'
 
                 torch.save(self.conf, f'analyze_result_temp/logits&labels_10.14/conf-{self.save_type}_{log_id}-{self.num}.pt')
                 torch.save(self.pred_label_dict, f'analyze_result_temp/logits&labels_10.14_pool/pred_label-{self.save_type}_{log_id}-{self.num}.pt')

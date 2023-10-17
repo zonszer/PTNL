@@ -155,20 +155,38 @@ for j, label in enumerate(index_cls_worst):
     plot_logitsDistri(image_logits[idxs], label.repeat(len(idxs[0])), do_softmax=True)
 
 # %%
+# --------------------------plot the relationship between classes acc and CE loss and pre_num:-----------------
 import numpy as np
 from collections import Counter
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 import torch
 import torch.nn as nn
+dict_as_input_format = True
 
-# Assuming image_logits and image_labels are numpy arrays
-# Get predicted class indices
-pred_indices = np.argmax(image_logits, axis=1)
+if dict_as_input_format:
+    pred_indices = np.array(list(pred_labels.values()))   # Predicted class labels
+    image_labels = np.array(list(gt_labels.values()))    # Ground truth class labels
+
+    # Count total occurrences for each class in pred_labels and gt_labels
+    class_counts_pred = Counter(pred_labels.values())        
+    class_counts_gt = Counter(gt_labels.values())   
+
+    # Calculate the ACC for each class and store it in acc_dict as {class_idx: acc}
+    acc_dict = {}
+    for class_idx in range(len(class_counts_gt)):
+        acc_dict[class_idx] = class_counts_pred[class_idx] / class_counts_gt[class_idx] if class_counts_gt[class_idx] != 0 else 0
+    # Convert keys to class labels
+    acc_array = np.array(list(acc_dict.values()))
+
+else:
+    # Assuming image_logits and image_labels are torch tensors
+    image_logits_, image_labels_ = torch.from_numpy(image_logits), torch.from_numpy(image_labels)
+    pred_indices = np.argmax(image_logits, axis=1)  #pred_labels is a dict which like {example_idx: pred class index(labels)}
 
 # Count occurrences for each class
-class_counts = Counter(pred_indices)
-class_counts_true = Counter(image_labels)
+class_counts = Counter(pred_indices)        
+class_counts_true = Counter(image_labels)   #gt_labels is a dict which like {example_idx: true class index(labels)}
 
 # Convert keys to class labels
 class_counts_dict = {class_idx: count-class_counts_true[class_idx] for class_idx, count in class_counts.items()}
@@ -192,9 +210,6 @@ colormap = mcolors.ListedColormap(colors)
 color_array = np.linspace(0, 1, num=len(class_counts))
 # Step 4: Assign colors to data points based on their order
 ordered_colors = color_array
-
-# Assuming image_logits and image_labels are torch tensors
-image_logits_, image_labels_ = torch.from_numpy(image_logits), torch.from_numpy(image_labels)
 
 # Get predicted class indices
 pred_indices = torch.argmax(image_logits_, dim=1)

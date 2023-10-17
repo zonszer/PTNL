@@ -1,0 +1,954 @@
+***************
+** Arguments **
+***************
+backbone: 
+config_file: configs/trainers/UPLTrainer/rn50_ep100.yaml
+dataset_config_file: configs/datasets/ssoxford_pets.yaml
+eval_only: False
+head: 
+hh_config_file: 
+load_epoch: None
+loss_type: cc
+model_dir: 
+no_train: False
+num_fp: 0
+opts: ['TRAINER.UPLTrainer.N_CTX', '16', 'TRAINER.UPLTrainer.CSC', 'False', 'TRAINER.UPLTrainer.CLASS_TOKEN_POSITION', 'end', 'DATASET.NUM_SHOTS', '16', 'DATASET.CLASS_EQULE', 'True', 'TEST.FINAL_MODEL', 'best_val', 'TRAINER.PLL.BETA', '0.0', 'TRAINER.PLL.USE_REGULAR', 'True', 'TRAINER.PLL.USE_PLL', 'True', 'TRAINER.PLL.PARTIAL_RATE', '0.3', 'TRAINER.PLL.LOSS_MIN', '0.0', 'TRAINER.PLL.USE_LABEL_FILTER', 'True', 'TRAINER.PLL.CONF_MOMN', '0.99', 'TRAINER.PLL.TEMPERATURE', '1.0', 'TRAINER.PLL.TOP_POOLS', '1']
+output_dir: ./output/ssoxford_pets/UPLTrainer/rn50_ep100_16shots-10.16-test_cc_refine_ep100_plus_1/SEED1/data-ssoxford_pets_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_seed-1_beta-0.0_FILT-True_T-1.0_cMomn-0.99_topP-1
+resume: 
+root: ./data
+seed: 1
+source_domains: None
+target_domains: None
+trainer: UPLTrainer
+transforms: None
+************
+** Config **
+************
+DATALOADER:
+  K_TRANSFORMS: 1
+  NUM_WORKERS: 8
+  OPEN_SETTING: False
+  RETURN_IMG0: False
+  TEST:
+    BATCH_SIZE: 100
+    SAMPLER: SequentialSampler
+    SHUFFLE: False
+  TRAIN_U:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAME_AS_X: True
+    SAMPLER: RandomSampler
+  TRAIN_X:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAMPLER: RandomSampler
+    SHUFFLE: True
+  VAL:
+    BATCH_SIZE: 50
+    SHUFFLE: False
+DATASET:
+  ALL_AS_UNLABELED: False
+  CIFAR_C_LEVEL: 1
+  CIFAR_C_TYPE: 
+  CLASS_EQULE: True
+  CONF_THRESHOLD: 0.9
+  IGNORE_FILE: 
+  IGNORE_NUM: 0
+  NAME: SSOxfordPets
+  NUM_LABELED: -1
+  NUM_SHOTS: 16
+  ROOT: ./data
+  SOURCE_DOMAINS: ()
+  STL10_FOLD: -1
+  TARGET_DOMAINS: ()
+  VAL_PERCENT: 0.1
+INPUT:
+  COLORJITTER_B: 0.4
+  COLORJITTER_C: 0.4
+  COLORJITTER_H: 0.1
+  COLORJITTER_S: 0.4
+  CROP_PADDING: 4
+  CUTOUT_LEN: 16
+  CUTOUT_N: 1
+  GB_K: 21
+  GB_P: 0.5
+  GN_MEAN: 0.0
+  GN_STD: 0.15
+  INTERPOLATION: bicubic
+  NO_TRANSFORM: False
+  PIXEL_MEAN: [0.48145466, 0.4578275, 0.40821073]
+  PIXEL_STD: [0.26862954, 0.26130258, 0.27577711]
+  RANDAUGMENT_M: 10
+  RANDAUGMENT_N: 2
+  RGS_P: 0.2
+  RRCROP_SCALE: (0.08, 1.0)
+  SIZE: (224, 224)
+  TRANSFORMS: ('random_resized_crop', 'random_flip', 'normalize')
+MODEL:
+  BACKBONE:
+    NAME: RN50
+    PRETRAINED: True
+  HEAD:
+    ACTIVATION: relu
+    BN: True
+    DROPOUT: 0.0
+    HIDDEN_LAYERS: ()
+    NAME: 
+  INIT_WEIGHTS: 
+  PSEUDO_LABEL_MODELS: ['RN50']
+OPTIM:
+  ADAM_BETA1: 0.9
+  ADAM_BETA2: 0.999
+  BASE_LR_MULT: 0.1
+  GAMMA: 0.1
+  LR: 0.002
+  LR_SCHEDULER: cosine
+  MAX_EPOCH: 100
+  MOMENTUM: 0.9
+  NAME: sgd
+  NEW_LAYERS: ()
+  RMSPROP_ALPHA: 0.99
+  SGD_DAMPNING: 0
+  SGD_NESTEROV: False
+  STAGED_LR: False
+  STEPSIZE: (-1,)
+  WARMUP_CONS_LR: 1e-05
+  WARMUP_EPOCH: 1
+  WARMUP_MIN_LR: 1e-05
+  WARMUP_RECOUNT: True
+  WARMUP_TYPE: constant
+  WEIGHT_DECAY: 0.0005
+OUTPUT_DIR: ./output/ssoxford_pets/UPLTrainer/rn50_ep100_16shots-10.16-test_cc_refine_ep100_plus_1/SEED1/data-ssoxford_pets_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_seed-1_beta-0.0_FILT-True_T-1.0_cMomn-0.99_topP-1
+RESUME: 
+SEED: 1
+TEST:
+  Analyze_Result_Path: ./analysis_results_test/
+  COMPUTE_CMAT: False
+  EVALUATOR: UPLClassification
+  FINAL_MODEL: best_val
+  NO_TEST: False
+  PER_CLASS_RESULT: True
+  SPLIT: test
+TRAIN:
+  CHECKPOINT_FREQ: 0
+  COUNT_ITER: train_x
+  PRINT_FREQ: 5
+TRAINER:
+  CG:
+    ALPHA_D: 0.5
+    ALPHA_F: 0.5
+    EPS_D: 1.0
+    EPS_F: 1.0
+  DAEL:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DDAIG:
+    ALPHA: 0.5
+    CLAMP: False
+    CLAMP_MAX: 1.0
+    CLAMP_MIN: -1.0
+    G_ARCH: 
+    LMDA: 0.3
+    WARMUP: 0
+  ENSEMBLE_NUM: 1
+  ENTMIN:
+    LMDA: 0.001
+  FIXMATCH:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 1.0
+  LOSS_TYPE: cc
+  M3SDA:
+    LMDA: 0.5
+    N_STEP_F: 4
+  MCD:
+    N_STEP_F: 4
+  MEANTEA:
+    EMA_ALPHA: 0.999
+    RAMPUP: 5
+    WEIGHT_U: 1.0
+  MIXMATCH:
+    MIXUP_BETA: 0.75
+    RAMPUP: 20000
+    TEMP: 2.0
+    WEIGHT_U: 100.0
+  MME:
+    LMDA: 0.1
+  NAME: UPLTrainer
+  PLL:
+    BETA: 0.0
+    CONF_LOSS_TYPE: 
+    CONF_MOMN: 0.99
+    LOSS_MIN: 0.0
+    PARTIAL_RATE: 0.3
+    POOL_ENLARGE_SCALE: 1.0
+    TEMPERATURE: 1.0
+    TOP_POOLS: 1
+    USE_LABEL_FILTER: True
+    USE_PLL: True
+    USE_REGULAR: True
+  SE:
+    CONF_THRE: 0.95
+    EMA_ALPHA: 0.999
+    RAMPUP: 300
+  UPLTrainer:
+    CLASS_TOKEN_POSITION: end
+    CSC: False
+    CTX_INIT: 
+    NUM_FP: 0
+    N_CTX: 16
+    PREC: fp16
+USE_CUDA: True
+VERBOSE: True
+VERSION: 1
+Collecting env info ...
+** System info **
+PyTorch version: 1.12.1+cu113
+Is debug build: False
+CUDA used to build PyTorch: 11.3
+ROCM used to build PyTorch: N/A
+
+OS: Ubuntu 22.04.3 LTS (x86_64)
+GCC version: (Ubuntu 9.5.0-1ubuntu1~22.04) 9.5.0
+Clang version: Could not collect
+CMake version: version 3.22.1
+Libc version: glibc-2.35
+
+Python version: 3.9.17 | packaged by conda-forge | (main, Aug 10 2023, 07:02:31)  [GCC 12.3.0] (64-bit runtime)
+Python platform: Linux-6.2.0-34-generic-x86_64-with-glibc2.35
+Is CUDA available: True
+CUDA runtime version: 11.5.119
+GPU models and configuration: 
+GPU 0: NVIDIA A100-PCIE-40GB
+GPU 1: Tesla V100-PCIE-16GB
+GPU 2: Tesla V100-PCIE-16GB
+
+Nvidia driver version: Could not collect
+cuDNN version: Could not collect
+HIP runtime version: N/A
+MIOpen runtime version: N/A
+Is XNNPACK available: True
+
+Versions of relevant libraries:
+[pip3] numpy==1.24.3
+[pip3] torch==1.12.1+cu113
+[pip3] torch-tb-profiler==0.2.0
+[pip3] torchaudio==0.12.1+cu113
+[pip3] torchvision==0.13.1+cu113
+[conda] numpy                     1.24.3                   pypi_0    pypi
+[conda] torch                     1.12.1+cu113             pypi_0    pypi
+[conda] torch-tb-profiler         0.2.0                    pypi_0    pypi
+[conda] torchaudio                0.12.1+cu113             pypi_0    pypi
+[conda] torchvision               0.13.1+cu113             pypi_0    pypi
+        Pillow (10.0.0)
+
+Loading trainer: UPLTrainer
+Loading dataset: SSOxfordPets
+Reading split from /mnt/disk2/zjh/projects7.12/PTNL/data/oxford_pets/split_zhou_OxfordPets.json
+Reading split from /mnt/disk2/zjh/projects7.12/PTNL/data/oxford_pets/split_zhou_OxfordPets.json
+* Using custom transform for testing
+Building transform_train
++ random resized crop (size=(224, 224), scale=(0.08, 1.0))
++ random flip
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+---------  ------------
+Dataset    SSOxfordPets
+# classes  37
+# train_x  2,944
+# val      736
+# test     3,669
+---------  ------------
+Loading CLIP (backbone: RN50)
+Building custom CLIP
+Initializing a generic context
+Initial context: "X X X X X X X X X X X X X X X X"
+Number of context words (tokens): 16
+Turning off gradients in both the image and the text encoder
+Loading evaluator: UPLClassification
+Loaded training GT labels from /mnt/disk2/zjh/projects7.12/PTNL/data/oxford_pets/SSOxfordPets_GTlabels.json
+--- 0
+['./data/oxford_pets/images/Abyssinian_182.jpg'
+ './data/oxford_pets/images/Abyssinian_15.jpg'
+ './data/oxford_pets/images/Abyssinian_121.jpg'
+ './data/oxford_pets/images/Abyssinian_168.jpg'
+ './data/oxford_pets/images/Abyssinian_142.jpg'
+ './data/oxford_pets/images/Abyssinian_138.jpg'
+ './data/oxford_pets/images/Abyssinian_139.jpg'
+ './data/oxford_pets/images/Abyssinian_164.jpg'
+ './data/oxford_pets/images/Abyssinian_149.jpg'
+ './data/oxford_pets/images/Abyssinian_143.jpg'
+ './data/oxford_pets/images/Abyssinian_13.jpg'
+ './data/oxford_pets/images/Abyssinian_129.jpg'
+ './data/oxford_pets/images/Abyssinian_193.jpg'
+ './data/oxford_pets/images/Abyssinian_16.jpg'
+ './data/oxford_pets/images/Abyssinian_136.jpg'
+ './data/oxford_pets/images/Abyssinian_117.jpg']
+--- 1
+['./data/oxford_pets/images/american_bulldog_108.jpg'
+ './data/oxford_pets/images/american_bulldog_116.jpg'
+ './data/oxford_pets/images/american_bulldog_132.jpg'
+ './data/oxford_pets/images/american_bulldog_184.jpg'
+ './data/oxford_pets/images/american_bulldog_202.jpg'
+ './data/oxford_pets/images/american_bulldog_120.jpg'
+ './data/oxford_pets/images/american_bulldog_128.jpg'
+ './data/oxford_pets/images/american_bulldog_152.jpg'
+ './data/oxford_pets/images/american_bulldog_147.jpg'
+ './data/oxford_pets/images/american_bulldog_134.jpg'
+ './data/oxford_pets/images/american_bulldog_109.jpg'
+ './data/oxford_pets/images/american_bulldog_18.jpg'
+ './data/oxford_pets/images/american_bulldog_105.jpg'
+ './data/oxford_pets/images/american_bulldog_126.jpg'
+ './data/oxford_pets/images/american_bulldog_179.jpg'
+ './data/oxford_pets/images/american_bulldog_125.jpg']
+--- 2
+['./data/oxford_pets/images/american_pit_bull_terrier_134.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_175.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_147.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_12.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_140.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_16.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_105.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_158.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_165.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_153.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_171.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_157.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_150.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_127.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_15.jpg'
+ './data/oxford_pets/images/american_pit_bull_terrier_111.jpg']
+--- 3
+['./data/oxford_pets/images/basset_hound_147.jpg'
+ './data/oxford_pets/images/basset_hound_167.jpg'
+ './data/oxford_pets/images/basset_hound_154.jpg'
+ './data/oxford_pets/images/basset_hound_174.jpg'
+ './data/oxford_pets/images/basset_hound_122.jpg'
+ './data/oxford_pets/images/basset_hound_171.jpg'
+ './data/oxford_pets/images/basset_hound_119.jpg'
+ './data/oxford_pets/images/basset_hound_136.jpg'
+ './data/oxford_pets/images/basset_hound_14.jpg'
+ './data/oxford_pets/images/basset_hound_161.jpg'
+ './data/oxford_pets/images/basset_hound_146.jpg'
+ './data/oxford_pets/images/basset_hound_156.jpg'
+ './data/oxford_pets/images/basset_hound_18.jpg'
+ './data/oxford_pets/images/basset_hound_114.jpg'
+ './data/oxford_pets/images/basset_hound_163.jpg'
+ './data/oxford_pets/images/basset_hound_118.jpg']
+--- 4
+['./data/oxford_pets/images/beagle_113.jpg'
+ './data/oxford_pets/images/beagle_131.jpg'
+ './data/oxford_pets/images/beagle_147.jpg'
+ './data/oxford_pets/images/beagle_109.jpg'
+ './data/oxford_pets/images/beagle_122.jpg'
+ './data/oxford_pets/images/beagle_185.jpg'
+ './data/oxford_pets/images/beagle_144.jpg'
+ './data/oxford_pets/images/beagle_151.jpg'
+ './data/oxford_pets/images/beagle_166.jpg'
+ './data/oxford_pets/images/beagle_164.jpg'
+ './data/oxford_pets/images/beagle_117.jpg'
+ './data/oxford_pets/images/beagle_18.jpg'
+ './data/oxford_pets/images/beagle_181.jpg'
+ './data/oxford_pets/images/beagle_119.jpg'
+ './data/oxford_pets/images/beagle_153.jpg'
+ './data/oxford_pets/images/beagle_149.jpg']
+--- 5
+['./data/oxford_pets/images/Bengal_101.jpg'
+ './data/oxford_pets/images/Bengal_138.jpg'
+ './data/oxford_pets/images/Bengal_155.jpg'
+ './data/oxford_pets/images/Bengal_160.jpg'
+ './data/oxford_pets/images/Bengal_17.jpg'
+ './data/oxford_pets/images/Bengal_133.jpg'
+ './data/oxford_pets/images/Bengal_175.jpg'
+ './data/oxford_pets/images/Bengal_12.jpg'
+ './data/oxford_pets/images/Bengal_125.jpg'
+ './data/oxford_pets/images/Bengal_149.jpg'
+ './data/oxford_pets/images/Bengal_153.jpg'
+ './data/oxford_pets/images/Bengal_142.jpg'
+ './data/oxford_pets/images/Bengal_134.jpg'
+ './data/oxford_pets/images/Bengal_14.jpg'
+ './data/oxford_pets/images/Bengal_179.jpg'
+ './data/oxford_pets/images/Bengal_122.jpg']
+--- 6
+['./data/oxford_pets/images/Birman_14.jpg'
+ './data/oxford_pets/images/Birman_127.jpg'
+ './data/oxford_pets/images/Birman_125.jpg'
+ './data/oxford_pets/images/Birman_108.jpg'
+ './data/oxford_pets/images/Birman_104.jpg'
+ './data/oxford_pets/images/Birman_142.jpg'
+ './data/oxford_pets/images/Birman_17.jpg'
+ './data/oxford_pets/images/Birman_188.jpg'
+ './data/oxford_pets/images/Birman_184.jpg'
+ './data/oxford_pets/images/Birman_16.jpg'
+ './data/oxford_pets/images/Birman_175.jpg'
+ './data/oxford_pets/images/Birman_171.jpg'
+ './data/oxford_pets/images/Birman_162.jpg'
+ './data/oxford_pets/images/Birman_158.jpg'
+ './data/oxford_pets/images/Birman_177.jpg'
+ './data/oxford_pets/images/Birman_119.jpg']
+--- 7
+['./data/oxford_pets/images/Bombay_104.jpg'
+ './data/oxford_pets/images/Bombay_125.jpg'
+ './data/oxford_pets/images/Bombay_115.jpg'
+ './data/oxford_pets/images/Bombay_110.jpg'
+ './data/oxford_pets/images/Bombay_156.jpg'
+ './data/oxford_pets/images/Bombay_10.jpg'
+ './data/oxford_pets/images/Bombay_1.jpg'
+ './data/oxford_pets/images/Bombay_128.jpg'
+ './data/oxford_pets/images/Bombay_18.jpg'
+ './data/oxford_pets/images/Bombay_135.jpg'
+ './data/oxford_pets/images/Bombay_127.jpg'
+ './data/oxford_pets/images/Bombay_158.jpg'
+ './data/oxford_pets/images/Bombay_113.jpg'
+ './data/oxford_pets/images/Bombay_126.jpg'
+ './data/oxford_pets/images/Bombay_186.jpg'
+ './data/oxford_pets/images/Bombay_148.jpg']
+--- 8
+['./data/oxford_pets/images/boxer_13.jpg'
+ './data/oxford_pets/images/boxer_15.jpg'
+ './data/oxford_pets/images/boxer_148.jpg'
+ './data/oxford_pets/images/boxer_156.jpg'
+ './data/oxford_pets/images/boxer_144.jpg'
+ './data/oxford_pets/images/boxer_145.jpg'
+ './data/oxford_pets/images/boxer_120.jpg'
+ './data/oxford_pets/images/boxer_165.jpg'
+ './data/oxford_pets/images/boxer_12.jpg'
+ './data/oxford_pets/images/boxer_176.jpg'
+ './data/oxford_pets/images/boxer_155.jpg'
+ './data/oxford_pets/images/boxer_17.jpg'
+ './data/oxford_pets/images/boxer_102.jpg'
+ './data/oxford_pets/images/boxer_139.jpg'
+ './data/oxford_pets/images/boxer_172.jpg'
+ './data/oxford_pets/images/boxer_186.jpg']
+--- 9
+['./data/oxford_pets/images/British_Shorthair_102.jpg'
+ './data/oxford_pets/images/British_Shorthair_17.jpg'
+ './data/oxford_pets/images/British_Shorthair_137.jpg'
+ './data/oxford_pets/images/British_Shorthair_185.jpg'
+ './data/oxford_pets/images/British_Shorthair_126.jpg'
+ './data/oxford_pets/images/British_Shorthair_196.jpg'
+ './data/oxford_pets/images/British_Shorthair_165.jpg'
+ './data/oxford_pets/images/British_Shorthair_125.jpg'
+ './data/oxford_pets/images/British_Shorthair_160.jpg'
+ './data/oxford_pets/images/British_Shorthair_173.jpg'
+ './data/oxford_pets/images/British_Shorthair_112.jpg'
+ './data/oxford_pets/images/British_Shorthair_109.jpg'
+ './data/oxford_pets/images/British_Shorthair_149.jpg'
+ './data/oxford_pets/images/British_Shorthair_128.jpg'
+ './data/oxford_pets/images/British_Shorthair_195.jpg'
+ './data/oxford_pets/images/British_Shorthair_177.jpg']
+--- 10
+['./data/oxford_pets/images/chihuahua_108.jpg'
+ './data/oxford_pets/images/chihuahua_149.jpg'
+ './data/oxford_pets/images/chihuahua_171.jpg'
+ './data/oxford_pets/images/chihuahua_153.jpg'
+ './data/oxford_pets/images/chihuahua_16.jpg'
+ './data/oxford_pets/images/chihuahua_110.jpg'
+ './data/oxford_pets/images/chihuahua_132.jpg'
+ './data/oxford_pets/images/chihuahua_126.jpg'
+ './data/oxford_pets/images/chihuahua_140.jpg'
+ './data/oxford_pets/images/chihuahua_100.jpg'
+ './data/oxford_pets/images/chihuahua_17.jpg'
+ './data/oxford_pets/images/chihuahua_183.jpg'
+ './data/oxford_pets/images/chihuahua_131.jpg'
+ './data/oxford_pets/images/chihuahua_117.jpg'
+ './data/oxford_pets/images/chihuahua_12.jpg'
+ './data/oxford_pets/images/chihuahua_133.jpg']
+--- 11
+['./data/oxford_pets/images/Egyptian_Mau_128.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_143.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_161.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_171.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_154.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_156.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_136.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_141.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_186.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_100.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_130.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_150.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_180.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_162.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_142.jpg'
+ './data/oxford_pets/images/Egyptian_Mau_165.jpg']
+--- 12
+['./data/oxford_pets/images/english_cocker_spaniel_184.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_103.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_190.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_183.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_187.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_11.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_146.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_108.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_155.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_125.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_111.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_109.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_140.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_129.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_151.jpg'
+ './data/oxford_pets/images/english_cocker_spaniel_15.jpg']
+--- 13
+['./data/oxford_pets/images/english_setter_166.jpg'
+ './data/oxford_pets/images/english_setter_129.jpg'
+ './data/oxford_pets/images/english_setter_138.jpg'
+ './data/oxford_pets/images/english_setter_177.jpg'
+ './data/oxford_pets/images/english_setter_141.jpg'
+ './data/oxford_pets/images/english_setter_18.jpg'
+ './data/oxford_pets/images/english_setter_174.jpg'
+ './data/oxford_pets/images/english_setter_108.jpg'
+ './data/oxford_pets/images/english_setter_148.jpg'
+ './data/oxford_pets/images/english_setter_150.jpg'
+ './data/oxford_pets/images/english_setter_165.jpg'
+ './data/oxford_pets/images/english_setter_142.jpg'
+ './data/oxford_pets/images/english_setter_106.jpg'
+ './data/oxford_pets/images/english_setter_151.jpg'
+ './data/oxford_pets/images/english_setter_111.jpg'
+ './data/oxford_pets/images/english_setter_124.jpg']
+--- 14
+['./data/oxford_pets/images/german_shorthaired_150.jpg'
+ './data/oxford_pets/images/german_shorthaired_167.jpg'
+ './data/oxford_pets/images/german_shorthaired_119.jpg'
+ './data/oxford_pets/images/german_shorthaired_189.jpg'
+ './data/oxford_pets/images/german_shorthaired_117.jpg'
+ './data/oxford_pets/images/german_shorthaired_146.jpg'
+ './data/oxford_pets/images/german_shorthaired_133.jpg'
+ './data/oxford_pets/images/german_shorthaired_101.jpg'
+ './data/oxford_pets/images/german_shorthaired_186.jpg'
+ './data/oxford_pets/images/german_shorthaired_175.jpg'
+ './data/oxford_pets/images/german_shorthaired_147.jpg'
+ './data/oxford_pets/images/german_shorthaired_11.jpg'
+ './data/oxford_pets/images/german_shorthaired_148.jpg'
+ './data/oxford_pets/images/german_shorthaired_156.jpg'
+ './data/oxford_pets/images/german_shorthaired_15.jpg'
+ './data/oxford_pets/images/german_shorthaired_104.jpg']
+--- 15
+['./data/oxford_pets/images/great_pyrenees_189.jpg'
+ './data/oxford_pets/images/great_pyrenees_166.jpg'
+ './data/oxford_pets/images/great_pyrenees_127.jpg'
+ './data/oxford_pets/images/great_pyrenees_11.jpg'
+ './data/oxford_pets/images/great_pyrenees_146.jpg'
+ './data/oxford_pets/images/great_pyrenees_141.jpg'
+ './data/oxford_pets/images/great_pyrenees_122.jpg'
+ './data/oxford_pets/images/great_pyrenees_132.jpg'
+ './data/oxford_pets/images/great_pyrenees_102.jpg'
+ './data/oxford_pets/images/great_pyrenees_164.jpg'
+ './data/oxford_pets/images/great_pyrenees_138.jpg'
+ './data/oxford_pets/images/great_pyrenees_137.jpg'
+ './data/oxford_pets/images/great_pyrenees_153.jpg'
+ './data/oxford_pets/images/great_pyrenees_133.jpg'
+ './data/oxford_pets/images/great_pyrenees_17.jpg'
+ './data/oxford_pets/images/great_pyrenees_106.jpg']
+--- 16
+['./data/oxford_pets/images/havanese_125.jpg'
+ './data/oxford_pets/images/havanese_181.jpg'
+ './data/oxford_pets/images/havanese_138.jpg'
+ './data/oxford_pets/images/havanese_129.jpg'
+ './data/oxford_pets/images/havanese_104.jpg'
+ './data/oxford_pets/images/havanese_190.jpg'
+ './data/oxford_pets/images/havanese_130.jpg'
+ './data/oxford_pets/images/havanese_164.jpg'
+ './data/oxford_pets/images/havanese_187.jpg'
+ './data/oxford_pets/images/havanese_116.jpg'
+ './data/oxford_pets/images/havanese_126.jpg'
+ './data/oxford_pets/images/havanese_100.jpg'
+ './data/oxford_pets/images/havanese_147.jpg'
+ './data/oxford_pets/images/havanese_161.jpg'
+ './data/oxford_pets/images/havanese_133.jpg'
+ './data/oxford_pets/images/havanese_122.jpg']
+--- 17
+['./data/oxford_pets/images/japanese_chin_115.jpg'
+ './data/oxford_pets/images/japanese_chin_108.jpg'
+ './data/oxford_pets/images/japanese_chin_137.jpg'
+ './data/oxford_pets/images/japanese_chin_150.jpg'
+ './data/oxford_pets/images/japanese_chin_121.jpg'
+ './data/oxford_pets/images/japanese_chin_141.jpg'
+ './data/oxford_pets/images/japanese_chin_164.jpg'
+ './data/oxford_pets/images/japanese_chin_117.jpg'
+ './data/oxford_pets/images/japanese_chin_10.jpg'
+ './data/oxford_pets/images/japanese_chin_142.jpg'
+ './data/oxford_pets/images/japanese_chin_139.jpg'
+ './data/oxford_pets/images/japanese_chin_126.jpg'
+ './data/oxford_pets/images/japanese_chin_140.jpg'
+ './data/oxford_pets/images/japanese_chin_143.jpg'
+ './data/oxford_pets/images/japanese_chin_127.jpg'
+ './data/oxford_pets/images/japanese_chin_136.jpg']
+--- 18
+['./data/oxford_pets/images/keeshond_151.jpg'
+ './data/oxford_pets/images/keeshond_184.jpg'
+ './data/oxford_pets/images/keeshond_176.jpg'
+ './data/oxford_pets/images/keeshond_182.jpg'
+ './data/oxford_pets/images/keeshond_154.jpg'
+ './data/oxford_pets/images/keeshond_188.jpg'
+ './data/oxford_pets/images/keeshond_160.jpg'
+ './data/oxford_pets/images/keeshond_142.jpg'
+ './data/oxford_pets/images/keeshond_100.jpg'
+ './data/oxford_pets/images/keeshond_137.jpg'
+ './data/oxford_pets/images/keeshond_171.jpg'
+ './data/oxford_pets/images/keeshond_14.jpg'
+ './data/oxford_pets/images/keeshond_114.jpg'
+ './data/oxford_pets/images/keeshond_13.jpg'
+ './data/oxford_pets/images/keeshond_165.jpg'
+ './data/oxford_pets/images/keeshond_18.jpg']
+--- 19
+['./data/oxford_pets/images/leonberger_143.jpg'
+ './data/oxford_pets/images/leonberger_156.jpg'
+ './data/oxford_pets/images/leonberger_174.jpg'
+ './data/oxford_pets/images/leonberger_112.jpg'
+ './data/oxford_pets/images/leonberger_154.jpg'
+ './data/oxford_pets/images/leonberger_180.jpg'
+ './data/oxford_pets/images/leonberger_138.jpg'
+ './data/oxford_pets/images/leonberger_166.jpg'
+ './data/oxford_pets/images/leonberger_116.jpg'
+ './data/oxford_pets/images/leonberger_128.jpg'
+ './data/oxford_pets/images/leonberger_150.jpg'
+ './data/oxford_pets/images/leonberger_164.jpg'
+ './data/oxford_pets/images/leonberger_130.jpg'
+ './data/oxford_pets/images/leonberger_118.jpg'
+ './data/oxford_pets/images/leonberger_117.jpg'
+ './data/oxford_pets/images/leonberger_12.jpg']
+--- 20
+['./data/oxford_pets/images/Maine_Coon_196.jpg'
+ './data/oxford_pets/images/Maine_Coon_175.jpg'
+ './data/oxford_pets/images/Maine_Coon_153.jpg'
+ './data/oxford_pets/images/Maine_Coon_206.jpg'
+ './data/oxford_pets/images/Maine_Coon_107.jpg'
+ './data/oxford_pets/images/Maine_Coon_16.jpg'
+ './data/oxford_pets/images/Maine_Coon_213.jpg'
+ './data/oxford_pets/images/Maine_Coon_152.jpg'
+ './data/oxford_pets/images/Maine_Coon_147.jpg'
+ './data/oxford_pets/images/Maine_Coon_205.jpg'
+ './data/oxford_pets/images/Maine_Coon_193.jpg'
+ './data/oxford_pets/images/Maine_Coon_140.jpg'
+ './data/oxford_pets/images/Maine_Coon_163.jpg'
+ './data/oxford_pets/images/Maine_Coon_102.jpg'
+ './data/oxford_pets/images/Maine_Coon_14.jpg'
+ './data/oxford_pets/images/Maine_Coon_208.jpg']
+--- 21
+['./data/oxford_pets/images/miniature_pinscher_183.jpg'
+ './data/oxford_pets/images/miniature_pinscher_145.jpg'
+ './data/oxford_pets/images/miniature_pinscher_128.jpg'
+ './data/oxford_pets/images/miniature_pinscher_167.jpg'
+ './data/oxford_pets/images/miniature_pinscher_156.jpg'
+ './data/oxford_pets/images/miniature_pinscher_107.jpg'
+ './data/oxford_pets/images/miniature_pinscher_130.jpg'
+ './data/oxford_pets/images/miniature_pinscher_177.jpg'
+ './data/oxford_pets/images/miniature_pinscher_160.jpg'
+ './data/oxford_pets/images/miniature_pinscher_106.jpg'
+ './data/oxford_pets/images/miniature_pinscher_164.jpg'
+ './data/oxford_pets/images/miniature_pinscher_115.jpg'
+ './data/oxford_pets/images/miniature_pinscher_127.jpg'
+ './data/oxford_pets/images/miniature_pinscher_114.jpg'
+ './data/oxford_pets/images/miniature_pinscher_131.jpg'
+ './data/oxford_pets/images/miniature_pinscher_179.jpg']
+--- 22
+['./data/oxford_pets/images/newfoundland_169.jpg'
+ './data/oxford_pets/images/newfoundland_188.jpg'
+ './data/oxford_pets/images/newfoundland_125.jpg'
+ './data/oxford_pets/images/newfoundland_146.jpg'
+ './data/oxford_pets/images/newfoundland_178.jpg'
+ './data/oxford_pets/images/newfoundland_119.jpg'
+ './data/oxford_pets/images/newfoundland_12.jpg'
+ './data/oxford_pets/images/newfoundland_159.jpg'
+ './data/oxford_pets/images/newfoundland_176.jpg'
+ './data/oxford_pets/images/newfoundland_147.jpg'
+ './data/oxford_pets/images/newfoundland_177.jpg'
+ './data/oxford_pets/images/newfoundland_151.jpg'
+ './data/oxford_pets/images/newfoundland_131.jpg'
+ './data/oxford_pets/images/newfoundland_143.jpg'
+ './data/oxford_pets/images/newfoundland_145.jpg'
+ './data/oxford_pets/images/newfoundland_17.jpg']
+--- 23
+['./data/oxford_pets/images/Persian_197.jpg'
+ './data/oxford_pets/images/Persian_152.jpg'
+ './data/oxford_pets/images/Persian_106.jpg'
+ './data/oxford_pets/images/Persian_181.jpg'
+ './data/oxford_pets/images/Persian_192.jpg'
+ './data/oxford_pets/images/Persian_159.jpg'
+ './data/oxford_pets/images/Persian_180.jpg'
+ './data/oxford_pets/images/Persian_116.jpg'
+ './data/oxford_pets/images/Persian_191.jpg'
+ './data/oxford_pets/images/Persian_114.jpg'
+ './data/oxford_pets/images/Persian_120.jpg'
+ './data/oxford_pets/images/Persian_160.jpg'
+ './data/oxford_pets/images/Persian_141.jpg'
+ './data/oxford_pets/images/Persian_125.jpg'
+ './data/oxford_pets/images/Persian_165.jpg'
+ './data/oxford_pets/images/Persian_105.jpg']
+--- 24
+['./data/oxford_pets/images/pomeranian_174.jpg'
+ './data/oxford_pets/images/pomeranian_125.jpg'
+ './data/oxford_pets/images/pomeranian_130.jpg'
+ './data/oxford_pets/images/pomeranian_13.jpg'
+ './data/oxford_pets/images/pomeranian_108.jpg'
+ './data/oxford_pets/images/pomeranian_104.jpg'
+ './data/oxford_pets/images/pomeranian_101.jpg'
+ './data/oxford_pets/images/pomeranian_178.jpg'
+ './data/oxford_pets/images/pomeranian_103.jpg'
+ './data/oxford_pets/images/pomeranian_179.jpg'
+ './data/oxford_pets/images/pomeranian_187.jpg'
+ './data/oxford_pets/images/pomeranian_133.jpg'
+ './data/oxford_pets/images/pomeranian_144.jpg'
+ './data/oxford_pets/images/pomeranian_180.jpg'
+ './data/oxford_pets/images/pomeranian_18.jpg'
+ './data/oxford_pets/images/pomeranian_131.jpg']
+--- 25
+['./data/oxford_pets/images/pug_167.jpg'
+ './data/oxford_pets/images/pug_105.jpg'
+ './data/oxford_pets/images/pug_115.jpg'
+ './data/oxford_pets/images/pug_104.jpg'
+ './data/oxford_pets/images/pug_145.jpg'
+ './data/oxford_pets/images/pug_181.jpg'
+ './data/oxford_pets/images/pug_108.jpg'
+ './data/oxford_pets/images/pug_163.jpg'
+ './data/oxford_pets/images/pug_14.jpg'
+ './data/oxford_pets/images/pug_173.jpg'
+ './data/oxford_pets/images/pug_166.jpg'
+ './data/oxford_pets/images/pug_139.jpg'
+ './data/oxford_pets/images/pug_148.jpg'
+ './data/oxford_pets/images/pug_176.jpg'
+ './data/oxford_pets/images/pug_15.jpg'
+ './data/oxford_pets/images/pug_179.jpg']
+--- 26
+['./data/oxford_pets/images/Ragdoll_194.jpg'
+ './data/oxford_pets/images/Ragdoll_172.jpg'
+ './data/oxford_pets/images/Ragdoll_127.jpg'
+ './data/oxford_pets/images/Ragdoll_178.jpg'
+ './data/oxford_pets/images/Ragdoll_106.jpg'
+ './data/oxford_pets/images/Ragdoll_180.jpg'
+ './data/oxford_pets/images/Ragdoll_201.jpg'
+ './data/oxford_pets/images/Ragdoll_100.jpg'
+ './data/oxford_pets/images/Ragdoll_166.jpg'
+ './data/oxford_pets/images/Ragdoll_12.jpg'
+ './data/oxford_pets/images/Ragdoll_199.jpg'
+ './data/oxford_pets/images/Ragdoll_196.jpg'
+ './data/oxford_pets/images/Ragdoll_202.jpg'
+ './data/oxford_pets/images/Ragdoll_188.jpg'
+ './data/oxford_pets/images/Ragdoll_113.jpg'
+ './data/oxford_pets/images/Ragdoll_162.jpg']
+--- 27
+['./data/oxford_pets/images/Russian_Blue_109.jpg'
+ './data/oxford_pets/images/Russian_Blue_129.jpg'
+ './data/oxford_pets/images/Russian_Blue_136.jpg'
+ './data/oxford_pets/images/Russian_Blue_176.jpg'
+ './data/oxford_pets/images/Russian_Blue_18.jpg'
+ './data/oxford_pets/images/Russian_Blue_148.jpg'
+ './data/oxford_pets/images/Russian_Blue_127.jpg'
+ './data/oxford_pets/images/Russian_Blue_171.jpg'
+ './data/oxford_pets/images/Russian_Blue_131.jpg'
+ './data/oxford_pets/images/Russian_Blue_117.jpg'
+ './data/oxford_pets/images/Russian_Blue_199.jpg'
+ './data/oxford_pets/images/Russian_Blue_104.jpg'
+ './data/oxford_pets/images/Russian_Blue_135.jpg'
+ './data/oxford_pets/images/Russian_Blue_103.jpg'
+ './data/oxford_pets/images/Russian_Blue_132.jpg'
+ './data/oxford_pets/images/Russian_Blue_140.jpg']
+--- 28
+['./data/oxford_pets/images/saint_bernard_162.jpg'
+ './data/oxford_pets/images/saint_bernard_160.jpg'
+ './data/oxford_pets/images/saint_bernard_148.jpg'
+ './data/oxford_pets/images/saint_bernard_109.jpg'
+ './data/oxford_pets/images/saint_bernard_164.jpg'
+ './data/oxford_pets/images/saint_bernard_119.jpg'
+ './data/oxford_pets/images/saint_bernard_166.jpg'
+ './data/oxford_pets/images/saint_bernard_150.jpg'
+ './data/oxford_pets/images/saint_bernard_123.jpg'
+ './data/oxford_pets/images/saint_bernard_156.jpg'
+ './data/oxford_pets/images/saint_bernard_11.jpg'
+ './data/oxford_pets/images/saint_bernard_10.jpg'
+ './data/oxford_pets/images/saint_bernard_170.jpg'
+ './data/oxford_pets/images/saint_bernard_17.jpg'
+ './data/oxford_pets/images/saint_bernard_187.jpg'
+ './data/oxford_pets/images/saint_bernard_142.jpg']
+--- 29
+['./data/oxford_pets/images/samoyed_159.jpg'
+ './data/oxford_pets/images/samoyed_14.jpg'
+ './data/oxford_pets/images/samoyed_188.jpg'
+ './data/oxford_pets/images/samoyed_131.jpg'
+ './data/oxford_pets/images/samoyed_145.jpg'
+ './data/oxford_pets/images/samoyed_101.jpg'
+ './data/oxford_pets/images/samoyed_109.jpg'
+ './data/oxford_pets/images/samoyed_168.jpg'
+ './data/oxford_pets/images/samoyed_179.jpg'
+ './data/oxford_pets/images/samoyed_166.jpg'
+ './data/oxford_pets/images/samoyed_152.jpg'
+ './data/oxford_pets/images/samoyed_123.jpg'
+ './data/oxford_pets/images/samoyed_100.jpg'
+ './data/oxford_pets/images/samoyed_103.jpg'
+ './data/oxford_pets/images/samoyed_175.jpg'
+ './data/oxford_pets/images/samoyed_189.jpg']
+--- 30
+['./data/oxford_pets/images/scottish_terrier_125.jpg'
+ './data/oxford_pets/images/scottish_terrier_170.jpg'
+ './data/oxford_pets/images/scottish_terrier_177.jpg'
+ './data/oxford_pets/images/scottish_terrier_152.jpg'
+ './data/oxford_pets/images/scottish_terrier_121.jpg'
+ './data/oxford_pets/images/scottish_terrier_16.jpg'
+ './data/oxford_pets/images/scottish_terrier_131.jpg'
+ './data/oxford_pets/images/scottish_terrier_101.jpg'
+ './data/oxford_pets/images/scottish_terrier_137.jpg'
+ './data/oxford_pets/images/scottish_terrier_118.jpg'
+ './data/oxford_pets/images/scottish_terrier_175.jpg'
+ './data/oxford_pets/images/scottish_terrier_14.jpg'
+ './data/oxford_pets/images/scottish_terrier_144.jpg'
+ './data/oxford_pets/images/scottish_terrier_186.jpg'
+ './data/oxford_pets/images/scottish_terrier_122.jpg'
+ './data/oxford_pets/images/scottish_terrier_135.jpg']
+--- 31
+['./data/oxford_pets/images/shiba_inu_104.jpg'
+ './data/oxford_pets/images/shiba_inu_159.jpg'
+ './data/oxford_pets/images/shiba_inu_117.jpg'
+ './data/oxford_pets/images/shiba_inu_128.jpg'
+ './data/oxford_pets/images/shiba_inu_106.jpg'
+ './data/oxford_pets/images/shiba_inu_19.jpg'
+ './data/oxford_pets/images/shiba_inu_164.jpg'
+ './data/oxford_pets/images/shiba_inu_145.jpg'
+ './data/oxford_pets/images/shiba_inu_158.jpg'
+ './data/oxford_pets/images/shiba_inu_180.jpg'
+ './data/oxford_pets/images/shiba_inu_123.jpg'
+ './data/oxford_pets/images/shiba_inu_127.jpg'
+ './data/oxford_pets/images/shiba_inu_113.jpg'
+ './data/oxford_pets/images/shiba_inu_14.jpg'
+ './data/oxford_pets/images/shiba_inu_172.jpg'
+ './data/oxford_pets/images/shiba_inu_191.jpg']
+--- 32
+['./data/oxford_pets/images/Siamese_130.jpg'
+ './data/oxford_pets/images/Siamese_136.jpg'
+ './data/oxford_pets/images/Siamese_164.jpg'
+ './data/oxford_pets/images/Siamese_149.jpg'
+ './data/oxford_pets/images/Siamese_206.jpg'
+ './data/oxford_pets/images/Siamese_146.jpg'
+ './data/oxford_pets/images/Siamese_103.jpg'
+ './data/oxford_pets/images/Siamese_114.jpg'
+ './data/oxford_pets/images/Siamese_122.jpg'
+ './data/oxford_pets/images/Siamese_207.jpg'
+ './data/oxford_pets/images/Siamese_115.jpg'
+ './data/oxford_pets/images/Siamese_117.jpg'
+ './data/oxford_pets/images/Siamese_173.jpg'
+ './data/oxford_pets/images/Siamese_199.jpg'
+ './data/oxford_pets/images/Siamese_185.jpg'
+ './data/oxford_pets/images/Siamese_183.jpg']
+--- 33
+['./data/oxford_pets/images/Sphynx_139.jpg'
+ './data/oxford_pets/images/Sphynx_171.jpg'
+ './data/oxford_pets/images/Sphynx_173.jpg'
+ './data/oxford_pets/images/Sphynx_167.jpg'
+ './data/oxford_pets/images/Sphynx_143.jpg'
+ './data/oxford_pets/images/Sphynx_114.jpg'
+ './data/oxford_pets/images/Sphynx_198.jpg'
+ './data/oxford_pets/images/Sphynx_196.jpg'
+ './data/oxford_pets/images/Sphynx_162.jpg'
+ './data/oxford_pets/images/Sphynx_164.jpg'
+ './data/oxford_pets/images/Sphynx_178.jpg'
+ './data/oxford_pets/images/Sphynx_199.jpg'
+ './data/oxford_pets/images/Sphynx_104.jpg'
+ './data/oxford_pets/images/Sphynx_148.jpg'
+ './data/oxford_pets/images/Sphynx_108.jpg'
+ './data/oxford_pets/images/Sphynx_194.jpg']
+--- 34
+['./data/oxford_pets/images/staffordshire_bull_terrier_102.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_176.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_16.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_15.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_106.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_149.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_115.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_186.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_103.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_118.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_172.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_199.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_18.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_162.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_132.jpg'
+ './data/oxford_pets/images/staffordshire_bull_terrier_175.jpg']
+--- 35
+['./data/oxford_pets/images/wheaten_terrier_188.jpg'
+ './data/oxford_pets/images/wheaten_terrier_144.jpg'
+ './data/oxford_pets/images/wheaten_terrier_17.jpg'
+ './data/oxford_pets/images/wheaten_terrier_11.jpg'
+ './data/oxford_pets/images/wheaten_terrier_129.jpg'
+ './data/oxford_pets/images/wheaten_terrier_176.jpg'
+ './data/oxford_pets/images/wheaten_terrier_150.jpg'
+ './data/oxford_pets/images/wheaten_terrier_136.jpg'
+ './data/oxford_pets/images/wheaten_terrier_102.jpg'
+ './data/oxford_pets/images/wheaten_terrier_171.jpg'
+ './data/oxford_pets/images/wheaten_terrier_182.jpg'
+ './data/oxford_pets/images/wheaten_terrier_133.jpg'
+ './data/oxford_pets/images/wheaten_terrier_10.jpg'
+ './data/oxford_pets/images/wheaten_terrier_108.jpg'
+ './data/oxford_pets/images/wheaten_terrier_169.jpg'
+ './data/oxford_pets/images/wheaten_terrier_100.jpg']
+--- 36
+['./data/oxford_pets/images/yorkshire_terrier_105.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_102.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_171.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_126.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_186.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_170.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_14.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_100.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_131.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_160.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_108.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_10.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_184.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_154.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_165.jpg'
+ './data/oxford_pets/images/yorkshire_terrier_120.jpg']
+* class: 0, Acc Rate 100.00%
+* class: 1, Acc Rate 100.00%
+* class: 2, Acc Rate 100.00%
+* class: 3, Acc Rate 100.00%
+* class: 4, Acc Rate 100.00%
+* class: 5, Acc Rate 100.00%
+* class: 6, Acc Rate 100.00%
+* class: 7, Acc Rate 100.00%
+* class: 8, Acc Rate 100.00%
+* class: 9, Acc Rate 100.00%
+* class: 10, Acc Rate 100.00%
+* class: 11, Acc Rate 100.00%
+* class: 12, Acc Rate 100.00%
+* class: 13, Acc Rate 100.00%
+* class: 14, Acc Rate 100.00%
+* class: 15, Acc Rate 100.00%
+* class: 16, Acc Rate 100.00%
+* class: 17, Acc Rate 100.00%
+* class: 18, Acc Rate 100.00%
+* class: 19, Acc Rate 100.00%
+* class: 20, Acc Rate 100.00%
+* class: 21, Acc Rate 100.00%
+* class: 22, Acc Rate 100.00%
+* class: 23, Acc Rate 100.00%
+* class: 24, Acc Rate 100.00%
+* class: 25, Acc Rate 100.00%
+* class: 26, Acc Rate 100.00%
+* class: 27, Acc Rate 100.00%
+* class: 28, Acc Rate 100.00%
+* class: 29, Acc Rate 100.00%
+* class: 30, Acc Rate 100.00%
+* class: 31, Acc Rate 100.00%
+* class: 32, Acc Rate 100.00%
+* class: 33, Acc Rate 100.00%
+* class: 34, Acc Rate 100.00%
+* class: 35, Acc Rate 100.00%
+* class: 36, Acc Rate 100.00%
+* average: 100.00%
+[[1.  0.3 0.3 ... 0.3 0.3 0.3]
+ [0.3 1.  0.3 ... 0.3 0.3 0.3]
+ [0.3 0.3 1.  ... 0.3 0.3 0.3]
+ ...
+ [0.3 0.3 0.3 ... 1.  0.3 0.3]
+ [0.3 0.3 0.3 ... 0.3 1.  0.3]
+ [0.3 0.3 0.3 ... 0.3 0.3 1. ]]
+Finish Generating Candidate Label Sets!
+
+SSOxfordPets
+Reading split from /mnt/disk2/zjh/projects7.12/PTNL/data/oxford_pets/split_zhou_OxfordPets.json
+sstrain 592
+No checkpoint found, train from scratch
+Initialize tensorboard (log_dir=./output/ssoxford_pets/UPLTrainer/rn50_ep100_16shots-10.16-test_cc_refine_ep100_plus_1/SEED1/data-ssoxford_pets_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_seed-1_beta-0.0_FILT-True_T-1.0_cMomn-0.99_topP-1/tensorboard)
+id: data-ssoxford_pets_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_seed-1_beta-0.0_FILT-True_T-1.0_cMomn-0.99_topP-1 ----> test * accuracy: 
