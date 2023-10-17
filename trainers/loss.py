@@ -40,7 +40,7 @@ class PLL_loss(nn.Module):
                 self.beta = self.cfg.BETA
 
         if 'refine' in self.losstype:
-            self.not_inpool_idxs = torch.LongTensor([]).to(self.device)
+            self.inpool_idxs = torch.LongTensor([])
             self.origin_labels = deepcopy(self.conf)
             self.cls_pools_dict = {}
 
@@ -73,16 +73,17 @@ class PLL_loss(nn.Module):
         else:
             raise ValueError
         # loss = torch.clamp(loss - self.loss_min, min=0.0)       #TODO: remove here 
+        # self.loss_ = loss.detach()
         return loss.mean()
 
-    def check_update(self, images, y, index):
+    def check_update(self, images, y, index, output=None):
         if '_' in self.cfg.CONF_LOSS_TYPE or '_' in self.losstype:
             if '_' in self.cfg.CONF_LOSS_TYPE:
                 conf_type = self.cfg.CONF_LOSS_TYPE.split('_')[-1]
             else:
                 conf_type = self.losstype.split('_')[-1]
             assert conf_type in ['rc', 'cav', 'refine'], 'conf_type not supported'
-            self.update_confidence(self.model, self.conf, images, y, index, conf_type)
+            self.update_confidence(self.model, self.conf, images, y, index, conf_type, output_bef=output)
         else:
             return
     
@@ -176,8 +177,8 @@ class PLL_loss(nn.Module):
         return conf_loss  
 
     @torch.no_grad()
-    def update_confidence(self, model, confidence, images, labels, batch_idxs, conf_type):
-        outputs, image_features, text_features = model(images)
+    def update_confidence(self, model, confidence, images, labels, batch_idxs, conf_type, output_bef=None):
+        # outputs, image_features, text_features = model(images)
         if conf_type == 'rc':
             temp_un_conf = F.softmax(outputs / self.T, dim=1)
             conf_selected = temp_un_conf * labels # un_confidence stores the weight of each example
@@ -190,7 +191,7 @@ class PLL_loss(nn.Module):
             self.conf[batch_idxs, :] = gt_label.float()
         elif conf_type == 'refine':
             batch_idxs = batch_idxs.to(self.device)
-            cav = (outputs * torch.abs(1 - outputs)) * labels
+            cav = (output_bef * torch.abs(1 - output_bef)) * labels
             
             def recursion(num_top_pools, output, cav_logits, not_in_pool):
                 if num_top_pools == 0 or (not_in_pool==False).all():
@@ -213,44 +214,42 @@ class PLL_loss(nn.Module):
                     recursion(num_top_pools-1, output, cav_logits, not_in_pool)
                     return 
             
-            not_in_pool_init = torch.ones(outputs.shape[0], dtype=torch.bool).to(self.device)
-            recursion(self.cfg.TOP_POOLS, outputs, cav, not_in_pool_init)
-            self.not_inpool_idxs = torch.cat((self.not_inpool_idxs, batch_idxs[not_in_pool_init]))
+            not_in_pool_init = torch.ones(output_bef.shape[0], dtype=torch.bool).to(self.device)
+            recursion(self.cfg.TOP_POOLS, output_bef, cav, not_in_pool_init)
+            # self.not_inpool_idxs = torch.cat((self.not_inpool_idxs, batch_idxs[not_in_pool_init]))
 
 
     def clean_conf(self):
-        if hasattr(self, 'origin_labels') and hasattr(self, 'conf'):
-            # self.conf[self.not_inpool_idxs, :] = self.origin_labels[self.not_inpool_idxs, :]
-            print(f'<{self.not_inpool_idxs.shape[0]}> samples are not in pool')
-            self.not_inpool_idxs = torch.LongTensor([]).to(self.device)         #reset not_inpool_idxs
         if hasattr(self, 'conf'):
             self.conf = torch.where(self.conf < (1/self.conf.shape[1]), torch.zeros_like(self.conf), self.conf)
             base_value = self.conf.sum(dim=1).unsqueeze(1).repeat(1, self.conf.shape[1])
             self.conf = self.conf / base_value
 
 
-    def update_conf_epochend(self, pool_id, shrink_f=0.5):      # shrink_f larger means val of unc_norm has larger effect on momn
+    def update_conf_epochend(self, shrink_f=0.5):      # shrink_f larger means val of unc_norm has larger effect on momn
         assert 'refine' in self.losstype
-        cur_pool = self.cls_pools_dict[pool_id]
+        for pool_id, cur_pool in self.cls_pools_dict.keys():
+            
+            pred_conf_value = self.conf[cur_pool.pool_idx, pool_id]       
+            if cur_pool.pool_capacity > 1: 
+                unc_norm = (cur_pool.pool_unc - cur_pool.pool_unc.min()) / (cur_pool.pool_unc.max() - cur_pool.pool_unc.min())
+                conf_increment = (1 - self.conf_momn) * (1 - unc_norm * shrink_f) 
+            if cur_pool.pool_capacity <= 1 or (torch.isnan(conf_increment)).any():
+                conf_increment = (1 - self.conf_momn)
+            pred_conf_value_ = pred_conf_value * self.conf_momn + conf_increment
+            base_value = pred_conf_value_ - pred_conf_value + 1
 
-        pred_conf_value = self.conf[cur_pool.pool_idx, pool_id]       
-        if cur_pool.pool_capacity > 1: 
-            unc_norm = (cur_pool.pool_unc - cur_pool.pool_unc.min()) / (cur_pool.pool_unc.max() - cur_pool.pool_unc.min())
-            conf_increment = (1 - self.conf_momn) * (1 - unc_norm * shrink_f) 
-        if cur_pool.pool_capacity <= 1 or (torch.isnan(conf_increment)).any():
-            conf_increment = (1 - self.conf_momn)
-        pred_conf_value_ = pred_conf_value * self.conf_momn + conf_increment
-        base_value = pred_conf_value_ - pred_conf_value + 1
+            # assert (base_value >= 1).all(), 'base_value should larger than 1'     #TODO double check
+            self.conf[cur_pool.pool_idx, pool_id] = pred_conf_value_
+            self.conf[cur_pool.pool_idx, :] = self.conf[cur_pool.pool_idx, :] / base_value.unsqueeze(1).repeat(1, self.conf.shape[1])
 
-        # assert (base_value >= 1).all(), 'base_value should larger than 1'     #TODO double check
-        self.conf[cur_pool.pool_idx, pool_id] = pred_conf_value_
-        self.conf[cur_pool.pool_idx, :] = self.conf[cur_pool.pool_idx, :] / base_value.unsqueeze(1).repeat(1, self.conf.shape[1])
-        # if torch.where(torch.isnan(self.conf[cur_pool.pool_idx, :]))[0].shape[0] > 0:
-        #     raise FloatingPointError("Loss is infinite or NaN!")
+            self.inpool_idxs = torch.cat((self.inpool_idxs, cur_pool.pool_idx.cpu()), dim=0)
 
-    def search_pools(self):
-        pass
-    
+        conf_set = set(range(self.conf.shape[0]))
+        not_inpool_idxs = torch.LongTensor(list(conf_set - set(self.inpool_idxs.numpy())))
+        self.conf[not_inpool_idxs, :] = self.origin_labels[not_inpool_idxs, :]
+        print(f'<{not_inpool_idxs.shape[0]}> samples are not in pool')
+        self.inpool_idxs = torch.LongTensor([])       #reset not_inpool_idxs
 
     @torch.no_grad()
     def cal_uncertainty(self, output, label, index=None):

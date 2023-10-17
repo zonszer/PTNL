@@ -493,7 +493,7 @@ class UPLTrainer(TrainerX):
             if hasattr(self.criterion, 'check_update'):
                 # update_dict = dict(zip(index.tolist(), gt_label.cpu().long().tolist()))
                 # self.criterion.gt_label_dict.update(update_dict)
-                self.criterion.check_update(image, label, index)   
+                self.criterion.check_update(image, label, index, output=output.detach())   
 
         # gradients compare:
         # if self.criterion.num % 2 == 0:
@@ -1181,11 +1181,12 @@ class UPLTrainer(TrainerX):
                 self.criterion.cls_pools_dict = self.init_cls_pools(split="train")
                 # self.evaluator._cname2lab = {v:k for k, v in self.evaluator._lab2cname.items()}
             elif self.epoch > 0:
+                self.criterion.update_conf_epochend()
+
                 acc_dict = self.evaluator.class_acc_sumlist[self.epoch - 1]     # the test result of past epoch
                 for cls_idx, pool in self.criterion.cls_pools_dict.items():
                     cls_acc = acc_dict[self.evaluator._lab2cname[cls_idx]]       
-                    self.criterion.update_conf_epochend(pool_id=cls_idx)
-                    pool.enlarge_pool(max_num=round(self.cfg.TRAINER.PLL.MAX_POOLNUM * cls_acc/100 * self.cfg.TRAINER.PLL.POOL_ENLARGE_SCALE))
+                    pool.scale_pool(next_capacity=round(self.cfg.TRAINER.PLL.MAX_POOLNUM * cls_acc/100 * self.cfg.TRAINER.PLL.POOL_ENLARGE_SCALE))
                     pool.reset()
                     
         if self.epoch != 0:            #self.epoch start from 0
@@ -1198,31 +1199,15 @@ class UPLTrainer(TrainerX):
         self.set_model_mode("eval")
         self.model.eval()
 
-        data_loader = self.train_loader_sstrain
-        # data_loader = self.test_loader
-        outputs = []; image_features_list = []; img_paths = []
-        uncertainty, index_list, labels = [], [], []
+        data_loader = self.val_loader
         from tqdm import tqdm
         for batch_idx, batch in tqdm(enumerate(data_loader)):
             image, label, index, impath = self.parse_batch_train_with_impath(batch)
             output, image_features, text_features = self.model(image)
-            unc = self.criterion.cal_uncertainty(output, label, index)
-
-            uncertainty.append(unc)
-            index_list.append(index)
-            img_paths.append(impath)
-
-        # sstrain_outputs = torch.cat(outputs, dim=0)         #torch.Size([4128, 100])
-        uncertainty = torch.cat(uncertainty, axis=0)   #(4128,)
-        index_list = torch.cat(index_list, axis=0)   #(4128,)
-        sstrain_img_paths = np.concatenate(img_paths, axis=0)   #(4128,) nparray
-        # image_features = torch.cat(image_features_list, axis=0) #torch.Size([4128, 1024])
-        # text_features = torch.cat(text_features, axis=0)
-        for impath in sstrain_img_paths:
-            label = self.gt_label_dict[impath.item()]
-            labels.append(label)
-        pools_dict = select_top_k_certainty_per_class(unc=uncertainty, class_ids=torch.LongTensor(labels), 
-                                                      idxs=index_list, K=int(max(self.cfg.DATASET.NUM_SHOTS*0.4, 2)))     #选择每个类别visual emb和text emb最相似的K个样本，对每个样本取预测的vector，最后加到info dict中（k>=0时）。 对每个样本取预测的vector，然后加到所有训练样本的info dict中（k=-1时）
+            break
+        
+        pools_dict = select_top_k_certainty_per_class(unc=output, class_ids=torch.arange(0, output.shape[1]), 
+                                                      idxs=None, K=int(max(self.cfg.DATASET.NUM_SHOTS*0.4, 2)))     #选择每个类别visual emb和text emb最相似的K个样本，对每个样本取预测的vector，最后加到info dict中（k>=0时）。 对每个样本取预测的vector，然后加到所有训练样本的info dict中（k=-1时）
 
         return pools_dict
     

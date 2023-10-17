@@ -55,16 +55,17 @@ class ClassLabelPool:
         self.pool_capacity = 0
         self.unc_max = -1
 
-    def enlarge_pool(self, max_num: int):
+    def scale_pool(self, next_capacity: int):
         """
         Enlarge the pool capacity. (if the pool capacity is smaller than the max_num given, remain unchanged)
         Args:
             enlarge_factor (int): The enlarge factor.
         """
-        if self.pool_max_capacity < max_num:
-            self.pool_max_capacity = max_num
+        if self.pool_max_capacity <= next_capacity:
+            self.pool_max_capacity = next_capacity
         else:
-            return
+            self.pool_max_capacity = max(next_capacity, 2)
+        return
 
     def update(self, feat_idxs: torch.LongTensor, feat_unc: torch.Tensor):
         """
