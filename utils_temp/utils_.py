@@ -30,8 +30,11 @@ class ClassLabelPool:
         """
         self.pool_max_capacity = max_capacity
         self.pool_capacity = 0
-        self.pool_idx = torch.LongTensor([]).to(unc_sample.device)
+        self.pool_idx = torch.LongTensor([])
         self.pool_unc = torch.Tensor([]).type(unc_sample.dtype).to(unc_sample.device)
+        self.saved_logits = torch.Tensor([]).type(unc_sample.dtype).to(unc_sample.device)
+        self.popped_idx = torch.LongTensor([])
+        self.popped_unc = torch.Tensor([]).type(unc_sample.dtype).to(unc_sample.device)
         self._update_pool_attr()
 
     def _update_pool_attr(self):
@@ -50,10 +53,13 @@ class ClassLabelPool:
         """
         Reset the pool.
         """
-        self.pool_idx = torch.LongTensor([]).to(self.pool_idx.device)
-        self.pool_unc = torch.Tensor([]).type(self.pool_unc.dtype).to(self.pool_idx.device)
+        self.pool_idx = torch.LongTensor([])
+        self.pool_unc = torch.Tensor([]).type(self.pool_unc.dtype).to(self.pool_unc.device)
+        self.saved_logits = torch.Tensor([]).type(self.saved_logits.dtype).to(self.saved_logits.device)
+        self.popped_idx = torch.LongTensor([])
+        self.popped_unc = torch.Tensor([]).type(self.popped_unc.dtype).to(self.popped_unc.device)
         self.pool_capacity = 0
-        self.unc_max = -1
+        self.unc_max = 0
 
     def scale_pool(self, next_capacity: int):
         """
@@ -64,43 +70,46 @@ class ClassLabelPool:
         if self.pool_max_capacity <= next_capacity:
             self.pool_max_capacity = next_capacity
         else:
-            self.pool_max_capacity = max(next_capacity, 2)
+            pass
         return
 
-    def update(self, feat_idxs: torch.LongTensor, feat_unc: torch.Tensor):
+    def update(self, feat_idx: torch.LongTensor, feat_unc: torch.Tensor, feat_logit: torch.Tensor = None):
         """
         Update the pool with new values.
         Args:
             feat_idxs (torch.Tensor): A tensor of feature indices, better to be ascending order.
             feat_unc (torch.Tensor): A tensor of feature uncertainties.
         """
-        in_pool = torch.zeros_like(feat_idxs, dtype=torch.bool)
 
-        for idx, unc in zip(feat_idxs, feat_unc):
-            # idx_position = (self.pool_idx == idx).nonzero(as_tuple=True)
+        # for feat_idx, feat_unc in zip(feat_idx, feat_unc):
+            # idx_position = (self.pool_idx == feat_idx).nonzero(as_tuple=True)
             # num_inpool = idx_position[0].numel() 
             # if num_inpool > 0:      
             #     assert False, 'should not be entered now'
             #     assert num_inpool == 1
-            #     self.pool_unc[idx_position[0]] = unc
-            #     in_pool[idx == feat_idxs] = True
-
-            if self.pool_capacity < self.pool_max_capacity:
-                self.pool_idx = torch.cat((idx.unsqueeze(0), self.pool_idx))
-                self.pool_unc = torch.cat((unc.unsqueeze(0), self.pool_unc))
-                self.pool_capacity += 1
-                in_pool[idx == feat_idxs] = True
+            #     self.pool_unc[idx_position[0]] = feat_unc
+            #     in_pool[feat_idx == feat_idxs] = True
+        if self.pool_capacity < self.pool_max_capacity:
+            self.pool_idx = torch.cat((feat_idx.unsqueeze(0), self.pool_idx))
+            self.pool_unc = torch.cat((feat_unc.unsqueeze(0), self.pool_unc))
+            # self.saved_logits = torch.cat((feat_logit.unsqueeze(0), self.saved_logits))
+            self.pool_capacity += 1
+            in_pool = True
+        else:
+            if self.unc_max <= feat_unc:
+                self.popped_idx = torch.cat((feat_idx.unsqueeze(0), self.popped_idx))
+                self.popped_unc = torch.cat((feat_unc.unsqueeze(0), self.popped_unc))
+                in_pool = False
             else:
-                if self.unc_max <= unc:
-                    in_pool[idx == feat_idxs] = False
-                    continue
-                else:
-                    self.pool_idx[self.unc_max_idx] = idx
-                    self.pool_unc[self.unc_max_idx] = unc
-                    in_pool[idx == feat_idxs] = True
-                    
-            if any(in_pool):
-                self._update_pool_attr()
+                self.popped_idx = torch.cat((self.pool_idx[self.unc_max_idx].unsqueeze(0), self.popped_idx))
+                self.popped_unc = torch.cat((self.pool_unc[self.unc_max_idx].unsqueeze(0), self.popped_unc))
+                self.pool_idx[self.unc_max_idx] = feat_idx
+                self.pool_unc[self.unc_max_idx] = feat_unc
+                # self.saved_logits[self.unc_max_idx] = feat_logit
+                in_pool = True
+                
+        if in_pool:
+            self._update_pool_attr()
 
         return in_pool
 

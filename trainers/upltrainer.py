@@ -1183,13 +1183,13 @@ class UPLTrainer(TrainerX):
             elif self.epoch > 0:
                 self.criterion.update_conf_epochend()
 
-                acc_dict = self.evaluator.class_acc_sumlist[self.epoch - 1]     # the test result of past epoch
+                acc_dict = self.evaluator.class_acc_sumlist[self.epoch - 1]     # the val result of past epoch
                 for cls_idx, pool in self.criterion.cls_pools_dict.items():
                     cls_acc = acc_dict[self.evaluator._lab2cname[cls_idx]]       
                     pool.scale_pool(next_capacity=round(self.cfg.TRAINER.PLL.MAX_POOLNUM * cls_acc/100 * self.cfg.TRAINER.PLL.POOL_ENLARGE_SCALE))
                     pool.reset()
                     
-        if self.epoch != 0:            #self.epoch start from 0
+        if self.epoch > 0:            #self.epoch start from 0
             if self.cfg.TRAINER.PLL.USE_PLL:
                 self.criterion.clean_conf()
 

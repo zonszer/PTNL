@@ -1,0 +1,13 @@
+id: data-ssoxford_pets_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-1_beta-0.0_FILT-True_T-1.0_cMomn-0.95_topP-1_MAXPOOL-16 ----> test * accuracy: 89.78%
+id: data-ssoxford_pets_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-1_beta-0.0_FILT-True_T-1.0_cMomn-0.97_topP-1_MAXPOOL-12 ----> test * accuracy: 88.42%
+id: data-ssoxford_pets_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-1_beta-0.0_FILT-True_T-1.0_cMomn-0.97_topP-1_MAXPOOL-16 ----> test * accuracy: 89.45%
+id: data-ssoxford_pets_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-1_beta-0.0_FILT-True_T-1.0_cMomn-0.95_topP-1_MAXPOOL-12 ----> test * accuracy: 89.29%
+id: data-ssoxford_pets_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-1_beta-0.0_FILT-True_T-1.0_cMomn-0.99_topP-1_MAXPOOL-12 ----> test * accuracy: 88.88%
+id: data-ssoxford_pets_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-1_beta-0.0_FILT-True_T-1.0_cMomn-0.95_topP-1_MAXPOOL-16 ----> test * accuracy: 90.30%
+id: data-ssoxford_pets_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-1_beta-0.0_FILT-True_T-1.0_cMomn-0.99_topP-1_MAXPOOL-16 ----> test * accuracy: 88.96%
+id: data-ssoxford_pets_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-1_beta-0.0_FILT-True_T-1.0_cMomn-0.97_topP-1_MAXPOOL-12 ----> test * accuracy: 88.01%
+id: data-ssoxford_pets_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-1_beta-0.0_FILT-True_T-1.0_cMomn-0.97_topP-1_MAXPOOL-16 ----> test * accuracy: 89.83%
+
+
+id: data-ssoxford_pets_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-1_beta-0.0_FILT-True_T-1.0_cMomn-0.99_topP-1_MAXPOOL-12 ----> test * accuracy: 
+id: data-ssoxford_pets_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-2_beta-0.0_FILT-True_T-1.0_cMomn-0.95_topP-1_MAXPOOL-12 ----> test * accuracy: 87.65%

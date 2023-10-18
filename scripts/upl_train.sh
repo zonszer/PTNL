@@ -5,7 +5,7 @@ cd ..
 # custom config
 DATA=./data
 TRAINER=UPLTrainer
-exp_ID="10.16-test_cc_refine_ep100_recursion_nozeroconf"    #NOTE +time
+exp_ID="10.18-test_cc_refine_ep100_usenotinpool"    #NOTE +time
 # TODO: 
 #1. test loss min and beta for rc and cc
 
@@ -90,7 +90,7 @@ LOSS_MIN=0.0
 BETA=0.0
 # declare -a LOSS_MINs=(0.0)
 declare -a CONF_MOMNs=(0.95 0.97 0.99)
-declare -a TOP_POOLs=(4 1)
+declare -a TOP_POOLs=(1)
 declare -a MAX_POOLNUMs=(12 16)
 
 

@@ -69,3 +69,4 @@ id: data-ssoxford_pets_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue
 id: data-ssoxford_pets_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-3_beta-0.0_FILT-True_T-1.0_cMomn-0.97_topP-1_MAXPOOL-16 ----> test * accuracy: 90.08%
 id: data-ssoxford_pets_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-3_beta-0.0_FILT-True_T-1.0_cMomn-0.97_topP-1_MAXPOOL-12 ----> test * accuracy: 89.89%
 id: data-ssoxford_pets_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-3_beta-0.0_FILT-True_T-1.0_cMomn-0.99_topP-1_MAXPOOL-12 ----> test * accuracy: 88.85%
+id: data-ssoxford_pets_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-3_beta-0.0_FILT-True_T-1.0_cMomn-0.99_topP-1_MAXPOOL-16 ----> test * accuracy: 89.42%

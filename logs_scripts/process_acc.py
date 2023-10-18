@@ -47,7 +47,7 @@ def formatting_data(data_dict):
     return new_dict
 
 # data_dict = extract_info('log_10-04_14-06-35_ssoxford_pets.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssoxford_pets.txt
-data_dict_new = extract_info('log_10.12-test_lossMin_ssucf101.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
+data_dict_new = extract_info('log_10.17-test_cc_refine_ep100_polishOutput_ssucf101.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
 data_dict_old = extract_info('log_10-04_17-35-17_ssucf101-contain-no-beta.txt')      #contain-no-beta is baseline
 data_dict_new = formatting_data(data_dict_new)
 data_dict_old = formatting_data(data_dict_old)
@@ -96,7 +96,7 @@ change = "(df['change']=='new')"
 # loss = "(df['loss']=='cc') "
 # loss = "(df['loss']=='rc cav')"
 # beta = "(df['beta']=='0.0')"
-PLL_ratio = "(df['usePLLTrue']=='0.3')"
+PLL_ratio = "(df['usePLLTrue']=='0.1')"
 # Iepoch = "(df['Iepoch']=='1') | (df['Iepoch'].isna())" 
 # seed = "(~((df['seed']=='3') & (df['loss']=='rc cav') & (df['usePLLTrue']=='0.3')))"
 # seed = "(df['seed']=='1')"
@@ -109,7 +109,7 @@ else:
 #----------------------settings----------------------
 
 # Group by Variables
-grouped_vars = ["beta", "lossMin",  "loss"]        
+grouped_vars = ["cMomn", "MAXPOOL",  "topP"]        
 compar_var = 'accuracy'
 grouped_data = selected_rows.groupby(grouped_vars)[compar_var].mean().reset_index()
 # Convert the "usePLLTrue" column to float

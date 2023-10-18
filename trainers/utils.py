@@ -163,7 +163,7 @@ def select_top_k_certainty_per_class(unc, class_ids, idxs, K=1, max_capacity_per
                                   storing top-K samples.
     """
     # Extract class_ids from image paths (assuming class's name is mentioned in each path's directory)
-    cls_set = torch.unique(class_ids)
+    cls_set = class_ids
     pools_dict = {}
     if max_capacity_perclass is None:
         max_capacity_perclass = {cls: K for cls in cls_set.tolist()}
@@ -177,7 +177,7 @@ def select_top_k_certainty_per_class(unc, class_ids, idxs, K=1, max_capacity_per
         # indices = torch.where(class_ids == cls) 
         
         # Select the unc and idx values for the current class
-        unc_sample = unc[0]
+        unc_sample = unc
 
         # Select the Top-K indices based on sorted uncertainty values (select the Top-min K values)
         # top_k_indices = torch.argsort(unc_current_class)

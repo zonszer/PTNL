@@ -67,7 +67,7 @@
             "--trainer=UPLTrainer",
             "--dataset-config-file=configs/datasets/ssucf101.yaml",
             "--config-file=configs/trainers/UPLTrainer/rn50_ep50.yaml",
-            "--output-dir=./output/ssucf101/UPLTrainer/rn50_ep50_16shots-10.13-debug/10.15-debug_doublecheck6",
+            "--output-dir=./output/ssucf101/UPLTrainer/rn50_ep50_16shots-10.13-debug/10.16-debug_doublecheck11",
             "--num-fp=0",
             "--loss_type=cc_refine",
             "TRAINER.UPLTrainer.N_CTX",
