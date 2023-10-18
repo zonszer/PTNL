@@ -14539,3 +14539,921 @@ Lunges: 50.00%
 Pole_Vault: 50.00%
 Pommel_Horse: 50.00%
 <217> samples are not in pool
+epoch [95/100][5/51]	time 0.468 (0.723)	data 0.001 (0.244)	eta 0:03:37	loss 2.3525 (1.6655) acc 62.5000 (79.3750)	lr 2.408324e-05
+epoch [95/100][10/51]	time 0.379 (0.566)	data 0.001 (0.123)	eta 0:02:47	loss 1.4493 (1.6007) acc 84.3750 (80.0000)	lr 2.408324e-05
+epoch [95/100][15/51]	time 0.462 (0.530)	data 0.001 (0.082)	eta 0:02:34	loss 1.4332 (1.6184) acc 71.8750 (79.3750)	lr 2.408324e-05
+epoch [95/100][20/51]	time 0.443 (0.511)	data 0.001 (0.062)	eta 0:02:26	loss 1.9125 (1.6595) acc 68.7500 (77.9688)	lr 2.408324e-05
+epoch [95/100][25/51]	time 0.492 (0.508)	data 0.001 (0.050)	eta 0:02:22	loss 1.7418 (1.6752) acc 68.7500 (76.8750)	lr 2.408324e-05
+epoch [95/100][30/51]	time 0.440 (0.497)	data 0.001 (0.041)	eta 0:02:17	loss 2.1161 (1.7043) acc 62.5000 (76.0417)	lr 2.408324e-05
+epoch [95/100][35/51]	time 0.423 (0.494)	data 0.002 (0.036)	eta 0:02:13	loss 1.6863 (1.7079) acc 75.0000 (75.8929)	lr 2.408324e-05
+epoch [95/100][40/51]	time 0.459 (0.491)	data 0.000 (0.031)	eta 0:02:10	loss 1.4656 (1.7040) acc 81.2500 (76.1719)	lr 2.408324e-05
+epoch [95/100][45/51]	time 0.523 (0.491)	data 0.000 (0.028)	eta 0:02:08	loss 1.8110 (1.7010) acc 84.3750 (76.5278)	lr 2.408324e-05
+epoch [95/100][50/51]	time 0.470 (0.486)	data 0.001 (0.025)	eta 0:02:04	loss 1.8390 (1.7092) acc 78.1250 (76.5625)	lr 2.408324e-05
+Do evaluation on val set
+=> result
+* total: 1,898
+* correct: 1,521
+* accuracy: 80.14%
+* error: 19.86%
+* macro_f1: 78.87%
+=> per-class result
+* class: 0 (Apply_Eye_Makeup)	total: 20	correct: 19	acc: 95.00%
+* class: 1 (Apply_Lipstick)	total: 16	correct: 16	acc: 100.00%
+* class: 2 (Archery)	total: 21	correct: 18	acc: 85.71%
+* class: 3 (Baby_Crawling)	total: 19	correct: 18	acc: 94.74%
+* class: 4 (Balance_Beam)	total: 15	correct: 9	acc: 60.00%
+* class: 5 (Band_Marching)	total: 22	correct: 22	acc: 100.00%
+* class: 6 (Baseball_Pitch)	total: 21	correct: 17	acc: 80.95%
+* class: 7 (Basketball)	total: 20	correct: 19	acc: 95.00%
+* class: 8 (Basketball_Dunk)	total: 19	correct: 19	acc: 100.00%
+* class: 9 (Bench_Press)	total: 22	correct: 19	acc: 86.36%
+* class: 10 (Biking)	total: 19	correct: 19	acc: 100.00%
+* class: 11 (Billiards)	total: 22	correct: 22	acc: 100.00%
+* class: 12 (Blow_Dry_Hair)	total: 19	correct: 17	acc: 89.47%
+* class: 13 (Blowing_Candles)	total: 15	correct: 15	acc: 100.00%
+* class: 14 (Body_Weight_Squats)	total: 16	correct: 11	acc: 68.75%
+* class: 15 (Bowling)	total: 22	correct: 22	acc: 100.00%
+* class: 16 (Boxing_Punching_Bag)	total: 23	correct: 22	acc: 95.65%
+* class: 17 (Boxing_Speed_Bag)	total: 19	correct: 11	acc: 57.89%
+* class: 18 (Breast_Stroke)	total: 15	correct: 10	acc: 66.67%
+* class: 19 (Brushing_Teeth)	total: 19	correct: 18	acc: 94.74%
+* class: 20 (Clean_And_Jerk)	total: 16	correct: 15	acc: 93.75%
+* class: 21 (Cliff_Diving)	total: 20	correct: 15	acc: 75.00%
+* class: 22 (Cricket_Bowling)	total: 21	correct: 14	acc: 66.67%
+* class: 23 (Cricket_Shot)	total: 24	correct: 16	acc: 66.67%
+* class: 24 (Cutting_In_Kitchen)	total: 15	correct: 13	acc: 86.67%
+* class: 25 (Diving)	total: 21	correct: 20	acc: 95.24%
+* class: 26 (Drumming)	total: 23	correct: 23	acc: 100.00%
+* class: 27 (Fencing)	total: 15	correct: 14	acc: 93.33%
+* class: 28 (Field_Hockey_Penalty)	total: 17	correct: 13	acc: 76.47%
+* class: 29 (Floor_Gymnastics)	total: 18	correct: 14	acc: 77.78%
+* class: 30 (Frisbee_Catch)	total: 18	correct: 15	acc: 83.33%
+* class: 31 (Front_Crawl)	total: 20	correct: 18	acc: 90.00%
+* class: 32 (Golf_Swing)	total: 20	correct: 15	acc: 75.00%
+* class: 33 (Haircut)	total: 19	correct: 11	acc: 57.89%
+* class: 34 (Hammering)	total: 21	correct: 18	acc: 85.71%
+* class: 35 (Hammer_Throw)	total: 21	correct: 14	acc: 66.67%
+* class: 36 (Handstand_Pushups)	total: 20	correct: 18	acc: 90.00%
+* class: 37 (Handstand_Walking)	total: 15	correct: 5	acc: 33.33%
+* class: 38 (Head_Massage)	total: 21	correct: 21	acc: 100.00%
+* class: 39 (High_Jump)	total: 17	correct: 9	acc: 52.94%
+* class: 40 (Horse_Race)	total: 18	correct: 17	acc: 94.44%
+* class: 41 (Horse_Riding)	total: 23	correct: 23	acc: 100.00%
+* class: 42 (Hula_Hoop)	total: 18	correct: 10	acc: 55.56%
+* class: 43 (Ice_Dancing)	total: 22	correct: 21	acc: 95.45%
+* class: 44 (Javelin_Throw)	total: 17	correct: 11	acc: 64.71%
+* class: 45 (Juggling_Balls)	total: 16	correct: 14	acc: 87.50%
+* class: 46 (Jumping_Jack)	total: 17	correct: 11	acc: 64.71%
+* class: 47 (Jump_Rope)	total: 21	correct: 8	acc: 38.10%
+* class: 48 (Kayaking)	total: 21	correct: 14	acc: 66.67%
+* class: 49 (Knitting)	total: 18	correct: 18	acc: 100.00%
+* class: 50 (Long_Jump)	total: 18	correct: 15	acc: 83.33%
+* class: 51 (Lunges)	total: 18	correct: 9	acc: 50.00%
+* class: 52 (Military_Parade)	total: 18	correct: 15	acc: 83.33%
+* class: 53 (Mixing)	total: 18	correct: 16	acc: 88.89%
+* class: 54 (Mopping_Floor)	total: 15	correct: 14	acc: 93.33%
+* class: 55 (Nunchucks)	total: 19	correct: 6	acc: 31.58%
+* class: 56 (Parallel_Bars)	total: 15	correct: 7	acc: 46.67%
+* class: 57 (Pizza_Tossing)	total: 16	correct: 6	acc: 37.50%
+* class: 58 (Playing_Cello)	total: 24	correct: 22	acc: 91.67%
+* class: 59 (Playing_Daf)	total: 22	correct: 0	acc: 0.00%
+* class: 60 (Playing_Dhol)	total: 23	correct: 21	acc: 91.30%
+* class: 61 (Playing_Flute)	total: 21	correct: 20	acc: 95.24%
+* class: 62 (Playing_Guitar)	total: 23	correct: 23	acc: 100.00%
+* class: 63 (Playing_Piano)	total: 15	correct: 15	acc: 100.00%
+* class: 64 (Playing_Sitar)	total: 23	correct: 23	acc: 100.00%
+* class: 65 (Playing_Tabla)	total: 16	correct: 15	acc: 93.75%
+* class: 66 (Playing_Violin)	total: 14	correct: 13	acc: 92.86%
+* class: 67 (Pole_Vault)	total: 22	correct: 11	acc: 50.00%
+* class: 68 (Pommel_Horse)	total: 18	correct: 9	acc: 50.00%
+* class: 69 (Pull_Ups)	total: 14	correct: 10	acc: 71.43%
+* class: 70 (Punch)	total: 24	correct: 22	acc: 91.67%
+* class: 71 (Push_Ups)	total: 14	correct: 14	acc: 100.00%
+* class: 72 (Rafting)	total: 17	correct: 16	acc: 94.12%
+* class: 73 (Rock_Climbing_Indoor)	total: 21	correct: 19	acc: 90.48%
+* class: 74 (Rope_Climbing)	total: 17	correct: 13	acc: 76.47%
+* class: 75 (Rowing)	total: 20	correct: 19	acc: 95.00%
+* class: 76 (Salsa_Spin)	total: 18	correct: 15	acc: 83.33%
+* class: 77 (Shaving_Beard)	total: 24	correct: 21	acc: 87.50%
+* class: 78 (Shotput)	total: 20	correct: 14	acc: 70.00%
+* class: 79 (Skate_Boarding)	total: 18	correct: 16	acc: 88.89%
+* class: 80 (Skiing)	total: 19	correct: 15	acc: 78.95%
+* class: 81 (Skijet)	total: 14	correct: 8	acc: 57.14%
+* class: 82 (Sky_Diving)	total: 16	correct: 16	acc: 100.00%
+* class: 83 (Soccer_Juggling)	total: 22	correct: 15	acc: 68.18%
+* class: 84 (Soccer_Penalty)	total: 19	correct: 18	acc: 94.74%
+* class: 85 (Still_Rings)	total: 16	correct: 10	acc: 62.50%
+* class: 86 (Sumo_Wrestling)	total: 16	correct: 16	acc: 100.00%
+* class: 87 (Surfing)	total: 19	correct: 16	acc: 84.21%
+* class: 88 (Swing)	total: 18	correct: 13	acc: 72.22%
+* class: 89 (Table_Tennis_Shot)	total: 20	correct: 15	acc: 75.00%
+* class: 90 (Tai_Chi)	total: 14	correct: 12	acc: 85.71%
+* class: 91 (Tennis_Swing)	total: 23	correct: 16	acc: 69.57%
+* class: 92 (Throw_Discus)	total: 18	correct: 9	acc: 50.00%
+* class: 93 (Trampoline_Jumping)	total: 17	correct: 8	acc: 47.06%
+* class: 94 (Typing)	total: 19	correct: 18	acc: 94.74%
+* class: 95 (Uneven_Bars)	total: 15	correct: 9	acc: 60.00%
+* class: 96 (Volleyball_Spiking)	total: 16	correct: 15	acc: 93.75%
+* class: 97 (Walking_With_Dog)	total: 17	correct: 13	acc: 76.47%
+* class: 98 (Wall_Pushups)	total: 19	correct: 14	acc: 73.68%
+* class: 99 (Writing_On_Board)	total: 21	correct: 21	acc: 100.00%
+* class: 100 (Yo_Yo)	total: 18	correct: 14	acc: 77.78%
+* average: 79.75%
+worst10 classes: 
+Playing_Daf: 0.00%
+Nunchucks: 31.58%
+Handstand_Walking: 33.33%
+Pizza_Tossing: 37.50%
+Jump_Rope: 38.10%
+Parallel_Bars: 46.67%
+Trampoline_Jumping: 47.06%
+Lunges: 50.00%
+Pole_Vault: 50.00%
+Pommel_Horse: 50.00%
+<215> samples are not in pool
+epoch [96/100][5/51]	time 0.462 (0.814)	data 0.001 (0.332)	eta 0:03:23	loss 2.0567 (1.7200) acc 75.0000 (79.3750)	lr 1.771275e-05
+epoch [96/100][10/51]	time 0.449 (0.634)	data 0.000 (0.166)	eta 0:02:35	loss 1.8594 (1.7462) acc 71.8750 (77.1875)	lr 1.771275e-05
+epoch [96/100][15/51]	time 0.439 (0.570)	data 0.003 (0.111)	eta 0:02:16	loss 1.6026 (1.7051) acc 71.8750 (77.2917)	lr 1.771275e-05
+epoch [96/100][20/51]	time 0.483 (0.545)	data 0.000 (0.084)	eta 0:02:08	loss 1.5347 (1.6777) acc 84.3750 (78.5938)	lr 1.771275e-05
+epoch [96/100][25/51]	time 0.466 (0.529)	data 0.001 (0.067)	eta 0:02:01	loss 1.2866 (1.7000) acc 81.2500 (77.6250)	lr 1.771275e-05
+epoch [96/100][30/51]	time 0.437 (0.519)	data 0.000 (0.056)	eta 0:01:56	loss 1.8137 (1.7193) acc 75.0000 (77.6042)	lr 1.771275e-05
+epoch [96/100][35/51]	time 0.473 (0.509)	data 0.002 (0.048)	eta 0:01:52	loss 1.6939 (1.7069) acc 78.1250 (78.0357)	lr 1.771275e-05
+epoch [96/100][40/51]	time 0.454 (0.506)	data 0.001 (0.042)	eta 0:01:48	loss 2.0876 (1.7241) acc 68.7500 (77.5781)	lr 1.771275e-05
+epoch [96/100][45/51]	time 0.360 (0.494)	data 0.001 (0.038)	eta 0:01:43	loss 1.6712 (1.7224) acc 78.1250 (77.5694)	lr 1.771275e-05
+epoch [96/100][50/51]	time 0.469 (0.493)	data 0.001 (0.034)	eta 0:01:41	loss 1.7058 (1.7227) acc 81.2500 (77.3125)	lr 1.771275e-05
+Do evaluation on val set
+=> result
+* total: 1,898
+* correct: 1,522
+* accuracy: 80.19%
+* error: 19.81%
+* macro_f1: 78.93%
+=> per-class result
+* class: 0 (Apply_Eye_Makeup)	total: 20	correct: 19	acc: 95.00%
+* class: 1 (Apply_Lipstick)	total: 16	correct: 16	acc: 100.00%
+* class: 2 (Archery)	total: 21	correct: 18	acc: 85.71%
+* class: 3 (Baby_Crawling)	total: 19	correct: 18	acc: 94.74%
+* class: 4 (Balance_Beam)	total: 15	correct: 9	acc: 60.00%
+* class: 5 (Band_Marching)	total: 22	correct: 22	acc: 100.00%
+* class: 6 (Baseball_Pitch)	total: 21	correct: 17	acc: 80.95%
+* class: 7 (Basketball)	total: 20	correct: 19	acc: 95.00%
+* class: 8 (Basketball_Dunk)	total: 19	correct: 19	acc: 100.00%
+* class: 9 (Bench_Press)	total: 22	correct: 19	acc: 86.36%
+* class: 10 (Biking)	total: 19	correct: 19	acc: 100.00%
+* class: 11 (Billiards)	total: 22	correct: 22	acc: 100.00%
+* class: 12 (Blow_Dry_Hair)	total: 19	correct: 17	acc: 89.47%
+* class: 13 (Blowing_Candles)	total: 15	correct: 15	acc: 100.00%
+* class: 14 (Body_Weight_Squats)	total: 16	correct: 11	acc: 68.75%
+* class: 15 (Bowling)	total: 22	correct: 22	acc: 100.00%
+* class: 16 (Boxing_Punching_Bag)	total: 23	correct: 22	acc: 95.65%
+* class: 17 (Boxing_Speed_Bag)	total: 19	correct: 11	acc: 57.89%
+* class: 18 (Breast_Stroke)	total: 15	correct: 11	acc: 73.33%
+* class: 19 (Brushing_Teeth)	total: 19	correct: 18	acc: 94.74%
+* class: 20 (Clean_And_Jerk)	total: 16	correct: 16	acc: 100.00%
+* class: 21 (Cliff_Diving)	total: 20	correct: 15	acc: 75.00%
+* class: 22 (Cricket_Bowling)	total: 21	correct: 14	acc: 66.67%
+* class: 23 (Cricket_Shot)	total: 24	correct: 16	acc: 66.67%
+* class: 24 (Cutting_In_Kitchen)	total: 15	correct: 13	acc: 86.67%
+* class: 25 (Diving)	total: 21	correct: 20	acc: 95.24%
+* class: 26 (Drumming)	total: 23	correct: 23	acc: 100.00%
+* class: 27 (Fencing)	total: 15	correct: 14	acc: 93.33%
+* class: 28 (Field_Hockey_Penalty)	total: 17	correct: 13	acc: 76.47%
+* class: 29 (Floor_Gymnastics)	total: 18	correct: 15	acc: 83.33%
+* class: 30 (Frisbee_Catch)	total: 18	correct: 15	acc: 83.33%
+* class: 31 (Front_Crawl)	total: 20	correct: 17	acc: 85.00%
+* class: 32 (Golf_Swing)	total: 20	correct: 15	acc: 75.00%
+* class: 33 (Haircut)	total: 19	correct: 11	acc: 57.89%
+* class: 34 (Hammering)	total: 21	correct: 18	acc: 85.71%
+* class: 35 (Hammer_Throw)	total: 21	correct: 14	acc: 66.67%
+* class: 36 (Handstand_Pushups)	total: 20	correct: 18	acc: 90.00%
+* class: 37 (Handstand_Walking)	total: 15	correct: 5	acc: 33.33%
+* class: 38 (Head_Massage)	total: 21	correct: 21	acc: 100.00%
+* class: 39 (High_Jump)	total: 17	correct: 9	acc: 52.94%
+* class: 40 (Horse_Race)	total: 18	correct: 17	acc: 94.44%
+* class: 41 (Horse_Riding)	total: 23	correct: 23	acc: 100.00%
+* class: 42 (Hula_Hoop)	total: 18	correct: 10	acc: 55.56%
+* class: 43 (Ice_Dancing)	total: 22	correct: 21	acc: 95.45%
+* class: 44 (Javelin_Throw)	total: 17	correct: 11	acc: 64.71%
+* class: 45 (Juggling_Balls)	total: 16	correct: 14	acc: 87.50%
+* class: 46 (Jumping_Jack)	total: 17	correct: 11	acc: 64.71%
+* class: 47 (Jump_Rope)	total: 21	correct: 8	acc: 38.10%
+* class: 48 (Kayaking)	total: 21	correct: 14	acc: 66.67%
+* class: 49 (Knitting)	total: 18	correct: 18	acc: 100.00%
+* class: 50 (Long_Jump)	total: 18	correct: 15	acc: 83.33%
+* class: 51 (Lunges)	total: 18	correct: 9	acc: 50.00%
+* class: 52 (Military_Parade)	total: 18	correct: 15	acc: 83.33%
+* class: 53 (Mixing)	total: 18	correct: 16	acc: 88.89%
+* class: 54 (Mopping_Floor)	total: 15	correct: 14	acc: 93.33%
+* class: 55 (Nunchucks)	total: 19	correct: 6	acc: 31.58%
+* class: 56 (Parallel_Bars)	total: 15	correct: 7	acc: 46.67%
+* class: 57 (Pizza_Tossing)	total: 16	correct: 6	acc: 37.50%
+* class: 58 (Playing_Cello)	total: 24	correct: 21	acc: 87.50%
+* class: 59 (Playing_Daf)	total: 22	correct: 0	acc: 0.00%
+* class: 60 (Playing_Dhol)	total: 23	correct: 21	acc: 91.30%
+* class: 61 (Playing_Flute)	total: 21	correct: 20	acc: 95.24%
+* class: 62 (Playing_Guitar)	total: 23	correct: 23	acc: 100.00%
+* class: 63 (Playing_Piano)	total: 15	correct: 15	acc: 100.00%
+* class: 64 (Playing_Sitar)	total: 23	correct: 23	acc: 100.00%
+* class: 65 (Playing_Tabla)	total: 16	correct: 15	acc: 93.75%
+* class: 66 (Playing_Violin)	total: 14	correct: 13	acc: 92.86%
+* class: 67 (Pole_Vault)	total: 22	correct: 11	acc: 50.00%
+* class: 68 (Pommel_Horse)	total: 18	correct: 9	acc: 50.00%
+* class: 69 (Pull_Ups)	total: 14	correct: 10	acc: 71.43%
+* class: 70 (Punch)	total: 24	correct: 22	acc: 91.67%
+* class: 71 (Push_Ups)	total: 14	correct: 14	acc: 100.00%
+* class: 72 (Rafting)	total: 17	correct: 16	acc: 94.12%
+* class: 73 (Rock_Climbing_Indoor)	total: 21	correct: 19	acc: 90.48%
+* class: 74 (Rope_Climbing)	total: 17	correct: 13	acc: 76.47%
+* class: 75 (Rowing)	total: 20	correct: 19	acc: 95.00%
+* class: 76 (Salsa_Spin)	total: 18	correct: 15	acc: 83.33%
+* class: 77 (Shaving_Beard)	total: 24	correct: 21	acc: 87.50%
+* class: 78 (Shotput)	total: 20	correct: 14	acc: 70.00%
+* class: 79 (Skate_Boarding)	total: 18	correct: 16	acc: 88.89%
+* class: 80 (Skiing)	total: 19	correct: 15	acc: 78.95%
+* class: 81 (Skijet)	total: 14	correct: 8	acc: 57.14%
+* class: 82 (Sky_Diving)	total: 16	correct: 16	acc: 100.00%
+* class: 83 (Soccer_Juggling)	total: 22	correct: 15	acc: 68.18%
+* class: 84 (Soccer_Penalty)	total: 19	correct: 18	acc: 94.74%
+* class: 85 (Still_Rings)	total: 16	correct: 10	acc: 62.50%
+* class: 86 (Sumo_Wrestling)	total: 16	correct: 16	acc: 100.00%
+* class: 87 (Surfing)	total: 19	correct: 16	acc: 84.21%
+* class: 88 (Swing)	total: 18	correct: 13	acc: 72.22%
+* class: 89 (Table_Tennis_Shot)	total: 20	correct: 15	acc: 75.00%
+* class: 90 (Tai_Chi)	total: 14	correct: 12	acc: 85.71%
+* class: 91 (Tennis_Swing)	total: 23	correct: 16	acc: 69.57%
+* class: 92 (Throw_Discus)	total: 18	correct: 9	acc: 50.00%
+* class: 93 (Trampoline_Jumping)	total: 17	correct: 8	acc: 47.06%
+* class: 94 (Typing)	total: 19	correct: 18	acc: 94.74%
+* class: 95 (Uneven_Bars)	total: 15	correct: 9	acc: 60.00%
+* class: 96 (Volleyball_Spiking)	total: 16	correct: 15	acc: 93.75%
+* class: 97 (Walking_With_Dog)	total: 17	correct: 13	acc: 76.47%
+* class: 98 (Wall_Pushups)	total: 19	correct: 14	acc: 73.68%
+* class: 99 (Writing_On_Board)	total: 21	correct: 21	acc: 100.00%
+* class: 100 (Yo_Yo)	total: 18	correct: 14	acc: 77.78%
+* average: 79.84%
+worst10 classes: 
+Playing_Daf: 0.00%
+Nunchucks: 31.58%
+Handstand_Walking: 33.33%
+Pizza_Tossing: 37.50%
+Jump_Rope: 38.10%
+Parallel_Bars: 46.67%
+Trampoline_Jumping: 47.06%
+Lunges: 50.00%
+Pole_Vault: 50.00%
+Pommel_Horse: 50.00%
+<212> samples are not in pool
+epoch [97/100][5/51]	time 0.349 (0.562)	data 0.001 (0.240)	eta 0:01:51	loss 1.5214 (1.6867) acc 75.0000 (76.8750)	lr 1.231166e-05
+epoch [97/100][10/51]	time 0.362 (0.484)	data 0.001 (0.121)	eta 0:01:33	loss 1.9623 (1.7549) acc 81.2500 (76.5625)	lr 1.231166e-05
+epoch [97/100][15/51]	time 0.490 (0.479)	data 0.001 (0.082)	eta 0:01:30	loss 1.6052 (1.7469) acc 71.8750 (75.0000)	lr 1.231166e-05
+epoch [97/100][20/51]	time 0.447 (0.473)	data 0.001 (0.061)	eta 0:01:26	loss 1.7559 (1.7078) acc 75.0000 (75.9375)	lr 1.231166e-05
+epoch [97/100][25/51]	time 0.443 (0.473)	data 0.000 (0.049)	eta 0:01:24	loss 1.7881 (1.7117) acc 78.1250 (76.2500)	lr 1.231166e-05
+epoch [97/100][30/51]	time 0.437 (0.471)	data 0.000 (0.041)	eta 0:01:21	loss 1.8899 (1.7225) acc 75.0000 (75.9375)	lr 1.231166e-05
+epoch [97/100][35/51]	time 0.523 (0.473)	data 0.001 (0.035)	eta 0:01:19	loss 1.7051 (1.7400) acc 78.1250 (75.2679)	lr 1.231166e-05
+epoch [97/100][40/51]	time 0.436 (0.473)	data 0.001 (0.031)	eta 0:01:17	loss 1.5349 (1.7512) acc 81.2500 (74.9219)	lr 1.231166e-05
+epoch [97/100][45/51]	time 0.470 (0.471)	data 0.001 (0.028)	eta 0:01:14	loss 1.4851 (1.7332) acc 90.6250 (75.6250)	lr 1.231166e-05
+epoch [97/100][50/51]	time 0.513 (0.475)	data 0.000 (0.025)	eta 0:01:13	loss 1.4499 (1.7107) acc 78.1250 (76.0625)	lr 1.231166e-05
+Do evaluation on val set
+=> result
+* total: 1,898
+* correct: 1,520
+* accuracy: 80.08%
+* error: 19.92%
+* macro_f1: 78.82%
+=> per-class result
+* class: 0 (Apply_Eye_Makeup)	total: 20	correct: 19	acc: 95.00%
+* class: 1 (Apply_Lipstick)	total: 16	correct: 16	acc: 100.00%
+* class: 2 (Archery)	total: 21	correct: 18	acc: 85.71%
+* class: 3 (Baby_Crawling)	total: 19	correct: 18	acc: 94.74%
+* class: 4 (Balance_Beam)	total: 15	correct: 9	acc: 60.00%
+* class: 5 (Band_Marching)	total: 22	correct: 22	acc: 100.00%
+* class: 6 (Baseball_Pitch)	total: 21	correct: 17	acc: 80.95%
+* class: 7 (Basketball)	total: 20	correct: 19	acc: 95.00%
+* class: 8 (Basketball_Dunk)	total: 19	correct: 19	acc: 100.00%
+* class: 9 (Bench_Press)	total: 22	correct: 19	acc: 86.36%
+* class: 10 (Biking)	total: 19	correct: 19	acc: 100.00%
+* class: 11 (Billiards)	total: 22	correct: 22	acc: 100.00%
+* class: 12 (Blow_Dry_Hair)	total: 19	correct: 17	acc: 89.47%
+* class: 13 (Blowing_Candles)	total: 15	correct: 15	acc: 100.00%
+* class: 14 (Body_Weight_Squats)	total: 16	correct: 11	acc: 68.75%
+* class: 15 (Bowling)	total: 22	correct: 22	acc: 100.00%
+* class: 16 (Boxing_Punching_Bag)	total: 23	correct: 22	acc: 95.65%
+* class: 17 (Boxing_Speed_Bag)	total: 19	correct: 11	acc: 57.89%
+* class: 18 (Breast_Stroke)	total: 15	correct: 10	acc: 66.67%
+* class: 19 (Brushing_Teeth)	total: 19	correct: 18	acc: 94.74%
+* class: 20 (Clean_And_Jerk)	total: 16	correct: 16	acc: 100.00%
+* class: 21 (Cliff_Diving)	total: 20	correct: 15	acc: 75.00%
+* class: 22 (Cricket_Bowling)	total: 21	correct: 14	acc: 66.67%
+* class: 23 (Cricket_Shot)	total: 24	correct: 15	acc: 62.50%
+* class: 24 (Cutting_In_Kitchen)	total: 15	correct: 13	acc: 86.67%
+* class: 25 (Diving)	total: 21	correct: 20	acc: 95.24%
+* class: 26 (Drumming)	total: 23	correct: 23	acc: 100.00%
+* class: 27 (Fencing)	total: 15	correct: 14	acc: 93.33%
+* class: 28 (Field_Hockey_Penalty)	total: 17	correct: 13	acc: 76.47%
+* class: 29 (Floor_Gymnastics)	total: 18	correct: 14	acc: 77.78%
+* class: 30 (Frisbee_Catch)	total: 18	correct: 15	acc: 83.33%
+* class: 31 (Front_Crawl)	total: 20	correct: 18	acc: 90.00%
+* class: 32 (Golf_Swing)	total: 20	correct: 15	acc: 75.00%
+* class: 33 (Haircut)	total: 19	correct: 11	acc: 57.89%
+* class: 34 (Hammering)	total: 21	correct: 18	acc: 85.71%
+* class: 35 (Hammer_Throw)	total: 21	correct: 14	acc: 66.67%
+* class: 36 (Handstand_Pushups)	total: 20	correct: 18	acc: 90.00%
+* class: 37 (Handstand_Walking)	total: 15	correct: 5	acc: 33.33%
+* class: 38 (Head_Massage)	total: 21	correct: 21	acc: 100.00%
+* class: 39 (High_Jump)	total: 17	correct: 9	acc: 52.94%
+* class: 40 (Horse_Race)	total: 18	correct: 17	acc: 94.44%
+* class: 41 (Horse_Riding)	total: 23	correct: 23	acc: 100.00%
+* class: 42 (Hula_Hoop)	total: 18	correct: 10	acc: 55.56%
+* class: 43 (Ice_Dancing)	total: 22	correct: 21	acc: 95.45%
+* class: 44 (Javelin_Throw)	total: 17	correct: 11	acc: 64.71%
+* class: 45 (Juggling_Balls)	total: 16	correct: 14	acc: 87.50%
+* class: 46 (Jumping_Jack)	total: 17	correct: 11	acc: 64.71%
+* class: 47 (Jump_Rope)	total: 21	correct: 8	acc: 38.10%
+* class: 48 (Kayaking)	total: 21	correct: 14	acc: 66.67%
+* class: 49 (Knitting)	total: 18	correct: 18	acc: 100.00%
+* class: 50 (Long_Jump)	total: 18	correct: 15	acc: 83.33%
+* class: 51 (Lunges)	total: 18	correct: 9	acc: 50.00%
+* class: 52 (Military_Parade)	total: 18	correct: 15	acc: 83.33%
+* class: 53 (Mixing)	total: 18	correct: 16	acc: 88.89%
+* class: 54 (Mopping_Floor)	total: 15	correct: 14	acc: 93.33%
+* class: 55 (Nunchucks)	total: 19	correct: 6	acc: 31.58%
+* class: 56 (Parallel_Bars)	total: 15	correct: 7	acc: 46.67%
+* class: 57 (Pizza_Tossing)	total: 16	correct: 6	acc: 37.50%
+* class: 58 (Playing_Cello)	total: 24	correct: 21	acc: 87.50%
+* class: 59 (Playing_Daf)	total: 22	correct: 0	acc: 0.00%
+* class: 60 (Playing_Dhol)	total: 23	correct: 21	acc: 91.30%
+* class: 61 (Playing_Flute)	total: 21	correct: 20	acc: 95.24%
+* class: 62 (Playing_Guitar)	total: 23	correct: 23	acc: 100.00%
+* class: 63 (Playing_Piano)	total: 15	correct: 15	acc: 100.00%
+* class: 64 (Playing_Sitar)	total: 23	correct: 23	acc: 100.00%
+* class: 65 (Playing_Tabla)	total: 16	correct: 15	acc: 93.75%
+* class: 66 (Playing_Violin)	total: 14	correct: 13	acc: 92.86%
+* class: 67 (Pole_Vault)	total: 22	correct: 11	acc: 50.00%
+* class: 68 (Pommel_Horse)	total: 18	correct: 9	acc: 50.00%
+* class: 69 (Pull_Ups)	total: 14	correct: 10	acc: 71.43%
+* class: 70 (Punch)	total: 24	correct: 22	acc: 91.67%
+* class: 71 (Push_Ups)	total: 14	correct: 14	acc: 100.00%
+* class: 72 (Rafting)	total: 17	correct: 16	acc: 94.12%
+* class: 73 (Rock_Climbing_Indoor)	total: 21	correct: 19	acc: 90.48%
+* class: 74 (Rope_Climbing)	total: 17	correct: 13	acc: 76.47%
+* class: 75 (Rowing)	total: 20	correct: 19	acc: 95.00%
+* class: 76 (Salsa_Spin)	total: 18	correct: 15	acc: 83.33%
+* class: 77 (Shaving_Beard)	total: 24	correct: 21	acc: 87.50%
+* class: 78 (Shotput)	total: 20	correct: 14	acc: 70.00%
+* class: 79 (Skate_Boarding)	total: 18	correct: 16	acc: 88.89%
+* class: 80 (Skiing)	total: 19	correct: 15	acc: 78.95%
+* class: 81 (Skijet)	total: 14	correct: 8	acc: 57.14%
+* class: 82 (Sky_Diving)	total: 16	correct: 16	acc: 100.00%
+* class: 83 (Soccer_Juggling)	total: 22	correct: 15	acc: 68.18%
+* class: 84 (Soccer_Penalty)	total: 19	correct: 18	acc: 94.74%
+* class: 85 (Still_Rings)	total: 16	correct: 10	acc: 62.50%
+* class: 86 (Sumo_Wrestling)	total: 16	correct: 16	acc: 100.00%
+* class: 87 (Surfing)	total: 19	correct: 16	acc: 84.21%
+* class: 88 (Swing)	total: 18	correct: 13	acc: 72.22%
+* class: 89 (Table_Tennis_Shot)	total: 20	correct: 15	acc: 75.00%
+* class: 90 (Tai_Chi)	total: 14	correct: 12	acc: 85.71%
+* class: 91 (Tennis_Swing)	total: 23	correct: 16	acc: 69.57%
+* class: 92 (Throw_Discus)	total: 18	correct: 9	acc: 50.00%
+* class: 93 (Trampoline_Jumping)	total: 17	correct: 8	acc: 47.06%
+* class: 94 (Typing)	total: 19	correct: 18	acc: 94.74%
+* class: 95 (Uneven_Bars)	total: 15	correct: 9	acc: 60.00%
+* class: 96 (Volleyball_Spiking)	total: 16	correct: 15	acc: 93.75%
+* class: 97 (Walking_With_Dog)	total: 17	correct: 13	acc: 76.47%
+* class: 98 (Wall_Pushups)	total: 19	correct: 14	acc: 73.68%
+* class: 99 (Writing_On_Board)	total: 21	correct: 21	acc: 100.00%
+* class: 100 (Yo_Yo)	total: 18	correct: 14	acc: 77.78%
+* average: 79.73%
+worst10 classes: 
+Playing_Daf: 0.00%
+Nunchucks: 31.58%
+Handstand_Walking: 33.33%
+Pizza_Tossing: 37.50%
+Jump_Rope: 38.10%
+Parallel_Bars: 46.67%
+Trampoline_Jumping: 47.06%
+Lunges: 50.00%
+Pole_Vault: 50.00%
+Pommel_Horse: 50.00%
+<214> samples are not in pool
+epoch [98/100][5/51]	time 0.302 (0.659)	data 0.000 (0.294)	eta 0:01:37	loss 1.6395 (1.7969) acc 78.1250 (73.1250)	lr 7.885299e-06
+epoch [98/100][10/51]	time 0.460 (0.542)	data 0.001 (0.147)	eta 0:01:17	loss 1.7717 (1.7493) acc 68.7500 (75.0000)	lr 7.885299e-06
+epoch [98/100][15/51]	time 0.433 (0.514)	data 0.001 (0.099)	eta 0:01:10	loss 1.7081 (1.7230) acc 68.7500 (75.8333)	lr 7.885299e-06
+epoch [98/100][20/51]	time 0.480 (0.499)	data 0.000 (0.074)	eta 0:01:06	loss 1.5096 (1.7155) acc 78.1250 (77.1875)	lr 7.885299e-06
+epoch [98/100][25/51]	time 0.457 (0.490)	data 0.001 (0.059)	eta 0:01:02	loss 1.9115 (1.7445) acc 68.7500 (76.5000)	lr 7.885299e-06
+epoch [98/100][30/51]	time 0.504 (0.489)	data 0.001 (0.050)	eta 0:01:00	loss 2.0255 (1.7370) acc 59.3750 (76.5625)	lr 7.885299e-06
+epoch [98/100][35/51]	time 0.412 (0.484)	data 0.008 (0.043)	eta 0:00:57	loss 1.7282 (1.7171) acc 78.1250 (76.9643)	lr 7.885299e-06
+epoch [98/100][40/51]	time 0.479 (0.478)	data 0.001 (0.038)	eta 0:00:54	loss 1.5791 (1.7189) acc 78.1250 (76.7188)	lr 7.885299e-06
+epoch [98/100][45/51]	time 0.539 (0.483)	data 0.001 (0.034)	eta 0:00:52	loss 1.8952 (1.6992) acc 78.1250 (77.3611)	lr 7.885299e-06
+epoch [98/100][50/51]	time 0.284 (0.480)	data 0.001 (0.030)	eta 0:00:49	loss 1.2858 (1.7008) acc 87.5000 (77.3125)	lr 7.885299e-06
+Do evaluation on val set
+=> result
+* total: 1,898
+* correct: 1,521
+* accuracy: 80.14%
+* error: 19.86%
+* macro_f1: 78.89%
+=> per-class result
+* class: 0 (Apply_Eye_Makeup)	total: 20	correct: 19	acc: 95.00%
+* class: 1 (Apply_Lipstick)	total: 16	correct: 16	acc: 100.00%
+* class: 2 (Archery)	total: 21	correct: 18	acc: 85.71%
+* class: 3 (Baby_Crawling)	total: 19	correct: 18	acc: 94.74%
+* class: 4 (Balance_Beam)	total: 15	correct: 9	acc: 60.00%
+* class: 5 (Band_Marching)	total: 22	correct: 22	acc: 100.00%
+* class: 6 (Baseball_Pitch)	total: 21	correct: 17	acc: 80.95%
+* class: 7 (Basketball)	total: 20	correct: 19	acc: 95.00%
+* class: 8 (Basketball_Dunk)	total: 19	correct: 19	acc: 100.00%
+* class: 9 (Bench_Press)	total: 22	correct: 19	acc: 86.36%
+* class: 10 (Biking)	total: 19	correct: 19	acc: 100.00%
+* class: 11 (Billiards)	total: 22	correct: 22	acc: 100.00%
+* class: 12 (Blow_Dry_Hair)	total: 19	correct: 17	acc: 89.47%
+* class: 13 (Blowing_Candles)	total: 15	correct: 15	acc: 100.00%
+* class: 14 (Body_Weight_Squats)	total: 16	correct: 11	acc: 68.75%
+* class: 15 (Bowling)	total: 22	correct: 22	acc: 100.00%
+* class: 16 (Boxing_Punching_Bag)	total: 23	correct: 22	acc: 95.65%
+* class: 17 (Boxing_Speed_Bag)	total: 19	correct: 11	acc: 57.89%
+* class: 18 (Breast_Stroke)	total: 15	correct: 11	acc: 73.33%
+* class: 19 (Brushing_Teeth)	total: 19	correct: 18	acc: 94.74%
+* class: 20 (Clean_And_Jerk)	total: 16	correct: 16	acc: 100.00%
+* class: 21 (Cliff_Diving)	total: 20	correct: 15	acc: 75.00%
+* class: 22 (Cricket_Bowling)	total: 21	correct: 14	acc: 66.67%
+* class: 23 (Cricket_Shot)	total: 24	correct: 15	acc: 62.50%
+* class: 24 (Cutting_In_Kitchen)	total: 15	correct: 13	acc: 86.67%
+* class: 25 (Diving)	total: 21	correct: 20	acc: 95.24%
+* class: 26 (Drumming)	total: 23	correct: 23	acc: 100.00%
+* class: 27 (Fencing)	total: 15	correct: 14	acc: 93.33%
+* class: 28 (Field_Hockey_Penalty)	total: 17	correct: 13	acc: 76.47%
+* class: 29 (Floor_Gymnastics)	total: 18	correct: 14	acc: 77.78%
+* class: 30 (Frisbee_Catch)	total: 18	correct: 15	acc: 83.33%
+* class: 31 (Front_Crawl)	total: 20	correct: 18	acc: 90.00%
+* class: 32 (Golf_Swing)	total: 20	correct: 15	acc: 75.00%
+* class: 33 (Haircut)	total: 19	correct: 11	acc: 57.89%
+* class: 34 (Hammering)	total: 21	correct: 18	acc: 85.71%
+* class: 35 (Hammer_Throw)	total: 21	correct: 14	acc: 66.67%
+* class: 36 (Handstand_Pushups)	total: 20	correct: 18	acc: 90.00%
+* class: 37 (Handstand_Walking)	total: 15	correct: 5	acc: 33.33%
+* class: 38 (Head_Massage)	total: 21	correct: 21	acc: 100.00%
+* class: 39 (High_Jump)	total: 17	correct: 9	acc: 52.94%
+* class: 40 (Horse_Race)	total: 18	correct: 17	acc: 94.44%
+* class: 41 (Horse_Riding)	total: 23	correct: 23	acc: 100.00%
+* class: 42 (Hula_Hoop)	total: 18	correct: 10	acc: 55.56%
+* class: 43 (Ice_Dancing)	total: 22	correct: 21	acc: 95.45%
+* class: 44 (Javelin_Throw)	total: 17	correct: 11	acc: 64.71%
+* class: 45 (Juggling_Balls)	total: 16	correct: 14	acc: 87.50%
+* class: 46 (Jumping_Jack)	total: 17	correct: 11	acc: 64.71%
+* class: 47 (Jump_Rope)	total: 21	correct: 8	acc: 38.10%
+* class: 48 (Kayaking)	total: 21	correct: 14	acc: 66.67%
+* class: 49 (Knitting)	total: 18	correct: 18	acc: 100.00%
+* class: 50 (Long_Jump)	total: 18	correct: 15	acc: 83.33%
+* class: 51 (Lunges)	total: 18	correct: 9	acc: 50.00%
+* class: 52 (Military_Parade)	total: 18	correct: 15	acc: 83.33%
+* class: 53 (Mixing)	total: 18	correct: 16	acc: 88.89%
+* class: 54 (Mopping_Floor)	total: 15	correct: 14	acc: 93.33%
+* class: 55 (Nunchucks)	total: 19	correct: 6	acc: 31.58%
+* class: 56 (Parallel_Bars)	total: 15	correct: 7	acc: 46.67%
+* class: 57 (Pizza_Tossing)	total: 16	correct: 6	acc: 37.50%
+* class: 58 (Playing_Cello)	total: 24	correct: 21	acc: 87.50%
+* class: 59 (Playing_Daf)	total: 22	correct: 0	acc: 0.00%
+* class: 60 (Playing_Dhol)	total: 23	correct: 21	acc: 91.30%
+* class: 61 (Playing_Flute)	total: 21	correct: 20	acc: 95.24%
+* class: 62 (Playing_Guitar)	total: 23	correct: 23	acc: 100.00%
+* class: 63 (Playing_Piano)	total: 15	correct: 15	acc: 100.00%
+* class: 64 (Playing_Sitar)	total: 23	correct: 23	acc: 100.00%
+* class: 65 (Playing_Tabla)	total: 16	correct: 15	acc: 93.75%
+* class: 66 (Playing_Violin)	total: 14	correct: 13	acc: 92.86%
+* class: 67 (Pole_Vault)	total: 22	correct: 11	acc: 50.00%
+* class: 68 (Pommel_Horse)	total: 18	correct: 9	acc: 50.00%
+* class: 69 (Pull_Ups)	total: 14	correct: 10	acc: 71.43%
+* class: 70 (Punch)	total: 24	correct: 22	acc: 91.67%
+* class: 71 (Push_Ups)	total: 14	correct: 14	acc: 100.00%
+* class: 72 (Rafting)	total: 17	correct: 16	acc: 94.12%
+* class: 73 (Rock_Climbing_Indoor)	total: 21	correct: 19	acc: 90.48%
+* class: 74 (Rope_Climbing)	total: 17	correct: 13	acc: 76.47%
+* class: 75 (Rowing)	total: 20	correct: 19	acc: 95.00%
+* class: 76 (Salsa_Spin)	total: 18	correct: 15	acc: 83.33%
+* class: 77 (Shaving_Beard)	total: 24	correct: 21	acc: 87.50%
+* class: 78 (Shotput)	total: 20	correct: 14	acc: 70.00%
+* class: 79 (Skate_Boarding)	total: 18	correct: 16	acc: 88.89%
+* class: 80 (Skiing)	total: 19	correct: 15	acc: 78.95%
+* class: 81 (Skijet)	total: 14	correct: 8	acc: 57.14%
+* class: 82 (Sky_Diving)	total: 16	correct: 16	acc: 100.00%
+* class: 83 (Soccer_Juggling)	total: 22	correct: 15	acc: 68.18%
+* class: 84 (Soccer_Penalty)	total: 19	correct: 18	acc: 94.74%
+* class: 85 (Still_Rings)	total: 16	correct: 10	acc: 62.50%
+* class: 86 (Sumo_Wrestling)	total: 16	correct: 16	acc: 100.00%
+* class: 87 (Surfing)	total: 19	correct: 16	acc: 84.21%
+* class: 88 (Swing)	total: 18	correct: 13	acc: 72.22%
+* class: 89 (Table_Tennis_Shot)	total: 20	correct: 15	acc: 75.00%
+* class: 90 (Tai_Chi)	total: 14	correct: 12	acc: 85.71%
+* class: 91 (Tennis_Swing)	total: 23	correct: 16	acc: 69.57%
+* class: 92 (Throw_Discus)	total: 18	correct: 9	acc: 50.00%
+* class: 93 (Trampoline_Jumping)	total: 17	correct: 8	acc: 47.06%
+* class: 94 (Typing)	total: 19	correct: 18	acc: 94.74%
+* class: 95 (Uneven_Bars)	total: 15	correct: 9	acc: 60.00%
+* class: 96 (Volleyball_Spiking)	total: 16	correct: 15	acc: 93.75%
+* class: 97 (Walking_With_Dog)	total: 17	correct: 13	acc: 76.47%
+* class: 98 (Wall_Pushups)	total: 19	correct: 14	acc: 73.68%
+* class: 99 (Writing_On_Board)	total: 21	correct: 21	acc: 100.00%
+* class: 100 (Yo_Yo)	total: 18	correct: 14	acc: 77.78%
+* average: 79.79%
+worst10 classes: 
+Playing_Daf: 0.00%
+Nunchucks: 31.58%
+Handstand_Walking: 33.33%
+Pizza_Tossing: 37.50%
+Jump_Rope: 38.10%
+Parallel_Bars: 46.67%
+Trampoline_Jumping: 47.06%
+Lunges: 50.00%
+Pole_Vault: 50.00%
+Pommel_Horse: 50.00%
+<214> samples are not in pool
+epoch [99/100][5/51]	time 0.271 (0.762)	data 0.001 (0.417)	eta 0:01:13	loss 1.6874 (1.6244) acc 75.0000 (78.7500)	lr 4.438035e-06
+epoch [99/100][10/51]	time 0.436 (0.582)	data 0.001 (0.209)	eta 0:00:53	loss 1.9869 (1.6336) acc 62.5000 (77.5000)	lr 4.438035e-06
+epoch [99/100][15/51]	time 0.451 (0.540)	data 0.000 (0.140)	eta 0:00:46	loss 1.9997 (1.6210) acc 75.0000 (78.5417)	lr 4.438035e-06
+epoch [99/100][20/51]	time 0.452 (0.517)	data 0.001 (0.105)	eta 0:00:42	loss 1.6187 (1.6641) acc 75.0000 (78.4375)	lr 4.438035e-06
+epoch [99/100][25/51]	time 0.472 (0.505)	data 0.001 (0.084)	eta 0:00:38	loss 2.0833 (1.6886) acc 68.7500 (77.8750)	lr 4.438035e-06
+epoch [99/100][30/51]	time 0.468 (0.500)	data 0.002 (0.070)	eta 0:00:36	loss 1.9521 (1.7086) acc 62.5000 (76.5625)	lr 4.438035e-06
+epoch [99/100][35/51]	time 0.448 (0.494)	data 0.003 (0.060)	eta 0:00:33	loss 1.5316 (1.7086) acc 87.5000 (77.0536)	lr 4.438035e-06
+epoch [99/100][40/51]	time 0.500 (0.492)	data 0.001 (0.053)	eta 0:00:30	loss 1.5557 (1.7084) acc 87.5000 (77.3438)	lr 4.438035e-06
+epoch [99/100][45/51]	time 0.442 (0.491)	data 0.001 (0.047)	eta 0:00:27	loss 1.7113 (1.6991) acc 75.0000 (77.5694)	lr 4.438035e-06
+epoch [99/100][50/51]	time 0.547 (0.490)	data 0.001 (0.043)	eta 0:00:25	loss 1.5623 (1.7056) acc 75.0000 (77.3125)	lr 4.438035e-06
+Do evaluation on val set
+=> result
+* total: 1,898
+* correct: 1,521
+* accuracy: 80.14%
+* error: 19.86%
+* macro_f1: 78.88%
+=> per-class result
+* class: 0 (Apply_Eye_Makeup)	total: 20	correct: 19	acc: 95.00%
+* class: 1 (Apply_Lipstick)	total: 16	correct: 16	acc: 100.00%
+* class: 2 (Archery)	total: 21	correct: 18	acc: 85.71%
+* class: 3 (Baby_Crawling)	total: 19	correct: 18	acc: 94.74%
+* class: 4 (Balance_Beam)	total: 15	correct: 9	acc: 60.00%
+* class: 5 (Band_Marching)	total: 22	correct: 22	acc: 100.00%
+* class: 6 (Baseball_Pitch)	total: 21	correct: 17	acc: 80.95%
+* class: 7 (Basketball)	total: 20	correct: 19	acc: 95.00%
+* class: 8 (Basketball_Dunk)	total: 19	correct: 19	acc: 100.00%
+* class: 9 (Bench_Press)	total: 22	correct: 19	acc: 86.36%
+* class: 10 (Biking)	total: 19	correct: 19	acc: 100.00%
+* class: 11 (Billiards)	total: 22	correct: 22	acc: 100.00%
+* class: 12 (Blow_Dry_Hair)	total: 19	correct: 17	acc: 89.47%
+* class: 13 (Blowing_Candles)	total: 15	correct: 15	acc: 100.00%
+* class: 14 (Body_Weight_Squats)	total: 16	correct: 11	acc: 68.75%
+* class: 15 (Bowling)	total: 22	correct: 22	acc: 100.00%
+* class: 16 (Boxing_Punching_Bag)	total: 23	correct: 22	acc: 95.65%
+* class: 17 (Boxing_Speed_Bag)	total: 19	correct: 11	acc: 57.89%
+* class: 18 (Breast_Stroke)	total: 15	correct: 11	acc: 73.33%
+* class: 19 (Brushing_Teeth)	total: 19	correct: 18	acc: 94.74%
+* class: 20 (Clean_And_Jerk)	total: 16	correct: 16	acc: 100.00%
+* class: 21 (Cliff_Diving)	total: 20	correct: 15	acc: 75.00%
+* class: 22 (Cricket_Bowling)	total: 21	correct: 14	acc: 66.67%
+* class: 23 (Cricket_Shot)	total: 24	correct: 15	acc: 62.50%
+* class: 24 (Cutting_In_Kitchen)	total: 15	correct: 13	acc: 86.67%
+* class: 25 (Diving)	total: 21	correct: 20	acc: 95.24%
+* class: 26 (Drumming)	total: 23	correct: 23	acc: 100.00%
+* class: 27 (Fencing)	total: 15	correct: 14	acc: 93.33%
+* class: 28 (Field_Hockey_Penalty)	total: 17	correct: 13	acc: 76.47%
+* class: 29 (Floor_Gymnastics)	total: 18	correct: 14	acc: 77.78%
+* class: 30 (Frisbee_Catch)	total: 18	correct: 15	acc: 83.33%
+* class: 31 (Front_Crawl)	total: 20	correct: 18	acc: 90.00%
+* class: 32 (Golf_Swing)	total: 20	correct: 15	acc: 75.00%
+* class: 33 (Haircut)	total: 19	correct: 11	acc: 57.89%
+* class: 34 (Hammering)	total: 21	correct: 18	acc: 85.71%
+* class: 35 (Hammer_Throw)	total: 21	correct: 14	acc: 66.67%
+* class: 36 (Handstand_Pushups)	total: 20	correct: 18	acc: 90.00%
+* class: 37 (Handstand_Walking)	total: 15	correct: 5	acc: 33.33%
+* class: 38 (Head_Massage)	total: 21	correct: 21	acc: 100.00%
+* class: 39 (High_Jump)	total: 17	correct: 9	acc: 52.94%
+* class: 40 (Horse_Race)	total: 18	correct: 17	acc: 94.44%
+* class: 41 (Horse_Riding)	total: 23	correct: 23	acc: 100.00%
+* class: 42 (Hula_Hoop)	total: 18	correct: 10	acc: 55.56%
+* class: 43 (Ice_Dancing)	total: 22	correct: 21	acc: 95.45%
+* class: 44 (Javelin_Throw)	total: 17	correct: 11	acc: 64.71%
+* class: 45 (Juggling_Balls)	total: 16	correct: 14	acc: 87.50%
+* class: 46 (Jumping_Jack)	total: 17	correct: 11	acc: 64.71%
+* class: 47 (Jump_Rope)	total: 21	correct: 8	acc: 38.10%
+* class: 48 (Kayaking)	total: 21	correct: 14	acc: 66.67%
+* class: 49 (Knitting)	total: 18	correct: 18	acc: 100.00%
+* class: 50 (Long_Jump)	total: 18	correct: 15	acc: 83.33%
+* class: 51 (Lunges)	total: 18	correct: 9	acc: 50.00%
+* class: 52 (Military_Parade)	total: 18	correct: 15	acc: 83.33%
+* class: 53 (Mixing)	total: 18	correct: 16	acc: 88.89%
+* class: 54 (Mopping_Floor)	total: 15	correct: 14	acc: 93.33%
+* class: 55 (Nunchucks)	total: 19	correct: 6	acc: 31.58%
+* class: 56 (Parallel_Bars)	total: 15	correct: 7	acc: 46.67%
+* class: 57 (Pizza_Tossing)	total: 16	correct: 6	acc: 37.50%
+* class: 58 (Playing_Cello)	total: 24	correct: 21	acc: 87.50%
+* class: 59 (Playing_Daf)	total: 22	correct: 0	acc: 0.00%
+* class: 60 (Playing_Dhol)	total: 23	correct: 21	acc: 91.30%
+* class: 61 (Playing_Flute)	total: 21	correct: 20	acc: 95.24%
+* class: 62 (Playing_Guitar)	total: 23	correct: 23	acc: 100.00%
+* class: 63 (Playing_Piano)	total: 15	correct: 15	acc: 100.00%
+* class: 64 (Playing_Sitar)	total: 23	correct: 23	acc: 100.00%
+* class: 65 (Playing_Tabla)	total: 16	correct: 15	acc: 93.75%
+* class: 66 (Playing_Violin)	total: 14	correct: 13	acc: 92.86%
+* class: 67 (Pole_Vault)	total: 22	correct: 11	acc: 50.00%
+* class: 68 (Pommel_Horse)	total: 18	correct: 9	acc: 50.00%
+* class: 69 (Pull_Ups)	total: 14	correct: 10	acc: 71.43%
+* class: 70 (Punch)	total: 24	correct: 22	acc: 91.67%
+* class: 71 (Push_Ups)	total: 14	correct: 14	acc: 100.00%
+* class: 72 (Rafting)	total: 17	correct: 16	acc: 94.12%
+* class: 73 (Rock_Climbing_Indoor)	total: 21	correct: 19	acc: 90.48%
+* class: 74 (Rope_Climbing)	total: 17	correct: 13	acc: 76.47%
+* class: 75 (Rowing)	total: 20	correct: 19	acc: 95.00%
+* class: 76 (Salsa_Spin)	total: 18	correct: 15	acc: 83.33%
+* class: 77 (Shaving_Beard)	total: 24	correct: 21	acc: 87.50%
+* class: 78 (Shotput)	total: 20	correct: 14	acc: 70.00%
+* class: 79 (Skate_Boarding)	total: 18	correct: 16	acc: 88.89%
+* class: 80 (Skiing)	total: 19	correct: 15	acc: 78.95%
+* class: 81 (Skijet)	total: 14	correct: 8	acc: 57.14%
+* class: 82 (Sky_Diving)	total: 16	correct: 16	acc: 100.00%
+* class: 83 (Soccer_Juggling)	total: 22	correct: 15	acc: 68.18%
+* class: 84 (Soccer_Penalty)	total: 19	correct: 18	acc: 94.74%
+* class: 85 (Still_Rings)	total: 16	correct: 10	acc: 62.50%
+* class: 86 (Sumo_Wrestling)	total: 16	correct: 16	acc: 100.00%
+* class: 87 (Surfing)	total: 19	correct: 16	acc: 84.21%
+* class: 88 (Swing)	total: 18	correct: 13	acc: 72.22%
+* class: 89 (Table_Tennis_Shot)	total: 20	correct: 15	acc: 75.00%
+* class: 90 (Tai_Chi)	total: 14	correct: 12	acc: 85.71%
+* class: 91 (Tennis_Swing)	total: 23	correct: 16	acc: 69.57%
+* class: 92 (Throw_Discus)	total: 18	correct: 9	acc: 50.00%
+* class: 93 (Trampoline_Jumping)	total: 17	correct: 8	acc: 47.06%
+* class: 94 (Typing)	total: 19	correct: 18	acc: 94.74%
+* class: 95 (Uneven_Bars)	total: 15	correct: 9	acc: 60.00%
+* class: 96 (Volleyball_Spiking)	total: 16	correct: 15	acc: 93.75%
+* class: 97 (Walking_With_Dog)	total: 17	correct: 13	acc: 76.47%
+* class: 98 (Wall_Pushups)	total: 19	correct: 14	acc: 73.68%
+* class: 99 (Writing_On_Board)	total: 21	correct: 21	acc: 100.00%
+* class: 100 (Yo_Yo)	total: 18	correct: 14	acc: 77.78%
+* average: 79.79%
+worst10 classes: 
+Playing_Daf: 0.00%
+Nunchucks: 31.58%
+Handstand_Walking: 33.33%
+Pizza_Tossing: 37.50%
+Jump_Rope: 38.10%
+Parallel_Bars: 46.67%
+Trampoline_Jumping: 47.06%
+Lunges: 50.00%
+Pole_Vault: 50.00%
+Pommel_Horse: 50.00%
+<220> samples are not in pool
+epoch [100/100][5/51]	time 0.230 (0.871)	data 0.001 (0.531)	eta 0:00:40	loss 2.1676 (2.0009) acc 62.5000 (70.6250)	lr 1.973272e-06
+epoch [100/100][10/51]	time 0.311 (0.598)	data 0.001 (0.266)	eta 0:00:24	loss 1.8420 (1.8746) acc 75.0000 (76.2500)	lr 1.973272e-06
+epoch [100/100][15/51]	time 0.362 (0.506)	data 0.002 (0.178)	eta 0:00:18	loss 1.7316 (1.7825) acc 78.1250 (77.9167)	lr 1.973272e-06
+epoch [100/100][20/51]	time 0.469 (0.493)	data 0.001 (0.133)	eta 0:00:15	loss 1.5251 (1.7871) acc 90.6250 (77.6562)	lr 1.973272e-06
+epoch [100/100][25/51]	time 0.426 (0.482)	data 0.001 (0.107)	eta 0:00:12	loss 1.7939 (1.7739) acc 75.0000 (77.7500)	lr 1.973272e-06
+epoch [100/100][30/51]	time 0.456 (0.479)	data 0.001 (0.089)	eta 0:00:10	loss 1.7243 (1.7556) acc 78.1250 (78.2292)	lr 1.973272e-06
+epoch [100/100][35/51]	time 0.457 (0.477)	data 0.001 (0.077)	eta 0:00:07	loss 1.4865 (1.7374) acc 90.6250 (78.4821)	lr 1.973272e-06
+epoch [100/100][40/51]	time 0.447 (0.473)	data 0.001 (0.067)	eta 0:00:05	loss 1.8547 (1.7443) acc 78.1250 (78.2812)	lr 1.973272e-06
+epoch [100/100][45/51]	time 0.482 (0.471)	data 0.001 (0.060)	eta 0:00:02	loss 1.4597 (1.7351) acc 84.3750 (78.1250)	lr 1.973272e-06
+epoch [100/100][50/51]	time 0.478 (0.471)	data 0.001 (0.054)	eta 0:00:00	loss 1.3788 (1.7342) acc 78.1250 (77.7500)	lr 1.973272e-06
+Do evaluation on val set
+=> result
+* total: 1,898
+* correct: 1,521
+* accuracy: 80.14%
+* error: 19.86%
+* macro_f1: 78.89%
+=> per-class result
+* class: 0 (Apply_Eye_Makeup)	total: 20	correct: 19	acc: 95.00%
+* class: 1 (Apply_Lipstick)	total: 16	correct: 16	acc: 100.00%
+* class: 2 (Archery)	total: 21	correct: 18	acc: 85.71%
+* class: 3 (Baby_Crawling)	total: 19	correct: 18	acc: 94.74%
+* class: 4 (Balance_Beam)	total: 15	correct: 9	acc: 60.00%
+* class: 5 (Band_Marching)	total: 22	correct: 22	acc: 100.00%
+* class: 6 (Baseball_Pitch)	total: 21	correct: 17	acc: 80.95%
+* class: 7 (Basketball)	total: 20	correct: 19	acc: 95.00%
+* class: 8 (Basketball_Dunk)	total: 19	correct: 19	acc: 100.00%
+* class: 9 (Bench_Press)	total: 22	correct: 19	acc: 86.36%
+* class: 10 (Biking)	total: 19	correct: 19	acc: 100.00%
+* class: 11 (Billiards)	total: 22	correct: 22	acc: 100.00%
+* class: 12 (Blow_Dry_Hair)	total: 19	correct: 17	acc: 89.47%
+* class: 13 (Blowing_Candles)	total: 15	correct: 15	acc: 100.00%
+* class: 14 (Body_Weight_Squats)	total: 16	correct: 11	acc: 68.75%
+* class: 15 (Bowling)	total: 22	correct: 22	acc: 100.00%
+* class: 16 (Boxing_Punching_Bag)	total: 23	correct: 22	acc: 95.65%
+* class: 17 (Boxing_Speed_Bag)	total: 19	correct: 11	acc: 57.89%
+* class: 18 (Breast_Stroke)	total: 15	correct: 11	acc: 73.33%
+* class: 19 (Brushing_Teeth)	total: 19	correct: 18	acc: 94.74%
+* class: 20 (Clean_And_Jerk)	total: 16	correct: 16	acc: 100.00%
+* class: 21 (Cliff_Diving)	total: 20	correct: 15	acc: 75.00%
+* class: 22 (Cricket_Bowling)	total: 21	correct: 14	acc: 66.67%
+* class: 23 (Cricket_Shot)	total: 24	correct: 15	acc: 62.50%
+* class: 24 (Cutting_In_Kitchen)	total: 15	correct: 13	acc: 86.67%
+* class: 25 (Diving)	total: 21	correct: 20	acc: 95.24%
+* class: 26 (Drumming)	total: 23	correct: 23	acc: 100.00%
+* class: 27 (Fencing)	total: 15	correct: 14	acc: 93.33%
+* class: 28 (Field_Hockey_Penalty)	total: 17	correct: 13	acc: 76.47%
+* class: 29 (Floor_Gymnastics)	total: 18	correct: 14	acc: 77.78%
+* class: 30 (Frisbee_Catch)	total: 18	correct: 15	acc: 83.33%
+* class: 31 (Front_Crawl)	total: 20	correct: 18	acc: 90.00%
+* class: 32 (Golf_Swing)	total: 20	correct: 15	acc: 75.00%
+* class: 33 (Haircut)	total: 19	correct: 11	acc: 57.89%
+* class: 34 (Hammering)	total: 21	correct: 18	acc: 85.71%
+* class: 35 (Hammer_Throw)	total: 21	correct: 14	acc: 66.67%
+* class: 36 (Handstand_Pushups)	total: 20	correct: 18	acc: 90.00%
+* class: 37 (Handstand_Walking)	total: 15	correct: 5	acc: 33.33%
+* class: 38 (Head_Massage)	total: 21	correct: 21	acc: 100.00%
+* class: 39 (High_Jump)	total: 17	correct: 9	acc: 52.94%
+* class: 40 (Horse_Race)	total: 18	correct: 17	acc: 94.44%
+* class: 41 (Horse_Riding)	total: 23	correct: 23	acc: 100.00%
+* class: 42 (Hula_Hoop)	total: 18	correct: 10	acc: 55.56%
+* class: 43 (Ice_Dancing)	total: 22	correct: 21	acc: 95.45%
+* class: 44 (Javelin_Throw)	total: 17	correct: 11	acc: 64.71%
+* class: 45 (Juggling_Balls)	total: 16	correct: 14	acc: 87.50%
+* class: 46 (Jumping_Jack)	total: 17	correct: 11	acc: 64.71%
+* class: 47 (Jump_Rope)	total: 21	correct: 8	acc: 38.10%
+* class: 48 (Kayaking)	total: 21	correct: 14	acc: 66.67%
+* class: 49 (Knitting)	total: 18	correct: 18	acc: 100.00%
+* class: 50 (Long_Jump)	total: 18	correct: 15	acc: 83.33%
+* class: 51 (Lunges)	total: 18	correct: 9	acc: 50.00%
+* class: 52 (Military_Parade)	total: 18	correct: 15	acc: 83.33%
+* class: 53 (Mixing)	total: 18	correct: 16	acc: 88.89%
+* class: 54 (Mopping_Floor)	total: 15	correct: 14	acc: 93.33%
+* class: 55 (Nunchucks)	total: 19	correct: 6	acc: 31.58%
+* class: 56 (Parallel_Bars)	total: 15	correct: 7	acc: 46.67%
+* class: 57 (Pizza_Tossing)	total: 16	correct: 6	acc: 37.50%
+* class: 58 (Playing_Cello)	total: 24	correct: 21	acc: 87.50%
+* class: 59 (Playing_Daf)	total: 22	correct: 0	acc: 0.00%
+* class: 60 (Playing_Dhol)	total: 23	correct: 21	acc: 91.30%
+* class: 61 (Playing_Flute)	total: 21	correct: 20	acc: 95.24%
+* class: 62 (Playing_Guitar)	total: 23	correct: 23	acc: 100.00%
+* class: 63 (Playing_Piano)	total: 15	correct: 15	acc: 100.00%
+* class: 64 (Playing_Sitar)	total: 23	correct: 23	acc: 100.00%
+* class: 65 (Playing_Tabla)	total: 16	correct: 15	acc: 93.75%
+* class: 66 (Playing_Violin)	total: 14	correct: 13	acc: 92.86%
+* class: 67 (Pole_Vault)	total: 22	correct: 11	acc: 50.00%
+* class: 68 (Pommel_Horse)	total: 18	correct: 9	acc: 50.00%
+* class: 69 (Pull_Ups)	total: 14	correct: 10	acc: 71.43%
+* class: 70 (Punch)	total: 24	correct: 22	acc: 91.67%
+* class: 71 (Push_Ups)	total: 14	correct: 14	acc: 100.00%
+* class: 72 (Rafting)	total: 17	correct: 16	acc: 94.12%
+* class: 73 (Rock_Climbing_Indoor)	total: 21	correct: 19	acc: 90.48%
+* class: 74 (Rope_Climbing)	total: 17	correct: 13	acc: 76.47%
+* class: 75 (Rowing)	total: 20	correct: 19	acc: 95.00%
+* class: 76 (Salsa_Spin)	total: 18	correct: 15	acc: 83.33%
+* class: 77 (Shaving_Beard)	total: 24	correct: 21	acc: 87.50%
+* class: 78 (Shotput)	total: 20	correct: 14	acc: 70.00%
+* class: 79 (Skate_Boarding)	total: 18	correct: 16	acc: 88.89%
+* class: 80 (Skiing)	total: 19	correct: 15	acc: 78.95%
+* class: 81 (Skijet)	total: 14	correct: 8	acc: 57.14%
+* class: 82 (Sky_Diving)	total: 16	correct: 16	acc: 100.00%
+* class: 83 (Soccer_Juggling)	total: 22	correct: 15	acc: 68.18%
+* class: 84 (Soccer_Penalty)	total: 19	correct: 18	acc: 94.74%
+* class: 85 (Still_Rings)	total: 16	correct: 10	acc: 62.50%
+* class: 86 (Sumo_Wrestling)	total: 16	correct: 16	acc: 100.00%
+* class: 87 (Surfing)	total: 19	correct: 16	acc: 84.21%
+* class: 88 (Swing)	total: 18	correct: 13	acc: 72.22%
+* class: 89 (Table_Tennis_Shot)	total: 20	correct: 15	acc: 75.00%
+* class: 90 (Tai_Chi)	total: 14	correct: 12	acc: 85.71%
+* class: 91 (Tennis_Swing)	total: 23	correct: 16	acc: 69.57%
+* class: 92 (Throw_Discus)	total: 18	correct: 9	acc: 50.00%
+* class: 93 (Trampoline_Jumping)	total: 17	correct: 8	acc: 47.06%
+* class: 94 (Typing)	total: 19	correct: 18	acc: 94.74%
+* class: 95 (Uneven_Bars)	total: 15	correct: 9	acc: 60.00%
+* class: 96 (Volleyball_Spiking)	total: 16	correct: 15	acc: 93.75%
+* class: 97 (Walking_With_Dog)	total: 17	correct: 13	acc: 76.47%
+* class: 98 (Wall_Pushups)	total: 19	correct: 14	acc: 73.68%
+* class: 99 (Writing_On_Board)	total: 21	correct: 21	acc: 100.00%
+* class: 100 (Yo_Yo)	total: 18	correct: 14	acc: 77.78%
+* average: 79.79%
+worst10 classes: 
+Playing_Daf: 0.00%
+Nunchucks: 31.58%
+Handstand_Walking: 33.33%
+Pizza_Tossing: 37.50%
+Jump_Rope: 38.10%
+Parallel_Bars: 46.67%
+Trampoline_Jumping: 47.06%
+Lunges: 50.00%
+Pole_Vault: 50.00%
+Pommel_Horse: 50.00%
+Checkpoint saved to ./output/ssucf101/UPLTrainer/rn50_ep100_16shots-10.18-test_cc_refine_ep100_usenotinpool/SEED2/data-ssucf101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-2_beta-0.0_FILT-True_T-1.0_cMomn-0.95_topP-1_MAXPOOL-16/prompt_learner/model-last-0.pth.tar
+Finished training
+Deploy the model with the best val performance
+Loading weights to prompt_learner from "./output/ssucf101/UPLTrainer/rn50_ep100_16shots-10.18-test_cc_refine_ep100_usenotinpool/SEED2/data-ssucf101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-2_beta-0.0_FILT-True_T-1.0_cMomn-0.95_topP-1_MAXPOOL-16/prompt_learner/model-best-0.pth.tar" (epoch = 80)
+Do evaluation on test set
+=> result
+* total: 3,783
+* correct: 2,877
+* accuracy: 76.05%
+* error: 23.95%
+* macro_f1: 74.13%
+=> per-class result
+* class: 0 (Apply_Eye_Makeup)	total: 44	correct: 33	acc: 75.00%
+* class: 1 (Apply_Lipstick)	total: 32	correct: 26	acc: 81.25%
+* class: 2 (Archery)	total: 41	correct: 32	acc: 78.05%
+* class: 3 (Baby_Crawling)	total: 35	correct: 35	acc: 100.00%
+* class: 4 (Balance_Beam)	total: 31	correct: 12	acc: 38.71%
+* class: 5 (Band_Marching)	total: 43	correct: 43	acc: 100.00%
+* class: 6 (Baseball_Pitch)	total: 43	correct: 37	acc: 86.05%
+* class: 7 (Basketball)	total: 35	correct: 30	acc: 85.71%
+* class: 8 (Basketball_Dunk)	total: 37	correct: 37	acc: 100.00%
+* class: 9 (Bench_Press)	total: 48	correct: 45	acc: 93.75%
+* class: 10 (Biking)	total: 38	correct: 36	acc: 94.74%
+* class: 11 (Billiards)	total: 40	correct: 40	acc: 100.00%
+* class: 12 (Blow_Dry_Hair)	total: 38	correct: 24	acc: 63.16%
+* class: 13 (Blowing_Candles)	total: 33	correct: 33	acc: 100.00%
+* class: 14 (Body_Weight_Squats)	total: 30	correct: 10	acc: 33.33%
+* class: 15 (Bowling)	total: 43	correct: 43	acc: 100.00%
+* class: 16 (Boxing_Punching_Bag)	total: 49	correct: 45	acc: 91.84%
+* class: 17 (Boxing_Speed_Bag)	total: 37	correct: 14	acc: 37.84%
+* class: 18 (Breast_Stroke)	total: 28	correct: 24	acc: 85.71%
+* class: 19 (Brushing_Teeth)	total: 36	correct: 24	acc: 66.67%
+* class: 20 (Clean_And_Jerk)	total: 33	correct: 33	acc: 100.00%
+* class: 21 (Cliff_Diving)	total: 39	correct: 19	acc: 48.72%
+* class: 22 (Cricket_Bowling)	total: 36	correct: 18	acc: 50.00%
+* class: 23 (Cricket_Shot)	total: 49	correct: 19	acc: 38.78%
+* class: 24 (Cutting_In_Kitchen)	total: 33	correct: 33	acc: 100.00%
+* class: 25 (Diving)	total: 45	correct: 42	acc: 93.33%
+* class: 26 (Drumming)	total: 45	correct: 39	acc: 86.67%
+* class: 27 (Fencing)	total: 34	correct: 33	acc: 97.06%
+* class: 28 (Field_Hockey_Penalty)	total: 40	correct: 31	acc: 77.50%
+* class: 29 (Floor_Gymnastics)	total: 36	correct: 28	acc: 77.78%
+* class: 30 (Frisbee_Catch)	total: 37	correct: 33	acc: 89.19%
+* class: 31 (Front_Crawl)	total: 37	correct: 24	acc: 64.86%
+* class: 32 (Golf_Swing)	total: 39	correct: 32	acc: 82.05%
+* class: 33 (Haircut)	total: 33	correct: 29	acc: 87.88%
+* class: 34 (Hammering)	total: 33	correct: 15	acc: 45.45%
+* class: 35 (Hammer_Throw)	total: 45	correct: 28	acc: 62.22%
+* class: 36 (Handstand_Pushups)	total: 28	correct: 27	acc: 96.43%
+* class: 37 (Handstand_Walking)	total: 34	correct: 8	acc: 23.53%
+* class: 38 (Head_Massage)	total: 41	correct: 41	acc: 100.00%
+* class: 39 (High_Jump)	total: 37	correct: 8	acc: 21.62%
+* class: 40 (Horse_Race)	total: 35	correct: 33	acc: 94.29%
+* class: 41 (Horse_Riding)	total: 49	correct: 49	acc: 100.00%
+* class: 42 (Hula_Hoop)	total: 34	correct: 28	acc: 82.35%
+* class: 43 (Ice_Dancing)	total: 46	correct: 46	acc: 100.00%
+* class: 44 (Javelin_Throw)	total: 31	correct: 11	acc: 35.48%
+* class: 45 (Juggling_Balls)	total: 40	correct: 26	acc: 65.00%
+* class: 46 (Jumping_Jack)	total: 37	correct: 14	acc: 37.84%
+* class: 47 (Jump_Rope)	total: 38	correct: 16	acc: 42.11%
+* class: 48 (Kayaking)	total: 36	correct: 21	acc: 58.33%
+* class: 49 (Knitting)	total: 34	correct: 30	acc: 88.24%
+* class: 50 (Long_Jump)	total: 39	correct: 11	acc: 28.21%
+* class: 51 (Lunges)	total: 37	correct: 13	acc: 35.14%
+* class: 52 (Military_Parade)	total: 33	correct: 33	acc: 100.00%
+* class: 53 (Mixing)	total: 45	correct: 42	acc: 93.33%
+* class: 54 (Mopping_Floor)	total: 34	correct: 30	acc: 88.24%
+* class: 55 (Nunchucks)	total: 35	correct: 13	acc: 37.14%
+* class: 56 (Parallel_Bars)	total: 37	correct: 28	acc: 75.68%
+* class: 57 (Pizza_Tossing)	total: 33	correct: 9	acc: 27.27%
+* class: 58 (Playing_Cello)	total: 44	correct: 35	acc: 79.55%
+* class: 59 (Playing_Daf)	total: 41	correct: 0	acc: 0.00%
+* class: 60 (Playing_Dhol)	total: 49	correct: 45	acc: 91.84%
+* class: 61 (Playing_Flute)	total: 48	correct: 43	acc: 89.58%
+* class: 62 (Playing_Guitar)	total: 43	correct: 43	acc: 100.00%
+* class: 63 (Playing_Piano)	total: 28	correct: 26	acc: 92.86%
+* class: 64 (Playing_Sitar)	total: 44	correct: 42	acc: 95.45%
+* class: 65 (Playing_Tabla)	total: 31	correct: 30	acc: 96.77%
+* class: 66 (Playing_Violin)	total: 28	correct: 22	acc: 78.57%
+* class: 67 (Pole_Vault)	total: 40	correct: 26	acc: 65.00%
+* class: 68 (Pommel_Horse)	total: 35	correct: 18	acc: 51.43%
+* class: 69 (Pull_Ups)	total: 28	correct: 25	acc: 89.29%
+* class: 70 (Punch)	total: 39	correct: 35	acc: 89.74%
+* class: 71 (Push_Ups)	total: 30	correct: 28	acc: 93.33%
+* class: 72 (Rafting)	total: 28	correct: 23	acc: 82.14%
+* class: 73 (Rock_Climbing_Indoor)	total: 41	correct: 34	acc: 82.93%
+* class: 74 (Rope_Climbing)	total: 34	correct: 19	acc: 55.88%
+* class: 75 (Rowing)	total: 36	correct: 34	acc: 94.44%
+* class: 76 (Salsa_Spin)	total: 43	correct: 36	acc: 83.72%
+* class: 77 (Shaving_Beard)	total: 43	correct: 36	acc: 83.72%
+* class: 78 (Shotput)	total: 46	correct: 34	acc: 73.91%
+* class: 79 (Skate_Boarding)	total: 32	correct: 26	acc: 81.25%
+* class: 80 (Skiing)	total: 40	correct: 29	acc: 72.50%
+* class: 81 (Skijet)	total: 28	correct: 27	acc: 96.43%
+* class: 82 (Sky_Diving)	total: 31	correct: 29	acc: 93.55%
+* class: 83 (Soccer_Juggling)	total: 39	correct: 30	acc: 76.92%
+* class: 84 (Soccer_Penalty)	total: 41	correct: 41	acc: 100.00%
+* class: 85 (Still_Rings)	total: 32	correct: 17	acc: 53.12%
+* class: 86 (Sumo_Wrestling)	total: 34	correct: 34	acc: 100.00%
+* class: 87 (Surfing)	total: 33	correct: 30	acc: 90.91%
+* class: 88 (Swing)	total: 42	correct: 29	acc: 69.05%
+* class: 89 (Table_Tennis_Shot)	total: 39	correct: 39	acc: 100.00%
+* class: 90 (Tai_Chi)	total: 28	correct: 24	acc: 85.71%
+* class: 91 (Tennis_Swing)	total: 49	correct: 38	acc: 77.55%
+* class: 92 (Throw_Discus)	total: 38	correct: 26	acc: 68.42%
+* class: 93 (Trampoline_Jumping)	total: 32	correct: 20	acc: 62.50%
+* class: 94 (Typing)	total: 43	correct: 43	acc: 100.00%
+* class: 95 (Uneven_Bars)	total: 28	correct: 8	acc: 28.57%
+* class: 96 (Volleyball_Spiking)	total: 35	correct: 28	acc: 80.00%
+* class: 97 (Walking_With_Dog)	total: 36	correct: 25	acc: 69.44%
+* class: 98 (Wall_Pushups)	total: 35	correct: 25	acc: 71.43%
+* class: 99 (Writing_On_Board)	total: 45	correct: 45	acc: 100.00%
+* class: 100 (Yo_Yo)	total: 36	correct: 14	acc: 38.89%
+* average: 75.54%
+worst10 classes: 
+Playing_Daf: 0.00%
+High_Jump: 21.62%
+Handstand_Walking: 23.53%
+Pizza_Tossing: 27.27%
+Long_Jump: 28.21%
+Uneven_Bars: 28.57%
+Body_Weight_Squats: 33.33%
+Lunges: 35.14%
+Javelin_Throw: 35.48%
+Nunchucks: 37.14%
+Elapsed: 0:55:24
+id: data-ssucf101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-2_beta-0.0_FILT-True_T-1.0_cMomn-0.95_topP-1_MAXPOOL-16 ----> test * accuracy: 76.05%

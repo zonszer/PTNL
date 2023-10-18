@@ -40,9 +40,9 @@ class PLL_loss(nn.Module):
                 self.beta = self.cfg.BETA
 
         if 'refine' in self.losstype:
-            self.inpool_idxs = torch.LongTensor([])
             self.origin_labels = deepcopy(self.conf)
             self.cls_pools_dict = {}
+            self.safe_f = self.cfg.SAFE_FACTOR
 
         if 'gce' in type or 'gce' in self.cfg.CONF_LOSS_TYPE:
             self.q = 0.7
@@ -228,6 +228,8 @@ class PLL_loss(nn.Module):
     def update_conf_epochend(self, shrink_f=0.5):      # shrink_f larger means val of unc_norm has larger effect on momn
         assert 'refine' in self.losstype
         not_inpool_num = 0
+        safe_range_num = 0
+        clean_num = 0
         for pool_id, cur_pool in self.cls_pools_dict.items():
             if cur_pool.pool_capacity > 1: 
                 unc_norm = (cur_pool.pool_unc - cur_pool.pool_unc.min()) / (cur_pool.pool_unc.max() - cur_pool.pool_unc.min())
@@ -241,37 +243,15 @@ class PLL_loss(nn.Module):
             base_value = pred_conf_value_ - pred_conf_value + 1
             # assert (base_value >= 1).all(), 'base_value should larger than 1'     #TODO double check
             self.conf[cur_pool.pool_idx, pool_id] = pred_conf_value_
-            # self.conf[cur_pool.pool_idx, :] = self.conf[cur_pool.pool_idx, :] / base_value.unsqueeze(1).repeat(1, self.conf.shape[1])     #clean conf will do this
-            # self.inpool_idxs = torch.cat((self.inpool_idxs, cur_pool.pool_idx.cpu()), dim=0)
-            
-            # contrib = (1 - unc_norm * shrink_f)
-            # contrib_scaled = contrib / contrib.sum()
-            # prob_avg = (self.softmax(cur_pool.saved_logits) * contrib_scaled.unsqueeze(1)).sum(dim=0)
-            # self.conf[cur_pool.pool_idx, :] = self.conf[cur_pool.pool_idx, :] * self.conf_momn + prob_avg * contrib.unsqueeze(1) * (1-self.conf_momn) 
-            # base_value = self.conf[cur_pool.pool_idx, :].sum(dim=1)
 
-            if cur_pool.popped_idx.shape[0] >= 1:
-                assert ((cur_pool.popped_unc - cur_pool.unc_max) >= 0).all()
-                unc_norm_pop = (cur_pool.popped_unc - cur_pool.unc_max) / (cur_pool.popped_unc.max() - cur_pool.unc_max)
-            else:
-                unc_norm_pop = 0
-            if isinstance(unc_norm_pop, torch.Tensor) and (torch.isnan(unc_norm_pop)).any():
-                unc_norm_pop = 0
-            pred_conf_value = self.origin_labels[cur_pool.popped_idx, pool_id]       
-            conf_increment = (1 - self.conf_momn) * (1 - unc_norm_pop * shrink_f)
-            pred_conf_value_ = pred_conf_value * self.conf_momn + conf_increment
-            base_value = pred_conf_value_ - pred_conf_value + 1
-            # assert (base_value >= 1).all(), 'base_value should larger than 1'     
-            self.conf[cur_pool.popped_idx, :] = self.origin_labels[cur_pool.popped_idx, :]
-            self.conf[cur_pool.popped_idx, pool_id] = pred_conf_value_
-            not_inpool_num += cur_pool.popped_idx.shape[0]
-            # self.conf[cur_pool.popped_idx, :] = self.conf[cur_pool.popped_idx, :] / base_value.unsqueeze(1).repeat(1, self.conf.shape[1])
+            safe_range = ((cur_pool.popped_unc - self.safe_f*cur_pool.unc_max) <= 0)
+            self.conf[cur_pool.popped_idx[~safe_range], :] = self.origin_labels[cur_pool.popped_idx[~safe_range], :]
 
-        # conf_set = set(range(self.conf.shape[0]))
-        # not_inpool_idxs = torch.LongTensor(list(conf_set - set(self.inpool_idxs.numpy())))
-        # self.conf[not_inpool_idxs, :] = self.origin_labels[not_inpool_idxs, :]
-        print(f'<{not_inpool_num}> samples are not in pool')
-        self.inpool_idxs = torch.LongTensor([])       #reset not_inpool_idxs
+            safe_range_num += safe_range.sum().item()
+            clean_num += (~safe_range).sum().item()
+
+        print(f'<{not_inpool_num}> samples are not in pool, <{safe_range_num}> samples are in safe range, <{clean_num}> samples are cleaned')
+
 
     @torch.no_grad()
     def cal_uncertainty(self, output, label, index=None):

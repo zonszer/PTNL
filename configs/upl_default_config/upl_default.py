@@ -302,11 +302,10 @@ _C.TRAINER.PLL.CONF_LOSS_TYPE = ''  # loss type for confidence loss
 _C.TRAINER.PLL.USE_REGULAR = False	# whether to use regular term in loss
 _C.TRAINER.PLL.USE_LABEL_FILTER = False	# whether to use regular term in loss
 _C.TRAINER.PLL.TEMPERATURE = 1.0  # temperature for sharpening the probability
-_C.TRAINER.PLL.LOSS_MIN = 0.0  # minimum loss for clamp 
 _C.TRAINER.PLL.CONF_MOMN = 0.95 # momentum for updating confidence
-_C.TRAINER.PLL.POOL_ENLARGE_SCALE = 1.0 # enlarge scale for pool
 _C.TRAINER.PLL.MAX_POOLNUM = 16 # enlarge scale for pool
 _C.TRAINER.PLL.TOP_POOLS = 1 # number of top pools to use
+_C.TRAINER.PLL.SAFE_FACTOR = 1.5 # number of top pools to use
 
 # loss:
 _C.TRAINER.LOSS_TYPE = 'CE'

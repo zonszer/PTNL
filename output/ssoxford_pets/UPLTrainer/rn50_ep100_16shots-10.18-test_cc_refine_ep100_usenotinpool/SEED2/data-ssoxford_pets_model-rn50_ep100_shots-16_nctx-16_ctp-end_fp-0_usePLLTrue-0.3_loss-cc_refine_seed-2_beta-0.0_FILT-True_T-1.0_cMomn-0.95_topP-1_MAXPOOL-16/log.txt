@@ -5482,3 +5482,1647 @@ epoch [75/100][5/19]	time 0.245 (0.636)	data 0.001 (0.353)	eta 0:05:10	loss 1.43
 epoch [75/100][10/19]	time 0.246 (0.442)	data 0.001 (0.177)	eta 0:03:33	loss 1.1369 (1.2097) acc 84.3750 (84.3750)	lr 3.386881e-04
 epoch [75/100][15/19]	time 0.250 (0.376)	data 0.001 (0.118)	eta 0:03:00	loss 1.3922 (1.1997) acc 75.0000 (83.7500)	lr 3.386881e-04
 Do evaluation on val set
+=> result
+* total: 736
+* correct: 668
+* accuracy: 90.76%
+* error: 9.24%
+* macro_f1: 90.73%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 16	acc: 80.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 20	acc: 100.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 18	acc: 90.00%
+* class: 7 (bombay)	total: 19	correct: 17	acc: 89.47%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 17	acc: 85.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 17	acc: 89.47%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 10	acc: 52.63%
+* class: 13 (english_setter)	total: 20	correct: 17	acc: 85.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 19	acc: 95.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 17	acc: 89.47%
+* class: 23 (persian)	total: 20	correct: 18	acc: 90.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 18	acc: 90.00%
+* class: 27 (russian_blue)	total: 20	correct: 19	acc: 95.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 17	acc: 85.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 90.70%
+worst10 classes: 
+english_cocker_spaniel: 52.63%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+abyssinian: 80.00%
+beagle: 85.00%
+british_shorthair: 85.00%
+chihuahua: 85.00%
+english_setter: 85.00%
+staffordshire_bull_terrier: 85.00%
+bombay: 89.47%
+<37> samples are not in pool
+epoch [76/100][5/19]	time 0.249 (0.649)	data 0.001 (0.363)	eta 0:05:04	loss 0.9939 (1.1416) acc 87.5000 (85.6250)	lr 3.154529e-04
+epoch [76/100][10/19]	time 0.187 (0.427)	data 0.001 (0.182)	eta 0:03:18	loss 1.4163 (1.1365) acc 71.8750 (85.9375)	lr 3.154529e-04
+epoch [76/100][15/19]	time 0.186 (0.347)	data 0.000 (0.121)	eta 0:02:39	loss 1.0171 (1.1324) acc 90.6250 (85.4167)	lr 3.154529e-04
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 666
+* accuracy: 90.49%
+* error: 9.51%
+* macro_f1: 90.46%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 15	acc: 75.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 20	acc: 100.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 16	acc: 80.00%
+* class: 7 (bombay)	total: 19	correct: 17	acc: 89.47%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 18	acc: 90.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 17	acc: 89.47%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 11	acc: 57.89%
+* class: 13 (english_setter)	total: 20	correct: 18	acc: 90.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 19	acc: 95.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 17	acc: 89.47%
+* class: 23 (persian)	total: 20	correct: 17	acc: 85.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 18	acc: 90.00%
+* class: 27 (russian_blue)	total: 20	correct: 18	acc: 90.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 17	acc: 85.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 90.44%
+worst10 classes: 
+english_cocker_spaniel: 57.89%
+abyssinian: 75.00%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+birman: 80.00%
+beagle: 85.00%
+chihuahua: 85.00%
+persian: 85.00%
+staffordshire_bull_terrier: 85.00%
+bombay: 89.47%
+<38> samples are not in pool
+epoch [77/100][5/19]	time 0.236 (0.558)	data 0.001 (0.289)	eta 0:04:11	loss 1.1742 (1.1252) acc 87.5000 (85.6250)	lr 2.928932e-04
+epoch [77/100][10/19]	time 0.253 (0.406)	data 0.001 (0.145)	eta 0:03:00	loss 1.2186 (1.1461) acc 84.3750 (85.3125)	lr 2.928932e-04
+epoch [77/100][15/19]	time 0.263 (0.357)	data 0.001 (0.097)	eta 0:02:37	loss 1.1163 (1.1258) acc 84.3750 (86.0417)	lr 2.928932e-04
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 668
+* accuracy: 90.76%
+* error: 9.24%
+* macro_f1: 90.73%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 15	acc: 75.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 20	acc: 100.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 16	acc: 80.00%
+* class: 7 (bombay)	total: 19	correct: 18	acc: 94.74%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 17	acc: 85.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 18	acc: 94.74%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 12	acc: 63.16%
+* class: 13 (english_setter)	total: 20	correct: 16	acc: 80.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 19	acc: 95.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 17	acc: 89.47%
+* class: 23 (persian)	total: 20	correct: 17	acc: 85.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 19	acc: 95.00%
+* class: 27 (russian_blue)	total: 20	correct: 18	acc: 90.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 90.73%
+worst10 classes: 
+english_cocker_spaniel: 63.16%
+abyssinian: 75.00%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+birman: 80.00%
+english_setter: 80.00%
+beagle: 85.00%
+british_shorthair: 85.00%
+chihuahua: 85.00%
+persian: 85.00%
+<37> samples are not in pool
+epoch [78/100][5/19]	time 0.197 (0.664)	data 0.001 (0.431)	eta 0:04:46	loss 1.2705 (1.2310) acc 84.3750 (82.5000)	lr 2.710314e-04
+epoch [78/100][10/19]	time 0.191 (0.427)	data 0.001 (0.216)	eta 0:03:02	loss 1.2591 (1.1705) acc 81.2500 (83.1250)	lr 2.710314e-04
+epoch [78/100][15/19]	time 0.426 (0.375)	data 0.001 (0.144)	eta 0:02:38	loss 0.9116 (1.1435) acc 87.5000 (84.7917)	lr 2.710314e-04
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 670
+* accuracy: 91.03%
+* error: 8.97%
+* macro_f1: 91.03%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 16	acc: 80.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 20	acc: 100.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 16	acc: 80.00%
+* class: 7 (bombay)	total: 19	correct: 18	acc: 94.74%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 18	acc: 90.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 18	acc: 94.74%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 12	acc: 63.16%
+* class: 13 (english_setter)	total: 20	correct: 18	acc: 90.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 19	acc: 95.00%
+* class: 20 (maine_coon)	total: 20	correct: 18	acc: 90.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 17	acc: 89.47%
+* class: 23 (persian)	total: 20	correct: 17	acc: 85.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 18	acc: 90.00%
+* class: 27 (russian_blue)	total: 20	correct: 18	acc: 90.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 91.00%
+worst10 classes: 
+english_cocker_spaniel: 63.16%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+abyssinian: 80.00%
+birman: 80.00%
+beagle: 85.00%
+chihuahua: 85.00%
+persian: 85.00%
+newfoundland: 89.47%
+bengal: 90.00%
+<37> samples are not in pool
+epoch [79/100][5/19]	time 0.245 (0.666)	data 0.001 (0.389)	eta 0:04:34	loss 1.2861 (1.1661) acc 81.2500 (82.5000)	lr 2.498889e-04
+epoch [79/100][10/19]	time 0.254 (0.457)	data 0.001 (0.195)	eta 0:03:06	loss 1.2216 (1.1774) acc 84.3750 (82.8125)	lr 2.498889e-04
+epoch [79/100][15/19]	time 0.240 (0.386)	data 0.000 (0.130)	eta 0:02:35	loss 1.2349 (1.1871) acc 87.5000 (83.5417)	lr 2.498889e-04
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 666
+* accuracy: 90.49%
+* error: 9.51%
+* macro_f1: 90.41%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 15	acc: 75.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 20	acc: 100.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 16	acc: 80.00%
+* class: 7 (bombay)	total: 19	correct: 18	acc: 94.74%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 18	acc: 90.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 18	acc: 94.74%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 10	acc: 52.63%
+* class: 13 (english_setter)	total: 20	correct: 18	acc: 90.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 19	acc: 95.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 16	acc: 84.21%
+* class: 23 (persian)	total: 20	correct: 16	acc: 80.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 18	acc: 90.00%
+* class: 27 (russian_blue)	total: 20	correct: 18	acc: 90.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 90.44%
+worst10 classes: 
+english_cocker_spaniel: 52.63%
+abyssinian: 75.00%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+birman: 80.00%
+persian: 80.00%
+newfoundland: 84.21%
+beagle: 85.00%
+chihuahua: 85.00%
+bengal: 90.00%
+<38> samples are not in pool
+epoch [80/100][5/19]	time 0.111 (0.565)	data 0.000 (0.339)	eta 0:03:42	loss 1.1251 (1.1660) acc 84.3750 (82.5000)	lr 2.294868e-04
+epoch [80/100][10/19]	time 0.110 (0.342)	data 0.001 (0.170)	eta 0:02:12	loss 1.2812 (1.1231) acc 78.1250 (85.0000)	lr 2.294868e-04
+epoch [80/100][15/19]	time 0.178 (0.279)	data 0.001 (0.113)	eta 0:01:47	loss 1.0969 (1.1194) acc 90.6250 (85.8333)	lr 2.294868e-04
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 666
+* accuracy: 90.49%
+* error: 9.51%
+* macro_f1: 90.41%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 15	acc: 75.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 20	acc: 100.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 16	acc: 80.00%
+* class: 7 (bombay)	total: 19	correct: 18	acc: 94.74%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 18	acc: 90.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 18	acc: 94.74%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 10	acc: 52.63%
+* class: 13 (english_setter)	total: 20	correct: 18	acc: 90.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 19	acc: 95.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 16	acc: 84.21%
+* class: 23 (persian)	total: 20	correct: 16	acc: 80.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 18	acc: 90.00%
+* class: 27 (russian_blue)	total: 20	correct: 18	acc: 90.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 90.44%
+worst10 classes: 
+english_cocker_spaniel: 52.63%
+abyssinian: 75.00%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+birman: 80.00%
+persian: 80.00%
+newfoundland: 84.21%
+beagle: 85.00%
+chihuahua: 85.00%
+bengal: 90.00%
+<44> samples are not in pool
+epoch [81/100][5/19]	time 0.242 (0.525)	data 0.000 (0.274)	eta 0:03:17	loss 1.2426 (1.1273) acc 81.2500 (86.8750)	lr 2.098450e-04
+epoch [81/100][10/19]	time 0.243 (0.384)	data 0.000 (0.137)	eta 0:02:21	loss 0.9870 (1.1058) acc 96.8750 (87.8125)	lr 2.098450e-04
+epoch [81/100][15/19]	time 0.241 (0.335)	data 0.001 (0.092)	eta 0:02:02	loss 1.1565 (1.1061) acc 84.3750 (86.6667)	lr 2.098450e-04
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 668
+* accuracy: 90.76%
+* error: 9.24%
+* macro_f1: 90.69%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 15	acc: 75.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 20	acc: 100.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 16	acc: 80.00%
+* class: 7 (bombay)	total: 19	correct: 18	acc: 94.74%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 18	acc: 90.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 18	acc: 94.74%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 10	acc: 52.63%
+* class: 13 (english_setter)	total: 20	correct: 18	acc: 90.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 19	acc: 95.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 17	acc: 89.47%
+* class: 23 (persian)	total: 20	correct: 17	acc: 85.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 19	acc: 95.00%
+* class: 27 (russian_blue)	total: 20	correct: 17	acc: 85.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 90.72%
+worst10 classes: 
+english_cocker_spaniel: 52.63%
+abyssinian: 75.00%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+birman: 80.00%
+beagle: 85.00%
+chihuahua: 85.00%
+persian: 85.00%
+russian_blue: 85.00%
+newfoundland: 89.47%
+<39> samples are not in pool
+epoch [82/100][5/19]	time 0.253 (0.630)	data 0.001 (0.341)	eta 0:03:44	loss 0.9672 (1.1570) acc 87.5000 (84.3750)	lr 1.909830e-04
+epoch [82/100][10/19]	time 0.197 (0.415)	data 0.001 (0.171)	eta 0:02:25	loss 1.1833 (1.1745) acc 93.7500 (84.3750)	lr 1.909830e-04
+epoch [82/100][15/19]	time 0.251 (0.351)	data 0.000 (0.114)	eta 0:02:01	loss 0.9651 (1.1312) acc 84.3750 (85.4167)	lr 1.909830e-04
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 671
+* accuracy: 91.17%
+* error: 8.83%
+* macro_f1: 91.17%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 15	acc: 75.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 19	acc: 95.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 16	acc: 80.00%
+* class: 7 (bombay)	total: 19	correct: 18	acc: 94.74%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 18	acc: 90.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 18	acc: 94.74%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 13	acc: 68.42%
+* class: 13 (english_setter)	total: 20	correct: 18	acc: 90.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 19	acc: 95.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 17	acc: 89.47%
+* class: 23 (persian)	total: 20	correct: 17	acc: 85.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 19	acc: 95.00%
+* class: 27 (russian_blue)	total: 20	correct: 18	acc: 90.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 91.15%
+worst10 classes: 
+english_cocker_spaniel: 68.42%
+abyssinian: 75.00%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+birman: 80.00%
+beagle: 85.00%
+chihuahua: 85.00%
+persian: 85.00%
+newfoundland: 89.47%
+bengal: 90.00%
+<38> samples are not in pool
+epoch [83/100][5/19]	time 0.243 (0.626)	data 0.001 (0.299)	eta 0:03:30	loss 1.4249 (1.1788) acc 81.2500 (85.6250)	lr 1.729194e-04
+epoch [83/100][10/19]	time 0.225 (0.435)	data 0.001 (0.150)	eta 0:02:24	loss 0.9651 (1.1022) acc 90.6250 (86.8750)	lr 1.729194e-04
+epoch [83/100][15/19]	time 0.118 (0.337)	data 0.001 (0.100)	eta 0:01:50	loss 1.0009 (1.1214) acc 90.6250 (87.2917)	lr 1.729194e-04
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 668
+* accuracy: 90.76%
+* error: 9.24%
+* macro_f1: 90.78%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 15	acc: 75.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 19	acc: 95.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 17	acc: 85.00%
+* class: 7 (bombay)	total: 19	correct: 18	acc: 94.74%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 18	acc: 90.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 17	acc: 89.47%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 13	acc: 68.42%
+* class: 13 (english_setter)	total: 20	correct: 17	acc: 85.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 18	acc: 90.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 17	acc: 89.47%
+* class: 23 (persian)	total: 20	correct: 17	acc: 85.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 18	acc: 90.00%
+* class: 27 (russian_blue)	total: 20	correct: 18	acc: 90.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 90.73%
+worst10 classes: 
+english_cocker_spaniel: 68.42%
+abyssinian: 75.00%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+beagle: 85.00%
+birman: 85.00%
+chihuahua: 85.00%
+english_setter: 85.00%
+persian: 85.00%
+egyptian_mau: 89.47%
+<37> samples are not in pool
+epoch [84/100][5/19]	time 0.246 (0.602)	data 0.000 (0.334)	eta 0:03:11	loss 1.3401 (1.2354) acc 78.1250 (81.2500)	lr 1.556721e-04
+epoch [84/100][10/19]	time 0.246 (0.424)	data 0.001 (0.167)	eta 0:02:12	loss 1.3254 (1.2147) acc 84.3750 (84.3750)	lr 1.556721e-04
+epoch [84/100][15/19]	time 0.247 (0.365)	data 0.001 (0.112)	eta 0:01:52	loss 0.8410 (1.1854) acc 93.7500 (85.2083)	lr 1.556721e-04
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 669
+* accuracy: 90.90%
+* error: 9.10%
+* macro_f1: 90.88%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 15	acc: 75.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 20	acc: 100.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 18	acc: 90.00%
+* class: 7 (bombay)	total: 19	correct: 18	acc: 94.74%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 18	acc: 90.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 16	acc: 84.21%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 12	acc: 63.16%
+* class: 13 (english_setter)	total: 20	correct: 18	acc: 90.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 18	acc: 90.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 17	acc: 89.47%
+* class: 23 (persian)	total: 20	correct: 17	acc: 85.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 18	acc: 90.00%
+* class: 27 (russian_blue)	total: 20	correct: 18	acc: 90.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 90.85%
+worst10 classes: 
+english_cocker_spaniel: 63.16%
+abyssinian: 75.00%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+egyptian_mau: 84.21%
+beagle: 85.00%
+chihuahua: 85.00%
+persian: 85.00%
+newfoundland: 89.47%
+bengal: 90.00%
+<40> samples are not in pool
+epoch [85/100][5/19]	time 0.176 (0.429)	data 0.001 (0.237)	eta 0:02:08	loss 1.2452 (1.1599) acc 81.2500 (87.5000)	lr 1.392580e-04
+epoch [85/100][10/19]	time 0.208 (0.306)	data 0.001 (0.119)	eta 0:01:30	loss 1.0669 (1.1524) acc 81.2500 (86.2500)	lr 1.392580e-04
+epoch [85/100][15/19]	time 0.197 (0.283)	data 0.001 (0.080)	eta 0:01:21	loss 1.3505 (1.1490) acc 78.1250 (85.6250)	lr 1.392580e-04
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 670
+* accuracy: 91.03%
+* error: 8.97%
+* macro_f1: 91.04%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 15	acc: 75.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 19	acc: 95.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 18	acc: 90.00%
+* class: 7 (bombay)	total: 19	correct: 18	acc: 94.74%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 18	acc: 90.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 18	acc: 94.74%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 13	acc: 68.42%
+* class: 13 (english_setter)	total: 20	correct: 17	acc: 85.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 18	acc: 90.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 17	acc: 89.47%
+* class: 23 (persian)	total: 20	correct: 17	acc: 85.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 18	acc: 90.00%
+* class: 27 (russian_blue)	total: 20	correct: 18	acc: 90.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 91.01%
+worst10 classes: 
+english_cocker_spaniel: 68.42%
+abyssinian: 75.00%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+beagle: 85.00%
+chihuahua: 85.00%
+english_setter: 85.00%
+persian: 85.00%
+newfoundland: 89.47%
+bengal: 90.00%
+<39> samples are not in pool
+epoch [86/100][5/19]	time 0.253 (0.632)	data 0.000 (0.327)	eta 0:02:56	loss 1.1180 (1.2006) acc 90.6250 (86.2500)	lr 1.236933e-04
+epoch [86/100][10/19]	time 0.247 (0.439)	data 0.001 (0.164)	eta 0:02:00	loss 1.1088 (1.2137) acc 81.2500 (84.0625)	lr 1.236933e-04
+epoch [86/100][15/19]	time 0.250 (0.375)	data 0.000 (0.109)	eta 0:01:41	loss 1.1867 (1.1654) acc 81.2500 (85.8333)	lr 1.236933e-04
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 668
+* accuracy: 90.76%
+* error: 9.24%
+* macro_f1: 90.78%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 15	acc: 75.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 19	acc: 95.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 18	acc: 90.00%
+* class: 7 (bombay)	total: 19	correct: 17	acc: 89.47%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 18	acc: 90.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 17	acc: 89.47%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 13	acc: 68.42%
+* class: 13 (english_setter)	total: 20	correct: 17	acc: 85.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 18	acc: 90.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 17	acc: 89.47%
+* class: 23 (persian)	total: 20	correct: 17	acc: 85.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 18	acc: 90.00%
+* class: 27 (russian_blue)	total: 20	correct: 18	acc: 90.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 90.73%
+worst10 classes: 
+english_cocker_spaniel: 68.42%
+abyssinian: 75.00%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+beagle: 85.00%
+chihuahua: 85.00%
+english_setter: 85.00%
+persian: 85.00%
+bombay: 89.47%
+egyptian_mau: 89.47%
+<39> samples are not in pool
+epoch [87/100][5/19]	time 0.189 (0.618)	data 0.001 (0.362)	eta 0:02:41	loss 1.2643 (1.2102) acc 87.5000 (84.3750)	lr 1.089935e-04
+epoch [87/100][10/19]	time 0.232 (0.429)	data 0.001 (0.181)	eta 0:01:49	loss 1.5506 (1.2331) acc 75.0000 (83.7500)	lr 1.089935e-04
+epoch [87/100][15/19]	time 0.172 (0.342)	data 0.000 (0.121)	eta 0:01:25	loss 0.8988 (1.1894) acc 96.8750 (84.3750)	lr 1.089935e-04
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 669
+* accuracy: 90.90%
+* error: 9.10%
+* macro_f1: 90.91%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 15	acc: 75.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 19	acc: 95.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 18	acc: 90.00%
+* class: 7 (bombay)	total: 19	correct: 17	acc: 89.47%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 18	acc: 90.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 18	acc: 94.74%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 13	acc: 68.42%
+* class: 13 (english_setter)	total: 20	correct: 17	acc: 85.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 18	acc: 90.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 17	acc: 89.47%
+* class: 23 (persian)	total: 20	correct: 17	acc: 85.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 18	acc: 90.00%
+* class: 27 (russian_blue)	total: 20	correct: 18	acc: 90.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 90.87%
+worst10 classes: 
+english_cocker_spaniel: 68.42%
+abyssinian: 75.00%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+beagle: 85.00%
+chihuahua: 85.00%
+english_setter: 85.00%
+persian: 85.00%
+bombay: 89.47%
+newfoundland: 89.47%
+<39> samples are not in pool
+epoch [88/100][5/19]	time 0.251 (0.560)	data 0.000 (0.298)	eta 0:02:15	loss 0.9058 (1.1330) acc 93.7500 (83.7500)	lr 9.517295e-05
+epoch [88/100][10/19]	time 0.239 (0.400)	data 0.001 (0.149)	eta 0:01:34	loss 1.0289 (1.0949) acc 90.6250 (86.8750)	lr 9.517295e-05
+epoch [88/100][15/19]	time 0.248 (0.349)	data 0.001 (0.100)	eta 0:01:20	loss 0.8597 (1.0993) acc 93.7500 (86.4583)	lr 9.517295e-05
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 668
+* accuracy: 90.76%
+* error: 9.24%
+* macro_f1: 90.78%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 15	acc: 75.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 19	acc: 95.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 17	acc: 85.00%
+* class: 7 (bombay)	total: 19	correct: 17	acc: 89.47%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 18	acc: 90.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 18	acc: 94.74%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 13	acc: 68.42%
+* class: 13 (english_setter)	total: 20	correct: 17	acc: 85.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 18	acc: 90.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 17	acc: 89.47%
+* class: 23 (persian)	total: 20	correct: 17	acc: 85.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 18	acc: 90.00%
+* class: 27 (russian_blue)	total: 20	correct: 18	acc: 90.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 90.73%
+worst10 classes: 
+english_cocker_spaniel: 68.42%
+abyssinian: 75.00%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+beagle: 85.00%
+birman: 85.00%
+chihuahua: 85.00%
+english_setter: 85.00%
+persian: 85.00%
+bombay: 89.47%
+<39> samples are not in pool
+epoch [89/100][5/19]	time 0.135 (0.583)	data 0.001 (0.303)	eta 0:02:10	loss 1.1958 (1.0968) acc 90.6250 (88.7500)	lr 8.224537e-05
+epoch [89/100][10/19]	time 0.184 (0.372)	data 0.001 (0.152)	eta 0:01:20	loss 1.1560 (1.1183) acc 84.3750 (86.5625)	lr 8.224537e-05
+epoch [89/100][15/19]	time 0.223 (0.326)	data 0.001 (0.102)	eta 0:01:09	loss 1.0030 (1.1072) acc 93.7500 (86.0417)	lr 8.224537e-05
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 670
+* accuracy: 91.03%
+* error: 8.97%
+* macro_f1: 91.04%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 15	acc: 75.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 19	acc: 95.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 17	acc: 85.00%
+* class: 7 (bombay)	total: 19	correct: 18	acc: 94.74%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 18	acc: 90.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 18	acc: 94.74%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 13	acc: 68.42%
+* class: 13 (english_setter)	total: 20	correct: 18	acc: 90.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 18	acc: 90.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 17	acc: 89.47%
+* class: 23 (persian)	total: 20	correct: 17	acc: 85.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 18	acc: 90.00%
+* class: 27 (russian_blue)	total: 20	correct: 18	acc: 90.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 91.01%
+worst10 classes: 
+english_cocker_spaniel: 68.42%
+abyssinian: 75.00%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+beagle: 85.00%
+birman: 85.00%
+chihuahua: 85.00%
+persian: 85.00%
+newfoundland: 89.47%
+bengal: 90.00%
+<38> samples are not in pool
+epoch [90/100][5/19]	time 0.240 (0.543)	data 0.000 (0.285)	eta 0:01:50	loss 1.3056 (1.1401) acc 81.2500 (84.3750)	lr 7.022351e-05
+epoch [90/100][10/19]	time 0.243 (0.391)	data 0.001 (0.143)	eta 0:01:17	loss 1.2204 (1.1513) acc 84.3750 (85.0000)	lr 7.022351e-05
+epoch [90/100][15/19]	time 0.121 (0.314)	data 0.000 (0.095)	eta 0:01:00	loss 1.1021 (1.1643) acc 87.5000 (85.4167)	lr 7.022351e-05
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 671
+* accuracy: 91.17%
+* error: 8.83%
+* macro_f1: 91.16%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 15	acc: 75.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 19	acc: 95.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 18	acc: 90.00%
+* class: 7 (bombay)	total: 19	correct: 18	acc: 94.74%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 18	acc: 90.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 18	acc: 94.74%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 13	acc: 68.42%
+* class: 13 (english_setter)	total: 20	correct: 18	acc: 90.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 18	acc: 90.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 17	acc: 89.47%
+* class: 23 (persian)	total: 20	correct: 17	acc: 85.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 18	acc: 90.00%
+* class: 27 (russian_blue)	total: 20	correct: 18	acc: 90.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 91.15%
+worst10 classes: 
+english_cocker_spaniel: 68.42%
+abyssinian: 75.00%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+beagle: 85.00%
+chihuahua: 85.00%
+persian: 85.00%
+newfoundland: 89.47%
+bengal: 90.00%
+birman: 90.00%
+<40> samples are not in pool
+epoch [91/100][5/19]	time 0.248 (0.620)	data 0.000 (0.288)	eta 0:01:54	loss 1.0262 (1.0506) acc 90.6250 (88.1250)	lr 5.911923e-05
+epoch [91/100][10/19]	time 0.250 (0.434)	data 0.001 (0.145)	eta 0:01:18	loss 1.2084 (1.1217) acc 84.3750 (85.9375)	lr 5.911923e-05
+epoch [91/100][15/19]	time 0.249 (0.371)	data 0.000 (0.097)	eta 0:01:04	loss 1.2117 (1.1427) acc 87.5000 (85.4167)	lr 5.911923e-05
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 669
+* accuracy: 90.90%
+* error: 9.10%
+* macro_f1: 90.89%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 15	acc: 75.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 19	acc: 95.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 17	acc: 85.00%
+* class: 7 (bombay)	total: 19	correct: 18	acc: 94.74%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 18	acc: 90.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 18	acc: 94.74%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 13	acc: 68.42%
+* class: 13 (english_setter)	total: 20	correct: 18	acc: 90.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 18	acc: 90.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 17	acc: 89.47%
+* class: 23 (persian)	total: 20	correct: 17	acc: 85.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 18	acc: 90.00%
+* class: 27 (russian_blue)	total: 20	correct: 18	acc: 90.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 17	acc: 85.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 90.87%
+worst10 classes: 
+english_cocker_spaniel: 68.42%
+abyssinian: 75.00%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+beagle: 85.00%
+birman: 85.00%
+chihuahua: 85.00%
+persian: 85.00%
+scottish_terrier: 85.00%
+newfoundland: 89.47%
+<38> samples are not in pool
+epoch [92/100][5/19]	time 0.197 (0.653)	data 0.001 (0.374)	eta 0:01:48	loss 1.5289 (1.3250) acc 68.7500 (77.5000)	lr 4.894348e-05
+epoch [92/100][10/19]	time 0.201 (0.418)	data 0.001 (0.188)	eta 0:01:07	loss 1.0837 (1.2234) acc 90.6250 (82.5000)	lr 4.894348e-05
+epoch [92/100][15/19]	time 0.195 (0.348)	data 0.000 (0.125)	eta 0:00:54	loss 1.3040 (1.1859) acc 81.2500 (83.7500)	lr 4.894348e-05
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 668
+* accuracy: 90.76%
+* error: 9.24%
+* macro_f1: 90.76%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 15	acc: 75.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 19	acc: 95.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 17	acc: 85.00%
+* class: 7 (bombay)	total: 19	correct: 18	acc: 94.74%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 18	acc: 90.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 18	acc: 94.74%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 13	acc: 68.42%
+* class: 13 (english_setter)	total: 20	correct: 18	acc: 90.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 18	acc: 90.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 17	acc: 89.47%
+* class: 23 (persian)	total: 20	correct: 17	acc: 85.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 18	acc: 90.00%
+* class: 27 (russian_blue)	total: 20	correct: 18	acc: 90.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 17	acc: 85.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 17	acc: 85.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 90.74%
+worst10 classes: 
+english_cocker_spaniel: 68.42%
+abyssinian: 75.00%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+beagle: 85.00%
+birman: 85.00%
+chihuahua: 85.00%
+persian: 85.00%
+scottish_terrier: 85.00%
+staffordshire_bull_terrier: 85.00%
+<39> samples are not in pool
+epoch [93/100][5/19]	time 0.247 (0.574)	data 0.001 (0.283)	eta 0:01:24	loss 1.2332 (1.1033) acc 81.2500 (88.1250)	lr 3.970631e-05
+epoch [93/100][10/19]	time 0.249 (0.410)	data 0.001 (0.142)	eta 0:00:58	loss 1.1631 (1.1340) acc 90.6250 (86.8750)	lr 3.970631e-05
+epoch [93/100][15/19]	time 0.250 (0.355)	data 0.000 (0.095)	eta 0:00:48	loss 0.9193 (1.1022) acc 96.8750 (87.0833)	lr 3.970631e-05
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 669
+* accuracy: 90.90%
+* error: 9.10%
+* macro_f1: 90.90%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 15	acc: 75.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 19	acc: 95.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 17	acc: 85.00%
+* class: 7 (bombay)	total: 19	correct: 18	acc: 94.74%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 18	acc: 90.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 18	acc: 94.74%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 13	acc: 68.42%
+* class: 13 (english_setter)	total: 20	correct: 18	acc: 90.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 18	acc: 90.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 17	acc: 89.47%
+* class: 23 (persian)	total: 20	correct: 17	acc: 85.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 18	acc: 90.00%
+* class: 27 (russian_blue)	total: 20	correct: 18	acc: 90.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 17	acc: 85.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 90.87%
+worst10 classes: 
+english_cocker_spaniel: 68.42%
+abyssinian: 75.00%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+beagle: 85.00%
+birman: 85.00%
+chihuahua: 85.00%
+persian: 85.00%
+staffordshire_bull_terrier: 85.00%
+newfoundland: 89.47%
+<36> samples are not in pool
+epoch [94/100][5/19]	time 0.218 (0.590)	data 0.001 (0.314)	eta 0:01:15	loss 1.1920 (1.1087) acc 90.6250 (85.6250)	lr 3.141684e-05
+epoch [94/100][10/19]	time 0.187 (0.388)	data 0.000 (0.157)	eta 0:00:47	loss 1.3331 (1.1405) acc 81.2500 (84.6875)	lr 3.141684e-05
+epoch [94/100][15/19]	time 0.191 (0.322)	data 0.001 (0.105)	eta 0:00:38	loss 1.2398 (1.1080) acc 84.3750 (86.6667)	lr 3.141684e-05
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 667
+* accuracy: 90.62%
+* error: 9.38%
+* macro_f1: 90.63%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 15	acc: 75.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 18	acc: 90.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 17	acc: 85.00%
+* class: 7 (bombay)	total: 19	correct: 18	acc: 94.74%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 18	acc: 90.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 18	acc: 94.74%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 13	acc: 68.42%
+* class: 13 (english_setter)	total: 20	correct: 18	acc: 90.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 18	acc: 90.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 17	acc: 89.47%
+* class: 23 (persian)	total: 20	correct: 17	acc: 85.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 18	acc: 90.00%
+* class: 27 (russian_blue)	total: 20	correct: 17	acc: 85.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 17	acc: 85.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 90.60%
+worst10 classes: 
+english_cocker_spaniel: 68.42%
+abyssinian: 75.00%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+beagle: 85.00%
+birman: 85.00%
+chihuahua: 85.00%
+persian: 85.00%
+russian_blue: 85.00%
+staffordshire_bull_terrier: 85.00%
+<39> samples are not in pool
+epoch [95/100][5/19]	time 0.247 (0.627)	data 0.001 (0.357)	eta 0:01:08	loss 1.0866 (1.1466) acc 87.5000 (83.1250)	lr 2.408324e-05
+epoch [95/100][10/19]	time 0.244 (0.436)	data 0.001 (0.179)	eta 0:00:45	loss 1.0748 (1.1372) acc 90.6250 (85.3125)	lr 2.408324e-05
+epoch [95/100][15/19]	time 0.257 (0.379)	data 0.001 (0.119)	eta 0:00:37	loss 0.9458 (1.1271) acc 93.7500 (86.0417)	lr 2.408324e-05
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 670
+* accuracy: 91.03%
+* error: 8.97%
+* macro_f1: 91.04%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 15	acc: 75.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 19	acc: 95.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 17	acc: 85.00%
+* class: 7 (bombay)	total: 19	correct: 18	acc: 94.74%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 18	acc: 90.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 18	acc: 94.74%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 13	acc: 68.42%
+* class: 13 (english_setter)	total: 20	correct: 18	acc: 90.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 18	acc: 90.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 17	acc: 89.47%
+* class: 23 (persian)	total: 20	correct: 17	acc: 85.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 18	acc: 90.00%
+* class: 27 (russian_blue)	total: 20	correct: 18	acc: 90.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 91.01%
+worst10 classes: 
+english_cocker_spaniel: 68.42%
+abyssinian: 75.00%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+beagle: 85.00%
+birman: 85.00%
+chihuahua: 85.00%
+persian: 85.00%
+newfoundland: 89.47%
+bengal: 90.00%
+<39> samples are not in pool
+epoch [96/100][5/19]	time 0.185 (0.577)	data 0.001 (0.344)	eta 0:00:51	loss 1.1304 (1.1453) acc 93.7500 (89.3750)	lr 1.771275e-05
+epoch [96/100][10/19]	time 0.202 (0.393)	data 0.001 (0.172)	eta 0:00:33	loss 1.0776 (1.1383) acc 84.3750 (88.7500)	lr 1.771275e-05
+epoch [96/100][15/19]	time 0.158 (0.313)	data 0.001 (0.115)	eta 0:00:25	loss 1.1210 (1.1157) acc 84.3750 (87.7083)	lr 1.771275e-05
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 668
+* accuracy: 90.76%
+* error: 9.24%
+* macro_f1: 90.77%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 15	acc: 75.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 18	acc: 90.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 17	acc: 85.00%
+* class: 7 (bombay)	total: 19	correct: 18	acc: 94.74%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 18	acc: 90.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 18	acc: 94.74%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 13	acc: 68.42%
+* class: 13 (english_setter)	total: 20	correct: 18	acc: 90.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 18	acc: 90.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 17	acc: 89.47%
+* class: 23 (persian)	total: 20	correct: 17	acc: 85.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 18	acc: 90.00%
+* class: 27 (russian_blue)	total: 20	correct: 18	acc: 90.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 17	acc: 85.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 90.74%
+worst10 classes: 
+english_cocker_spaniel: 68.42%
+abyssinian: 75.00%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+beagle: 85.00%
+birman: 85.00%
+chihuahua: 85.00%
+persian: 85.00%
+staffordshire_bull_terrier: 85.00%
+newfoundland: 89.47%
+<39> samples are not in pool
+epoch [97/100][5/19]	time 0.335 (0.649)	data 0.001 (0.345)	eta 0:00:46	loss 0.8042 (1.1372) acc 90.6250 (84.3750)	lr 1.231166e-05
+epoch [97/100][10/19]	time 0.248 (0.457)	data 0.001 (0.173)	eta 0:00:30	loss 1.0587 (1.1743) acc 90.6250 (82.8125)	lr 1.231166e-05
+epoch [97/100][15/19]	time 0.244 (0.385)	data 0.001 (0.116)	eta 0:00:23	loss 1.0559 (1.1723) acc 84.3750 (83.7500)	lr 1.231166e-05
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 669
+* accuracy: 90.90%
+* error: 9.10%
+* macro_f1: 90.90%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 15	acc: 75.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 18	acc: 90.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 17	acc: 85.00%
+* class: 7 (bombay)	total: 19	correct: 18	acc: 94.74%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 18	acc: 90.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 18	acc: 94.74%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 13	acc: 68.42%
+* class: 13 (english_setter)	total: 20	correct: 18	acc: 90.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 18	acc: 90.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 17	acc: 89.47%
+* class: 23 (persian)	total: 20	correct: 17	acc: 85.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 18	acc: 90.00%
+* class: 27 (russian_blue)	total: 20	correct: 18	acc: 90.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 90.87%
+worst10 classes: 
+english_cocker_spaniel: 68.42%
+abyssinian: 75.00%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+beagle: 85.00%
+birman: 85.00%
+chihuahua: 85.00%
+persian: 85.00%
+newfoundland: 89.47%
+basset_hound: 90.00%
+<38> samples are not in pool
+epoch [98/100][5/19]	time 0.246 (0.629)	data 0.000 (0.339)	eta 0:00:32	loss 1.0809 (1.1872) acc 84.3750 (84.3750)	lr 7.885299e-06
+epoch [98/100][10/19]	time 0.252 (0.438)	data 0.001 (0.170)	eta 0:00:20	loss 1.1440 (1.1169) acc 84.3750 (87.5000)	lr 7.885299e-06
+epoch [98/100][15/19]	time 0.242 (0.374)	data 0.001 (0.113)	eta 0:00:15	loss 1.1155 (1.0930) acc 81.2500 (87.0833)	lr 7.885299e-06
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 669
+* accuracy: 90.90%
+* error: 9.10%
+* macro_f1: 90.90%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 15	acc: 75.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 19	acc: 95.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 17	acc: 85.00%
+* class: 7 (bombay)	total: 19	correct: 18	acc: 94.74%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 18	acc: 90.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 18	acc: 94.74%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 13	acc: 68.42%
+* class: 13 (english_setter)	total: 20	correct: 18	acc: 90.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 18	acc: 90.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 17	acc: 89.47%
+* class: 23 (persian)	total: 20	correct: 17	acc: 85.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 18	acc: 90.00%
+* class: 27 (russian_blue)	total: 20	correct: 18	acc: 90.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 17	acc: 85.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 90.87%
+worst10 classes: 
+english_cocker_spaniel: 68.42%
+abyssinian: 75.00%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+beagle: 85.00%
+birman: 85.00%
+chihuahua: 85.00%
+persian: 85.00%
+staffordshire_bull_terrier: 85.00%
+newfoundland: 89.47%
+<41> samples are not in pool
+epoch [99/100][5/19]	time 0.134 (0.433)	data 0.000 (0.234)	eta 0:00:14	loss 1.2784 (1.2244) acc 78.1250 (86.2500)	lr 4.438035e-06
+epoch [99/100][10/19]	time 0.108 (0.273)	data 0.000 (0.117)	eta 0:00:07	loss 1.1861 (1.1828) acc 84.3750 (85.9375)	lr 4.438035e-06
+epoch [99/100][15/19]	time 0.180 (0.231)	data 0.001 (0.078)	eta 0:00:05	loss 1.0787 (1.1830) acc 93.7500 (86.2500)	lr 4.438035e-06
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 670
+* accuracy: 91.03%
+* error: 8.97%
+* macro_f1: 91.04%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 15	acc: 75.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 19	acc: 95.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 17	acc: 85.00%
+* class: 7 (bombay)	total: 19	correct: 18	acc: 94.74%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 18	acc: 90.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 18	acc: 94.74%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 13	acc: 68.42%
+* class: 13 (english_setter)	total: 20	correct: 18	acc: 90.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 18	acc: 90.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 17	acc: 89.47%
+* class: 23 (persian)	total: 20	correct: 17	acc: 85.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 18	acc: 90.00%
+* class: 27 (russian_blue)	total: 20	correct: 18	acc: 90.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 91.01%
+worst10 classes: 
+english_cocker_spaniel: 68.42%
+abyssinian: 75.00%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+beagle: 85.00%
+birman: 85.00%
+chihuahua: 85.00%
+persian: 85.00%
+newfoundland: 89.47%
+bengal: 90.00%
+<40> samples are not in pool
+epoch [100/100][5/19]	time 0.245 (0.610)	data 0.001 (0.358)	eta 0:00:08	loss 1.4369 (1.2419) acc 78.1250 (82.5000)	lr 1.973272e-06
+epoch [100/100][10/19]	time 0.242 (0.427)	data 0.000 (0.179)	eta 0:00:03	loss 0.9662 (1.1818) acc 78.1250 (82.8125)	lr 1.973272e-06
+epoch [100/100][15/19]	time 0.248 (0.367)	data 0.000 (0.120)	eta 0:00:01	loss 1.1079 (1.1783) acc 90.6250 (83.1250)	lr 1.973272e-06
+Do evaluation on val set
+=> result
+* total: 736
+* correct: 669
+* accuracy: 90.90%
+* error: 9.10%
+* macro_f1: 90.90%
+=> per-class result
+* class: 0 (abyssinian)	total: 20	correct: 15	acc: 75.00%
+* class: 1 (american_bulldog)	total: 20	correct: 19	acc: 95.00%
+* class: 2 (american_pit_bull_terrier)	total: 20	correct: 15	acc: 75.00%
+* class: 3 (basset_hound)	total: 20	correct: 19	acc: 95.00%
+* class: 4 (beagle)	total: 20	correct: 17	acc: 85.00%
+* class: 5 (bengal)	total: 20	correct: 18	acc: 90.00%
+* class: 6 (birman)	total: 20	correct: 17	acc: 85.00%
+* class: 7 (bombay)	total: 19	correct: 18	acc: 94.74%
+* class: 8 (boxer)	total: 20	correct: 18	acc: 90.00%
+* class: 9 (british_shorthair)	total: 20	correct: 18	acc: 90.00%
+* class: 10 (chihuahua)	total: 20	correct: 17	acc: 85.00%
+* class: 11 (egyptian_mau)	total: 19	correct: 18	acc: 94.74%
+* class: 12 (english_cocker_spaniel)	total: 19	correct: 13	acc: 68.42%
+* class: 13 (english_setter)	total: 20	correct: 18	acc: 90.00%
+* class: 14 (german_shorthaired)	total: 20	correct: 20	acc: 100.00%
+* class: 15 (great_pyrenees)	total: 20	correct: 19	acc: 95.00%
+* class: 16 (havanese)	total: 20	correct: 15	acc: 75.00%
+* class: 17 (japanese_chin)	total: 20	correct: 20	acc: 100.00%
+* class: 18 (keeshond)	total: 20	correct: 19	acc: 95.00%
+* class: 19 (leonberger)	total: 20	correct: 18	acc: 90.00%
+* class: 20 (maine_coon)	total: 20	correct: 19	acc: 95.00%
+* class: 21 (miniature_pinscher)	total: 20	correct: 20	acc: 100.00%
+* class: 22 (newfoundland)	total: 19	correct: 17	acc: 89.47%
+* class: 23 (persian)	total: 20	correct: 17	acc: 85.00%
+* class: 24 (pomeranian)	total: 20	correct: 20	acc: 100.00%
+* class: 25 (pug)	total: 20	correct: 20	acc: 100.00%
+* class: 26 (ragdoll)	total: 20	correct: 18	acc: 90.00%
+* class: 27 (russian_blue)	total: 20	correct: 17	acc: 85.00%
+* class: 28 (saint_bernard)	total: 20	correct: 19	acc: 95.00%
+* class: 29 (samoyed)	total: 20	correct: 20	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 31 (shiba_inu)	total: 20	correct: 19	acc: 95.00%
+* class: 32 (siamese)	total: 20	correct: 19	acc: 95.00%
+* class: 33 (sphynx)	total: 20	correct: 20	acc: 100.00%
+* class: 34 (staffordshire_bull_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 35 (wheaten_terrier)	total: 20	correct: 18	acc: 90.00%
+* class: 36 (yorkshire_terrier)	total: 20	correct: 19	acc: 95.00%
+* average: 90.87%
+worst10 classes: 
+english_cocker_spaniel: 68.42%
+abyssinian: 75.00%
+american_pit_bull_terrier: 75.00%
+havanese: 75.00%
+beagle: 85.00%
+birman: 85.00%
+chihuahua: 85.00%
+persian: 85.00%
+russian_blue: 85.00%
+newfoundland: 89.47%
+Checkpoint saved to ./output/ssoxford_pets/UPLTrainer/rn50_ep100_16shots-10.18-test_cc_refine_ep100_usenotinpool/SEED2/data-ssoxford_pets_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-2_beta-0.0_FILT-True_T-1.0_cMomn-0.95_topP-1_MAXPOOL-16/prompt_learner/model-last-0.pth.tar
+Finished training
+Deploy the model with the best val performance
+Loading weights to prompt_learner from "./output/ssoxford_pets/UPLTrainer/rn50_ep100_16shots-10.18-test_cc_refine_ep100_usenotinpool/SEED2/data-ssoxford_pets_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-2_beta-0.0_FILT-True_T-1.0_cMomn-0.95_topP-1_MAXPOOL-16/prompt_learner/model-best-0.pth.tar" (epoch = 53)
+Do evaluation on test set
+=> result
+* total: 3,669
+* correct: 3,213
+* accuracy: 87.57%
+* error: 12.43%
+* macro_f1: 87.58%
+=> per-class result
+* class: 0 (abyssinian)	total: 98	correct: 80	acc: 81.63%
+* class: 1 (american_bulldog)	total: 100	correct: 81	acc: 81.00%
+* class: 2 (american_pit_bull_terrier)	total: 100	correct: 61	acc: 61.00%
+* class: 3 (basset_hound)	total: 100	correct: 88	acc: 88.00%
+* class: 4 (beagle)	total: 100	correct: 84	acc: 84.00%
+* class: 5 (bengal)	total: 100	correct: 90	acc: 90.00%
+* class: 6 (birman)	total: 100	correct: 76	acc: 76.00%
+* class: 7 (bombay)	total: 88	correct: 85	acc: 96.59%
+* class: 8 (boxer)	total: 99	correct: 90	acc: 90.91%
+* class: 9 (british_shorthair)	total: 100	correct: 76	acc: 76.00%
+* class: 10 (chihuahua)	total: 100	correct: 91	acc: 91.00%
+* class: 11 (egyptian_mau)	total: 97	correct: 74	acc: 76.29%
+* class: 12 (english_cocker_spaniel)	total: 100	correct: 77	acc: 77.00%
+* class: 13 (english_setter)	total: 100	correct: 91	acc: 91.00%
+* class: 14 (german_shorthaired)	total: 100	correct: 99	acc: 99.00%
+* class: 15 (great_pyrenees)	total: 100	correct: 92	acc: 92.00%
+* class: 16 (havanese)	total: 100	correct: 82	acc: 82.00%
+* class: 17 (japanese_chin)	total: 100	correct: 98	acc: 98.00%
+* class: 18 (keeshond)	total: 99	correct: 96	acc: 96.97%
+* class: 19 (leonberger)	total: 100	correct: 86	acc: 86.00%
+* class: 20 (maine_coon)	total: 100	correct: 83	acc: 83.00%
+* class: 21 (miniature_pinscher)	total: 100	correct: 96	acc: 96.00%
+* class: 22 (newfoundland)	total: 100	correct: 91	acc: 91.00%
+* class: 23 (persian)	total: 100	correct: 77	acc: 77.00%
+* class: 24 (pomeranian)	total: 100	correct: 98	acc: 98.00%
+* class: 25 (pug)	total: 100	correct: 98	acc: 98.00%
+* class: 26 (ragdoll)	total: 100	correct: 64	acc: 64.00%
+* class: 27 (russian_blue)	total: 100	correct: 97	acc: 97.00%
+* class: 28 (saint_bernard)	total: 100	correct: 97	acc: 97.00%
+* class: 29 (samoyed)	total: 100	correct: 100	acc: 100.00%
+* class: 30 (scottish_terrier)	total: 99	correct: 91	acc: 91.92%
+* class: 31 (shiba_inu)	total: 100	correct: 99	acc: 99.00%
+* class: 32 (siamese)	total: 100	correct: 79	acc: 79.00%
+* class: 33 (sphynx)	total: 100	correct: 93	acc: 93.00%
+* class: 34 (staffordshire_bull_terrier)	total: 89	correct: 61	acc: 68.54%
+* class: 35 (wheaten_terrier)	total: 100	correct: 95	acc: 95.00%
+* class: 36 (yorkshire_terrier)	total: 100	correct: 97	acc: 97.00%
+* average: 87.54%
+worst10 classes: 
+american_pit_bull_terrier: 61.00%
+ragdoll: 64.00%
+staffordshire_bull_terrier: 68.54%
+birman: 76.00%
+british_shorthair: 76.00%
+egyptian_mau: 76.29%
+english_cocker_spaniel: 77.00%
+persian: 77.00%
+siamese: 79.00%
+american_bulldog: 81.00%
+Elapsed: 0:17:50
+id: data-ssoxford_pets_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-2_beta-0.0_FILT-True_T-1.0_cMomn-0.95_topP-1_MAXPOOL-16 ----> test * accuracy: 87.57%
