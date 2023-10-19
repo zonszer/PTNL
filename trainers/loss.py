@@ -31,7 +31,6 @@ class PLL_loss(nn.Module):
         self.cfg = cfg
         self.num = 0
         #PLL items: 
-        self.loss_min = self.cfg.LOSS_MIN
         self.T = self.cfg.TEMPERATURE
         if '_' in type or '_' in self.cfg.CONF_LOSS_TYPE:   #means need to update conf
             self.conf = self.init_confidence(PartialY)
@@ -220,7 +219,7 @@ class PLL_loss(nn.Module):
 
     def clean_conf(self):
         if hasattr(self, 'conf'):
-            self.conf = torch.where(self.conf < self.eps, torch.zeros_like(self.conf), self.conf)
+            self.conf = torch.where(self.conf < (1/self.conf.shape[1]), torch.zeros_like(self.conf), self.conf)
             base_value = self.conf.sum(dim=1).unsqueeze(1).repeat(1, self.conf.shape[1])
             self.conf = self.conf / base_value
 
@@ -244,13 +243,20 @@ class PLL_loss(nn.Module):
             # assert (base_value >= 1).all(), 'base_value should larger than 1'     #TODO double check
             self.conf[cur_pool.pool_idx, pool_id] = pred_conf_value_
 
-            safe_range = ((cur_pool.popped_unc - self.safe_f*cur_pool.unc_max) <= 0)
-            self.conf[cur_pool.popped_idx[~safe_range], :] = self.origin_labels[cur_pool.popped_idx[~safe_range], :]
+            # if cur_pool.pool_capacity > 0:
+            #     safe_range = ((cur_pool.popped_unc - self.safe_f*cur_pool.unc_max) <= 0)
+            #     self.conf[cur_pool.popped_idx[~safe_range], :] = self.origin_labels[cur_pool.popped_idx[~safe_range], :]
+            #     safe_range_num += safe_range.sum().item()
+            #     clean_num += (~safe_range).sum().item()
+            if cur_pool.popped_unc.shape[0] != 0:
+                num_samples = cur_pool.popped_unc.shape[0] // int(self.safe_f)
+                random_idxs = torch.randperm(cur_pool.popped_unc.shape[0])[:num_samples]
+                self.conf[cur_pool.popped_idx[random_idxs], :] = self.origin_labels[cur_pool.popped_idx[random_idxs], :]
+                safe_range_num += (cur_pool.popped_unc.shape[0] - num_samples)
+                clean_num += num_samples
 
-            safe_range_num += safe_range.sum().item()
-            clean_num += (~safe_range).sum().item()
-
-        print(f'<{not_inpool_num}> samples are not in pool, <{safe_range_num}> samples are in safe range, <{clean_num}> samples are cleaned')
+        not_inpool_num = safe_range_num + clean_num
+        print(f'<{not_inpool_num}> samples are not in pool: <{safe_range_num}> samples are in safe range, <{clean_num}> samples are cleaned')
 
 
     @torch.no_grad()

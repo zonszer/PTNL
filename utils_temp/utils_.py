@@ -35,17 +35,13 @@ class ClassLabelPool:
         self.saved_logits = torch.Tensor([]).type(unc_sample.dtype).to(unc_sample.device)
         self.popped_idx = torch.LongTensor([])
         self.popped_unc = torch.Tensor([]).type(unc_sample.dtype).to(unc_sample.device)
-        self._update_pool_attr()
-
+        self.unc_max = 1e-10
     def _update_pool_attr(self):
         """
         Update the pool attributes.
         """
         # self.unc_avg = torch.mean(self.pool_unc)
-        if self.pool_capacity < self.pool_max_capacity:
-            pass
-        else:
-            self.unc_max, self.unc_max_idx = torch.max(self.pool_unc, dim=0)
+        self.unc_max, self.unc_max_idx = torch.max(self.pool_unc, dim=0)
         assert self.pool_unc.shape == self.pool_unc.shape
         assert self.pool_unc.shape[0] <= self.pool_max_capacity
     

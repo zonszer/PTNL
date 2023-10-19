@@ -5,10 +5,10 @@ cd ..
 # custom config
 DATA=./data
 TRAINER=UPLTrainer
-exp_ID="10.18-test_cc_refine_ep100_setClean&Safe"    #NOTE +time
+exp_ID="10.19-test_cc_refine_ep100_randomR"    #NOTE +time
 # TODO: 
-#1. test loss min and beta for rc and cc
-
+#1. change oonf clean threshold and set safe factor and range
+#10.19-test_cc_refine_ep100_safe&clean2
 # TAG=$(date +"%m-%d_%H-%M-%S")   # get current time stamp
 TAG="${exp_ID}"      
 
@@ -86,11 +86,12 @@ USE_REGULAR=True     #add 2
 USE_LABEL_FILTER=True
 # declare -a BETAS=(0.0 0.1 0.2 0.3)
 BETA=0.0
-declare -a CONF_MOMNs=(0.95 0.97 0.99)
+declare -a CONF_MOMNs=(0.95 0.99)
 declare -a TOP_POOLs=(1)
-declare -a MAX_POOLNUMs=(12 16)
+declare -a MAX_POOLNUMs=(12)
 declare -a DATASETs=('ssucf101')
-declare -a SAFT_FACTORs=(1.5 1.75 2.0)
+declare -a SAFT_FACTORs=(3.0 4.0 5.0)
+# declare -a SHRINK_FACTORs=(0.5 0.3 0.7)
 
 
 for SEED in {1..3}
@@ -104,11 +105,11 @@ do
             do
                 for CONF_MOMN in "${CONF_MOMNs[@]}"
                 do
-                    for SAFT_F in "${SAFT_FACTORs[@]}"
+                    for SAFT_FACTOR in "${SAFT_FACTORs[@]}"
                     do
                         for MAX_POOLNUM in "${MAX_POOLNUMs[@]}"
                         do
-                            common_id="data-${DATASET}_model-${CFG}_shots-${SHOTS}_nctx-${NCTX}_ctp-${CTP}_fp-${FP}_usePLL${use_PLL}-${PLL_partial_rate}_loss-${loss_type}_seed-${SEED}_beta-${BETA}_FILT-${USE_LABEL_FILTER}_cMomn-${CONF_MOMN}_topP-${TOP_POOL}_MAXPOOL-${MAX_POOLNUM}_safeF-${SAFT_F}"
+                            common_id="data-${DATASET}_model-${CFG}_shots-${SHOTS}_nctx-${NCTX}_ctp-${CTP}_fp-${FP}_usePLL${use_PLL}-${PLL_partial_rate}_loss-${loss_type}_seed-${SEED}_beta-${BETA}_FILT-${USE_LABEL_FILTER}_cMomn-${CONF_MOMN}_topP-${TOP_POOL}_MAXPOOL-${MAX_POOLNUM}_randomR-${SAFT_FACTOR}"
                             DIR=./output/${DATASET}/${TRAINER}/${CFG}_${SHOTS}shots-${TAG}/SEED${SEED}/${common_id}
                             if [ -d "$DIR" ]; then
                                 echo "Results are available in ${DIR}. Skip this job"
@@ -136,6 +137,7 @@ do
                                 TRAINER.PLL.USE_LABEL_FILTER ${USE_LABEL_FILTER} \
                                 TRAINER.PLL.CONF_MOMN ${CONF_MOMN} \
                                 TRAINER.PLL.MAX_POOLNUM ${MAX_POOLNUM} \
+                                TRAINER.PLL.SAFE_FACTOR ${SAFT_FACTOR} \
                                 TRAINER.PLL.TOP_POOLS ${TOP_POOL}
                                 
                                 ACCURACY=$(grep -A4 'Do evaluation on test set' ${DIR}/log.txt | grep 'accuracy:' | awk -F' ' '{print $3}')

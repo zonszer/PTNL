@@ -59,7 +59,7 @@
           "console": "integratedTerminal",
           "justMyCode": false,
           "env": {
-            "CUDA_VISIBLE_DEVICES": "0"
+            "CUDA_VISIBLE_DEVICES": "1"
           },
           "args": [
             "--root=./data",
@@ -67,7 +67,7 @@
             "--trainer=UPLTrainer",
             "--dataset-config-file=configs/datasets/ssucf101.yaml",
             "--config-file=configs/trainers/UPLTrainer/rn50_ep50.yaml",
-            "--output-dir=./output/ssucf101/UPLTrainer/rn50_ep50_16shots-10.13-debug/10.16-debug_doublecheck11",
+            "--output-dir=./output/ssucf101/UPLTrainer/rn50_ep50_16shots-10.13-debug/10.16-debug_doublecheck13",
             "--num-fp=0",
             "--loss_type=cc_refine",
             "TRAINER.UPLTrainer.N_CTX",
@@ -83,9 +83,9 @@
             "TRAINER.PLL.USE_PLL",
             "True",
             "TRAINER.PLL.PARTIAL_RATE",
-            "0.1",
+            "0.3",
             "TRAINER.PLL.BETA",
-            "0.2",
+            "0.0",
             "TEST.FINAL_MODEL",
             "best_val",
             "TRAINER.PLL.USE_LABEL_FILTER",
@@ -94,12 +94,10 @@
             "1.0",
             // "TRAINER.PLL.INIT_EPOCH",
             // "0",
-            "TRAINER.PLL.POOL_ENLARGE_SCALE",
-            "0.875",
             "TRAINER.PLL.CONF_MOMN",
             "0.99",
             "TRAINER.PLL.TOP_POOLS",
-            "3",
+            "1",
             "TRAINER.PLL.MAX_POOLNUM",
             "16"
           ]

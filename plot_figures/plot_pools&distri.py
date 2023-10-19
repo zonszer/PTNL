@@ -21,7 +21,7 @@ path = '../analyze_result_temp/logits&labels_10.14'
 
 #+++++++=========== figure1, dataset is train -> PLL05 confidence_RC+gce_rc_PLL0.5-4.pt
 # Step 2: Get list of files confidence_RC+gce_rc_PLL0.5-42
-files_no_true = sorted(glob.glob(path+ '/conf-cc_refine_1epoch_PLL0.3-*.pt'),  key=lambda x: int(re.findall('(\d+)', x)[-1]))
+files_no_true = sorted(glob.glob(path+ '/conf-cc_refine_PLL0.3-*.pt'),  key=lambda x: int(re.findall('(\d+)', x)[-1]))
 files_true = sorted(glob.glob(path+ '/conf-cc_refine_1epoch_PLL1e-30-*.pt'),  key=lambda x: int(re.findall('(\d+)', x)[-1]))
 fig_id = 'rc_refine-conf-'
 ##============ set params:
@@ -56,7 +56,7 @@ print(f'all_data_no_true.shape is {all_data_no_true.shape}')
 ##============set params:
 dataset_class_names = ['Apply_Eye_Makeup', 'Apply_Lipstick', 'Archery', 'Baby_Crawling', 'Balance_Beam', 'Band_Marching', 'Baseball_Pitch', 'Basketball', 'Basketball_Dunk', 'Bench_Press', 'Biking', 'Billiards', 'Blow_Dry_Hair', 'Blowing_Candles', 'Body_Weight_Squats', 'Bowling', 'Boxing_Punching_Bag', 'Boxing_Speed_Bag', 'Breast_Stroke', 'Brushing_Teeth', 'Clean_And_Jerk', 'Cliff_Diving', 'Cricket_Bowling', 'Cricket_Shot', 'Cutting_In_Kitchen', 'Diving', 'Drumming', 'Fencing', 'Field_Hockey_Penalty', 'Floor_Gymnastics', 'Frisbee_Catch', 'Front_Crawl', 'Golf_Swing', 'Haircut', 'Hammering', 'Hammer_Throw', 'Handstand_Pushups', 'Handstand_Walking', 'Head_Massage', 'High_Jump', 'Horse_Race', 'Horse_Riding', 'Hula_Hoop', 'Ice_Dancing', 'Javelin_Throw', 'Juggling_Balls', 'Jumping_Jack', 'Jump_Rope', 'Kayaking', 'Knitting', 'Long_Jump', 'Lunges', 'Military_Parade', 'Mixing', 'Mopping_Floor', 'Nunchucks', 'Parallel_Bars', 'Pizza_Tossing', 'Playing_Cello', 'Playing_Daf', 'Playing_Dhol', 'Playing_Flute', 'Playing_Guitar', 'Playing_Piano', 'Playing_Sitar', 'Playing_Tabla', 'Playing_Violin', 'Pole_Vault', 'Pommel_Horse', 'Pull_Ups', 'Punch', 'Push_Ups', 'Rafting', 'Rock_Climbing_Indoor', 'Rope_Climbing', 'Rowing', 'Salsa_Spin', 'Shaving_Beard', 'Shotput', 'Skate_Boarding', 'Skiing', 'Skijet', 'Sky_Diving', 'Soccer_Juggling', 'Soccer_Penalty', 'Still_Rings', 'Sumo_Wrestling', 'Surfing', 'Swing', 'Table_Tennis_Shot', 'Tai_Chi', 'Tennis_Swing', 'Throw_Discus', 'Trampoline_Jumping', 'Typing', 'Uneven_Bars', 'Volleyball_Spiking', 'Walking_With_Dog', 'Wall_Pushups', 'Writing_On_Board', 'Yo_Yo']
 sub_figure_num = 9
-figure_type = 'Still_Rings'      # Yo_Yo Still_Rings Long_Jump
+figure_type = 'Long_Jump'      # Yo_Yo Still_Rings Long_Jump
 # pos_loop = True
 np.random.seed(0)
 ##============set params:
