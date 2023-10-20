@@ -39,7 +39,7 @@ add_partial_labels, generate_uniform_cv_candidate_labels,
 select_top_k_certainty_per_class,
 )
 
-from utils_temp.utils_ import dict_add
+from utils_temp.utils_ import dict_add, get_regular_weight
 _tokenizer = _Tokenizer()
 from trainers.loss import GeneralizedCrossEntropy, PLL_loss
 
@@ -290,7 +290,7 @@ class CustomCLIP(nn.Module):
         logit_scale = self.logit_scale.exp()
         logits = logit_scale * image_features @ text_features.t()
 
-        if self.cfg.TRAINER.PLL.USE_REGULAR:
+        if self.cfg.TRAINER.PLL.USE_REGULAR and self.training:
             if hasattr(self, 'text_regular_feat'):
                 self.regular = logit_scale * self.text_regular_feat @ text_features.t()
             else:
@@ -481,19 +481,19 @@ class UPLTrainer(TrainerX):
         else:
             output, image_features, text_features = self.model(image)
             # loss = self.GCE_loss(output, label)
-            self.criterion.model = self.model
             loss = self.criterion(output, label, index)
             if self.cfg.TRAINER.PLL.USE_REGULAR:
                 loss_regular = F.cross_entropy(self.model.regular, self.model.regular_label, )
-                loss = loss + self.cfg.TRAINER.PLL.BETA*loss_regular
-                # self.regular = self.text_regular_feat @ text_features.t()     
-                # image_features @ self.model.text_regular_feat.t()       
-                # label.int()
+                if hasattr(self, 'pool_unc_norm'):
+                    loss = loss + get_regular_weight(beta_median=self.cfg.TRAINER.PLL.BETA,
+                                                        class_acc=self.pool_unc_norm,
+                                                    ) * loss_regular
+
             self.model_backward_and_update(loss)
-            if hasattr(self.criterion, 'check_update'):
+            # if hasattr(self.criterion, 'check_update'):
                 # update_dict = dict(zip(index.tolist(), gt_label.cpu().long().tolist()))
                 # self.criterion.gt_label_dict.update(update_dict)
-                self.criterion.check_update(image, label, index, output=output.detach())   
+                # self.criterion.check_conf_update(image, label, index)   
 
         # gradients compare:
         # if self.criterion.num % 2 == 0:
@@ -1175,19 +1175,54 @@ class UPLTrainer(TrainerX):
                 )
         
 
-    def before_epoch(self):
-        if 'refine' in self.criterion.losstype:
-            if self.epoch == 0:            #self.epoch start from 0
-                self.criterion.cls_pools_dict = self.init_cls_pools(split="train")
-                # self.evaluator._cname2lab = {v:k for k, v in self.evaluator._lab2cname.items()}
-            elif self.epoch > 0:
-                self.criterion.update_conf_epochend()
+    def forward_get_conf(self, batch):
+        _, _, impath = self.parse_batch_test_with_impath(batch)
+        image, label, index = self.parse_batch_train(batch)     #When PLL: labels_true == self.labels_true[index]
+        gt_label = self._get_gt_label(impath, dtype=label.dtype)
 
-                acc_dict = self.evaluator.class_acc_sumlist[self.epoch - 1]     # the val result of past epoch
-                for cls_idx, pool in self.criterion.cls_pools_dict.items():
-                    cls_acc = acc_dict[self.evaluator._lab2cname[cls_idx]]       
-                    pool.scale_pool(next_capacity=round(self.cfg.TRAINER.PLL.MAX_POOLNUM * cls_acc/100 ))
-                    pool.reset()
+        output, image_features, text_features = self.model(image)
+        self.criterion.check_conf_update(image, label, index, is_training=False, output=output)   
+
+        summary = {
+            "acc": compute_accuracy(output, gt_label)[0].item(),
+            'index': index,
+            'output': output,
+            'label': label,
+            'image_features': image_features,
+            'text_features': text_features,
+        }
+        return summary
+
+    @torch.no_grad()
+    def before_epoch(self):
+        if self.epoch == 0:            #self.epoch start from 0
+            if 'refine' in self.criterion.losstype:
+                self.criterion.cls_pools_dict = self.init_cls_pools(split="train")
+
+        elif self.epoch > 0:
+            self.set_model_mode("eval")
+            self.model.eval()
+            output_all = []
+            indexs_all = []
+            labels_all = []
+
+            for batch_idx, batch in enumerate(self.train_loader_sstrain_notfm):
+                summary = self.forward_get_conf(batch)
+                indexs_all.append(summary['index'])
+                output_all.append(summary['output'])
+                labels_all.append(summary['label'])
+                print(f'batch_idx: {batch_idx}, pred_acc: {summary["acc"]}')
+            
+            pool_unc_avgs = self.criterion.update_conf_epochend(indexs_all, output_all, labels_all)
+            pool_unc_avgs = torch.cat(pool_unc_avgs, dim=0)
+            max_unc = pool_unc_avgs.max()
+            min_unc = pool_unc_avgs.min()
+            pool_unc_norm = (pool_unc_avgs - min_unc) / (max_unc - min_unc)
+            self.pool_unc_norm = pool_unc_norm
+
+            for cls_idx, pool in self.criterion.cls_pools_dict.items():
+                pool.scale_pool(next_capacity=round(self.cfg.TRAINER.PLL.MAX_POOLNUM * pool_unc_norm[cls_idx]))
+                pool.reset()
                     
         if self.epoch > 0:            #self.epoch start from 0
             if self.cfg.TRAINER.PLL.USE_PLL:

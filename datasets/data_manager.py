@@ -270,7 +270,7 @@ class UPLDataManager(DataManager):
         self.val_loader = val_loader
         self.test_loader = test_loader
         self.train_loader_x = train_loader_x
-        self.tfm_train = tfm_train
+        self.tfm_train = tfm_train; self.tfm_test = tfm_test
         for loader_name in ['test_novel_loader', 'test_base_loader', 'train_loader_sstrain', 'train_loader_u']:
             try:
                 loader = eval(loader_name)
@@ -305,4 +305,18 @@ class UPLDataManager(DataManager):
             dataset_wrapper=self.dataset_wrapper,
             tag='sstrain',
         )
+        train_loader_sstrain_notfm = build_data_loader(
+            self.cfg,
+            sampler_type="RandomSampler",
+            sampler=None,
+            data_source=sstrain,
+            batch_size=self.cfg.DATALOADER.TRAIN_X.BATCH_SIZE,
+            n_domain=self.cfg.DATALOADER.TRAIN_X.N_DOMAIN,
+            n_ins=1,
+            tfm=self.tfm_test,
+            is_train=True,
+            dataset_wrapper=self.dataset_wrapper,
+            tag='sstrain',
+        )
         self.train_loader_sstrain = train_loader_sstrain
+        self.train_loader_sstrain_notfm = train_loader_sstrain_notfm

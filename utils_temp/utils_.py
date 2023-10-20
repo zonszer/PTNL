@@ -29,13 +29,8 @@ class ClassLabelPool:
             items_unc (torch.Tensor): A tensor of item uncertainties.
         """
         self.pool_max_capacity = max_capacity
-        self.pool_capacity = 0
-        self.pool_idx = torch.LongTensor([])
-        self.pool_unc = torch.Tensor([]).type(unc_sample.dtype).to(unc_sample.device)
-        self.saved_logits = torch.Tensor([]).type(unc_sample.dtype).to(unc_sample.device)
-        self.popped_idx = torch.LongTensor([])
-        self.popped_unc = torch.Tensor([]).type(unc_sample.dtype).to(unc_sample.device)
-        self.unc_max = 1e-10
+        self.reset()
+        
     def _update_pool_attr(self):
         """
         Update the pool attributes.
@@ -50,12 +45,16 @@ class ClassLabelPool:
         Reset the pool.
         """
         self.pool_idx = torch.LongTensor([])
-        self.pool_unc = torch.Tensor([]).type(self.pool_unc.dtype).to(self.pool_unc.device)
-        self.saved_logits = torch.Tensor([]).type(self.saved_logits.dtype).to(self.saved_logits.device)
         self.popped_idx = torch.LongTensor([])
-        self.popped_unc = torch.Tensor([]).type(self.popped_unc.dtype).to(self.popped_unc.device)
+        self.pool_unc = None
+        self.popped_unc = None
+        #info:
+        # self.saved_logits = []
+        # self.popped_img_feats = []
+        # self.poped_logits = []
+        #attribute:
         self.pool_capacity = 0
-        self.unc_max = 0
+        self.unc_max = 1e-10
 
     def scale_pool(self, next_capacity: int):
         """
@@ -69,37 +68,49 @@ class ClassLabelPool:
             pass
         return
 
-    def update(self, feat_idx: torch.LongTensor, feat_unc: torch.Tensor, feat_logit: torch.Tensor = None):
+    def pop_notinpool_items(self):
+        """
+        Get the popped items.
+        Returns:
+            tuple: A tuple containing the popped items (popped_idx, popped_unc).
+        """
+        popped_idx_last, popped_unc_last = self.popped_idx, self.popped_unc
+        self.popped_idx = torch.LongTensor([])
+        self.popped_unc = torch.Tensor([]).type(self.popped_unc.dtype).to(self.popped_unc.device)
+
+        return popped_idx_last, popped_unc_last
+
+    def update(self, feat_idx: torch.LongTensor, feat_unc: torch.Tensor, record_popped=True):
         """
         Update the pool with new values.
         Args:
             feat_idxs (torch.Tensor): A tensor of feature indices, better to be ascending order.
             feat_unc (torch.Tensor): A tensor of feature uncertainties.
         """
+        if self.pool_unc == None:     # init dtype by the first update
+            self.popped_unc = torch.Tensor([]).type(feat_unc.dtype).to(feat_unc.device)
+            self.pool_unc = torch.Tensor([]).type(feat_unc.dtype).to(feat_unc.device)
 
-        # for feat_idx, feat_unc in zip(feat_idx, feat_unc):
-            # idx_position = (self.pool_idx == feat_idx).nonzero(as_tuple=True)
-            # num_inpool = idx_position[0].numel() 
-            # if num_inpool > 0:      
-            #     assert False, 'should not be entered now'
-            #     assert num_inpool == 1
-            #     self.pool_unc[idx_position[0]] = feat_unc
-            #     in_pool[feat_idx == feat_idxs] = True
         if self.pool_capacity < self.pool_max_capacity:
-            self.pool_idx = torch.cat((feat_idx.unsqueeze(0), self.pool_idx))
-            self.pool_unc = torch.cat((feat_unc.unsqueeze(0), self.pool_unc))
-            # self.saved_logits = torch.cat((feat_logit.unsqueeze(0), self.saved_logits))
+            self.pool_idx = torch.cat((self.pool_idx, feat_idx.unsqueeze(0)))  # Interchanged positions
+            self.pool_unc = torch.cat((self.pool_unc, feat_unc.unsqueeze(0)))  # Interchanged positions
+            # self.saved_logits = torch.cat((self.saved_logits, feat_logit.unsqueeze(0)))  # Interchanged positions
             self.pool_capacity += 1
             in_pool = True
         else:
             if self.unc_max <= feat_unc:
-                self.popped_idx = torch.cat((feat_idx.unsqueeze(0), self.popped_idx))
-                self.popped_unc = torch.cat((feat_unc.unsqueeze(0), self.popped_unc))
+                if record_popped:
+                    self.popped_idx = torch.cat((self.popped_idx, feat_idx.unsqueeze(0)))  # Interchanged positions
+                    self.popped_unc = torch.cat((self.popped_unc, feat_unc.unsqueeze(0)))  # Interchanged positions
                 in_pool = False
             else:
-                self.popped_idx = torch.cat((self.pool_idx[self.unc_max_idx].unsqueeze(0), self.popped_idx))
-                self.popped_unc = torch.cat((self.pool_unc[self.unc_max_idx].unsqueeze(0), self.popped_unc))
-                self.pool_idx[self.unc_max_idx] = feat_idx
+                if record_popped:
+                    self.popped_idx = torch.cat((self.popped_idx, self.pool_idx[self.unc_max_idx].unsqueeze(0)))  # Interchanged positions
+                    self.popped_unc = torch.cat((self.popped_unc, self.pool_unc[self.unc_max_idx].unsqueeze(0)))  # Interchanged positions
+                    # self.popped_img_feats.append(info_dict['image_feat'])      #TODO debug the append is the sam ewith cat
+                    # self.poped_logits.append(info_dict['logit'])
+                
+                self.pool_idx[self.unc_max_idx.item()] = feat_idx
                 self.pool_unc[self.unc_max_idx] = feat_unc
                 # self.saved_logits[self.unc_max_idx] = feat_logit
                 in_pool = True
@@ -132,7 +143,7 @@ def restore_pic(x):
     x = jnp.transpose(x, (0, 2, 3, 1))
     return x
 
-def get_regular_weight(dataset:str, beta_median:float) -> np.ndarray:
+def get_regular_weight(class_acc, beta_median:float) -> np.ndarray:
     """
     Read a file and extract accuracy values.
     Args:
@@ -140,21 +151,20 @@ def get_regular_weight(dataset:str, beta_median:float) -> np.ndarray:
     Returns:
         np.ndarray: An array of accuracy values.
     """
-    path = 'zero-shot_testdata_' + dataset + '.txt'
-    acc_values = []
-    with open(path, 'r') as f:
-        lines = f.readlines()
-
-    # For each line, find the accuracy value and append it to the list
-    for line in lines:
-        match = re.search(r'acc: (\d+\.\d+)%', line)
-        if match:
-            acc_value = float(match.group(1))
-            acc_values.append(acc_value)
-    acc_array = np.array(acc_values, dtype=np.float16)
-    acc_array_ = -(beta_median / np.median(acc_array)) * acc_array 
-    acc_array_ = acc_array_ + (-acc_array_.min()-acc_array_.max())
-    return acc_array_
+    # path = 'zero-shot_testdata_' + dataset + '.txt'
+    # acc_values = []
+    # with open(path, 'r') as f:
+    #     lines = f.readlines()
+    # # For each line, find the accuracy value and append it to the list
+    # for line in lines:
+    #     match = re.search(r'acc: (\d+\.\d+)%', line)
+    #     if match:
+    #         acc_value = float(match.group(1))
+    #         acc_values.append(acc_value)
+    acc_array = class_acc.half
+    acc_array_ = -(beta_median / torch.median(acc_array)) * acc_array 
+    beta_ = acc_array_ + (-acc_array_.min()-acc_array_.max())
+    return beta_
 
 
 

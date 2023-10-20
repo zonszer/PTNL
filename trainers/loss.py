@@ -75,14 +75,14 @@ class PLL_loss(nn.Module):
         # self.loss_ = loss.detach()
         return loss.mean()
 
-    def check_update(self, images, y, index, output=None):
+    def check_conf_update(self, images, y, index, output=None):
         if '_' in self.cfg.CONF_LOSS_TYPE or '_' in self.losstype:
             if '_' in self.cfg.CONF_LOSS_TYPE:
                 conf_type = self.cfg.CONF_LOSS_TYPE.split('_')[-1]
             else:
                 conf_type = self.losstype.split('_')[-1]
             assert conf_type in ['rc', 'cav', 'refine'], 'conf_type not supported'
-            self.update_confidence(self.model, self.conf, images, y, index, conf_type, output_bef=output)
+            self.update_confidence(y, index, conf_type, output=output)
         else:
             return
     
@@ -176,45 +176,142 @@ class PLL_loss(nn.Module):
         return conf_loss  
 
     @torch.no_grad()
-    def update_confidence(self, model, confidence, images, labels, batch_idxs, conf_type, output_bef=None):
-        outputs, image_features, text_features = model(images)
+    def update_confidence(self, PL_labels, batch_idxs, conf_type, outputs):
+        # outputs, image_features, text_features = model(images)
         if conf_type == 'rc':
-            temp_un_conf = F.softmax(outputs / self.T, dim=1)
-            conf_selected = temp_un_conf * labels # un_confidence stores the weight of each example
-            base_value = conf_selected.sum(dim=1).unsqueeze(1).repeat(1, conf_selected.shape[1])
-            self.conf[batch_idxs, :] = conf_selected / base_value  # use maticx for element-wise division
+            rc_conf = self.cal_pred_conf(outputs, PL_labels, conf_type)
+            base_value = rc_conf.sum(dim=1).unsqueeze(1).repeat(1, rc_conf.shape[1])
+            self.conf[batch_idxs, :] = rc_conf / base_value  # use maticx for element-wise division
+
         elif conf_type == 'cav':
-            cav = (outputs * torch.abs(1 - outputs)) * labels
-            cav_pred = torch.max(cav, dim=1)[1]
-            gt_label = F.one_hot(cav_pred, labels.shape[1]) # label_smoothing() could be used to further improve the performance for some datasets
+            cav_conf = self.cal_pred_conf(outputs, PL_labels, conf_type)
+            cav_pred = torch.max(cav_conf, dim=1)[1]
+            gt_label = F.one_hot(cav_pred, PL_labels.shape[1]) # label_smoothing() could be used to further improve the performance for some datasets
             self.conf[batch_idxs, :] = gt_label.float()
+
         elif conf_type == 'refine':
-            cav = (outputs * torch.abs(1 - outputs)) * labels
+            conf_type = 'cav'
+            conf = self.cal_pred_conf(outputs, PL_labels, conf_type)
+            self.fill_pools(conf, outputs, batch_idxs, top_pools=1, record_notinpool=True)
+
+
+    @torch.no_grad()
+    def cal_pred_conf(self, logits, PL_labels, conf_type):
+        if conf_type == 'rc':
+            conf = F.softmax(logits / self.T, dim=1)
+        elif conf_type == 'cav':
+            conf = (logits * torch.abs(1 - logits)) 
+        return conf * PL_labels
+
+    @torch.no_grad()
+    def cal_uncertainty(self, output, label, index=None):
+        """calculate uncertainty for each sample in batch"""
+        unc = F.cross_entropy(output, label, reduction='none')
+        return unc
+    
+
+    def fill_pools(self, conf, outputs, batch_idxs, top_pools=1, record_notinpool=True):
+        """fill pools with top_pools samples for each class"""
+        def recursion(num_top_pools, output, cav_logits, not_in_pool, all_idxs):
+            if num_top_pools == 0 or (not_in_pool==False).all():
+                return 
+            else:
+                this_loop_idxs = all_idxs[not_in_pool]        #torch.arange(0, output.shape[0])[not_in_pool]
+                # output[this_loop_idxs]; cav_logits[this_loop_idxs]
+
+                max_val, cav_pred = torch.max(cav_logits[this_loop_idxs], dim=1)
+                unc = self.cal_uncertainty(output[this_loop_idxs], cav_pred)      
+
+                for i, (cls_idx, idx) in enumerate(zip(cav_pred, this_loop_idxs)):
+                    pool = self.cls_pools_dict[cls_idx.item()]
+                    in_pool = pool.update(feat_idx=batch_idxs[idx], feat_unc=unc[i], 
+                                          record_popped = record_notinpool)
+                    not_in_pool[idx] = not in_pool
+                    # if in_pool.item():    #HACK： should change the position
+                        # self.pred_label_dict.update({batch_idxs[i].item(): [cls_idx.cpu().item(), unc[i].cpu().item()]})
+
+            cav_logits[this_loop_idxs, cav_pred] = -torch.inf
+            recursion(num_top_pools-1, output, cav_logits, not_in_pool, all_idxs)
+            return 
+        # call recursion:
+        not_in_pool_init = torch.ones(outputs.shape[0], dtype=torch.bool)
+        all_idxs = torch.arange(0, outputs.shape[0])
+        recursion(top_pools, outputs, conf, not_in_pool_init, all_idxs)
             
-            def recursion(num_top_pools, output, cav_logits, not_in_pool):
-                if num_top_pools == 0 or (not_in_pool==False).all():
-                    return 
-                else:
-                    this_loop_idxs = torch.arange(0, output.shape[0])[not_in_pool]        #torch.arange(0, output.shape[0])[not_in_pool]
-                    # output[this_loop_idxs]; cav_logits[this_loop_idxs]
 
-                    max_val, cav_pred = torch.max(cav_logits[this_loop_idxs], dim=1)
-                    unc = self.cal_uncertainty(output[this_loop_idxs], cav_pred)      
+    def refill_pools(self, indexs_all, output_all, labels_all):
+        popped_idxs = []
+        pool_not_full = torch.zeros(len(self.cls_pools_dict), dtype=torch.bool)
 
-                    for i, (cls_idx, idx) in enumerate(zip(cav_pred, this_loop_idxs)):
-                        pool = self.cls_pools_dict[cls_idx.item()]
-                        in_pool = pool.update(feat_idx=batch_idxs[idx], feat_unc=unc[i], feat_logit=None)
-                        not_in_pool[idx] = ~in_pool
-                        # if in_pool.item():    #HACK： should change the position
-                            # self.pred_label_dict.update({batch_idxs[i].item(): [cls_idx.cpu().item(), unc[i].cpu().item()]})
+        for pool_id, cur_pool in self.cls_pools_dict.items():
+            popped_idxs, popped_unc = cur_pool.pop_notinpool_items()
+            popped_idxs.append(popped_idxs)
 
-                    cav_logits[this_loop_idxs, cav_pred] = -torch.inf
-                    recursion(num_top_pools-1, output, cav_logits, not_in_pool)
-                    return 
+            if cur_pool.pool_capacity < cur_pool.pool_max_capacity:
+                pool_not_full[pool_id] = True
             
-            not_in_pool_init = torch.ones(outputs.shape[0], dtype=torch.bool).to(self.device)
-            recursion(self.cfg.TOP_POOLS, outputs, cav, not_in_pool_init)
-            # self.not_inpool_idxs = torch.cat((self.not_inpool_idxs, batch_idxs[not_in_pool_init]))
+        popped_idxs = torch.cat(popped_idxs, dim=0)
+        popped_output = output_all[popped_idxs, pool_not_full]
+        popped_labels = labels_all[popped_idxs, pool_not_full]
+        conf = self.cal_pred_conf(popped_output, popped_labels, conf_type='cav')
+        self.fill_pools(conf, popped_output, indexs_all[popped_idxs], 
+                                    top_pools=self.cfg.TOP_POOLS, record_notinpool=True)
+
+
+    @torch.no_grad()
+    def update_conf_epochend(self, indexs_all, output_all, labels_all):      # shrink_f larger means val of unc_norm has larger effect on momn
+        if 'refine' not in self.losstype:
+            return 
+        else:
+            print('update conf_refine at epoch end:')
+            # pop items not in pools and fill the remained pools:
+            self.refill_pools(indexs_all, output_all, labels_all)
+            
+            # clean pool and calculate conf increament:
+            (not_inpool_num, safe_range_num, clean_num, 
+                        pool_unc_avgs) = self.update_conf_refine(shrink_f=0.5)
+            
+            print(f'<{not_inpool_num}> samples are not in pool:,'
+                    f'<{safe_range_num}> samples are in safe range,'
+                    f'<{clean_num}> samples are cleaned')   
+            return pool_unc_avgs
+
+    def update_conf_refine(self, shrink_f):
+        not_inpool_num = 0
+        safe_range_num = 0
+        clean_num = 0
+        pool_unc_avgs = []
+
+        for pool_id, cur_pool in self.cls_pools_dict.items():
+            print(f'pool_id: {pool_id}, pool_capacity: {cur_pool.pool_capacity}')
+            if cur_pool.pool_capacity == 0:
+                continue
+            if cur_pool.pool_capacity == cur_pool.pool_max_capacity: 
+                unc_min = cur_pool.pool_unc.min()
+                unc_norm = (cur_pool.pool_unc - unc_min) / (cur_pool.unc_max - unc_min)
+            else:
+                unc_norm = 0
+            # if isinstance(unc_norm, torch.Tensor) and (torch.isnan(unc_norm)).any():
+            #     unc_norm = 0
+            pool_unc_avgs.append(unc_norm.mean().item())
+            
+            # 1. cal increament and update conf:
+            pred_conf_value = self.conf[cur_pool.pool_idx, pool_id]       
+            conf_increment = (1 - self.conf_momn) * (1 - unc_norm * shrink_f) 
+            pred_conf_value_ = pred_conf_value * self.conf_momn + conf_increment
+            base_value = pred_conf_value_ - pred_conf_value + 1
+            # assert (base_value >= 1).all(), 'base_value should larger than 1'     #TODO double check
+            self.conf[cur_pool.pool_idx, pool_id] = pred_conf_value_
+
+            # 2. clean poped items which are not in safe range:
+            if cur_pool.popped_idx.shape[0] > 0:
+                safe_range = ((cur_pool.popped_unc - self.safe_f*cur_pool.unc_max) <= 0)
+                self.conf[cur_pool.popped_idx[~safe_range], :] = self.origin_labels[cur_pool.popped_idx[~safe_range], :]
+                safe_range_num += safe_range.sum().item()
+                clean_num += (~safe_range).sum().item()
+            
+        not_inpool_num = safe_range_num + clean_num
+        return not_inpool_num, safe_range_num, clean_num, pool_unc_avgs
 
 
     def clean_conf(self):
@@ -223,47 +320,6 @@ class PLL_loss(nn.Module):
             base_value = self.conf.sum(dim=1).unsqueeze(1).repeat(1, self.conf.shape[1])
             self.conf = self.conf / base_value
 
-
-    def update_conf_epochend(self, shrink_f=0.5):      # shrink_f larger means val of unc_norm has larger effect on momn
-        assert 'refine' in self.losstype
-        not_inpool_num = 0
-        safe_range_num = 0
-        clean_num = 0
-        for pool_id, cur_pool in self.cls_pools_dict.items():
-            if cur_pool.pool_capacity > 1: 
-                unc_norm = (cur_pool.pool_unc - cur_pool.pool_unc.min()) / (cur_pool.pool_unc.max() - cur_pool.pool_unc.min())
-            else:
-                unc_norm = 0
-            if isinstance(unc_norm, torch.Tensor) and (torch.isnan(unc_norm)).any():
-                unc_norm = 0
-            pred_conf_value = self.conf[cur_pool.pool_idx, pool_id]       
-            conf_increment = (1 - self.conf_momn) * (1 - unc_norm * shrink_f) 
-            pred_conf_value_ = pred_conf_value * self.conf_momn + conf_increment
-            base_value = pred_conf_value_ - pred_conf_value + 1
-            # assert (base_value >= 1).all(), 'base_value should larger than 1'     #TODO double check
-            self.conf[cur_pool.pool_idx, pool_id] = pred_conf_value_
-
-            # if cur_pool.pool_capacity > 0:
-            #     safe_range = ((cur_pool.popped_unc - self.safe_f*cur_pool.unc_max) <= 0)
-            #     self.conf[cur_pool.popped_idx[~safe_range], :] = self.origin_labels[cur_pool.popped_idx[~safe_range], :]
-            #     safe_range_num += safe_range.sum().item()
-            #     clean_num += (~safe_range).sum().item()
-            if cur_pool.popped_unc.shape[0] != 0:
-                num_samples = cur_pool.popped_unc.shape[0] // int(self.safe_f)
-                random_idxs = torch.randperm(cur_pool.popped_unc.shape[0])[:num_samples]
-                self.conf[cur_pool.popped_idx[random_idxs], :] = self.origin_labels[cur_pool.popped_idx[random_idxs], :]
-                safe_range_num += (cur_pool.popped_unc.shape[0] - num_samples)
-                clean_num += num_samples
-
-        not_inpool_num = safe_range_num + clean_num
-        print(f'<{not_inpool_num}> samples are not in pool: <{safe_range_num}> samples are in safe range, <{clean_num}> samples are cleaned')
-
-
-    @torch.no_grad()
-    def cal_uncertainty(self, output, label, index=None):
-        """calculate uncertainty for each sample in batch"""
-        unc = F.cross_entropy(output, label, reduction='none')
-        return unc
 
     def log_conf(self, all_logits=None, all_labels=None):
         log_id = 'PLL' + str(self.cfg.PARTIAL_RATE)
