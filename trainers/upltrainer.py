@@ -1181,15 +1181,15 @@ class UPLTrainer(TrainerX):
         gt_label = self._get_gt_label(impath, dtype=label.dtype)
 
         output, image_features, text_features = self.model(image)
-        self.criterion.check_conf_update(image, label, index, is_training=False, output=output)   
+        self.criterion.check_conf_update(image, label, index, output=output)   
 
         summary = {
             "acc": compute_accuracy(output, gt_label)[0].item(),
             'index': index,
             'output': output,
-            'label': label,
-            'image_features': image_features,
-            'text_features': text_features,
+            # 'label': label,
+            # 'image_features': image_features,
+            # 'text_features': text_features,
         }
         return summary
 
@@ -1202,26 +1202,24 @@ class UPLTrainer(TrainerX):
         elif self.epoch > 0:
             self.set_model_mode("eval")
             self.model.eval()
-            output_all = []
-            indexs_all = []
-            labels_all = []
+            output_all = []; indexs_all = []
 
-            for batch_idx, batch in enumerate(self.train_loader_sstrain_notfm):
+            for batch_idx, batch in enumerate(self.dm.train_loader_sstrain_notfm):
                 summary = self.forward_get_conf(batch)
                 indexs_all.append(summary['index'])
                 output_all.append(summary['output'])
-                labels_all.append(summary['label'])
-                print(f'batch_idx: {batch_idx}, pred_acc: {summary["acc"]}')
-            
-            pool_unc_avgs = self.criterion.update_conf_epochend(indexs_all, output_all, labels_all)
-            pool_unc_avgs = torch.cat(pool_unc_avgs, dim=0)
-            max_unc = pool_unc_avgs.max()
-            min_unc = pool_unc_avgs.min()
-            pool_unc_norm = (pool_unc_avgs - min_unc) / (max_unc - min_unc)
+                if (
+                    batch_idx + 1
+                ) % self.cfg.TRAIN.PRINT_FREQ == 0 or self.num_batches < self.cfg.TRAIN.PRINT_FREQ:
+                    print(f'batch_idx: {batch_idx}, pred_acc: {summary["acc"]}')
+
+            indexs_all = torch.cat(indexs_all, dim=0)
+            output_all = torch.cat(output_all, dim=0)
+            pool_unc_norm = self.criterion.update_conf_epochend(indexs_all, output_all)
             self.pool_unc_norm = pool_unc_norm
 
             for cls_idx, pool in self.criterion.cls_pools_dict.items():
-                pool.scale_pool(next_capacity=round(self.cfg.TRAINER.PLL.MAX_POOLNUM * pool_unc_norm[cls_idx]))
+                pool.scale_pool(next_capacity=round((self.cfg.TRAINER.PLL.MAX_POOLNUM * pool_unc_norm[cls_idx]).item()))
                 pool.reset()
                     
         if self.epoch > 0:            #self.epoch start from 0
@@ -1231,19 +1229,8 @@ class UPLTrainer(TrainerX):
 
     @torch.no_grad()                           
     def init_cls_pools(self, split="train"):
-        self.set_model_mode("eval")
-        self.model.eval()
-
-        data_loader = self.val_loader
-        from tqdm import tqdm
-        for batch_idx, batch in tqdm(enumerate(data_loader)):
-            image, label, index, impath = self.parse_batch_train_with_impath(batch)
-            output, image_features, text_features = self.model(image)
-            break
-        
-        pools_dict = select_top_k_certainty_per_class(unc=output, class_ids=torch.arange(0, output.shape[1]), 
-                                                      idxs=None, K=int(max(self.cfg.DATASET.NUM_SHOTS*0.4, 2)))     #选择每个类别visual emb和text emb最相似的K个样本，对每个样本取预测的vector，最后加到info dict中（k>=0时）。 对每个样本取预测的vector，然后加到所有训练样本的info dict中（k=-1时）
-
+        pools_dict = select_top_k_certainty_per_class(class_ids=torch.arange(0, len(self.lab2cname)), 
+                                                      K=int(max(self.cfg.TRAINER.PLL.MAX_POOLNUM*0.4, 3)))     #选择每个类别visual emb和text emb最相似的K个样本，对每个样本取预测的vector，最后加到info dict中（k>=0时）。 对每个样本取预测的vector，然后加到所有训练样本的info dict中（k=-1时）
         return pools_dict
     
 

@@ -5,10 +5,13 @@ cd ..
 # custom config
 DATA=./data
 TRAINER=UPLTrainer
-exp_ID="10.19-test_cc_refine_ep100_randomR"    #NOTE +time
+exp_ID="10.20-test_cc_refine_ep100_refillpool"    #NOTE +time
 # TODO: 
 #1. change oonf clean threshold and set safe factor and range
 #10.19-test_cc_refine_ep100_safe&clean2
+# rememberi it use tfm_test now 10.19
+
+
 # TAG=$(date +"%m-%d_%H-%M-%S")   # get current time stamp
 TAG="${exp_ID}"      
 
@@ -82,15 +85,15 @@ TAG=$TAG # log tag (multiple_models_random_init or rn50_random_init)
 # done
 
 #---------------------------individual settings: ---------------------------
-USE_REGULAR=True     #add 2
+USE_REGULAR=False     #add 2
 USE_LABEL_FILTER=True
 # declare -a BETAS=(0.0 0.1 0.2 0.3)
 BETA=0.0
-declare -a CONF_MOMNs=(0.95 0.99)
-declare -a TOP_POOLs=(1)
-declare -a MAX_POOLNUMs=(12)
+declare -a CONF_MOMNs=(0.95 0.97 0.99)
+declare -a TOP_POOLs=(0 2 5)
+declare -a MAX_POOLNUMs=(12 16)
 declare -a DATASETs=('ssucf101')
-declare -a SAFT_FACTORs=(3.0 4.0 5.0)
+declare -a SAFT_FACTORs=(3.5 4.0 5.0)
 # declare -a SHRINK_FACTORs=(0.5 0.3 0.7)
 
 
@@ -109,7 +112,7 @@ do
                     do
                         for MAX_POOLNUM in "${MAX_POOLNUMs[@]}"
                         do
-                            common_id="data-${DATASET}_model-${CFG}_shots-${SHOTS}_nctx-${NCTX}_ctp-${CTP}_fp-${FP}_usePLL${use_PLL}-${PLL_partial_rate}_loss-${loss_type}_seed-${SEED}_beta-${BETA}_FILT-${USE_LABEL_FILTER}_cMomn-${CONF_MOMN}_topP-${TOP_POOL}_MAXPOOL-${MAX_POOLNUM}_randomR-${SAFT_FACTOR}"
+                            common_id="data-${DATASET}_model-${CFG}_shots-${SHOTS}_nctx-${NCTX}_ctp-${CTP}_fp-${FP}_usePLL${use_PLL}-${PLL_partial_rate}_loss-${loss_type}_seed-${SEED}_beta-${BETA}_FILT-${USE_LABEL_FILTER}_cMomn-${CONF_MOMN}_topP-${TOP_POOL}_MAXPOOL-${MAX_POOLNUM}_safeF-${SAFT_FACTOR}"
                             DIR=./output/${DATASET}/${TRAINER}/${CFG}_${SHOTS}shots-${TAG}/SEED${SEED}/${common_id}
                             if [ -d "$DIR" ]; then
                                 echo "Results are available in ${DIR}. Skip this job"

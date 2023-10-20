@@ -20,7 +20,7 @@ class ClassLabelPool:
     Store the average and current values for uncertainty of each class samples and the max capacity of the pool.
     """
 
-    def __init__(self, max_capacity: int, unc_sample=None):
+    def __init__(self, max_capacity: int, cls_id):
         """
         Initialize the ClassLabelPool.
         Args:
@@ -29,6 +29,10 @@ class ClassLabelPool:
             items_unc (torch.Tensor): A tensor of item uncertainties.
         """
         self.pool_max_capacity = max_capacity
+        self.is_freeze = False
+        self.cls_id = cls_id
+        self.device = 'cuda'
+        self.unc_dtype = torch.float16
         self.reset()
         
     def _update_pool_attr(self):
@@ -45,9 +49,9 @@ class ClassLabelPool:
         Reset the pool.
         """
         self.pool_idx = torch.LongTensor([])
+        self.pool_unc = torch.Tensor([]).type(self.unc_dtype).to(self.device)
         self.popped_idx = torch.LongTensor([])
-        self.pool_unc = None
-        self.popped_unc = None
+        self.popped_unc = torch.Tensor([]).type(self.unc_dtype).to(self.device)
         #info:
         # self.saved_logits = []
         # self.popped_img_feats = []
@@ -55,6 +59,12 @@ class ClassLabelPool:
         #attribute:
         self.pool_capacity = 0
         self.unc_max = 1e-10
+        self.popped_idx_past = None
+        self.popped_unc_past = None
+
+        assert self.is_freeze == False
+        self.pool_unc_past = None
+        self.pool_idx_past = None
 
     def scale_pool(self, next_capacity: int):
         """
@@ -68,17 +78,73 @@ class ClassLabelPool:
             pass
         return
 
+    def freeze_stored_items(self):
+        """
+        Freeze the current items in pool. NOTE this method should only be called when the pool is not full.
+        which means self.popped_idx.shape[0] is 0
+        """
+        assert self.popped_idx.shape[0] == 0
+        self.pool_unc_past = self.pool_unc
+        self.pool_idx_past = self.pool_idx
+
+        # reset the pool：
+        self.pool_idx = torch.LongTensor([])
+        self.pool_unc = torch.Tensor([]).type(self.unc_dtype).to(self.device)
+        self.popped_idx = torch.LongTensor([])
+        self.popped_unc = torch.Tensor([]).type(self.unc_dtype).to(self.device)
+        self.pool_max_capacity = self.pool_max_capacity - self.pool_capacity
+        self.pool_capacity = 0
+        self.unc_max = 1e-10
+
+        self.is_freeze = True
+    
+    def unfreeze_stored_items(self):
+        """
+        Unfreeze the current items in pool. NOTE this method should only be called when the pool is not full.
+        which means self.popped_idx.shape[0] is 0
+        """
+        assert self.is_freeze == True   
+        self.pool_unc = torch.cat((self.pool_unc_past, self.pool_unc), dim=0)
+        self.pool_idx = torch.cat((self.pool_idx_past, self.pool_idx), dim=0)
+
+        # reset the pool：
+        self.pool_max_capacity = self.pool_max_capacity + self.pool_idx_past.shape[0]
+        self.pool_capacity = self.pool_idx.shape[0]
+        self.unc_max = None
+        self.pool_unc_past = None
+        self.pool_idx_past = None
+
+        self.is_freeze = False
+
+    def recalculate_unc(self, logits_all, criterion, cal_poped_items=False):
+        """
+        Recalculate the uncertainty of the items in the pool.
+        """
+        # max_val, cav_pred = torch.max(logits_all[self.pool_idx], dim=1)
+        unc = criterion(logits_all[self.pool_idx], 
+                        torch.LongTensor([self.cls_id]).repeat(self.pool_idx.shape[0]).to(logits_all.device)) 
+        self.pool_unc = unc
+        if unc.shape[0] == 0:
+            return 
+        self.unc_max = unc.max()
+        
+        if cal_poped_items == True and self.popped_idx.shape[0] > 0:
+            unc = criterion(logits_all[self.popped_idx], 
+                            torch.LongTensor([self.cls_id]).repeat(self.popped_idx.shape[0]).to(logits_all.device)) 
+            self.popped_unc = unc
+
+
     def pop_notinpool_items(self):
         """
         Get the popped items.
         Returns:
             tuple: A tuple containing the popped items (popped_idx, popped_unc).
         """
-        popped_idx_last, popped_unc_last = self.popped_idx, self.popped_unc
+        self.popped_idx_past, self.popped_unc_past = self.popped_idx, self.popped_unc
         self.popped_idx = torch.LongTensor([])
         self.popped_unc = torch.Tensor([]).type(self.popped_unc.dtype).to(self.popped_unc.device)
 
-        return popped_idx_last, popped_unc_last
+        return self.popped_idx_past, self.popped_unc_past
 
     def update(self, feat_idx: torch.LongTensor, feat_unc: torch.Tensor, record_popped=True):
         """
@@ -87,10 +153,6 @@ class ClassLabelPool:
             feat_idxs (torch.Tensor): A tensor of feature indices, better to be ascending order.
             feat_unc (torch.Tensor): A tensor of feature uncertainties.
         """
-        if self.pool_unc == None:     # init dtype by the first update
-            self.popped_unc = torch.Tensor([]).type(feat_unc.dtype).to(feat_unc.device)
-            self.pool_unc = torch.Tensor([]).type(feat_unc.dtype).to(feat_unc.device)
-
         if self.pool_capacity < self.pool_max_capacity:
             self.pool_idx = torch.cat((self.pool_idx, feat_idx.unsqueeze(0)))  # Interchanged positions
             self.pool_unc = torch.cat((self.pool_unc, feat_unc.unsqueeze(0)))  # Interchanged positions
@@ -98,6 +160,7 @@ class ClassLabelPool:
             self.pool_capacity += 1
             in_pool = True
         else:
+            assert self.pool_max_capacity != 0
             if self.unc_max <= feat_unc:
                 if record_popped:
                     self.popped_idx = torch.cat((self.popped_idx, feat_idx.unsqueeze(0)))  # Interchanged positions
@@ -110,7 +173,7 @@ class ClassLabelPool:
                     # self.popped_img_feats.append(info_dict['image_feat'])      #TODO debug the append is the sam ewith cat
                     # self.poped_logits.append(info_dict['logit'])
                 
-                self.pool_idx[self.unc_max_idx.item()] = feat_idx
+                self.pool_idx[self.unc_max_idx] = feat_idx
                 self.pool_unc[self.unc_max_idx] = feat_unc
                 # self.saved_logits[self.unc_max_idx] = feat_logit
                 in_pool = True

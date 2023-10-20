@@ -1,0 +1,12 @@
+id: data-ssucf101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-2_beta-0.0_FILT-True_cMomn-0.99_topP-1_MAXPOOL-12_randomR-3.0 ----> test * accuracy: 77.11%
+id: data-ssucf101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.99_topP-1_MAXPOOL-12_randomR-3.0 ----> test * accuracy: 72.85%
+id: data-ssucf101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.95_topP-1_MAXPOOL-12_randomR-3.0 ----> test * accuracy: 73.54%
+id: data-ssucf101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.99_topP-1_MAXPOOL-12_randomR-3.0 ----> test * accuracy: 77.19%
+id: data-ssucf101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-2_beta-0.0_FILT-True_cMomn-0.95_topP-1_MAXPOOL-12_randomR-3.0 ----> test * accuracy: 74.23%
+id: data-ssucf101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-2_beta-0.0_FILT-True_cMomn-0.95_topP-1_MAXPOOL-12_randomR-3.0 ----> test * accuracy: 75.84%
+id: data-ssucf101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-2_beta-0.0_FILT-True_cMomn-0.99_topP-1_MAXPOOL-12_randomR-3.0 ----> test * accuracy: 73.62%
+id: data-ssucf101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-3_beta-0.0_FILT-True_cMomn-0.95_topP-1_MAXPOOL-12_randomR-3.0 ----> test * accuracy: 77.19%
+id: data-ssucf101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-2_beta-0.0_FILT-True_cMomn-0.99_topP-1_MAXPOOL-12_randomR-3.0 ----> test * accuracy: 73.49%
+id: data-ssucf101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-3_beta-0.0_FILT-True_cMomn-0.99_topP-1_MAXPOOL-12_randomR-3.0 ----> test * accuracy: 77.40%
+id: data-ssucf101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-3_beta-0.0_FILT-True_cMomn-0.95_topP-1_MAXPOOL-12_randomR-3.0 ----> test * accuracy: 72.64%
+id: data-ssucf101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-3_beta-0.0_FILT-True_cMomn-0.99_topP-1_MAXPOOL-12_randomR-3.0 ----> test * accuracy: 71.90%

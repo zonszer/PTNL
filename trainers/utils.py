@@ -142,7 +142,7 @@ def select_top_k_similarity_per_class(outputs, img_paths, K=1, image_features=No
     return predict_label_dict, predict_conf_dict
 
 
-def select_top_k_certainty_per_class(unc, class_ids, idxs, K=1, max_capacity_perclass=None):
+def select_top_k_certainty_per_class(class_ids, K=1, max_capacity_perclass=None):
     """
     Select the top-K samples with the highest certainty per class. 
     Get label class name from img_paths and transform it to a class_id. 
@@ -172,21 +172,8 @@ def select_top_k_certainty_per_class(unc, class_ids, idxs, K=1, max_capacity_per
     max_capacity_perclass = torch.LongTensor([max_capacity_perclass[cls.item()] for cls in cls_set])
 
     # Loop through each unique class id
-    for i, cls in enumerate(cls_set):                                   #TODO sort can be removed 
-        # Get the indices where class_ids list equals to current class 
-        # indices = torch.where(class_ids == cls) 
-        
-        # Select the unc and idx values for the current class
-        unc_sample = unc
-
-        # Select the Top-K indices based on sorted uncertainty values (select the Top-min K values)
-        # top_k_indices = torch.argsort(unc_current_class)
-        # idxs_current_class_ = idxs_current_class[top_k_indices][:max_capacity_perclass[cls]]
-        # unc_current_class_ = unc_current_class[top_k_indices][:max_capacity_perclass[cls]]
-
-        # Append a new ClassLabelPool for each class with the selected items to pools_dict
-        pools_dict[cls.item()] = ClassLabelPool(max_capacity = max_capacity_perclass[i].item(),
-                                                unc_sample = unc_sample.half().to(unc.device)) 
+    for i, cls in enumerate(cls_set):                                   
+        pools_dict[cls.item()] = ClassLabelPool(max_capacity = max_capacity_perclass[i].item(), cls_id=cls.item())
     return pools_dict
 
 
