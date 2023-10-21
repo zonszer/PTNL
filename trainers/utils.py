@@ -497,7 +497,7 @@ def save_outputs(train_loader, trainer, predict_label_dict, dataset_name, text_f
     if not os.path.exists('./analyze_results/{}{}/'.format(backbone_name, tag)):
         os.makedirs('./analyze_results/{}{}/'.format(backbone_name, tag))
 
-    torch.save(v_features, './analyze_results/{}{}/_v_feature.pt'.format(backbone_name, tag, dataset_name))
+    torch.save(v_features, './analyze_results/{}{}/{}_v_feature.pt'.format(backbone_name, tag, dataset_name))
     torch.save(text_features, './analyze_results/{}{}/{}_l_feature.pt'.format(backbone_name, tag, dataset_name))
     torch.save(logits_tensor, './analyze_results/{}{}/{}_logits.pt'.format(backbone_name, tag, dataset_name))
 

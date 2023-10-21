@@ -3,7 +3,7 @@ from dassl.data.data_manager import DatasetWrapper
 from dassl.data.transforms import build_transform
 from dassl.data.samplers import build_sampler
 from dassl.data.datasets import build_dataset
-from vision_benchmark.evaluation import construct_dataloader, construct_multitask_dataset
+# from vision_benchmark.evaluation import construct_dataloader, construct_multitask_dataset
 
 from torch.utils.data import DataLoader, WeightedRandomSampler
 import torch

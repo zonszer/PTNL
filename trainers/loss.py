@@ -52,7 +52,7 @@ class PLL_loss(nn.Module):
         confidence = confidence.to(self.device)
         return confidence
     
-    def forward(self, *args):
+    def forward(self, *args, reduce=True):
         """"
         x: outputs logits
         y: targets (multi-label binarized vector)
@@ -71,7 +71,9 @@ class PLL_loss(nn.Module):
             loss = self.forward_rc_plus(*args)
         else:
             raise ValueError
-        return loss.mean()
+        if reduce:
+            loss = loss.mean()
+        return loss
 
     def check_conf_update(self, images, y, index, output=None):
         if '_' in self.cfg.CONF_LOSS_TYPE or '_' in self.losstype:
@@ -212,6 +214,8 @@ class PLL_loss(nn.Module):
         """fill pools with top_pools samples for each class"""
         if pool_idxs is None:
             pool_idxs = torch.arange(0, len(self.cls_pools_dict))
+        if conf.shape[1] == 0 or outputs.shape[1] == 0:
+            return 
         not_in_pool_init = torch.ones(outputs.shape[0], dtype=torch.bool)
         all_idxs = torch.arange(0, outputs.shape[0])
 
@@ -220,8 +224,14 @@ class PLL_loss(nn.Module):
                 return 
             else:
                 this_loop_idxs = all_idxs[not_in_pool]        #torch.arange(0, output.shape[0])[not_in_pool]
-
+                # try:
                 max_val, cav_pred = torch.max(cav_logits[this_loop_idxs], dim=1)
+                # except:
+                #     print('this_loop_idxs.shape: ', this_loop_idxs.shape)
+                #     print('this_loop_idxs: ', this_loop_idxs)
+                    # print('not_in_pool: ', not_in_pool)
+                    # print('cav_logits.shape: ', cav_logits.shape)
+                    # raise ValueError
                 cls_ids = pool_idxs[cav_pred]
                 unc = self.cal_uncertainty(output[this_loop_idxs], cav_pred)      
 
@@ -285,19 +295,19 @@ class PLL_loss(nn.Module):
             self.refill_pools(indexs_all, output_all)
             
             # clean pool and calculate conf increament:
-            (not_inpool_num, safe_range_num, clean_num, 
-                        pool_unc_avgs) = self.update_conf_refine(shrink_f=0.5)
+            (info_dict, pool_unc_avgs) = self.update_conf_refine(shrink_f=0.5)
             
-            print(f'<{not_inpool_num}> samples are not in pool:,'
-                    f'<{safe_range_num}> samples are in safe range,'
-                    f'<{clean_num}> samples are cleaned')   
-            return pool_unc_avgs
+            print(f'<{info_dict["not_inpool_num"]}> samples are not in pool:,'
+                    f'<{info_dict["safe_range_num"]}> samples are in safe range,'
+                    f'<{info_dict["clean_num"]}> samples are cleaned')   
+            return pool_unc_avgs, info_dict
 
     def update_conf_refine(self, shrink_f=0.5):
         not_inpool_num = 0
         safe_range_num = 0
         clean_num = 0
         pool_unc_avgs = []
+        popped_idxs_safe = []; popped_idxs_unsafe = []
 
         for pool_id, cur_pool in self.cls_pools_dict.items():
             print(f'pool_id: {pool_id}, pool_capacity: {cur_pool.pool_capacity}')
@@ -328,7 +338,10 @@ class PLL_loss(nn.Module):
                             self.origin_labels[cur_pool.popped_idx_past[~safe_range], :]
                 safe_range_num += safe_range.sum().item()
                 clean_num += (~safe_range).sum().item()
-                
+                if self.losstype.split('_')[0] == 'rc':
+                    popped_idxs_unsafe.extend(cur_pool.popped_idx_past[~safe_range].tolist())
+                    popped_idxs_safe.extend(cur_pool.popped_idx_past[safe_range].tolist())
+
         pool_unc_avgs = torch.cat(pool_unc_avgs, dim=0)
         nan_mask = torch.isnan(pool_unc_avgs)
         idx = torch.nonzero(nan_mask)
@@ -339,7 +352,14 @@ class PLL_loss(nn.Module):
         pool_unc_norm =  - (pool_unc_avgs - min_unc) / (max_unc - min_unc) + 1.0
 
         not_inpool_num = safe_range_num + clean_num
-        return not_inpool_num, safe_range_num, clean_num, pool_unc_norm
+        info = {
+            'not_inpool_num': not_inpool_num,
+            'safe_range_num': safe_range_num,
+            'clean_num': clean_num,
+            'popped_idxs_unsafe': {idx: True for idx in popped_idxs_unsafe} if len(popped_idxs_unsafe) > 0 else {}, 
+            'popped_idxs_safe': {idx: True for idx in popped_idxs_safe} if len(popped_idxs_safe) > 0 else {},
+        }
+        return info, pool_unc_norm, 
 
 
     def clean_conf(self):

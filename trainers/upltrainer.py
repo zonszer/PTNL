@@ -479,9 +479,19 @@ class UPLTrainer(TrainerX):
             self.scaler.step(self.optim)
             self.scaler.update()
         else:
-            output, image_features, text_features = self.model(image)
+            notuse_mask = torch.zeros_like(index, dtype=torch.bool).to(self.device)
+            halfuse_mask = torch.zeros_like(index, dtype=torch.bool).to(self.device)
+            if self.criterion.losstype == 'rc_refine' and hasattr(self, 'feat_idxs_unsafe'):
+                for i, idx in enumerate(index):
+                    notuse_mask[i] = self.feat_idxs_unsafe.get(idx.item(), False)
+                    halfuse_mask[i] = self.feat_idxs_halfsafe.get(idx.item(), False)
+
+            weight = (~halfuse_mask) * (~notuse_mask) + self.cfg.TRAINER.PLL.HALF_USE_W * halfuse_mask       #full use examples weight are 1.0 and half use is 0.5, not use is 0.0
+            output, image_features, text_features = self.model(image)             # 0.5 is weight for half use examples
             # loss = self.GCE_loss(output, label)
-            loss = self.criterion(output, label, index)
+            loss = self.criterion(output, label, index, reduce=False)
+            loss = (loss * weight).mean()
+
             if self.cfg.TRAINER.PLL.USE_REGULAR:
                 loss_regular = F.cross_entropy(self.model.regular, self.model.regular_label, )
                 if hasattr(self, 'pool_unc_norm'):
@@ -1215,8 +1225,10 @@ class UPLTrainer(TrainerX):
 
             indexs_all = torch.cat(indexs_all, dim=0)
             output_all = torch.cat(output_all, dim=0)
-            pool_unc_norm = self.criterion.update_conf_epochend(indexs_all, output_all)
+            pool_unc_norm, info_dict = self.criterion.update_conf_epochend(indexs_all, output_all)
             self.pool_unc_norm = pool_unc_norm
+            self.feat_idxs_halfsafe = info_dict['popped_idxs_safe']
+            self.feat_idxs_unsafe = info_dict['popped_idxs_unsafe']
 
             for cls_idx, pool in self.criterion.cls_pools_dict.items():
                 pool.scale_pool(next_capacity=round((self.cfg.TRAINER.PLL.MAX_POOLNUM * pool_unc_norm[cls_idx]).item()))
