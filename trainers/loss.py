@@ -309,9 +309,11 @@ class PLL_loss(nn.Module):
         clean_num = 0
         pool_unc_avgs = []
         popped_idxs_safe = []; popped_idxs_unsafe = []
+        if self.losstype.split('_')[0] == 'rc':
+            shrink_f = 0.75
 
         for pool_id, cur_pool in self.cls_pools_dict.items():
-            print(f'pool_id: {pool_id}, pool_capacity: {cur_pool.pool_capacity}')
+            print(f'pool_id: {pool_id}, pool_capacity: {cur_pool.pool_capacity}/{cur_pool.pool_max_capacity}')
             if cur_pool.pool_capacity == 0:
                 pool_unc_avgs.append(torch.full((1,), torch.nan, dtype=torch.float16))
                 continue

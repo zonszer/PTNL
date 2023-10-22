@@ -90,13 +90,14 @@ USE_LABEL_FILTER=True
 # declare -a BETAS=(0.0 0.1 0.2 0.3)
 BETA=0.0
 declare -a CONF_MOMNs=(0.40 0.45 0.50)
-declare -a TOP_POOLs=(2 0)
+declare -a TOP_POOLs=(0 2)
 # declare -a MAX_POOLNUMs=(16 19)     
 declare -a DATASETs=('ssucf101')
-declare -a SAFT_FACTORs=(2.5 3.0 3.5)
+declare -a SAFT_FACTORs=(3.0)
+declare -a HALF_USE_Ws=(0.4 0.5 0.6)
 
 if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
-    declare -a MAX_POOLNUMs=(19)  
+    declare -a MAX_POOLNUMs=(16 19)  
 elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
     declare -a MAX_POOLNUMs=(16)  
 else 
@@ -122,42 +123,46 @@ do
                     do
                         for MAX_POOLNUM in "${MAX_POOLNUMs[@]}"
                         do
-                            common_id="data-${DATASET}_model-${CFG}_shots-${SHOTS}_nctx-${NCTX}_ctp-${CTP}_fp-${FP}_usePLL${use_PLL}-${PLL_partial_rate}_loss-${loss_type}_seed-${SEED}_beta-${BETA}_FILT-${USE_LABEL_FILTER}_cMomn-${CONF_MOMN}_topP-${TOP_POOL}_MAXPOOL-${MAX_POOLNUM}_safeF-${SAFT_FACTOR}"
-                            DIR=./output/${DATASET}/${TRAINER}/${CFG}_${SHOTS}shots-${TAG}/SEED${SEED}/${common_id}
-                            if [ -d "$DIR" ]; then
-                                echo "Results are available in ${DIR}. Skip this job"
-                            else
-                                echo "Run this job and save the output to ${DIR}"
-                                python upl_train.py \
-                                --root ${DATA} \
-                                --seed ${SEED} \
-                                --trainer ${TRAINER} \
-                                --dataset-config-file configs/datasets/${DATASET}.yaml \
-                                --config-file configs/trainers/${TRAINER}/${CFG}.yaml \
-                                --output-dir ${DIR} \
-                                --num-fp ${FP} \
-                                --loss_type ${loss_type} \
-                                TRAINER.UPLTrainer.N_CTX ${NCTX} \
-                                TRAINER.UPLTrainer.CSC ${CSC} \
-                                TRAINER.UPLTrainer.CLASS_TOKEN_POSITION ${CTP} \
-                                DATASET.NUM_SHOTS ${SHOTS} \
-                                DATASET.CLASS_EQULE ${CLASS_EQULE} \
-                                TEST.FINAL_MODEL best_val \
-                                TRAINER.PLL.BETA ${BETA} \
-                                TRAINER.PLL.USE_REGULAR ${USE_REGULAR} \
-                                TRAINER.PLL.USE_PLL ${use_PLL} \
-                                TRAINER.PLL.PARTIAL_RATE ${PLL_partial_rate} \
-                                TRAINER.PLL.USE_LABEL_FILTER ${USE_LABEL_FILTER} \
-                                TRAINER.PLL.CONF_MOMN ${CONF_MOMN} \
-                                TRAINER.PLL.MAX_POOLNUM ${MAX_POOLNUM} \
-                                TRAINER.PLL.SAFE_FACTOR ${SAFT_FACTOR} \
-                                TRAINER.PLL.TOP_POOLS ${TOP_POOL}
-                                
-                                ACCURACY=$(grep -A4 'Do evaluation on test set' ${DIR}/log.txt | grep 'accuracy:' | awk -F' ' '{print $3}')
-                                RECORD="id: ${common_id} ----> test * accuracy: ${ACCURACY}"
-                                echo "${RECORD}" | tee -a ${LOG_FILE}
-                                echo "${RECORD}" >> ${DIR}/log.txt
-                            fi
+                            for HALF_USE_W in "${HALF_USE_Ws[@]}"
+                            do
+                                common_id="data-${DATASET}_model-${CFG}_shots-${SHOTS}_nctx-${NCTX}_ctp-${CTP}_fp-${FP}_usePLL${use_PLL}-${PLL_partial_rate}_loss-${loss_type}_seed-${SEED}_beta-${BETA}_FILT-${USE_LABEL_FILTER}_cMomn-${CONF_MOMN}_topP-${TOP_POOL}_MAXPOOL-${MAX_POOLNUM}_safeF-${SAFT_FACTOR}_halfW-${HALF_USE_W}"
+                                DIR=./output/${DATASET}/${TRAINER}/${CFG}_${SHOTS}shots-${TAG}/SEED${SEED}/${common_id}
+                                if [ -d "$DIR" ]; then
+                                    echo "Results are available in ${DIR}. Skip this job"
+                                else
+                                    echo "Run this job and save the output to ${DIR}"
+                                    python upl_train.py \
+                                    --root ${DATA} \
+                                    --seed ${SEED} \
+                                    --trainer ${TRAINER} \
+                                    --dataset-config-file configs/datasets/${DATASET}.yaml \
+                                    --config-file configs/trainers/${TRAINER}/${CFG}.yaml \
+                                    --output-dir ${DIR} \
+                                    --num-fp ${FP} \
+                                    --loss_type ${loss_type} \
+                                    TRAINER.UPLTrainer.N_CTX ${NCTX} \
+                                    TRAINER.UPLTrainer.CSC ${CSC} \
+                                    TRAINER.UPLTrainer.CLASS_TOKEN_POSITION ${CTP} \
+                                    DATASET.NUM_SHOTS ${SHOTS} \
+                                    DATASET.CLASS_EQULE ${CLASS_EQULE} \
+                                    TEST.FINAL_MODEL best_val \
+                                    TRAINER.PLL.BETA ${BETA} \
+                                    TRAINER.PLL.USE_REGULAR ${USE_REGULAR} \
+                                    TRAINER.PLL.USE_PLL ${use_PLL} \
+                                    TRAINER.PLL.PARTIAL_RATE ${PLL_partial_rate} \
+                                    TRAINER.PLL.USE_LABEL_FILTER ${USE_LABEL_FILTER} \
+                                    TRAINER.PLL.CONF_MOMN ${CONF_MOMN} \
+                                    TRAINER.PLL.MAX_POOLNUM ${MAX_POOLNUM} \
+                                    TRAINER.PLL.SAFE_FACTOR ${SAFT_FACTOR} \
+                                    TRAINER.PLL.HALF_USE_W ${HALF_USE_W} \
+                                    TRAINER.PLL.TOP_POOLS ${TOP_POOL}
+                                    
+                                    ACCURACY=$(grep -A4 'Do evaluation on test set' ${DIR}/log.txt | grep 'accuracy:' | awk -F' ' '{print $3}')
+                                    RECORD="id: ${common_id} ----> test * accuracy: ${ACCURACY}"
+                                    echo "${RECORD}" | tee -a ${LOG_FILE}
+                                    echo "${RECORD}" >> ${DIR}/log.txt
+                                fi
+                            done
                         done
                     done
                 done
