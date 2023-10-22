@@ -224,14 +224,7 @@ class PLL_loss(nn.Module):
                 return 
             else:
                 this_loop_idxs = all_idxs[not_in_pool]        #torch.arange(0, output.shape[0])[not_in_pool]
-                # try:
                 max_val, cav_pred = torch.max(cav_logits[this_loop_idxs], dim=1)
-                # except:
-                #     print('this_loop_idxs.shape: ', this_loop_idxs.shape)
-                #     print('this_loop_idxs: ', this_loop_idxs)
-                    # print('not_in_pool: ', not_in_pool)
-                    # print('cav_logits.shape: ', cav_logits.shape)
-                    # raise ValueError
                 cls_ids = pool_idxs[cav_pred]
                 unc = self.cal_uncertainty(output[this_loop_idxs], cav_pred)      
 
@@ -251,57 +244,63 @@ class PLL_loss(nn.Module):
         recursion(top_pools, outputs, conf, not_in_pool_init, all_idxs)
 
 
-    def refill_pools(self, indexs_all, output_all):
+    def refill_pools(self, indexs_all, output_all, refill_stepsize=None):
         popped_idxs = []
         pool_not_full = torch.zeros(len(self.cls_pools_dict), dtype=torch.bool)
+        stepsize_per_pool = ((self.MAX_POOLNUM - refill_stepsize) / self.cfg.TOP_POOLS).type(torch.int64)       #TODO check it should be float here. HACK this function is not used yet
 
-        for pool_id, cur_pool in self.cls_pools_dict.items():
-            if cur_pool.popped_idx.shape[0] > 0:
-                popped_idx, popped_unc = cur_pool.pop_notinpool_items()
-                popped_idxs.append(popped_idx)
+        for j in range(self.cfg.TOP_POOLS):
+            for pool_id, cur_pool in self.cls_pools_dict.items():
+                if cur_pool.popped_idx.shape[0] > 0:
+                    popped_idx, popped_unc = cur_pool.pop_notinpool_items()
+                    popped_idxs.append(popped_idx)
 
-            if cur_pool.pool_capacity < cur_pool.pool_max_capacity:
-                pool_not_full[pool_id] = True
+                if cur_pool.pool_capacity < self.MAX_POOLNUM:       #pool_not_full inculde cur_pool.pool_capacity < cur_pool.pool_max_capacity AND cur_pool.pool_capacity = cur_pool.pool_max_capacity but < self.MAX_POOLNUM
+                    pool_not_full[pool_id] = True
             
-        popped_idxs = torch.cat(popped_idxs, dim=0)
-        sort_idxs = torch.argsort(indexs_all)       #output_all[sort_idxs] is the data original order
-        not_full_idxs = torch.where(pool_not_full == True)[0]
-        popped_output = output_all[sort_idxs][popped_idxs.unsqueeze(1), not_full_idxs.unsqueeze(0)]
-        popped_labels = self.origin_labels[popped_idxs.unsqueeze(1), not_full_idxs.unsqueeze(0)]
-        conf = self.cal_pred_conf(popped_output, popped_labels, conf_type='cav')
+            popped_idxs = torch.cat(popped_idxs, dim=0)
+            sort_idxs = torch.argsort(indexs_all)       #output_all[sort_idxs] is the data original order
+            not_full_idxs = torch.where(pool_not_full == True)[0]
+            not_full_stepsize = stepsize_per_pool[not_full_idxs]            #TODO check here
+            popped_output = output_all[sort_idxs][popped_idxs.unsqueeze(1), not_full_idxs.unsqueeze(0)]
+            popped_labels = self.origin_labels[popped_idxs.unsqueeze(1), not_full_idxs.unsqueeze(0)]
+            conf = self.cal_pred_conf(popped_output, popped_labels, conf_type='cav')
+
+            for i, pool_id in enumerate(not_full_idxs.tolist()):
+                cur_pool = self.cls_pools_dict[pool_id]
+                cur_pool.freeze_stored_items(refill_max_cap=self.MAX_POOLNUM, refill_stepsize=not_full_stepsize[i].item())
+
+            self.fill_pools(conf, popped_output, popped_idxs, 
+                                        top_pools=1, 
+                                        record_notinpool=True, 
+                                        pool_idxs=not_full_idxs)
+            
+            for pool_id in not_full_idxs.tolist():
+                cur_pool = self.cls_pools_dict[pool_id]
+                cur_pool.unfreeze_stored_items()
 
         for pool_id in not_full_idxs.tolist():
             cur_pool = self.cls_pools_dict[pool_id]
-            cur_pool.freeze_stored_items()
-
-        self.fill_pools(conf, popped_output, popped_idxs, 
-                                    top_pools=self.cfg.TOP_POOLS, 
-                                    record_notinpool=True, 
-                                    pool_idxs=not_full_idxs)
-        
-        for pool_id in not_full_idxs.tolist():
-            cur_pool = self.cls_pools_dict[pool_id]
-            cur_pool.unfreeze_stored_items()
             cur_pool.recalculate_unc(logits_all=output_all[sort_idxs], criterion=self.cal_uncertainty)
 
 
     @torch.no_grad()
-    def update_conf_epochend(self, indexs_all, output_all):      # shrink_f larger means val of unc_norm has larger effect on momn
+    def update_conf_epochend(self, indexs_all, output_all, pool_cur_capacity):      # shrink_f larger means val of unc_norm has larger effect on momn
         info_dict = {}
-        pool_unc_avgs = None
+        pools_certainty_norm = None
         if 'refine' in self.losstype:
             print('update conf_refine at epoch end:')
             # pop items not in pools and fill the remained pools:
-            self.refill_pools(indexs_all, output_all)
+            self.refill_pools(indexs_all, output_all, refill_stepsize=pool_cur_capacity)
             
             # clean pool and calculate conf increament:
-            (info_dict, pool_unc_avgs) = self.update_conf_refine(shrink_f=0.5)
+            (info_dict, pools_certainty_norm) = self.update_conf_refine(shrink_f=0.5)
             
             print(f'<{info_dict["not_inpool_num"]}> samples are not in pool:,'
                     f'<{info_dict["safe_range_num"]}> samples are in safe range,'
                     f'<{info_dict["clean_num"]}> samples are cleaned')   
             
-        return pool_unc_avgs, info_dict
+        return pools_certainty_norm, info_dict
 
     def update_conf_refine(self, shrink_f=0.5):
         not_inpool_num = 0

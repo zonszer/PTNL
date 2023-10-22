@@ -78,7 +78,7 @@ class ClassLabelPool:
             pass
         return
 
-    def freeze_stored_items(self):
+    def freeze_stored_items(self, refill_max_cap, refill_stepsize, refill_strategy='uniform'):         #until_full     #uniform
         """
         Freeze the current items in pool. NOTE this method should only be called when the pool is not full.
         which means self.popped_idx.shape[0] is 0
@@ -87,12 +87,21 @@ class ClassLabelPool:
         self.pool_unc_past = self.pool_unc
         self.pool_idx_past = self.pool_idx
 
+        # to_fill_num = refill_stepsize
+        if refill_strategy == 'uniform':
+            to_fill_num = min(2, refill_max_cap - self.pool_max_capacity)
+        # if refill_strategy == 'until_full':
+        #     to_fill_num = refill_maxnum - self.pool_max_capacity
+        # elif refill_strategy == '+half':
+        #     to_fill_num = min(int(self.pool_capacity / 2), refill_maxnum - self.pool_max_capacity)
+        assert refill_max_cap >= self.pool_max_capacity + to_fill_num           #the margin condiction  TODO check here
+
         # reset the pool：
         self.pool_idx = torch.LongTensor([])
         self.pool_unc = torch.Tensor([]).type(self.unc_dtype).to(self.device)
         self.popped_idx = torch.LongTensor([])
         self.popped_unc = torch.Tensor([]).type(self.unc_dtype).to(self.device)
-        self.pool_max_capacity = self.pool_max_capacity - self.pool_capacity
+        self.pool_max_capacity = to_fill_num    # the unfilled num of past loop + the to_fill_num of the next loop
         self.pool_capacity = 0
         self.unc_max = 1e-10
 
@@ -108,7 +117,7 @@ class ClassLabelPool:
         self.pool_idx = torch.cat((self.pool_idx_past, self.pool_idx), dim=0)
 
         # reset the pool：
-        self.pool_max_capacity = self.pool_max_capacity + self.pool_idx_past.shape[0]
+        self.pool_max_capacity = self.pool_idx_past.shape[0]
         self.pool_capacity = self.pool_idx.shape[0]
         self.unc_max = None
         self.pool_unc_past = None
@@ -145,6 +154,7 @@ class ClassLabelPool:
         self.popped_unc = torch.Tensor([]).type(self.popped_unc.dtype).to(self.popped_unc.device)
 
         return self.popped_idx_past, self.popped_unc_past
+
 
     def update(self, feat_idx: torch.LongTensor, feat_unc: torch.Tensor, record_popped=True):
         """
@@ -224,7 +234,7 @@ def get_regular_weight(class_acc, beta_median:float) -> np.ndarray:
     #     if match:
     #         acc_value = float(match.group(1))
     #         acc_values.append(acc_value)
-    acc_array = class_acc.half
+    acc_array = class_acc.half()
     acc_array_ = -(beta_median / torch.median(acc_array)) * acc_array 
     beta_ = acc_array_ + (-acc_array_.min()-acc_array_.max())
     return beta_
