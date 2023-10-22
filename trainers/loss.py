@@ -287,9 +287,9 @@ class PLL_loss(nn.Module):
 
     @torch.no_grad()
     def update_conf_epochend(self, indexs_all, output_all):      # shrink_f larger means val of unc_norm has larger effect on momn
-        if 'refine' not in self.losstype:
-            return 
-        else:
+        info_dict = {}
+        pool_unc_avgs = None
+        if 'refine' in self.losstype:
             print('update conf_refine at epoch end:')
             # pop items not in pools and fill the remained pools:
             self.refill_pools(indexs_all, output_all)
@@ -300,7 +300,8 @@ class PLL_loss(nn.Module):
             print(f'<{info_dict["not_inpool_num"]}> samples are not in pool:,'
                     f'<{info_dict["safe_range_num"]}> samples are in safe range,'
                     f'<{info_dict["clean_num"]}> samples are cleaned')   
-            return pool_unc_avgs, info_dict
+            
+        return pool_unc_avgs, info_dict
 
     def update_conf_refine(self, shrink_f=0.5):
         not_inpool_num = 0

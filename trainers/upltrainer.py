@@ -1227,12 +1227,13 @@ class UPLTrainer(TrainerX):
             output_all = torch.cat(output_all, dim=0)
             pool_unc_norm, info_dict = self.criterion.update_conf_epochend(indexs_all, output_all)
             self.pool_unc_norm = pool_unc_norm
-            self.feat_idxs_halfsafe = info_dict['popped_idxs_safe']
-            self.feat_idxs_unsafe = info_dict['popped_idxs_unsafe']
+            self.feat_idxs_halfsafe = info_dict.get('popped_idxs_safe', None)
+            self.feat_idxs_unsafe = info_dict.get('popped_idxs_unsafe', None)
 
-            for cls_idx, pool in self.criterion.cls_pools_dict.items():
-                pool.scale_pool(next_capacity=round((self.cfg.TRAINER.PLL.MAX_POOLNUM * pool_unc_norm[cls_idx]).item()))
-                pool.reset()
+            if hasattr(self.criterion, 'cls_pools_dict'):
+                for cls_idx, pool in self.criterion.cls_pools_dict.items():
+                    pool.scale_pool(next_capacity=round((self.cfg.TRAINER.PLL.MAX_POOLNUM * pool_unc_norm[cls_idx]).item()))
+                    pool.reset()
                     
         if self.epoch > 0:            #self.epoch start from 0
             if self.cfg.TRAINER.PLL.USE_PLL:

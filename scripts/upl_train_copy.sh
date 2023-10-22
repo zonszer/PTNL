@@ -5,9 +5,12 @@ cd ..
 # custom config
 DATA=./data
 TRAINER=UPLTrainer
-exp_ID="10.16-test_cc_refine_ep100_recursion"    #NOTE +time
+exp_ID="10.22-test_rc_refine_ep100"    #NOTE +time
 # TODO: 
-#1. test loss min and beta for rc and cc
+#1. change oonf clean threshold and set safe factor and range
+#10.19-test_cc_refine_ep100_safe&clean2
+# rememberi it use tfm_test now 10.19
+
 
 # TAG=$(date +"%m-%d_%H-%M-%S")   # get current time stamp
 TAG="${exp_ID}"      
@@ -82,68 +85,80 @@ TAG=$TAG # log tag (multiple_models_random_init or rn50_random_init)
 # done
 
 #---------------------------individual settings: ---------------------------
-USE_REGULAR=True     #add 2
+USE_REGULAR=False     #add 2
 USE_LABEL_FILTER=True
-TEMPERATURE=1.0
-LOSS_MIN=0.0
 # declare -a BETAS=(0.0 0.1 0.2 0.3)
 BETA=0.0
-# declare -a LOSS_MINs=(0.0)
-declare -a CONF_MOMNs=(0.97)
-declare -a TOP_POOLs=(1)
-declare -a MAX_POOLNUMs=(16)
+declare -a CONF_MOMNs=(0.40 0.45 0.50)
+declare -a TOP_POOLs=(2 0)
+# declare -a MAX_POOLNUMs=(16 19)     
+declare -a DATASETs=('ssucf101')
+declare -a SAFT_FACTORs=(2.5 3.0 3.5)
+
+if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
+    declare -a MAX_POOLNUMs=(19)  
+elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
+    declare -a MAX_POOLNUMs=(16)  
+else 
+    echo "Invalid rate for MAX_POOLNUMs, rate is: $rate"
+fi
+
+
+# declare -a SHRINK_FACTORs=(0.5 0.3 0.7)
 
 
 for SEED in {1..3}
 do
-    for DATASET in 'ssucf101' 'ssoxford_pets'
+    for DATASET in "${DATASETs[@]}"
     do
         LOG_FILE="logs_scripts/log_${TAG}_${DATASET}.txt"
-        for loss_type in 'cc' 'rc_refine'
+        for loss_type in 'rc_refine'
         do
             for TOP_POOL in "${TOP_POOLs[@]}"
             do
                 for CONF_MOMN in "${CONF_MOMNs[@]}"
                 do
-                    for MAX_POOLNUM in "${MAX_POOLNUMs[@]}"
+                    for SAFT_FACTOR in "${SAFT_FACTORs[@]}"
                     do
-                        common_id="data-${DATASET}_model-${CFG}_shots-${SHOTS}_nctx-${NCTX}_ctp-${CTP}_fp-${FP}_usePLL${use_PLL}-${PLL_partial_rate}_loss-${loss_type}_seed-${SEED}_beta-${BETA}_FILT-${USE_LABEL_FILTER}_T-${TEMPERATURE}_cMomn-${CONF_MOMN}_topP-${TOP_POOL}_MAXPOOL-${MAX_POOLNUM}"
-                        DIR=./output/${DATASET}/${TRAINER}/${CFG}_${SHOTS}shots-${TAG}/SEED${SEED}/${common_id}
-                        if [ -d "$DIR" ]; then
-                            echo "Results are available in ${DIR}. Skip this job"
-                        else
-                            echo "Run this job and save the output to ${DIR}"
-                            python upl_train.py \
-                            --root ${DATA} \
-                            --seed ${SEED} \
-                            --trainer ${TRAINER} \
-                            --dataset-config-file configs/datasets/${DATASET}.yaml \
-                            --config-file configs/trainers/${TRAINER}/${CFG}.yaml \
-                            --output-dir ${DIR} \
-                            --num-fp ${FP} \
-                            --loss_type ${loss_type} \
-                            TRAINER.UPLTrainer.N_CTX ${NCTX} \
-                            TRAINER.UPLTrainer.CSC ${CSC} \
-                            TRAINER.UPLTrainer.CLASS_TOKEN_POSITION ${CTP} \
-                            DATASET.NUM_SHOTS ${SHOTS} \
-                            DATASET.CLASS_EQULE ${CLASS_EQULE} \
-                            TEST.FINAL_MODEL best_val \
-                            TRAINER.PLL.BETA ${BETA} \
-                            TRAINER.PLL.USE_REGULAR ${USE_REGULAR} \
-                            TRAINER.PLL.USE_PLL ${use_PLL} \
-                            TRAINER.PLL.PARTIAL_RATE ${PLL_partial_rate} \
-                            TRAINER.PLL.LOSS_MIN ${LOSS_MIN} \
-                            TRAINER.PLL.USE_LABEL_FILTER ${USE_LABEL_FILTER} \
-                            TRAINER.PLL.CONF_MOMN ${CONF_MOMN} \
-                            TRAINER.PLL.TEMPERATURE ${TEMPERATURE} \
-                            TRAINER.PLL.MAX_POOLNUM ${MAX_POOLNUM} \
-                            TRAINER.PLL.TOP_POOLS ${TOP_POOL}
-                            
-                            ACCURACY=$(grep -A4 'Do evaluation on test set' ${DIR}/log.txt | grep 'accuracy:' | awk -F' ' '{print $3}')
-                            RECORD="id: ${common_id} ----> test * accuracy: ${ACCURACY}"
-                            echo "${RECORD}" | tee -a ${LOG_FILE}
-                            echo "${RECORD}" >> ${DIR}/log.txt
-                        fi
+                        for MAX_POOLNUM in "${MAX_POOLNUMs[@]}"
+                        do
+                            common_id="data-${DATASET}_model-${CFG}_shots-${SHOTS}_nctx-${NCTX}_ctp-${CTP}_fp-${FP}_usePLL${use_PLL}-${PLL_partial_rate}_loss-${loss_type}_seed-${SEED}_beta-${BETA}_FILT-${USE_LABEL_FILTER}_cMomn-${CONF_MOMN}_topP-${TOP_POOL}_MAXPOOL-${MAX_POOLNUM}_safeF-${SAFT_FACTOR}"
+                            DIR=./output/${DATASET}/${TRAINER}/${CFG}_${SHOTS}shots-${TAG}/SEED${SEED}/${common_id}
+                            if [ -d "$DIR" ]; then
+                                echo "Results are available in ${DIR}. Skip this job"
+                            else
+                                echo "Run this job and save the output to ${DIR}"
+                                python upl_train.py \
+                                --root ${DATA} \
+                                --seed ${SEED} \
+                                --trainer ${TRAINER} \
+                                --dataset-config-file configs/datasets/${DATASET}.yaml \
+                                --config-file configs/trainers/${TRAINER}/${CFG}.yaml \
+                                --output-dir ${DIR} \
+                                --num-fp ${FP} \
+                                --loss_type ${loss_type} \
+                                TRAINER.UPLTrainer.N_CTX ${NCTX} \
+                                TRAINER.UPLTrainer.CSC ${CSC} \
+                                TRAINER.UPLTrainer.CLASS_TOKEN_POSITION ${CTP} \
+                                DATASET.NUM_SHOTS ${SHOTS} \
+                                DATASET.CLASS_EQULE ${CLASS_EQULE} \
+                                TEST.FINAL_MODEL best_val \
+                                TRAINER.PLL.BETA ${BETA} \
+                                TRAINER.PLL.USE_REGULAR ${USE_REGULAR} \
+                                TRAINER.PLL.USE_PLL ${use_PLL} \
+                                TRAINER.PLL.PARTIAL_RATE ${PLL_partial_rate} \
+                                TRAINER.PLL.USE_LABEL_FILTER ${USE_LABEL_FILTER} \
+                                TRAINER.PLL.CONF_MOMN ${CONF_MOMN} \
+                                TRAINER.PLL.MAX_POOLNUM ${MAX_POOLNUM} \
+                                TRAINER.PLL.SAFE_FACTOR ${SAFT_FACTOR} \
+                                TRAINER.PLL.TOP_POOLS ${TOP_POOL}
+                                
+                                ACCURACY=$(grep -A4 'Do evaluation on test set' ${DIR}/log.txt | grep 'accuracy:' | awk -F' ' '{print $3}')
+                                RECORD="id: ${common_id} ----> test * accuracy: ${ACCURACY}"
+                                echo "${RECORD}" | tee -a ${LOG_FILE}
+                                echo "${RECORD}" >> ${DIR}/log.txt
+                            fi
+                        done
                     done
                 done
             done

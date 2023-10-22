@@ -50,9 +50,11 @@ def formatting_data(data_dict):
 #log_10.16-test_cc_refine_ep100_recursion_ssucf101.txt  --> not zero so much not in pool+ output use bef_output)
 #log_10.16-test_cc_refine_ep100_recursion_nozeroconf_ssucf101.txt --> not zero not in pool
 #log_10.18-test_cc_refine_ep100_usenotinpool2_ssucf101.txt --> utilize not in pool by origin_label + temp_pred increment
+#after 10.20:
+#log_10.22-test_rc_refine_ep100_ssucf101.txt --> test rc_reine with weight of unsafe and safe
 
 # data_dict = extract_info('log_10-04_14-06-35_ssoxford_pets.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssoxford_pets.txt
-data_dict_new = extract_info('log_10.18-test_cc_refine_ep100_usenotinpool2_ssucf101.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
+data_dict_new = extract_info('log_10.22-test_rc_refine_ep100_ssucf101.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
 data_dict_old = extract_info('log_10-04_17-35-17_ssucf101-contain-no-beta.txt')      #contain-no-beta is baseline
 data_dict_new = formatting_data(data_dict_new)
 data_dict_old = formatting_data(data_dict_old)
@@ -101,11 +103,11 @@ change = "(df['change']=='new')"
 # loss = "(df['loss']=='cc') "
 # loss = "(df['loss']=='rc cav')"
 # beta = "(df['beta']=='0.0')"
-PLL_ratio = "(df['usePLLTrue']=='0.1')"
+PLL_ratio = "(df['usePLLTrue']=='0.3')"
 # Iepoch = "(df['Iepoch']=='1') | (df['Iepoch'].isna())" 
 # seed = "(~((df['seed']=='3') & (df['loss']=='rc cav') & (df['usePLLTrue']=='0.3')))"
-seed = "(df['seed']!='3')"
-select_condiction =   PLL_ratio  + '&' + change + '&' + seed
+# seed = "(df['seed']!='3')"
+select_condiction =   PLL_ratio  + '&' + change     #+ '&' + seed
 
 if select_condiction == 'None':
     selected_rows = df
@@ -114,7 +116,7 @@ else:
 #----------------------settings----------------------
 
 # Group by Variables
-grouped_vars = ["cMomn", "MAXPOOL",  "shrinkF"]        
+grouped_vars = ["cMomn", "MAXPOOL",  "safeF"]        
 compar_var = 'accuracy'
 grouped_data = selected_rows.groupby(grouped_vars)[compar_var].mean().reset_index()
 # Convert the "usePLLTrue" column to float
