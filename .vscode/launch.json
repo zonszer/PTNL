@@ -59,7 +59,7 @@
           "console": "integratedTerminal",
           "justMyCode": false,
           "env": {
-            "CUDA_VISIBLE_DEVICES": "0"
+            "CUDA_VISIBLE_DEVICES": "2"
           },
           "args": [
             "--root=./data",
@@ -67,7 +67,7 @@
             "--trainer=UPLTrainer",
             "--dataset-config-file=configs/datasets/ssucf101.yaml",
             "--config-file=configs/trainers/UPLTrainer/rn50_ep50.yaml",
-            "--output-dir=./output/ssucf101/UPLTrainer/rn50_ep50_16shots-10.20-debug/10.20-debug_doublecheck21",
+            "--output-dir=./output/ssucf101/UPLTrainer/rn50_ep50_16shots-10.20-debug/10.22-debug25",
             "--num-fp=0",
             "--loss_type=rc_refine",
             "TRAINER.UPLTrainer.N_CTX",
@@ -83,7 +83,7 @@
             "TRAINER.PLL.USE_PLL",
             "True",
             "TRAINER.PLL.PARTIAL_RATE",
-            "0.3",
+            "0.1",
             "TRAINER.PLL.BETA",
             "0.0",
             "TEST.FINAL_MODEL",
@@ -92,14 +92,14 @@
             "True",
             "TRAINER.PLL.TEMPERATURE",
             "1.0",
-            // "TRAINER.PLL.INIT_EPOCH",
-            // "0",
+            "TRAINER.PLL.INIT_EPOCH",
+            "1",
             "TRAINER.PLL.CONF_MOMN",
-            "0.99",
+            "0.4",
             "TRAINER.PLL.TOP_POOLS",
-            "2",
+            "100",
             "TRAINER.PLL.MAX_POOLNUM",
-            "16",
+            "8",
             "TRAINER.PLL.USE_REGULAR",    //2
             "False",
             "TRAINER.PLL.HALF_USE_W",

@@ -51,7 +51,11 @@ def formatting_data(data_dict):
 #log_10.16-test_cc_refine_ep100_recursion_nozeroconf_ssucf101.txt --> not zero not in pool
 #log_10.18-test_cc_refine_ep100_usenotinpool2_ssucf101.txt --> utilize not in pool by origin_label + temp_pred increment
 #after 10.20:
-#log_10.22-test_rc_refine_ep100_ssucf101.txt --> test rc_reine with weight of unsafe and safe
+#log_10.22-test_rc_refine_ep100_ssucf101.txt --> test rc_reine with weight of unsafe and safe ( modify rc use momn which is smilar to cc_refine strategy)
+
+#rc_refine:
+#log_10.23-test_rc_refine_ep100_refillloop_1_ssucf101.txt --> test rc_reine with a loop of refill(top_pool=100) until each pool cap reaches a certain number
+
 
 # data_dict = extract_info('log_10-04_14-06-35_ssoxford_pets.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssoxford_pets.txt
 data_dict_new = extract_info('log_10.22-test_rc_refine_ep100_ssucf101.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
