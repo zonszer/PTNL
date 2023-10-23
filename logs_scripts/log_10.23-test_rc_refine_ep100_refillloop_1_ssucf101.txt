@@ -71,3 +71,4 @@ id: data-ssucf101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_
 id: data-ssucf101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-rc_refine_seed-2_beta-0.0_FILT-True_cMomn-1.0_topP-100_MAXPOOL-10_safeF-1.0_initE-0 ----> test * accuracy: 74.04%
 id: data-ssucf101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-rc_refine_seed-2_beta-0.0_FILT-True_cMomn-1.0_topP-100_MAXPOOL-10_safeF-1.0_initE-20 ----> test * accuracy: 75.28%
 id: data-ssucf101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_refine_seed-2_beta-0.0_FILT-True_cMomn-1.0_topP-100_MAXPOOL-10_safeF-1.0_initE-0 ----> test * accuracy: 72.32%
+id: data-ssucf101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_refine_seed-2_beta-0.0_FILT-True_cMomn-1.0_topP-100_MAXPOOL-10_safeF-1.0_initE-20 ----> test * accuracy: 70.92%
