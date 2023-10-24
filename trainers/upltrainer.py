@@ -339,7 +339,7 @@ class UPLTrainer(TrainerX):
 
     def build_loss(self):
         if self.cfg.TRAINER.LOSS_TYPE == 'CE':
-            criterion = torch.nn.CrossEntropyLoss()
+            criterion = torch.nn.CrossEntropyLoss(reduction='none')
             criterion.cfg = self.cfg.TRAINER.PLL
         else:
             if hasattr(self, 'partialY') and self.partialY != None:
@@ -481,7 +481,7 @@ class UPLTrainer(TrainerX):
         else:
             notuse_mask = torch.zeros_like(index, dtype=torch.bool).to(self.device)
             halfuse_mask = torch.zeros_like(index, dtype=torch.bool).to(self.device)
-            if self.criterion.losstype == 'rc_refine' and hasattr(self, 'feat_idxs_unsafe'):
+            if hasattr(self.criterion, 'losstype') and self.criterion.losstype == 'rc_refine' and hasattr(self, 'feat_idxs_unsafe'):
                 for i, idx in enumerate(index):
                     notuse_mask[i] = self.feat_idxs_unsafe.get(idx.item(), False)
                     halfuse_mask[i] = self.feat_idxs_halfsafe.get(idx.item(), False)
@@ -489,7 +489,7 @@ class UPLTrainer(TrainerX):
             weight = (~halfuse_mask) * (~notuse_mask) + self.cfg.TRAINER.PLL.HALF_USE_W * halfuse_mask       #full use examples weight are 1.0 and half use is 0.5, not use is 0.0
             output, image_features, text_features = self.model(image)             # 0.5 is weight for half use examples
             # loss = self.GCE_loss(output, label)
-            loss = self.criterion(output, label, index, reduce=False)
+            loss = self.criterion(output, label, index)
             loss = (loss * weight).mean()
 
             if self.cfg.TRAINER.PLL.USE_REGULAR:
@@ -1205,6 +1205,9 @@ class UPLTrainer(TrainerX):
 
     @torch.no_grad()
     def before_epoch(self):
+        if not hasattr(self.criterion, 'losstype') or self.criterion.losstype == 'cc':
+            return
+
         if self.epoch == 0:            #self.epoch start from 0
             if 'refine' in self.criterion.losstype:
                 self.criterion.cls_pools_dict = self.init_cls_pools(split="train")

@@ -52,9 +52,11 @@ def formatting_data(data_dict):
 #log_10.18-test_cc_refine_ep100_usenotinpool2_ssucf101.txt --> utilize not in pool by origin_label + temp_pred increment
 #after 10.20:
 #log_10.22-test_rc_refine_ep100_ssucf101.txt --> test rc_reine with weight of unsafe and safe
-
+# log_10.20-test_cc_refine_ep100_refillpool2_ssucf101.txt --> refill the pool only once, but for cc_refine   (best on ssucf so far)
+#log_10.23-retest_rc_refine_ep100_1refill_ssucf101.txt -->  retest refill the pool only once(but with cav_conf rather than momn), also with weight of unsafe and safe (best on ssucf so far)
+#log_10.24-retest_rc_refine_ep100_1refill_ssdtd.txt --> test rc_refine on dtd dataset
 # data_dict = extract_info('log_10-04_14-06-35_ssoxford_pets.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssoxford_pets.txt
-data_dict_new = extract_info('log_10.22-test_rc_refine_ep100_ssucf101.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
+data_dict_new = extract_info('log_10.24-retest_rc_refine_ep100_1refill_ssdtd.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
 data_dict_old = extract_info('log_10-04_17-35-17_ssucf101-contain-no-beta.txt')      #contain-no-beta is baseline
 data_dict_new = formatting_data(data_dict_new)
 data_dict_old = formatting_data(data_dict_old)
@@ -86,6 +88,54 @@ df_new.loc[:, "change"] = 'new'
 df = pd.concat([df_new, df_old])
 print('len df:', len(df))
 
+#%% NOTE: check the lost experiment settings:
+import itertools
+
+def generate_all_combinations(df):
+    # Get all unique values for each parameter
+    unique_values = {col: df[col].unique() for col in df.columns if col != 'accuracy'}
+    
+    # Generate all combinations
+    all_combinations = list(itertools.product(*unique_values.values())) 
+    
+    return all_combinations
+
+def check_missing_experiments(df):
+    all_combinations = generate_all_combinations(df)
+    missing_experiments = []
+    for comb in all_combinations:
+        if list(comb) not in df.drop(columns='accuracy').values.tolist():
+            missing_experiments.append(comb)
+    missing_df = pd.DataFrame(missing_experiments, columns=df.columns.drop('accuracy'))
+    missing_df['accuracy'] = float('NaN')
+    return missing_df
+
+def generate_exp_id(row):
+    id_parts = []
+    for col in row.index:
+        if col != 'accuracy' and col != 'change':
+            id_parts.append(f"{col}-{row[col]}")
+    id_str = "id: " + "_".join(id_parts)
+    id_str = id_str.replace('rn50ep50', 'rn50_ep50')
+    id_str = id_str.replace('rn50ep100', 'rn50_ep100')
+    id_str = id_str.replace('rn50ep200', 'rn50_ep200')
+    id_str = id_str.replace('ssoxfordpets', 'ssoxford_pets')
+    id_str = id_str.replace('loss-rc cav', 'loss-rc_cav')
+    id_str = id_str.replace('loss-rc refine', 'loss-rc_refine')
+    id_str = id_str.replace('loss-cc refine', 'loss-cc_refine')
+    id_str = id_str.replace('loss-cc rc', 'loss-cc_rc')
+    id_str = id_str.replace('loss-rc rc', 'loss-rc_rc')
+    return id_str
+
+
+# Filter the DataFrame
+filtered_df = df[df['change'] == 'new']
+# Check for missing experiments
+missing_experiments_df = check_missing_experiments(filtered_df)
+# Check for missing experiments
+print('len missing_experiments:', len(missing_experiments_df))
+missing_exp_ids = missing_experiments_df.apply(generate_exp_id, axis=1).tolist()
+
 # Now you can continue with the rest of your code as before, 
 # modifying the variables to match the hyperparameters in your DataFrame
 #%%
@@ -104,10 +154,23 @@ change = "(df['change']=='new')"
 # loss = "(df['loss']=='rc cav')"
 # beta = "(df['beta']=='0.0')"
 PLL_ratio = "(df['usePLLTrue']=='0.3')"
+
+# 1. for test rc_refine: -- > grouped_vars = ["safeF", "halfW", "topP"]  
+MAXPOOL	= "(df['MAXPOOL']=='16')"
+# topP = "(df['topP']=='2')"
+
+# 2. for test cc_refine: -->["safeF", "cMomn", "topP"]     
+# cMomn = "(df['cMomn']=='0.99')"
+# topP = "(df['topP']=='2')"
+# MAXPOOL	= "(df['MAXPOOL']=='16')"
+
+# halfW = "(df['halfW']=='0.5')"
+# safeF = "(df['safeF']=='0.5')"
+# topP = "(df['topP']=='2')"
 # Iepoch = "(df['Iepoch']=='1') | (df['Iepoch'].isna())" 
 # seed = "(~((df['seed']=='3') & (df['loss']=='rc cav') & (df['usePLLTrue']=='0.3')))"
 # seed = "(df['seed']!='3')"
-select_condiction =   PLL_ratio  + '&' + change     #+ '&' + seed
+select_condiction =   PLL_ratio  + '&' + change  +'&' + MAXPOOL
 
 if select_condiction == 'None':
     selected_rows = df
@@ -116,7 +179,7 @@ else:
 #----------------------settings----------------------
 
 # Group by Variables
-grouped_vars = ["cMomn", "MAXPOOL",  "safeF"]        
+grouped_vars = ["halfW", "safeF", "topP"]         
 compar_var = 'accuracy'
 grouped_data = selected_rows.groupby(grouped_vars)[compar_var].mean().reset_index()
 # Convert the "usePLLTrue" column to float

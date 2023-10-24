@@ -5,7 +5,7 @@ cd ..
 # custom config
 DATA=./data
 TRAINER=UPLTrainer
-exp_ID="10.20-test_cc_refine_ep100_refillpool2"    #NOTE +time
+exp_ID="10.24-test_cc_refine_ep100_1refill"    #NOTE +time
 # TODO: 
 #1. change oonf clean threshold and set safe factor and range
 #10.19-test_cc_refine_ep100_safe&clean2
@@ -90,11 +90,19 @@ USE_LABEL_FILTER=True
 # declare -a BETAS=(0.0 0.1 0.2 0.3)
 BETA=0.0
 declare -a CONF_MOMNs=(0.95 0.97 0.99)
-declare -a TOP_POOLs=(2 5)
-declare -a MAX_POOLNUMs=(12 16)
-declare -a DATASETs=('ssucf101')
+declare -a TOP_POOLs=(2 4)
+# declare -a MAX_POOLNUMs=(14 16)
+declare -a DATASETs=('ssdtd')
 declare -a SAFT_FACTORs=(3.5 4.0 5.0)
 # declare -a SHRINK_FACTORs=(0.5 0.3 0.7)
+
+if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
+    declare -a MAX_POOLNUMs=(16)  
+elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
+    declare -a MAX_POOLNUMs=(14)  
+else 
+    echo "Invalid rate for MAX_POOLNUMs"
+fi
 
 
 for SEED in {1..3}

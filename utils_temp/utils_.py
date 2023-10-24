@@ -184,10 +184,14 @@ class ClassLabelPool:
         return in_pool
 
     def __str__(self):
-        str_ = ''
+        str_ = f'pool_id: {self.cls_id}, '
         if hasattr(self, 'unc_avg'):
             str_ += f"unc_avg: {self.unc_avg:.4f}, "
-        return str_ + f"unc_max: {self.unc_max:.4f}, pool_capacity: {self.pool_capacity}/{self.pool_max_capacity}"
+        if self.unc_max != None:
+            str_ += f"unc_max: {self.unc_max:.4f}, "
+        else:
+            str_ += f"unc_max: None, "
+        return str_ + f"pool_capacity: {self.pool_capacity}/{self.pool_max_capacity}"
     
 
 

@@ -67,9 +67,9 @@
             "--trainer=UPLTrainer",
             "--dataset-config-file=configs/datasets/ssucf101.yaml",
             "--config-file=configs/trainers/UPLTrainer/rn50_ep50.yaml",
-            "--output-dir=./output/ssucf101/UPLTrainer/rn50_ep50_16shots-10.20-debug/10.20-debug_doublecheck21",
+            "--output-dir=./output/ssucf101/UPLTrainer/rn50_ep50_16shots-10.24-debug/10.24-debug_doublecheck_",
             "--num-fp=0",
-            "--loss_type=rc_refine",
+            "--loss_type=cc",
             "TRAINER.UPLTrainer.N_CTX",
             "16",
             "TRAINER.UPLTrainer.CSC",
@@ -95,9 +95,9 @@
             // "TRAINER.PLL.INIT_EPOCH",
             // "0",
             "TRAINER.PLL.CONF_MOMN",
-            "0.99",
+            "0.97",
             "TRAINER.PLL.TOP_POOLS",
-            "2",
+            "3",
             "TRAINER.PLL.MAX_POOLNUM",
             "16",
             "TRAINER.PLL.USE_REGULAR",    //2
@@ -419,6 +419,34 @@
           ]
         },
 
+      {
+      "name": "get_info.py-rn50-dtd",
+      "type": "python",
+      "request": "launch",
+      "program": "get_info.py",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": {
+          "CUDA_VISIBLE_DEVICES": "1"
+      },
+      "args": [
+          "--root=./data",
+          "--seed=1",
+          "--trainer=UPLTrainer",
+          "--dataset-config-file=configs/datasets/ssdtd.yaml",   //
+          "--config-file=configs/trainers/UPLTrainer/anay_rn50.yaml",
+          "--output-dir=./output/ssdtd/UPLTrainer/anay_rn50_16shots_random_init/nctx16_cscFalse_ctpend-1/seed1",
+          "--tag=-1",
+          "TRAINER.UPLTrainer.N_CTX",
+          "16",
+          "TRAINER.UPLTrainer.CSC",
+          "False",
+          "TRAINER.UPLTrainer.CLASS_TOKEN_POSITION",
+          "end",
+          "DATASET.NUM_SHOTS",
+          "16"
+      ]
+      },
       {
       "name": "get_info.py-rn50-ssucf101",
       "type": "python",

@@ -52,7 +52,7 @@ class PLL_loss(nn.Module):
         confidence = confidence.to(self.device)
         return confidence
     
-    def forward(self, *args, reduce=True):
+    def forward(self, *args, reduce=False):
         """"
         x: outputs logits
         y: targets (multi-label binarized vector)
@@ -192,7 +192,12 @@ class PLL_loss(nn.Module):
         elif conf_type == 'refine':
             conf_type = 'cav'
             conf = self.cal_pred_conf(outputs, PL_labels, conf_type)
-            self.fill_pools(conf, outputs, batch_idxs, top_pools=1, record_notinpool=True)
+            if self.losstype.split('_')[0] == 'rc':
+                cav_pred = torch.max(conf, dim=1)[1]
+                gt_label = F.one_hot(cav_pred, PL_labels.shape[1]) 
+                self.conf[batch_idxs, :] = gt_label.float()
+            if hasattr(self, 'cls_pools_dict'):
+                self.fill_pools(conf, outputs, batch_idxs, top_pools=1, record_notinpool=True)
 
 
     @torch.no_grad()
@@ -313,7 +318,7 @@ class PLL_loss(nn.Module):
             shrink_f = 0.75
 
         for pool_id, cur_pool in self.cls_pools_dict.items():
-            print(f'pool_id: {pool_id}, pool_capacity: {cur_pool.pool_capacity}/{cur_pool.pool_max_capacity}')
+            print(cur_pool)
             if cur_pool.pool_capacity == 0:
                 pool_unc_avgs.append(torch.full((1,), torch.nan, dtype=torch.float16))
                 continue
@@ -327,12 +332,17 @@ class PLL_loss(nn.Module):
             pool_unc_avgs.append(cur_pool.pool_unc.mean().unsqueeze(0).cpu())
             
             # 1. cal increament and update conf:
-            pred_conf_value = self.conf[cur_pool.pool_idx, pool_id]       
-            conf_increment = (1 - self.conf_momn) * (1 - unc_norm * shrink_f) 
-            pred_conf_value_ = pred_conf_value * self.conf_momn + conf_increment
-            base_value = pred_conf_value_ - pred_conf_value + 1
-            # assert (base_value >= 1).all(), 'base_value should larger than 1'     #TODO double check
-            self.conf[cur_pool.pool_idx, pool_id] = pred_conf_value_
+            if self.losstype.split('_')[0] == 'cc':
+                pred_conf_value = self.conf[cur_pool.pool_idx, pool_id]       
+                conf_increment = (1 - self.conf_momn) * (1 - unc_norm * shrink_f) 
+                pred_conf_value_ = pred_conf_value * self.conf_momn + conf_increment
+                base_value = pred_conf_value_ - pred_conf_value + 1
+                # assert (base_value >= 1).all(), 'base_value should larger than 1'    
+                self.conf[cur_pool.pool_idx, pool_id] = pred_conf_value_
+            elif self.losstype.split('_')[0] == 'rc':
+                conf_type = 'cav'
+                revised_conf = F.one_hot(torch.LongTensor([pool_id]), self.origin_labels.shape[1]).repeat(cur_pool.pool_idx.shape[0], 1)
+                self.conf[cur_pool.pool_idx, :] = revised_conf.to(self.conf.device).float()
 
             # 2. clean poped items which are not in safe range:
             if cur_pool.popped_idx_past != None and cur_pool.popped_idx_past.shape[0] > 0:
