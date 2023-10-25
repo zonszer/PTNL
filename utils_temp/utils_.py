@@ -60,8 +60,6 @@ class ClassLabelPool:
         #attribute:
         self.pool_capacity = 0
         self.unc_max = 1e-10
-        self.popped_idx_past = None
-        self.popped_unc_past = None
 
         assert self.is_freeze == False
         self.pool_unc_past = None
@@ -135,27 +133,19 @@ class ClassLabelPool:
             self.popped_unc = unc
 
 
-    def pop_notinpool_items(self):
+    def pop_notinpool_items(self, retain=False):
         """
         Get the popped items.
         Returns:
             tuple: A tuple containing the popped items (popped_idx, popped_unc).
         """
-        self.popped_idx_past, self.popped_unc_past = self.popped_idx, self.popped_unc
-        self.popped_idx = torch.LongTensor([])
-        self.popped_unc = torch.Tensor([]).type(self.popped_unc.dtype).to(self.popped_unc.device)
-
-        return self.popped_idx_past, self.popped_unc_past
-    
-    def clean_past_popped(self):
-        """
-        Clean the past popped items.
-        Returns:
-            tuple: A tuple containing the popped items (popped_idx, popped_unc).
-        """
-        popped_idx_past_, popped_unc_past_ = self.popped_idx_past, self.popped_unc_past
-        self.popped_idx_past, self.popped_unc_past = None, None
-        return popped_idx_past_
+        if retain:
+            return self.popped_idx, self.popped_unc
+        else:
+            popped_idx_past, popped_unc_past = self.popped_idx, self.popped_unc
+            self.popped_idx = torch.LongTensor([])
+            self.popped_unc = torch.Tensor([]).type(self.popped_unc.dtype).to(self.popped_unc.device)
+            return popped_idx_past, popped_unc_past
 
 
     def update(self, feat_idx: torch.LongTensor, feat_unc: torch.Tensor, record_popped=True):
