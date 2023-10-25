@@ -496,7 +496,7 @@ class UPLTrainer(TrainerX):
                 loss_regular = F.cross_entropy(self.model.regular, self.model.regular_label, )
                 if hasattr(self, 'pool_unc_norm'):
                     loss = loss + get_regular_weight(beta_median=self.cfg.TRAINER.PLL.BETA,
-                                                        class_acc=self.pool_unc_norm,
+                                                        class_acc=self.pool_certn_norm,
                                                     ) * loss_regular
 
             self.model_backward_and_update(loss)
@@ -1228,14 +1228,17 @@ class UPLTrainer(TrainerX):
 
             indexs_all = torch.cat(indexs_all, dim=0)
             output_all = torch.cat(output_all, dim=0)
-            pool_unc_norm, info_dict = self.criterion.update_conf_epochend(indexs_all, output_all)
-            self.pool_unc_norm = pool_unc_norm
-            self.feat_idxs_halfsafe = info_dict.get('popped_idxs_safe', None)
-            self.feat_idxs_unsafe = info_dict.get('popped_idxs_unsafe', None)
+
+            pool_certn_norm, info_dict = self.criterion.update_conf_epochend(indexs_all, output_all)
+                                                                            
+            self.pool_certn_norm = pool_certn_norm
+            self.feat_idxs_halfsafe = info_dict.get('popped_idxs_safe', {})
+            self.feat_idxs_unsafe = info_dict.get('popped_idxs_unsafe', {})
 
             if hasattr(self.criterion, 'cls_pools_dict'):
+                pool_next_capacity = self.cfg.TRAINER.PLL.MAX_POOLNUM * pool_certn_norm
                 for cls_idx, pool in self.criterion.cls_pools_dict.items():
-                    pool.scale_pool(next_capacity=round((self.cfg.TRAINER.PLL.MAX_POOLNUM * pool_unc_norm[cls_idx]).item()))
+                    pool.scale_pool(next_capacity=round(pool_next_capacity[cls_idx].item()))
                     pool.reset()
                     
         if self.epoch > 0:            #self.epoch start from 0

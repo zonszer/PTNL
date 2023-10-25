@@ -33,6 +33,7 @@ class ClassLabelPool:
         self.cls_id = cls_id
         self.device = 'cuda'
         self.unc_dtype = torch.float16
+        self.baseline_capacity = max_capacity
         self.reset()
         
     def _update_pool_attr(self):
@@ -72,10 +73,10 @@ class ClassLabelPool:
         Args:
             enlarge_factor (int): The enlarge factor.
         """
-        if self.pool_max_capacity <= next_capacity:
+        if next_capacity >= self.pool_max_capacity and next_capacity > self.baseline_capacity:
             self.pool_max_capacity = next_capacity
         else:
-            pass
+            self.pool_max_capacity = self.baseline_capacity
         return
 
     def freeze_stored_items(self):
@@ -145,6 +146,17 @@ class ClassLabelPool:
         self.popped_unc = torch.Tensor([]).type(self.popped_unc.dtype).to(self.popped_unc.device)
 
         return self.popped_idx_past, self.popped_unc_past
+    
+    def clean_past_popped(self):
+        """
+        Clean the past popped items.
+        Returns:
+            tuple: A tuple containing the popped items (popped_idx, popped_unc).
+        """
+        popped_idx_past_, popped_unc_past_ = self.popped_idx_past, self.popped_unc_past
+        self.popped_idx_past, self.popped_unc_past = None, None
+        return popped_idx_past_
+
 
     def update(self, feat_idx: torch.LongTensor, feat_unc: torch.Tensor, record_popped=True):
         """
@@ -160,7 +172,7 @@ class ClassLabelPool:
             self.pool_capacity += 1
             in_pool = True
         else:
-            assert self.pool_max_capacity != 0
+            assert self.pool_max_capacity >= self.pool_capacity, f"pool_max_capacity: {self.pool_max_capacity}, pool_capacity: {self.pool_capacity}"
             if self.unc_max <= feat_unc:
                 if record_popped:
                     self.popped_idx = torch.cat((self.popped_idx, feat_idx.unsqueeze(0)))  # Interchanged positions
@@ -228,7 +240,7 @@ def get_regular_weight(class_acc, beta_median:float) -> np.ndarray:
     #     if match:
     #         acc_value = float(match.group(1))
     #         acc_values.append(acc_value)
-    acc_array = class_acc.half
+    acc_array = class_acc.half()
     acc_array_ = -(beta_median / torch.median(acc_array)) * acc_array 
     beta_ = acc_array_ + (-acc_array_.min()-acc_array_.max())
     return beta_

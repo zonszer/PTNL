@@ -40,7 +40,7 @@ class PLL_loss(nn.Module):
 
         if 'refine' in self.losstype:
             self.origin_labels = deepcopy(self.conf)
-            self.cls_pools_dict = {}
+            # self.cls_pools_dict = {}
             self.safe_f = self.cfg.SAFE_FACTOR
 
         if 'gce' in type or 'gce' in self.cfg.CONF_LOSS_TYPE:
@@ -229,14 +229,7 @@ class PLL_loss(nn.Module):
                 return 
             else:
                 this_loop_idxs = all_idxs[not_in_pool]        #torch.arange(0, output.shape[0])[not_in_pool]
-                # try:
                 max_val, cav_pred = torch.max(cav_logits[this_loop_idxs], dim=1)
-                # except:
-                #     print('this_loop_idxs.shape: ', this_loop_idxs.shape)
-                #     print('this_loop_idxs: ', this_loop_idxs)
-                    # print('not_in_pool: ', not_in_pool)
-                    # print('cav_logits.shape: ', cav_logits.shape)
-                    # raise ValueError
                 cls_ids = pool_idxs[cav_pred]
                 unc = self.cal_uncertainty(output[this_loop_idxs], cav_pred)      
 
@@ -293,20 +286,20 @@ class PLL_loss(nn.Module):
     @torch.no_grad()
     def update_conf_epochend(self, indexs_all, output_all):      # shrink_f larger means val of unc_norm has larger effect on momn
         info_dict = {}
-        pool_unc_avgs = None
-        if 'refine' in self.losstype:
-            print('update conf_refine at epoch end:')
+        pools_certainty_norm = None
+        if 'refine' in self.losstype and hasattr(self, 'cls_pools_dict'):
+            print('-----------update conf_refine at epoch end:-----------')
             # pop items not in pools and fill the remained pools:
             self.refill_pools(indexs_all, output_all)
             
             # clean pool and calculate conf increament:
-            (info_dict, pool_unc_avgs) = self.update_conf_refine(shrink_f=0.5)
+            (info_dict, pools_certainty_norm) = self.update_conf_refine(shrink_f=0.5)
             
             print(f'<{info_dict["not_inpool_num"]}> samples are not in pool:,'
                     f'<{info_dict["safe_range_num"]}> samples are in safe range,'
                     f'<{info_dict["clean_num"]}> samples are cleaned')   
             
-        return pool_unc_avgs, info_dict
+        return pools_certainty_norm, info_dict
 
     def update_conf_refine(self, shrink_f=0.5):
         not_inpool_num = 0
@@ -322,11 +315,11 @@ class PLL_loss(nn.Module):
             if cur_pool.pool_capacity == 0:
                 pool_unc_avgs.append(torch.full((1,), torch.nan, dtype=torch.float16))
                 continue
-            if cur_pool.pool_capacity == cur_pool.pool_max_capacity: 
+            elif cur_pool.pool_capacity <= self.cfg.MAX_POOLNUM * 0.5: 
+                unc_norm = 0
+            else:
                 unc_min = cur_pool.pool_unc.min()
                 unc_norm = (cur_pool.pool_unc - unc_min) / (cur_pool.unc_max - unc_min)
-            else:
-                unc_norm = 0
             # if isinstance(unc_norm, torch.Tensor) and (torch.isnan(unc_norm)).any():
             #     unc_norm = 0
             pool_unc_avgs.append(cur_pool.pool_unc.mean().unsqueeze(0).cpu())
