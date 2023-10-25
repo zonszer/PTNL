@@ -496,7 +496,7 @@ class UPLTrainer(TrainerX):
                 loss_regular = F.cross_entropy(self.model.regular, self.model.regular_label, )
                 if hasattr(self, 'pool_unc_norm'):
                     loss = loss + get_regular_weight(beta_median=self.cfg.TRAINER.PLL.BETA,
-                                                        class_acc=self.pool_unc_norm,
+                                                        class_acc=self.pool_certn_norm,
                                                     ) * loss_regular
 
             self.model_backward_and_update(loss)
@@ -1205,7 +1205,7 @@ class UPLTrainer(TrainerX):
 
     @torch.no_grad()
     def before_epoch(self):
-        if self.epoch == 0:            #self.epoch start from 0
+        if self.epoch == self.cfg.TRAINER.PLL.INIT_EPOCH:            #self.epoch start from 0
             if 'refine' in self.criterion.losstype:
                 self.criterion.cls_pools_dict = self.init_cls_pools(split="train")
 
@@ -1225,14 +1225,20 @@ class UPLTrainer(TrainerX):
 
             indexs_all = torch.cat(indexs_all, dim=0)
             output_all = torch.cat(output_all, dim=0)
-            pool_unc_norm, info_dict = self.criterion.update_conf_epochend(indexs_all, output_all)
-            self.pool_unc_norm = pool_unc_norm
-            self.feat_idxs_halfsafe = info_dict.get('popped_idxs_safe', None)
-            self.feat_idxs_unsafe = info_dict.get('popped_idxs_unsafe', None)
+            if hasattr(self.criterion, 'cls_pools_dict') and hasattr(self, 'pool_certn_norm') and self.pool_certn_norm is not None:
+                pool_cur_capacity = self.cfg.TRAINER.PLL.MAX_POOLNUM * self.pool_certn_norm
+            else:
+                pool_cur_capacity = None
+            pool_certn_norm, info_dict = self.criterion.update_conf_epochend(indexs_all, output_all, 
+                                                                             pool_cur_capacity)
+            self.pool_certn_norm = pool_certn_norm
+            self.feat_idxs_halfsafe = info_dict.get('popped_idxs_safe', {})
+            self.feat_idxs_unsafe = info_dict.get('popped_idxs_unsafe', {})
 
             if hasattr(self.criterion, 'cls_pools_dict'):
+                pool_next_capacity = self.cfg.TRAINER.PLL.MAX_POOLNUM * pool_certn_norm
                 for cls_idx, pool in self.criterion.cls_pools_dict.items():
-                    pool.scale_pool(next_capacity=round((self.cfg.TRAINER.PLL.MAX_POOLNUM * pool_unc_norm[cls_idx]).item()))
+                    pool.scale_pool(next_capacity=round(pool_next_capacity[cls_idx].item()))
                     pool.reset()
                     
         if self.epoch > 0:            #self.epoch start from 0
@@ -1243,7 +1249,7 @@ class UPLTrainer(TrainerX):
     @torch.no_grad()                           
     def init_cls_pools(self, split="train"):
         pools_dict = select_top_k_certainty_per_class(class_ids=torch.arange(0, len(self.lab2cname)), 
-                                                      K=int(max(self.cfg.TRAINER.PLL.MAX_POOLNUM*0.4, 3)))     #选择每个类别visual emb和text emb最相似的K个样本，对每个样本取预测的vector，最后加到info dict中（k>=0时）。 对每个样本取预测的vector，然后加到所有训练样本的info dict中（k=-1时）
+                                                      K=int(max(self.cfg.TRAINER.PLL.MAX_POOLNUM*0.5, 3)))     #选择每个类别visual emb和text emb最相似的K个样本，对每个样本取预测的vector，最后加到info dict中（k>=0时）。 对每个样本取预测的vector，然后加到所有训练样本的info dict中（k=-1时）
         return pools_dict
     
 
