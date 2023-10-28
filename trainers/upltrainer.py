@@ -1204,6 +1204,9 @@ class UPLTrainer(TrainerX):
 
     @torch.no_grad()
     def before_epoch(self):
+        self.feat_weight = torch.ones(len(self.train_loader_sstrain.dataset), 
+                                            dtype=torch.float16, device=self.device)
+
         if not hasattr(self.criterion, 'losstype') or self.criterion.losstype == 'cc':
             return
 
@@ -1236,8 +1239,8 @@ class UPLTrainer(TrainerX):
             self.pool_certn_norm = pool_certn_norm
             # self.feat_idxs_halfsafe = info_dict.get('popped_idxs_safe', {})
             # self.feat_idxs_unsafe = info_dict.get('popped_idxs_unsafe', {})
-            self.feat_weight = info_dict.get('unsafe_feat_weight', torch.ones(self.conf.shape[1], 
-                                                                              dtype=torch.float16, device=self.device))
+            self.feat_weight = info_dict.get('unsafe_feat_weight', torch.ones(len(self.train_loader_sstrain.dataset), 
+                                                                                 dtype=torch.float16, device=self.device))
 
             if hasattr(self.criterion, 'cls_pools_dict'):
                 init_cap = self.cfg.TRAINER.PLL.MAX_POOLNUM * self.cfg.TRAINER.PLL.POOL_INITRATIO

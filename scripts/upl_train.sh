@@ -5,7 +5,7 @@ cd ..
 # custom config
 DATA=./data
 TRAINER=UPLTrainer
-exp_ID="10.26-DEBUG_test_cc_refine_ep100_HackCap"    #NOTE +time
+exp_ID="10.28-test_cc_refine_ep100"    #NOTE +time
 # TODO: 
 #1. change oonf clean threshold and set safe factor and range
 #10.19-test_cc_refine_ep100_safe&clean2
@@ -90,10 +90,10 @@ USE_LABEL_FILTER=True
 # declare -a BETAS=(0.0 0.1 0.2 0.3)
 BETA=0.0
 declare -a CONF_MOMNs=(0.95 0.97 0.99)
-declare -a TOP_POOLs=(2)
+declare -a TOP_POOLs=(2 3)
 # declare -a MAX_POOLNUMs=(14 16)
 declare -a DATASETs=('ssdtd')
-declare -a SAFT_FACTORs=(3.5 4.0 5.0)
+declare -a SAFT_FACTORs=(0.0)
 # declare -a SHRINK_FACTORs=(0.5 0.3 0.7)
 
 if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
@@ -140,7 +140,7 @@ do
                                 TRAINER.UPLTrainer.CLASS_TOKEN_POSITION ${CTP} \
                                 DATASET.NUM_SHOTS ${SHOTS} \
                                 DATASET.CLASS_EQULE ${CLASS_EQULE} \
-                                TEST.FINAL_MODEL best_val \
+                                TEST.FINAL_MODEL last_step \
                                 TRAINER.PLL.BETA ${BETA} \
                                 TRAINER.PLL.USE_REGULAR ${USE_REGULAR} \
                                 TRAINER.PLL.USE_PLL ${use_PLL} \

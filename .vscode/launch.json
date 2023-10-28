@@ -59,7 +59,7 @@
           "console": "integratedTerminal",
           "justMyCode": false,
           "env": {
-            "CUDA_VISIBLE_DEVICES": "2"
+            "CUDA_VISIBLE_DEVICES": "3"
           },
           "args": [
             "--root=./data",
@@ -67,9 +67,9 @@
             "--trainer=UPLTrainer",
             "--dataset-config-file=configs/datasets/ssdtd.yaml",
             "--config-file=configs/trainers/UPLTrainer/rn50_ep50.yaml",
-            "--output-dir=./output/ssdtd/UPLTrainer/rn50_ep50_16shots-10.24-debug/10.24-debug_doublecheck25",
+            "--output-dir=./output/ssdtd/UPLTrainer/rn50_ep50_16shots-10.24-debug/10.24-debug_doublecheck30",
             "--num-fp=0",
-            "--loss_type=rc_refine",
+            "--loss_type=cc_refine",
             "TRAINER.UPLTrainer.N_CTX",
             "16",
             "TRAINER.UPLTrainer.CSC",
@@ -95,7 +95,7 @@
             "TRAINER.PLL.SAFE_FACTOR",
             "3.0",
             "TRAINER.PLL.CONF_MOMN",
-            "0.5",
+            "0.95",
             "TRAINER.PLL.TOP_POOLS",
             "3",
             "TRAINER.PLL.MAX_POOLNUM",

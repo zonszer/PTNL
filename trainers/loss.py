@@ -200,6 +200,8 @@ class PLL_loss(nn.Module):
             elif conf_type_ == 'rc':
                 base_value = conf.sum(dim=1).unsqueeze(1).repeat(1, conf.shape[1])
                 self.conf[batch_idxs, :] = conf / base_value  # use maticx for element-wise division
+            elif conf_type_ == 'cc':
+                pass
             else:
                 raise ValueError('conf_type not supported')
             if hasattr(self, 'cls_pools_dict'):
@@ -211,6 +213,8 @@ class PLL_loss(nn.Module):
         if conf_type == 'rc':
             conf = F.softmax(logits / self.T, dim=1)
         elif conf_type == 'cav':
+            conf = (logits * torch.abs(1 - logits)) 
+        elif conf_type == 'cc':
             conf = (logits * torch.abs(1 - logits)) 
         return conf * PL_labels
 
@@ -327,7 +331,7 @@ class PLL_loss(nn.Module):
             notinpool_idxs, notinpool_uncs = self.refill_pools(indexs_all, output_all)
             
             # clean pool and calculate conf increament:
-            (info_dict, pools_certainty_norm) = self.update_conf_refine(notinpool_idxs, notinpool_uncs, shrink_f=0.5)
+            (info_dict, pools_certainty_norm) = self.update_conf_refine(notinpool_idxs, notinpool_uncs)
             
             print(f'<{info_dict["not_inpool_num"]}> samples are not in pool:,'
                     f'<{info_dict["safe_range_num"]}> samples are in safe range,'
@@ -341,7 +345,7 @@ class PLL_loss(nn.Module):
         clean_num = 0
         pool_unc_avgs = []
         popped_idxs_unsafe = []; popped_feat_weight = []
-        unsafe_feat_weight = torch.ones(self.conf.shape[1], dtype=torch.float16, device=self.device)
+        unsafe_feat_weight = torch.ones(self.conf.shape[0], dtype=torch.float16, device=self.device)
         conf_type_ = self.losstype.split('_')[0]
             
         for pool_id, cur_pool in self.cls_pools_dict.items():
@@ -369,22 +373,26 @@ class PLL_loss(nn.Module):
             elif conf_type_ == 'rc' or conf_type_ == 'cav':
                 max_val, max_idx = torch.max(self.conf[cur_pool.pool_idx, :], dim=1)
                 self.conf[cur_pool.pool_idx, max_idx] = max_val * self.conf_momn        #TODO: conf_momn is shrink_f
-                revised_conf = self.conf[cur_pool.pool_idx, pool_id] + max_val * self.conf_momn # 
+                if conf_type_ == 'cav':
+                    conf_increment = 1.0
+                else:
+                    conf_increment = max_val * self.conf_momn
+                revised_conf = self.conf[cur_pool.pool_idx, pool_id] + conf_increment # 
                 self.conf[cur_pool.pool_idx, pool_id] = revised_conf
 
         # 2. clean poped items which are not in safe range:
-        if notinpool_idxs.shape[0] > 0:
+        if notinpool_idxs.shape[0] > 1:
             # safe_range = ((cur_pool.popped_unc - self.safe_f*cur_pool.unc_max) <= 0)
             # self.conf[cur_pool.popped_idx[~safe_range], :] = \
             #             self.origin_labels[cur_pool.popped_idx[~safe_range], :]
             # safe_range_num += safe_range.sum().item()
             # clean_num += (~safe_range).sum().item()
-            if conf_type_ == 'rc' or conf_type_ == 'cav':           #TODO modify this strategy for cc_refine
-                unc_notinpool_min = notinpool_uncs.min()
-                unc_norm_ = (notinpool_uncs - unc_notinpool_min) / (notinpool_uncs.max() - unc_notinpool_min)
-                unsafe_feat_weight[notinpool_idxs] = unc_norm_ * self.cfg.HALF_USE_W 
-                # popped_feat_weight.extend(unc_norm_.tolist())
-                # popped_idxs_unsafe.extend(notinpool_idxs.tolist())
+            # if conf_type_ == 'rc' or conf_type_ == 'cav' or conf_type_ == 'cc':          
+            unc_notinpool_min = notinpool_uncs.min()
+            cern_norm = -(notinpool_uncs - unc_notinpool_min) / (notinpool_uncs.max() - unc_notinpool_min) + 1.0
+            unsafe_feat_weight[notinpool_idxs] = cern_norm * self.cfg.HALF_USE_W 
+            # popped_feat_weight.extend(unc_norm_.tolist())
+            # popped_idxs_unsafe.extend(notinpool_idxs.tolist())
 
         pool_unc_avgs = torch.cat(pool_unc_avgs, dim=0)
         nan_mask = torch.isnan(pool_unc_avgs)

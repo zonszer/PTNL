@@ -5,7 +5,7 @@ cd ..
 # custom config
 DATA=./data
 TRAINER=UPLTrainer
-exp_ID="10.28-test_rc&cav_refine_ep100_2"    #NOTE +time
+exp_ID="10.28-test_rc&cav_refine_ep100_final"    #NOTE +time
 # TODO: 
 #1. change oonf clean threshold and set safe factor and range
 #10.19-test_cc_refine_ep100_safe&clean2
@@ -90,8 +90,8 @@ USE_LABEL_FILTER=True
 POOL_INITRATIO=0.4
 # declare -a BETAS=(0.0 0.1 0.2 0.3)
 BETA=0.0
-declare -a CONF_MOMNs=(0.6 0.65 0.75)
-declare -a TOP_POOLs=(2 4)
+# declare -a CONF_MOMNs=(0.55 0.60 0.70)      #NOTE for cav and rc it is different
+declare -a TOP_POOLs=(2 3)
 # declare -a MAX_POOLNUMs=(16 19)     
 declare -a DATASETs=('ssdtd')
 # declare -a SAFT_FACTORs=(2.5 3.0 4.0)
@@ -101,7 +101,7 @@ declare -a HALF_USE_Ws=(0.4 0.5 0.6)
 if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
     declare -a MAX_POOLNUMs=(16)  
 elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
-    declare -a MAX_POOLNUMs=(14 16)  
+    declare -a MAX_POOLNUMs=(16)  
 else 
     echo "Invalid rate for MAX_POOLNUMs"
 fi
@@ -117,13 +117,17 @@ do
         LOG_FILE="logs_scripts/log_${TAG}_${DATASET}.txt"
         for loss_type in 'rc_refine' 'cav_refine'
         do
+            if [ "$loss_type" == "cav_refine" ]; then
+                declare -a CONF_MOMNs=(0.00 0.10 0.30)
+            fi
+            if [ "$loss_type" == "rc_refine" ]; then
+                declare -a CONF_MOMNs=(0.55 0.60 0.70)
+            fi
+
             for TOP_POOL in "${TOP_POOLs[@]}"
             do
                 for CONF_MOMN in "${CONF_MOMNs[@]}"
                 do
-                    if [ "$loss_type" == "cav_refine" ]; then
-                        CONF_MOMN=0.5
-                    fi
                     for SAFT_FACTOR in "${SAFT_FACTORs[@]}"
                     do
                         for MAX_POOLNUM in "${MAX_POOLNUMs[@]}"
