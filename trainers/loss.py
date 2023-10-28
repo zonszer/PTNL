@@ -218,11 +218,11 @@ class PLL_loss(nn.Module):
     def fill_pools(self, conf, outputs, batch_idxs, top_pools=1, record_notinpool=True, pool_idxs=None):
         """fill pools with top_pools samples for each class"""
         if pool_idxs is None:
-            pool_idxs = torch.arange(0, len(self.cls_pools_dict))
-        if conf.shape[1] == 0 or outputs.shape[1] == 0:
+            pool_idxs = torch.arange(0, len(self.cls_pools_dict)).to(self.device)
+        if conf.shape[1] == 0:
             return 
-        not_in_pool_init = torch.ones(outputs.shape[0], dtype=torch.bool)
-        all_idxs = torch.arange(0, outputs.shape[0])
+        not_in_pool_init = torch.ones(conf.shape[0], dtype=torch.bool)
+        all_idxs = torch.arange(0, conf.shape[0])
 
         def recursion(num_top_pools, output, cav_logits, not_in_pool, all_idxs):
             if num_top_pools == 0 or (not_in_pool==False).all():
@@ -231,7 +231,7 @@ class PLL_loss(nn.Module):
                 this_loop_idxs = all_idxs[not_in_pool]        #torch.arange(0, output.shape[0])[not_in_pool]
                 max_val, cav_pred = torch.max(cav_logits[this_loop_idxs], dim=1)
                 cls_ids = pool_idxs[cav_pred]
-                unc = self.cal_uncertainty(output[this_loop_idxs], cav_pred)      
+                unc = self.cal_uncertainty(output[this_loop_idxs], cls_ids)      
 
                 for i, (cls_id, idx) in enumerate(zip(cls_ids, this_loop_idxs)):
                     pool = self.cls_pools_dict[cls_id.item()]
@@ -264,23 +264,25 @@ class PLL_loss(nn.Module):
         popped_idxs = torch.cat(popped_idxs, dim=0)
         sort_idxs = torch.argsort(indexs_all)       #output_all[sort_idxs] is the data original order
         not_full_idxs = torch.where(pool_not_full == True)[0]
-        popped_output = output_all[sort_idxs][popped_idxs.unsqueeze(1), not_full_idxs.unsqueeze(0)]
-        popped_labels = self.origin_labels[popped_idxs.unsqueeze(1), not_full_idxs.unsqueeze(0)]
+        popped_output = output_all[sort_idxs][popped_idxs, :]
+        popped_labels = self.origin_labels[popped_idxs, :]
         conf = self.cal_pred_conf(popped_output, popped_labels, conf_type='cav')
+        conf_selected = conf[:, not_full_idxs]
+        # output_selected = popped_output[:, not_full_idxs]
 
         for pool_id in not_full_idxs.tolist():
             cur_pool = self.cls_pools_dict[pool_id]
             cur_pool.freeze_stored_items()
 
-        self.fill_pools(conf, popped_output, popped_idxs, 
+        self.fill_pools(conf_selected, popped_output, popped_idxs, 
                                     top_pools=self.cfg.TOP_POOLS, 
                                     record_notinpool=True, 
-                                    pool_idxs=not_full_idxs)
+                                    pool_idxs=not_full_idxs.to(conf_selected.device))
         
         for pool_id in not_full_idxs.tolist():
             cur_pool = self.cls_pools_dict[pool_id]
             cur_pool.unfreeze_stored_items()
-            cur_pool.recalculate_unc(logits_all=output_all[sort_idxs], criterion=self.cal_uncertainty)
+            cur_pool.recalculate_unc(logits_all=output_all[sort_idxs], criterion=self.cal_uncertainty)      #TODO can be removed
 
 
     @torch.no_grad()

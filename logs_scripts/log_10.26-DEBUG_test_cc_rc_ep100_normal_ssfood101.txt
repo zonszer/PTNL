@@ -1,0 +1,75 @@
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_cav_seed-1_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-3.5 ----> test * accuracy: 76.15%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-rc_cav_seed-1_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-3.5 ----> test * accuracy: 79.37%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_cav_seed-1_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.0 ----> test * accuracy: 78.32%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-rc_cav_seed-1_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.0 ----> test * accuracy: 79.67%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_cav_seed-1_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.5 ----> test * accuracy: 78.04%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-rc_cav_seed-1_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.5 ----> test * accuracy: 79.45%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_cav_seed-1_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-5.0 ----> test * accuracy: 76.87%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-rc_cav_seed-1_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-5.0 ----> test * accuracy: 79.62%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_seed-1_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-3.5 ----> test * accuracy: 79.51%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_seed-1_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-3.5 ----> test * accuracy: 79.68%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_seed-1_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.0 ----> test * accuracy: 79.53%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_seed-1_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.0 ----> test * accuracy: 79.64%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_seed-1_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.5 ----> test * accuracy: 79.70%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_seed-1_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.5 ----> test * accuracy: 79.83%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_seed-1_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-5.0 ----> test * accuracy: 79.53%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_seed-1_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-5.0 ----> test * accuracy: 79.72%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_rc_seed-1_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-3.5 ----> test * accuracy: 77.84%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-rc_rc_seed-1_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-3.5 ----> test * accuracy: 79.60%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_rc_seed-1_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.0 ----> test * accuracy: 77.40%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-rc_rc_seed-1_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.0 ----> test * accuracy: 79.36%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_rc_seed-1_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.5 ----> test * accuracy: 77.47%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-rc_rc_seed-1_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.5 ----> test * accuracy: 79.46%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_rc_seed-1_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-5.0 ----> test * accuracy: 77.82%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-rc_rc_seed-1_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-5.0 ----> test * accuracy: 79.41%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_cav_seed-2_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-3.5 ----> test * accuracy: 79.29%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-rc_cav_seed-2_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-3.5 ----> test * accuracy: 79.60%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_cav_seed-2_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.0 ----> test * accuracy: 78.00%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-rc_cav_seed-2_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.0 ----> test * accuracy: 79.41%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_cav_seed-2_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.5 ----> test * accuracy: 79.09%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-rc_cav_seed-2_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.5 ----> test * accuracy: 79.50%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_cav_seed-2_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-5.0 ----> test * accuracy: 78.97%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-rc_cav_seed-2_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-5.0 ----> test * accuracy: 79.59%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_seed-2_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-5.0 ----> test * accuracy: 79.23%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_seed-2_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-5.0 ----> test * accuracy: 79.77%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_seed-2_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.5 ----> test * accuracy: 79.52%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_seed-2_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.5 ----> test * accuracy: 79.76%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_rc_seed-2_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-3.5 ----> test * accuracy: 
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-rc_rc_seed-2_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-3.5 ----> test * accuracy: 79.74%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_rc_seed-2_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-3.5 ----> test * accuracy: 79.15%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-rc_rc_seed-2_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.0 ----> test * accuracy: 79.78%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_rc_seed-2_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.0 ----> test * accuracy: 78.91%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-rc_rc_seed-2_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.5 ----> test * accuracy: 79.54%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_rc_seed-2_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.5 ----> test * accuracy: 79.11%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-rc_rc_seed-2_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-5.0 ----> test * accuracy: 79.77%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_rc_seed-2_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-5.0 ----> test * accuracy: 78.74%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_cav_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-3.5 ----> test * accuracy: 
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_cav_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.0 ----> test * accuracy: 
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_cav_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.5 ----> test * accuracy: 
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_cav_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-5.0 ----> test * accuracy: 
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-3.5 ----> test * accuracy: 
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.0 ----> test * accuracy: 
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.5 ----> test * accuracy: 
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-5.0 ----> test * accuracy: 
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_rc_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-3.5 ----> test * accuracy: 
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_rc_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.0 ----> test * accuracy: 
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_rc_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.5 ----> test * accuracy: 
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_rc_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-5.0 ----> test * accuracy: 
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-rc_cav_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-3.5 ----> test * accuracy: 79.47%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-rc_cav_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.0 ----> test * accuracy: 79.42%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_cav_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-3.5 ----> test * accuracy: 75.77%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_cav_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.0 ----> test * accuracy: 75.23%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-rc_cav_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.5 ----> test * accuracy: 79.56%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-rc_cav_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-5.0 ----> test * accuracy: 79.45%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_cav_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.5 ----> test * accuracy: 75.49%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-3.5 ----> test * accuracy: 79.55%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.0 ----> test * accuracy: 79.43%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_cav_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-5.0 ----> test * accuracy: 74.16%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-3.5 ----> test * accuracy: 79.25%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.5 ----> test * accuracy: 79.51%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-5.0 ----> test * accuracy: 79.48%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.0 ----> test * accuracy: 79.28%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.5 ----> test * accuracy: 79.23%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-5.0 ----> test * accuracy: 79.16%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-rc_rc_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-3.5 ----> test * accuracy: 79.25%
+id: data-ssfood101_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-rc_rc_seed-3_beta-0.0_FILT-False_cMomn-0.95_topP-2_MAXPOOL-16_safeF-4.0 ----> test * accuracy: 79.25%

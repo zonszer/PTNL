@@ -5,7 +5,7 @@ cd ..
 # custom config
 DATA=./data
 TRAINER=UPLTrainer
-exp_ID="10.24-retest_rc_refine_ep100_1refill"    #NOTE +time
+exp_ID="10.25-retest_rc_refine_ep100_1refill"    #NOTE +time
 # TODO: 
 #1. change oonf clean threshold and set safe factor and range
 #10.19-test_cc_refine_ep100_safe&clean2

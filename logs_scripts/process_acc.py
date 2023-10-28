@@ -40,8 +40,8 @@ def formatting_data(data_dict):
         new_key = new_key.replace('loss-rc_cav', 'loss-rc cav')
         new_key = new_key.replace('loss-rc_refine', 'loss-rc refine')
         new_key = new_key.replace('loss-cc_refine', 'loss-cc refine')
+        new_key = new_key.replace('loss-cav_refine', 'loss-cav refine')
         new_key = new_key.replace('loss-cc_rc', 'loss-cc rc')
-        new_key = new_key.replace('loss-cc_refine', 'loss-cc refine')
         new_key = new_key.replace('loss-rc_rc', 'loss-rc rc')
         new_dict[new_key] = value
     return new_dict
@@ -53,12 +53,29 @@ def formatting_data(data_dict):
 #after 10.20:
 #log_10.22-test_rc_refine_ep100_ssucf101.txt --> test rc_reine with weight of unsafe and safe
 # log_10.20-test_cc_refine_ep100_refillpool2_ssucf101.txt --> refill the pool only once, but for cc_refine   (best on ssucf so far)
-#log_10.23-retest_rc_refine_ep100_1refill_ssucf101.txt -->  retest refill the pool only once(but with cav_conf rather than momn), also with weight of unsafe and safe (best on ssucf so far)
-#log_10.24-retest_rc_refine_ep100_1refill_ssdtd.txt --> test rc_refine on dtd dataset
+#log_10.23-retest_rc_refine_ep100_1refill_ssucf101.txt --> retest refill the pool only once(but with cav_conf rather than momn), also with weight of unsafe and safe (best on ssucf so far)
+
+#rc_refine:
+#log_10.24-retest_rc_refine_ep100_1refill_ssdtd.txt --> test rc_refine on dtd dataset (TopP=1,2,3,4) (old)
+#log_10.25-retest_rc_refine_ep100_1refill_ssdtd.txt --> 四个改进，需要与10.24的对比看是否有提升（这个是HACk版本，即pool cap那里有问题的main branch）
+#log_10.26-DEBUG_retest_rc_refine_ep100_improRefill&unc__ssdtd.txt -->四个改进，需要与10.24的对比看是否有提升
+#log_10.26-DEBUG_retest_rc_refine_ep100_improRefill&unc_1_ssdtd.txt -->三个改进（去掉pool cap的-1），需要与10.24的对比看是否有提升
+
+#cc_refine:
+#log_10.24-test_cc_refine_ep100_1refill_ssdtd.txt --> test cc_refine on dtd dataset (TopP=1,2,3,4) (old)
+#log_10.26-DEBUG_test_cc_refine_ep100_1refill_improRefill&unc_ssdtd.txt -->四个改进，需要与10.24的对比看是否有提升
+#log_10.26-DEBUG_test_cc_refine_ep100_1refill_improRefill&unc_1cap_ssdtd.txt --> 把pool cap改成回old版本（只升不降, no -1），需要与10.24的对比看是否有提升
+# log_10.26-DEBUG_test_cc_refine_ep100_HackCap_ssdtd.txt --> 看看cc用hack版本的pool cap是否有提升
+
 # data_dict = extract_info('log_10-04_14-06-35_ssoxford_pets.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssoxford_pets.txt
-data_dict_new = extract_info('log_10.24-retest_rc_refine_ep100_1refill_ssdtd.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
-data_dict_old = extract_info('log_10-04_17-35-17_ssucf101-contain-no-beta.txt')      #contain-no-beta is baseline
+data_dict_new = extract_info('log_10.27-test_rc&cav_refine_ep100_ssdtd.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
+data_dict_new_hack = extract_info('log_10.26-DEBUG_test_cc_refine_ep100_HackCap_ssdtd--LastEpoch.txt')      
+data_dict_new1 = extract_info('log_10.26-DEBUG_test_cc_refine_ep100_1refill_improRefill&unc_1cap_ssdtd--LastEpoch.txt')      
+data_dict_old = extract_info('log_10.24-test_cc_refine_ep100_1refill_ssdtd--LastEpoch.txt')      
+
 data_dict_new = formatting_data(data_dict_new)
+data_dict_new1 = formatting_data(data_dict_new1)
+data_dict_new_hack = formatting_data(data_dict_new_hack)
 data_dict_old = formatting_data(data_dict_old)
 
 
@@ -79,13 +96,17 @@ def parse2df(data_dict):
     return df
 
 df_new = parse2df(data_dict_new)
+df_new1 = parse2df(data_dict_new1)
+df_new_hack = parse2df(data_dict_new_hack)
 df_old = parse2df(data_dict_old)
 # merge two data dicts:
 df_old.loc[:, "change"] = 'old'
+df_new1.loc[:, "change"] = 'new no-1'
+df_new_hack.loc[:, "change"] = 'new_hack'
 df_new.loc[:, "change"] = 'new'
 # df.loc[:, "UseWeightedbeta"] = 'False'
 # df_result = pd.concat([df_t, df])
-df = pd.concat([df_new, df_old])
+df = pd.concat([df_new, df_new1, df_new_hack, df_old])
 print('len df:', len(df))
 
 #%% NOTE: check the lost experiment settings:
@@ -122,6 +143,7 @@ def generate_exp_id(row):
     id_str = id_str.replace('ssoxfordpets', 'ssoxford_pets')
     id_str = id_str.replace('loss-rc cav', 'loss-rc_cav')
     id_str = id_str.replace('loss-rc refine', 'loss-rc_refine')
+    id_str = id_str.replace('loss-cav refine', 'loss-cav_refine')
     id_str = id_str.replace('loss-cc refine', 'loss-cc_refine')
     id_str = id_str.replace('loss-cc rc', 'loss-cc_rc')
     id_str = id_str.replace('loss-rc rc', 'loss-rc_rc')
@@ -149,17 +171,17 @@ import numpy as np
 # Select the rows where beta == 1.5 and bs == 32
 change = "(df['change']=='new')"
 # loss = "(df['loss']!='CE')"
-# loss = "(df['loss']=='cc refine')"
+loss = "(df['loss']=='rc refine')"
 # loss = "(df['loss']=='cc') "
 # loss = "(df['loss']=='rc cav')"
 # beta = "(df['beta']=='0.0')"
-PLL_ratio = "(df['usePLLTrue']=='0.3')"
+PLL_ratio = "(df['usePLLTrue']=='0.1')"
 
 # 1. for test rc_refine: -- > grouped_vars = ["safeF", "halfW", "topP"]  
 MAXPOOL	= "(df['MAXPOOL']=='16')"
-# topP = "(df['topP']=='2')"
+topP = "(df['topP']=='4')"
 
-# 2. for test cc_refine: -->["safeF", "cMomn", "topP"]     
+# 2. for test cc_refine: --> grouped_vars =  ["safeF", "cMomn", "topP"]     
 # cMomn = "(df['cMomn']=='0.99')"
 # topP = "(df['topP']=='2')"
 # MAXPOOL	= "(df['MAXPOOL']=='16')"
@@ -169,8 +191,8 @@ MAXPOOL	= "(df['MAXPOOL']=='16')"
 # topP = "(df['topP']=='2')"
 # Iepoch = "(df['Iepoch']=='1') | (df['Iepoch'].isna())" 
 # seed = "(~((df['seed']=='3') & (df['loss']=='rc cav') & (df['usePLLTrue']=='0.3')))"
-# seed = "(df['seed']!='3')"
-select_condiction =   PLL_ratio  + '&' + change  +'&' + MAXPOOL
+seed = "(df['seed']=='1')"
+select_condiction = PLL_ratio  +'&'+  MAXPOOL  +'&'+ change +'&'+ topP +'&'+ loss +'&'+ seed
 
 if select_condiction == 'None':
     selected_rows = df
@@ -179,8 +201,10 @@ else:
 #----------------------settings----------------------
 
 # Group by Variables
-grouped_vars = ["halfW", "safeF", "topP"]         
+grouped_vars = ["safeF", "halfW", "cMomn"]          
+# grouped_vars = ["safeF", "cMomn", "change"]               
 compar_var = 'accuracy'
+print("len(selected_rows) :", len(selected_rows))
 grouped_data = selected_rows.groupby(grouped_vars)[compar_var].mean().reset_index()
 # Convert the "usePLLTrue" column to float
 x_axis_var = grouped_vars[0]
@@ -203,7 +227,7 @@ elif len(grouped_vars) == 2:
     ax.set_ylabel(compar_var)  # Set y-axis label
     ax.legend(title=color_axis_var, prop={'size': 6})  # Add legend
 else:
-    g = sns.FacetGrid(grouped_data, col=sub_fig_var, col_wrap=3, height=4, aspect=1)
+    g = sns.FacetGrid(grouped_data, col=sub_fig_var, col_wrap=4, height=4, aspect=1)
     g.map_dataframe(lambda data, color: sns.barplot(x=x_axis_var, y=compar_var, hue=color_axis_var, data=data, palette='viridis'))
     ax = None  # Set to None as there are multiple axes in FacetGrid
     # Add a legend and axis labels to each subplot
@@ -285,3 +309,4 @@ plt.show()
 
 
 #best params for head is: beta=1.5(larger better), wd=0.01(not so important), lr=0.0001, bs=32(larger better)
+# %%
