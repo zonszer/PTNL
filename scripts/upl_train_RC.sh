@@ -5,7 +5,7 @@ cd ..
 # custom config
 DATA=./data
 TRAINER=UPLTrainer
-exp_ID="10.24-retest_rc_refine_ep100_1refill"    #NOTE +time
+exp_ID="10.28-test_rc&cav_refine_ep100_2"    #NOTE +time
 # TODO: 
 #1. change oonf clean threshold and set safe factor and range
 #10.19-test_cc_refine_ep100_safe&clean2
@@ -87,19 +87,21 @@ TAG=$TAG # log tag (multiple_models_random_init or rn50_random_init)
 #---------------------------individual settings: ---------------------------
 USE_REGULAR=False     #add 2
 USE_LABEL_FILTER=True
+POOL_INITRATIO=0.4
 # declare -a BETAS=(0.0 0.1 0.2 0.3)
 BETA=0.0
-declare -a CONF_MOMNs=(1.0)
-declare -a TOP_POOLs=(1 3)
+declare -a CONF_MOMNs=(0.6 0.65 0.75)
+declare -a TOP_POOLs=(2 4)
 # declare -a MAX_POOLNUMs=(16 19)     
-declare -a DATASETs=('ssdtd')            #
-declare -a SAFT_FACTORs=(2.5 3.0 4.0)
+declare -a DATASETs=('ssdtd')
+# declare -a SAFT_FACTORs=(2.5 3.0 4.0)
+declare -a SAFT_FACTORs=(0.0)
 declare -a HALF_USE_Ws=(0.4 0.5 0.6)
 
 if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
     declare -a MAX_POOLNUMs=(16)  
 elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
-    declare -a MAX_POOLNUMs=(14)  
+    declare -a MAX_POOLNUMs=(14 16)  
 else 
     echo "Invalid rate for MAX_POOLNUMs"
 fi
@@ -113,12 +115,15 @@ do
     for DATASET in "${DATASETs[@]}"
     do
         LOG_FILE="logs_scripts/log_${TAG}_${DATASET}.txt"
-        for loss_type in 'rc_refine'
+        for loss_type in 'rc_refine' 'cav_refine'
         do
             for TOP_POOL in "${TOP_POOLs[@]}"
             do
                 for CONF_MOMN in "${CONF_MOMNs[@]}"
                 do
+                    if [ "$loss_type" == "cav_refine" ]; then
+                        CONF_MOMN=0.5
+                    fi
                     for SAFT_FACTOR in "${SAFT_FACTORs[@]}"
                     do
                         for MAX_POOLNUM in "${MAX_POOLNUMs[@]}"
@@ -145,7 +150,7 @@ do
                                     TRAINER.UPLTrainer.CLASS_TOKEN_POSITION ${CTP} \
                                     DATASET.NUM_SHOTS ${SHOTS} \
                                     DATASET.CLASS_EQULE ${CLASS_EQULE} \
-                                    TEST.FINAL_MODEL best_val \
+                                    TEST.FINAL_MODEL last_step \
                                     TRAINER.PLL.BETA ${BETA} \
                                     TRAINER.PLL.USE_REGULAR ${USE_REGULAR} \
                                     TRAINER.PLL.USE_PLL ${use_PLL} \
@@ -153,6 +158,7 @@ do
                                     TRAINER.PLL.USE_LABEL_FILTER ${USE_LABEL_FILTER} \
                                     TRAINER.PLL.CONF_MOMN ${CONF_MOMN} \
                                     TRAINER.PLL.MAX_POOLNUM ${MAX_POOLNUM} \
+                                    TRAINER.PLL.POOL_INITRATIO ${POOL_INITRATIO} \
                                     TRAINER.PLL.SAFE_FACTOR ${SAFT_FACTOR} \
                                     TRAINER.PLL.HALF_USE_W ${HALF_USE_W} \
                                     TRAINER.PLL.TOP_POOLS ${TOP_POOL}
