@@ -479,18 +479,17 @@ class UPLTrainer(TrainerX):
             self.scaler.step(self.optim)
             self.scaler.update()
         else:
-            notuse_mask = torch.zeros_like(index, dtype=torch.bool).to(self.device)
-            halfuse_mask = torch.zeros_like(index, dtype=torch.bool).to(self.device)
-            if hasattr(self.criterion, 'losstype') and self.criterion.losstype == 'rc_refine' and hasattr(self, 'feat_idxs_unsafe'):
-                for i, idx in enumerate(index):
-                    notuse_mask[i] = self.feat_idxs_unsafe.get(idx.item(), False)
-                    halfuse_mask[i] = self.feat_idxs_halfsafe.get(idx.item(), False)
-
-            weight = (~halfuse_mask) * (~notuse_mask) + self.cfg.TRAINER.PLL.HALF_USE_W * halfuse_mask       #full use examples weight are 1.0 and half use is 0.5, not use is 0.0
+            # notuse_mask = torch.zeros_like(index, dtype=torch.bool).to(self.device)
+            # halfuse_mask = torch.zeros_like(index, dtype=torch.bool).to(self.device)
+            # if hasattr(self.criterion, 'losstype') and 'refine' in self.criterion.losstype:
+            #     for i, idx in enumerate(index):
+            #         notuse_mask[i] = self.feat_idxs_unsafe.get(idx.item(), False)
+            #         halfuse_mask[i] = self.feat_idxs_halfsafe.get(idx.item(), False)
+            # weight = (~halfuse_mask) * (~notuse_mask) + self.cfg.TRAINER.PLL.HALF_USE_W * halfuse_mask       #full use examples weight are 1.0 and half use is 0.5, not use is 0.0
             output, image_features, text_features = self.model(image)             # 0.5 is weight for half use examples
             # loss = self.GCE_loss(output, label)
             loss = self.criterion(output, label, index)
-            loss = (loss * weight).mean()
+            loss = (loss * self.feat_weight[index]).mean()
 
             if self.cfg.TRAINER.PLL.USE_REGULAR:
                 loss_regular = F.cross_entropy(self.model.regular, self.model.regular_label, )
@@ -934,7 +933,7 @@ class UPLTrainer(TrainerX):
                 partialY = torch.cat(partialY_, dim=0)
 
         # Attributes:
-        self.partialY = partialY
+        self.partialY = partialY; self.labels_true = labels_true
         return predict_label_dict 
 
     @torch.no_grad()
@@ -1211,6 +1210,9 @@ class UPLTrainer(TrainerX):
         if self.epoch == 0:            #self.epoch start from 0
             if 'refine' in self.criterion.losstype:
                 self.criterion.cls_pools_dict = self.init_cls_pools(split="train")
+                for cls_idx, pool in self.criterion.cls_pools_dict.items():
+                    pool.labels_true = self.labels_true
+
 
         elif self.epoch > 0:
             self.set_model_mode("eval")
@@ -1232,11 +1234,15 @@ class UPLTrainer(TrainerX):
             pool_certn_norm, info_dict = self.criterion.update_conf_epochend(indexs_all, output_all)
                                                                             
             self.pool_certn_norm = pool_certn_norm
-            self.feat_idxs_halfsafe = info_dict.get('popped_idxs_safe', {})
-            self.feat_idxs_unsafe = info_dict.get('popped_idxs_unsafe', {})
+            # self.feat_idxs_halfsafe = info_dict.get('popped_idxs_safe', {})
+            # self.feat_idxs_unsafe = info_dict.get('popped_idxs_unsafe', {})
+            self.feat_weight = info_dict.get('unsafe_feat_weight', torch.ones(self.conf.shape[1], 
+                                                                              dtype=torch.float16, device=self.device))
 
             if hasattr(self.criterion, 'cls_pools_dict'):
-                pool_next_capacity = self.cfg.TRAINER.PLL.MAX_POOLNUM * pool_certn_norm
+                init_cap = self.cfg.TRAINER.PLL.MAX_POOLNUM * self.cfg.TRAINER.PLL.POOL_INITRATIO
+                pool_next_capacity = (self.cfg.TRAINER.PLL.MAX_POOLNUM - init_cap) * pool_certn_norm + init_cap
+
                 for cls_idx, pool in self.criterion.cls_pools_dict.items():
                     pool.scale_pool(next_capacity=round(pool_next_capacity[cls_idx].item()))
                     pool.reset()
@@ -1249,7 +1255,7 @@ class UPLTrainer(TrainerX):
     @torch.no_grad()                           
     def init_cls_pools(self, split="train"):
         pools_dict = select_top_k_certainty_per_class(class_ids=torch.arange(0, len(self.lab2cname)), 
-                                                      K=int(max(self.cfg.TRAINER.PLL.MAX_POOLNUM*0.4, 3)))     #选择每个类别visual emb和text emb最相似的K个样本，对每个样本取预测的vector，最后加到info dict中（k>=0时）。 对每个样本取预测的vector，然后加到所有训练样本的info dict中（k=-1时）
+                                                      K=int(max(self.cfg.TRAINER.PLL.MAX_POOLNUM*self.cfg.TRAINER.PLL.POOL_INITRATIO, 3)))     #选择每个类别visual emb和text emb最相似的K个样本，对每个样本取预测的vector，最后加到info dict中（k>=0时）。 对每个样本取预测的vector，然后加到所有训练样本的info dict中（k=-1时）
         return pools_dict
     
 

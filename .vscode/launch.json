@@ -52,15 +52,14 @@
           ]
         },
         {
-          "name": "upl_train.py-ucf101-debug_worstClasses",
+          "name": "upl_train.py-ssdtd-debug_worstClasses",
           "type": "python",
           "request": "launch",
           "program": "upl_train.py",
           "console": "integratedTerminal",
           "justMyCode": false,
           "env": {
-            "CUDA_VISIBLE_DEVICES": "2",
-            // "CUDA_LAUNCH_BLOCKING": "1",
+            "CUDA_VISIBLE_DEVICES": "2"
           },
           "args": [
             "--root=./data",
@@ -68,9 +67,9 @@
             "--trainer=UPLTrainer",
             "--dataset-config-file=configs/datasets/ssdtd.yaml",
             "--config-file=configs/trainers/UPLTrainer/rn50_ep50.yaml",
-            "--output-dir=./output/ssdtd/UPLTrainer/rn50_ep50_16shots-10.24-debug/10.24-debug_doublecheck_8",
+            "--output-dir=./output/ssdtd/UPLTrainer/rn50_ep50_16shots-10.24-debug/10.24-debug_doublecheck25",
             "--num-fp=0",
-            "--loss_type=cc_refine",
+            "--loss_type=rc_refine",
             "TRAINER.UPLTrainer.N_CTX",
             "16",
             "TRAINER.UPLTrainer.CSC",
@@ -93,10 +92,10 @@
             "True",
             "TRAINER.PLL.TEMPERATURE",
             "1.0",
-            // "TRAINER.PLL.INIT_EPOCH",
-            // "0",
+            "TRAINER.PLL.SAFE_FACTOR",
+            "3.0",
             "TRAINER.PLL.CONF_MOMN",
-            "0.97",
+            "0.5",
             "TRAINER.PLL.TOP_POOLS",
             "3",
             "TRAINER.PLL.MAX_POOLNUM",
@@ -420,6 +419,62 @@
           ]
         },
 
+      {
+      "name": "get_info.py-rn50-ssfood101",
+      "type": "python",
+      "request": "launch",
+      "program": "get_info.py",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": {
+          "CUDA_VISIBLE_DEVICES": "3"
+      },
+      "args": [
+          "--root=./data",
+          "--seed=1",
+          "--trainer=UPLTrainer",
+          "--dataset-config-file=configs/datasets/ssfood101.yaml",   //
+          "--config-file=configs/trainers/UPLTrainer/anay_rn50.yaml",
+          "--output-dir=./output/ssfood101/UPLTrainer/anay_rn50_16shots_random_init/nctx16_cscFalse_ctpend-1/seed1",
+          "--tag=-1",
+          "TRAINER.UPLTrainer.N_CTX",
+          "16",
+          "TRAINER.UPLTrainer.CSC",
+          "False",
+          "TRAINER.UPLTrainer.CLASS_TOKEN_POSITION",
+          "end",
+          "DATASET.NUM_SHOTS",
+          "16"
+      ]
+      },
+      {
+      "name": "get_info.py-rn50-ssoxford_flowers",
+      "type": "python",
+      "request": "launch",
+      "program": "get_info.py",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": {
+          "CUDA_VISIBLE_DEVICES": "3"
+      },
+      "args": [
+          "--root=./data",
+          "--seed=1",
+          "--trainer=UPLTrainer",
+          "--dataset-config-file=configs/datasets/ssoxford_flowers.yaml",   //
+          "--config-file=configs/trainers/UPLTrainer/anay_rn50.yaml",
+          "--output-dir=./output/ssoxford_flowers/UPLTrainer/anay_rn50_16shots_random_init/nctx16_cscFalse_ctpend-1/seed1",
+          "--tag=-1",
+          "TRAINER.UPLTrainer.N_CTX",
+          "16",
+          "TRAINER.UPLTrainer.CSC",
+          "False",
+          "TRAINER.UPLTrainer.CLASS_TOKEN_POSITION",
+          "end",
+          "DATASET.NUM_SHOTS",
+          "16"
+      ]
+      },
       {
       "name": "get_info.py-rn50-dtd",
       "type": "python",

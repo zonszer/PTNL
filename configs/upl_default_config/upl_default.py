@@ -293,6 +293,8 @@ _C.TRAINER.FIXMATCH.STRONG_TRANSFORMS = ()
 
 _C.TRAINER.ENSEMBLE_NUM = 1
 
+# _C.TRAINER.USE_BEST = True		# whether to use best model for testing
+
 # PLL cfg:
 _C.TRAINER.PLL = CN()
 _C.TRAINER.PLL.USE_PLL = False  # whether to use PLL
@@ -304,6 +306,7 @@ _C.TRAINER.PLL.USE_LABEL_FILTER = False	# whether to use regular term in loss
 _C.TRAINER.PLL.TEMPERATURE = 1.0  # temperature for sharpening the probability
 _C.TRAINER.PLL.CONF_MOMN = 0.95 # momentum for updating confidence
 _C.TRAINER.PLL.MAX_POOLNUM = 16 # enlarge scale for pool
+_C.TRAINER.PLL.POOL_INITRATIO = 0.4 # enlarge scale for pool
 _C.TRAINER.PLL.TOP_POOLS = 1 # number of top pools to use
 _C.TRAINER.PLL.SAFE_FACTOR = 1.5 # number of top pools to use
 _C.TRAINER.PLL.HALF_USE_W = 0.5 # the weight of half use eamples

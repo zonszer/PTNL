@@ -60,8 +60,6 @@ class ClassLabelPool:
         #attribute:
         self.pool_capacity = 0
         self.unc_max = 1e-10
-        self.popped_idx_past = None
-        self.popped_unc_past = None
 
         assert self.is_freeze == False
         self.pool_unc_past = None
@@ -76,7 +74,7 @@ class ClassLabelPool:
         if next_capacity >= self.pool_max_capacity and next_capacity > self.baseline_capacity:
             self.pool_max_capacity = next_capacity
         else:
-            self.pool_max_capacity = self.baseline_capacity
+            self.pool_max_capacity = max(round(self.pool_max_capacity * 0.7), self.baseline_capacity)
         return
 
     def freeze_stored_items(self):
@@ -135,27 +133,19 @@ class ClassLabelPool:
             self.popped_unc = unc
 
 
-    def pop_notinpool_items(self):
+    def pop_notinpool_items(self, retain=False):
         """
         Get the popped items.
         Returns:
             tuple: A tuple containing the popped items (popped_idx, popped_unc).
         """
-        self.popped_idx_past, self.popped_unc_past = self.popped_idx, self.popped_unc
-        self.popped_idx = torch.LongTensor([])
-        self.popped_unc = torch.Tensor([]).type(self.popped_unc.dtype).to(self.popped_unc.device)
-
-        return self.popped_idx_past, self.popped_unc_past
-    
-    def clean_past_popped(self):
-        """
-        Clean the past popped items.
-        Returns:
-            tuple: A tuple containing the popped items (popped_idx, popped_unc).
-        """
-        popped_idx_past_, popped_unc_past_ = self.popped_idx_past, self.popped_unc_past
-        self.popped_idx_past, self.popped_unc_past = None, None
-        return popped_idx_past_
+        if retain:
+            return self.popped_idx, self.popped_unc
+        else:
+            popped_idx_past, popped_unc_past = self.popped_idx, self.popped_unc
+            self.popped_idx = torch.LongTensor([])
+            self.popped_unc = torch.Tensor([]).type(self.popped_unc.dtype).to(self.popped_unc.device)
+            return popped_idx_past, popped_unc_past
 
 
     def update(self, feat_idx: torch.LongTensor, feat_unc: torch.Tensor, record_popped=True):
@@ -203,8 +193,32 @@ class ClassLabelPool:
             str_ += f"unc_max: {self.unc_max:.4f}, "
         else:
             str_ += f"unc_max: None, "
+        if hasattr(self, 'labels_true'):
+            corrcet_num = (self.labels_true[self.pool_idx] == torch.LongTensor([self.cls_id])).sum()
+            str_ += f"pool ACC: {corrcet_num}/{self.pool_capacity}, "
         return str_ + f"pool_capacity: {self.pool_capacity}/{self.pool_max_capacity}"
     
+
+def find_elem_idx_BinA(A, B):
+    """
+    This function finds the indices of the elements of tensor b in tensor a.
+    
+    Parameters:
+    a (torch.Tensor): The tensor in which to find the indices.
+    b (torch.Tensor): The tensor whose elements' indices are to be found.
+    
+    Returns:
+    torch.Tensor: A tensor containing the indices of the elements of b in a.
+    """
+    
+    # Create a dictionary with elements of a as keys and their indices as values
+    a_dict = {item.item(): i for i, item in enumerate(A)}
+    
+    # Map the elements of b to their corresponding indices in a using the dictionary
+    indices = torch.tensor([a_dict[item.item()] for item in B])
+    
+    return indices
+
 
 
 def restore_pic(x):
