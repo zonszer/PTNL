@@ -60,18 +60,24 @@ def formatting_data(data_dict):
 #log_10.25-retest_rc_refine_ep100_1refill_ssdtd.txt --> 四个改进，需要与10.24的对比看是否有提升（这个是HACk版本，即pool cap那里有问题的main branch）
 #log_10.26-DEBUG_retest_rc_refine_ep100_improRefill&unc__ssdtd.txt -->四个改进，需要与10.24的对比看是否有提升
 #log_10.26-DEBUG_retest_rc_refine_ep100_improRefill&unc_1_ssdtd.txt -->三个改进（去掉pool cap的-1），需要与10.24的对比看是否有提升
+#log_10.28-test_cc_refine_ep100_ssdtd.txt --> 把10.28 final 版本的修改加到cc_refine上
 
 #cc_refine:
 #log_10.24-test_cc_refine_ep100_1refill_ssdtd.txt --> test cc_refine on dtd dataset (TopP=1,2,3,4) (old)
 #log_10.26-DEBUG_test_cc_refine_ep100_1refill_improRefill&unc_ssdtd.txt -->四个改进，需要与10.24的对比看是否有提升
 #log_10.26-DEBUG_test_cc_refine_ep100_1refill_improRefill&unc_1cap_ssdtd.txt --> 把pool cap改成回old版本（只升不降, no -1），需要与10.24的对比看是否有提升
 # log_10.26-DEBUG_test_cc_refine_ep100_HackCap_ssdtd.txt --> 看看cc用hack版本的pool cap是否有提升
+#log_10.27-test_rc&cav_refine_ep100_ssdtd.txt --> 做的修改见导图（10.27以后的结果都默认用了last epoch的结果）
+#log_10.28-test_rc&cav_refine_ep100_ssdtd.txt --> 做的修改见导图
+#log_10.28-test_rc&cav_refine_ep100_1_ssdtd.txt --> 做的修改见导图
+#log_10.28-test_rc&cav_refine_ep100_2_ssdtd.txt --> 做的修改见导图
+#log_10.28-test_rc&cav_refine_ep100_final_ssdtd.txt --> 做的修改见导图
 
-# data_dict = extract_info('log_10-04_14-06-35_ssoxford_pets.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssoxford_pets.txt
-data_dict_new = extract_info('log_10.27-test_rc&cav_refine_ep100_ssdtd.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
-data_dict_new_hack = extract_info('log_10.26-DEBUG_test_cc_refine_ep100_HackCap_ssdtd--LastEpoch.txt')      
-data_dict_new1 = extract_info('log_10.26-DEBUG_test_cc_refine_ep100_1refill_improRefill&unc_1cap_ssdtd--LastEpoch.txt')      
-data_dict_old = extract_info('log_10.24-test_cc_refine_ep100_1refill_ssdtd--LastEpoch.txt')      
+
+data_dict_new = extract_info('log_10.28-test_cc_refine_ep100_ssdtd.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
+data_dict_new_hack = extract_info('log_10.25-retest_rc_refine_ep100_1refill_ssdtd--LastEpoch.txt')      
+data_dict_new1 = extract_info('log_10.26-DEBUG_retest_rc_refine_ep100_improRefill&unc__ssdtd--LastEpoch.txt')      
+data_dict_old = extract_info('log_10.24-retest_rc_refine_ep100_1refill_ssdtd--LastEpoch.txt')      
 
 data_dict_new = formatting_data(data_dict_new)
 data_dict_new1 = formatting_data(data_dict_new1)
@@ -101,7 +107,7 @@ df_new_hack = parse2df(data_dict_new_hack)
 df_old = parse2df(data_dict_old)
 # merge two data dicts:
 df_old.loc[:, "change"] = 'old'
-df_new1.loc[:, "change"] = 'new no-1'
+df_new1.loc[:, "change"] = 'new has-1'
 df_new_hack.loc[:, "change"] = 'new_hack'
 df_new.loc[:, "change"] = 'new'
 # df.loc[:, "UseWeightedbeta"] = 'False'
@@ -151,15 +157,21 @@ def generate_exp_id(row):
 
 
 # Filter the DataFrame
-filtered_df = df[df['change'] == 'new']
+#----------------------settings----------------------
+change_ = "(df['change']=='new')"
+loss_ = "(df['loss']=='cc refine')"
+
+select_condiction_ = loss_   +'&'+  change_  #+'&'+ loss #+'&'+ seed #+'&'+ topP 
+#----------------------settings----------------------
+
+filtered_df = df[eval(select_condiction_)]
 # Check for missing experiments
 missing_experiments_df = check_missing_experiments(filtered_df)
 # Check for missing experiments
-print('len missing_experiments:', len(missing_experiments_df))
+print('len missing_exp_ids:', len(missing_experiments_df))
 missing_exp_ids = missing_experiments_df.apply(generate_exp_id, axis=1).tolist()
 
-# Now you can continue with the rest of your code as before, 
-# modifying the variables to match the hyperparameters in your DataFrame
+
 #%%
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
@@ -171,15 +183,16 @@ import numpy as np
 # Select the rows where beta == 1.5 and bs == 32
 change = "(df['change']=='new')"
 # loss = "(df['loss']!='CE')"
-loss = "(df['loss']=='rc refine')"
-# loss = "(df['loss']=='cc') "
+loss = "(df['loss']=='cc refine')"
+# loss = "(df['loss']=='cav refine')"
+# loss = "(df['loss']=='rc rc') "
 # loss = "(df['loss']=='rc cav')"
 # beta = "(df['beta']=='0.0')"
-PLL_ratio = "(df['usePLLTrue']=='0.1')"
+PLL_ratio = "(df['usePLLTrue']=='0.3')"
 
 # 1. for test rc_refine: -- > grouped_vars = ["safeF", "halfW", "topP"]  
-MAXPOOL	= "(df['MAXPOOL']=='16')"
-topP = "(df['topP']=='4')"
+MAXPOOL	= "(df['MAXPOOL']=='14')"
+# topP = "(df['topP']=='4')"
 
 # 2. for test cc_refine: --> grouped_vars =  ["safeF", "cMomn", "topP"]     
 # cMomn = "(df['cMomn']=='0.99')"
@@ -191,8 +204,8 @@ topP = "(df['topP']=='4')"
 # topP = "(df['topP']=='2')"
 # Iepoch = "(df['Iepoch']=='1') | (df['Iepoch'].isna())" 
 # seed = "(~((df['seed']=='3') & (df['loss']=='rc cav') & (df['usePLLTrue']=='0.3')))"
-seed = "(df['seed']=='1')"
-select_condiction = PLL_ratio  +'&'+  MAXPOOL  +'&'+ change +'&'+ topP +'&'+ loss +'&'+ seed
+# seed = "(df['seed']=='1')"
+select_condiction = PLL_ratio   +'&'+  change  +'&'+ loss  +'&'+ MAXPOOL #+'&'+ topP 
 
 if select_condiction == 'None':
     selected_rows = df
@@ -201,8 +214,7 @@ else:
 #----------------------settings----------------------
 
 # Group by Variables
-grouped_vars = ["safeF", "halfW", "cMomn"]          
-# grouped_vars = ["safeF", "cMomn", "change"]               
+grouped_vars = ["cMomn", "halfW", "topP"]               
 compar_var = 'accuracy'
 print("len(selected_rows) :", len(selected_rows))
 grouped_data = selected_rows.groupby(grouped_vars)[compar_var].mean().reset_index()

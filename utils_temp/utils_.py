@@ -215,7 +215,7 @@ def find_elem_idx_BinA(A, B):
     a_dict = {item.item(): i for i, item in enumerate(A)}
     
     # Map the elements of b to their corresponding indices in a using the dictionary
-    indices = torch.tensor([a_dict[item.item()] for item in B])
+    indices = torch.tensor([a_dict[item.item()] for item in B], dtype=torch.long)
     
     return indices
 

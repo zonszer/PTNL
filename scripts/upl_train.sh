@@ -5,7 +5,7 @@ cd ..
 # custom config
 DATA=./data
 TRAINER=UPLTrainer
-exp_ID="10.28-test_cc_refine_ep100"    #NOTE +time
+exp_ID="10.29-test_cc_refine_ep100"    #NOTE +time
 # TODO: 
 #1. change oonf clean threshold and set safe factor and range
 #10.19-test_cc_refine_ep100_safe&clean2
@@ -89,11 +89,12 @@ USE_REGULAR=False     #add 2
 USE_LABEL_FILTER=True
 # declare -a BETAS=(0.0 0.1 0.2 0.3)
 BETA=0.0
-declare -a CONF_MOMNs=(0.95 0.97 0.99)
-declare -a TOP_POOLs=(2 3)
+declare -a CONF_MOMNs=(0.95 0.99)
+declare -a TOP_POOLs=(1 2)
 # declare -a MAX_POOLNUMs=(14 16)
 declare -a DATASETs=('ssdtd')
-declare -a SAFT_FACTORs=(0.0)
+# declare -a SAFT_FACTORs=(0.0)
+declare -a HALF_USE_Ws=(0.2 0.3 0.7 0.8)
 # declare -a SHRINK_FACTORs=(0.5 0.3 0.7)
 
 if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
@@ -116,11 +117,11 @@ do
             do
                 for CONF_MOMN in "${CONF_MOMNs[@]}"
                 do
-                    for SAFT_FACTOR in "${SAFT_FACTORs[@]}"
+                    for HALF_USE_W in "${HALF_USE_Ws[@]}"
                     do
                         for MAX_POOLNUM in "${MAX_POOLNUMs[@]}"
                         do
-                            common_id="data-${DATASET}_model-${CFG}_shots-${SHOTS}_nctx-${NCTX}_ctp-${CTP}_fp-${FP}_usePLL${use_PLL}-${PLL_partial_rate}_loss-${loss_type}_seed-${SEED}_beta-${BETA}_FILT-${USE_LABEL_FILTER}_cMomn-${CONF_MOMN}_topP-${TOP_POOL}_MAXPOOL-${MAX_POOLNUM}_safeF-${SAFT_FACTOR}"
+                            common_id="data-${DATASET}_model-${CFG}_shots-${SHOTS}_nctx-${NCTX}_ctp-${CTP}_fp-${FP}_usePLL${use_PLL}-${PLL_partial_rate}_loss-${loss_type}_seed-${SEED}_beta-${BETA}_FILT-${USE_LABEL_FILTER}_cMomn-${CONF_MOMN}_topP-${TOP_POOL}_MAXPOOL-${MAX_POOLNUM}_halfW-${HALF_USE_W}"
                             DIR=./output/${DATASET}/${TRAINER}/${CFG}_${SHOTS}shots-${TAG}/SEED${SEED}/${common_id}
                             if [ -d "$DIR" ]; then
                                 echo "Results are available in ${DIR}. Skip this job"
@@ -148,7 +149,7 @@ do
                                 TRAINER.PLL.USE_LABEL_FILTER ${USE_LABEL_FILTER} \
                                 TRAINER.PLL.CONF_MOMN ${CONF_MOMN} \
                                 TRAINER.PLL.MAX_POOLNUM ${MAX_POOLNUM} \
-                                TRAINER.PLL.SAFE_FACTOR ${SAFT_FACTOR} \
+                                TRAINER.PLL.HALF_USE_W ${HALF_USE_W} \
                                 TRAINER.PLL.TOP_POOLS ${TOP_POOL}
                                 
                                 ACCURACY=$(grep -A4 'Do evaluation on test set' ${DIR}/log.txt | grep 'accuracy:' | awk -F' ' '{print $3}')
