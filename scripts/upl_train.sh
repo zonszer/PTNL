@@ -5,7 +5,7 @@ cd ..
 # custom config
 DATA=./data
 TRAINER=UPLTrainer
-exp_ID="10.29-test_cc_refine_ep100"    #NOTE +time
+exp_ID="10.30-test_cc_refine_ep100_1"    #NOTE +time
 # TODO: 
 #1. change oonf clean threshold and set safe factor and range
 #10.19-test_cc_refine_ep100_safe&clean2
@@ -87,20 +87,21 @@ TAG=$TAG # log tag (multiple_models_random_init or rn50_random_init)
 #---------------------------individual settings: ---------------------------
 USE_REGULAR=False     #add 2
 USE_LABEL_FILTER=True
+# TEMPERATURE=1.0
 # declare -a BETAS=(0.0 0.1 0.2 0.3)
 BETA=0.0
-declare -a CONF_MOMNs=(0.95 0.99)
-declare -a TOP_POOLs=(1 2)
+declare -a CONF_MOMNs=(0.01 0.03 0.05)
+declare -a TOP_POOLs=(1 2 3)
 # declare -a MAX_POOLNUMs=(14 16)
 declare -a DATASETs=('ssdtd')
 # declare -a SAFT_FACTORs=(0.0)
-declare -a HALF_USE_Ws=(0.2 0.3 0.7 0.8)
+declare -a HALF_USE_Ws=(0.2 0.3 0.4 0.5 0.7)
 # declare -a SHRINK_FACTORs=(0.5 0.3 0.7)
 
 if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
     declare -a MAX_POOLNUMs=(16)  
 elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
-    declare -a MAX_POOLNUMs=(16 14)  
+    declare -a MAX_POOLNUMs=(16)  
 else 
     echo "Invalid rate for MAX_POOLNUMs"
 fi

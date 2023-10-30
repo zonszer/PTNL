@@ -1,0 +1,99 @@
+absl-py==2.0.0
+asttokens @ file:///home/conda/feedstock_root/build_artifacts/asttokens_1694046349000/work
+backcall @ file:///home/conda/feedstock_root/build_artifacts/backcall_1592338393461/work
+backports.functools-lru-cache @ file:///home/conda/feedstock_root/build_artifacts/backports.functools_lru_cache_1687772187254/work
+beautifulsoup4==4.12.2
+cachetools==5.3.1
+certifi==2023.7.22
+charset-normalizer==3.3.0
+comm @ file:///home/conda/feedstock_root/build_artifacts/comm_1691044910542/work
+contourpy==1.1.1
+cycler==0.12.1
+# Editable install with no version control (dassl==0.6.3)
+-e /home/zjh/proj_10.21/dassl/Dassl.pytorch-master
+debugpy @ file:///croot/debugpy_1690905042057/work
+decorator @ file:///home/conda/feedstock_root/build_artifacts/decorator_1641555617451/work
+entrypoints==0.3
+exceptiongroup @ file:///home/conda/feedstock_root/build_artifacts/exceptiongroup_1692026125334/work
+executing @ file:///home/conda/feedstock_root/build_artifacts/executing_1667317341051/work
+filelock==3.12.4
+flake8==3.7.9
+fonttools==4.43.1
+ftfy==6.1.1
+future==0.18.3
+gdown==4.7.1
+google-auth==2.23.3
+google-auth-oauthlib==1.1.0
+grpcio==1.59.0
+idna==3.4
+importlib-metadata==6.8.0
+importlib-resources==6.1.0
+ipykernel @ file:///home/conda/feedstock_root/build_artifacts/ipykernel_1693880262622/work
+ipython @ file:///home/conda/feedstock_root/build_artifacts/ipython_1696264049390/work
+isort==4.3.21
+jedi @ file:///home/conda/feedstock_root/build_artifacts/jedi_1696326070614/work
+joblib==1.3.2
+jupyter-client @ file:///home/conda/feedstock_root/build_artifacts/jupyter_client_1654730843242/work
+jupyter_core @ file:///home/conda/feedstock_root/build_artifacts/jupyter_core_1669775081219/work
+kiwisolver==1.4.5
+littleutils==0.2.2
+Markdown==3.5
+MarkupSafe==2.1.3
+matplotlib==3.8.0
+matplotlib-inline @ file:///home/conda/feedstock_root/build_artifacts/matplotlib-inline_1660814786464/work
+mccabe==0.6.1
+nest-asyncio @ file:///home/conda/feedstock_root/build_artifacts/nest-asyncio_1697083700168/work
+numpy==1.26.1
+oauthlib==3.2.2
+ogb==1.3.6
+outdated==0.2.2
+packaging @ file:///home/conda/feedstock_root/build_artifacts/packaging_1696202382185/work
+pandas==2.1.1
+parso @ file:///home/conda/feedstock_root/build_artifacts/parso_1638334955874/work
+pexpect @ file:///home/conda/feedstock_root/build_artifacts/pexpect_1667297516076/work
+pickleshare @ file:///home/conda/feedstock_root/build_artifacts/pickleshare_1602536217715/work
+Pillow==10.1.0
+prompt-toolkit @ file:///home/conda/feedstock_root/build_artifacts/prompt-toolkit_1688565951714/work
+protobuf==4.23.4
+psutil @ file:///opt/conda/conda-bld/psutil_1656431268089/work
+ptyprocess @ file:///home/conda/feedstock_root/build_artifacts/ptyprocess_1609419310487/work/dist/ptyprocess-0.7.0-py2.py3-none-any.whl
+pure-eval @ file:///home/conda/feedstock_root/build_artifacts/pure_eval_1642875951954/work
+pyasn1==0.5.0
+pyasn1-modules==0.3.0
+pycodestyle==2.5.0
+pyflakes==2.1.1
+Pygments @ file:///home/conda/feedstock_root/build_artifacts/pygments_1691408637400/work
+pyparsing==3.1.1
+PySocks==1.7.1
+python-dateutil @ file:///home/conda/feedstock_root/build_artifacts/python-dateutil_1626286286081/work
+pytz==2023.3.post1
+PyYAML==6.0.1
+pyzmq @ file:///croot/pyzmq_1686601365461/work
+regex==2023.10.3
+requests==2.31.0
+requests-oauthlib==1.3.1
+rsa==4.9
+scikit-learn==1.3.1
+scipy==1.11.3
+seaborn==0.13.0
+six @ file:///home/conda/feedstock_root/build_artifacts/six_1620240208055/work
+soupsieve==2.5
+stack-data @ file:///home/conda/feedstock_root/build_artifacts/stack_data_1669632077133/work
+tabulate==0.9.0
+tb-nightly==2.15.0a20231019
+tensorboard-data-server==0.7.1
+threadpoolctl==3.2.0
+torch==1.12.0
+torchvision==0.13.0
+tornado @ file:///home/conda/feedstock_root/build_artifacts/tornado_1648827245914/work
+tqdm==4.66.1
+traitlets @ file:///home/conda/feedstock_root/build_artifacts/traitlets_1696377679271/work
+typing_extensions @ file:///croot/typing_extensions_1690297465030/work
+tzdata==2023.3
+urllib3==2.0.7
+wcwidth @ file:///home/conda/feedstock_root/build_artifacts/wcwidth_1696255154857/work
+Werkzeug==3.0.0
+wilds==1.2.2
+yacs==0.1.8
+yapf==0.29.0
+zipp==3.17.0

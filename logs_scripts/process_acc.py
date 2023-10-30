@@ -61,6 +61,7 @@ def formatting_data(data_dict):
 #log_10.26-DEBUG_retest_rc_refine_ep100_improRefill&unc__ssdtd.txt -->四个改进，需要与10.24的对比看是否有提升
 #log_10.26-DEBUG_retest_rc_refine_ep100_improRefill&unc_1_ssdtd.txt -->三个改进（去掉pool cap的-1），需要与10.24的对比看是否有提升
 #log_10.28-test_cc_refine_ep100_ssdtd.txt --> 把10.28 final 版本的修改加到cc_refine上
+#log_10.29-test_rc&cav_refine_ep100_ssdtd.txt --> 做的修改见导图
 
 #cc_refine:
 #log_10.24-test_cc_refine_ep100_1refill_ssdtd.txt --> test cc_refine on dtd dataset (TopP=1,2,3,4) (old)
@@ -74,7 +75,7 @@ def formatting_data(data_dict):
 #log_10.28-test_rc&cav_refine_ep100_final_ssdtd.txt --> 做的修改见导图
 
 
-data_dict_new = extract_info('log_10.28-test_cc_refine_ep100_ssdtd.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
+data_dict_new = extract_info('log_10.29-test_cc_refine_ep100_ssdtd.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
 data_dict_new_hack = extract_info('log_10.25-retest_rc_refine_ep100_1refill_ssdtd--LastEpoch.txt')      
 data_dict_new1 = extract_info('log_10.26-DEBUG_retest_rc_refine_ep100_improRefill&unc__ssdtd--LastEpoch.txt')      
 data_dict_old = extract_info('log_10.24-retest_rc_refine_ep100_1refill_ssdtd--LastEpoch.txt')      
@@ -183,15 +184,16 @@ import numpy as np
 # Select the rows where beta == 1.5 and bs == 32
 change = "(df['change']=='new')"
 # loss = "(df['loss']!='CE')"
-loss = "(df['loss']=='cc refine')"
 # loss = "(df['loss']=='cav refine')"
+# loss = "(df['loss']=='cav refine')"
+loss = "(df['loss']=='cc refine')"
 # loss = "(df['loss']=='rc rc') "
 # loss = "(df['loss']=='rc cav')"
 # beta = "(df['beta']=='0.0')"
-PLL_ratio = "(df['usePLLTrue']=='0.3')"
+PLL_ratio = "(df['usePLLTrue']=='0.1')"
 
 # 1. for test rc_refine: -- > grouped_vars = ["safeF", "halfW", "topP"]  
-MAXPOOL	= "(df['MAXPOOL']=='14')"
+MAXPOOL	= "(df['MAXPOOL']=='16')"
 # topP = "(df['topP']=='4')"
 
 # 2. for test cc_refine: --> grouped_vars =  ["safeF", "cMomn", "topP"]     
@@ -244,7 +246,7 @@ else:
     ax = None  # Set to None as there are multiple axes in FacetGrid
     # Add a legend and axis labels to each subplot
     for axes in g.axes.flat:
-        axes.legend(loc='upper left', title=color_axis_var, prop={'size': 6})
+        axes.legend(loc='upper right', title=color_axis_var, prop={'size': 6})
         axes.set_xlabel(x_axis_var)  # Set x-axis label
         axes.set_ylabel(compar_var)  # Set y-axis label
 

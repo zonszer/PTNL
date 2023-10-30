@@ -156,11 +156,14 @@ class ClassLabelPool:
             feat_unc (torch.Tensor): A tensor of feature uncertainties.
         """
         if self.pool_capacity < self.pool_max_capacity:
-            self.pool_idx = torch.cat((self.pool_idx, feat_idx.unsqueeze(0)))  # Interchanged positions
-            self.pool_unc = torch.cat((self.pool_unc, feat_unc.unsqueeze(0)))  # Interchanged positions
-            # self.saved_logits = torch.cat((self.saved_logits, feat_logit.unsqueeze(0)))  # Interchanged positions
-            self.pool_capacity += 1
-            in_pool = True
+            if feat_unc < 1e4:
+                self.pool_idx = torch.cat((self.pool_idx, feat_idx.unsqueeze(0)))  # Interchanged positions
+                self.pool_unc = torch.cat((self.pool_unc, feat_unc.unsqueeze(0)))  # Interchanged positions
+                # self.saved_logits = torch.cat((self.saved_logits, feat_logit.unsqueeze(0)))  # Interchanged positions
+                self.pool_capacity += 1
+                in_pool = True
+            else:
+                in_pool = False
         else:
             assert self.pool_max_capacity >= self.pool_capacity, f"pool_max_capacity: {self.pool_max_capacity}, pool_capacity: {self.pool_capacity}"
             if self.unc_max <= feat_unc:
@@ -172,7 +175,7 @@ class ClassLabelPool:
                 if record_popped:
                     self.popped_idx = torch.cat((self.popped_idx, self.pool_idx[self.unc_max_idx].unsqueeze(0)))  # Interchanged positions
                     self.popped_unc = torch.cat((self.popped_unc, self.pool_unc[self.unc_max_idx].unsqueeze(0)))  # Interchanged positions
-                    # self.popped_img_feats.append(info_dict['image_feat'])      #TODO debug the append is the sam ewith cat
+                    # self.popped_img_feats.append(info_dict['image_feat'])      
                     # self.poped_logits.append(info_dict['logit'])
                 
                 self.pool_idx[self.unc_max_idx] = feat_idx

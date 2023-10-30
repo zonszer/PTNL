@@ -1,0 +1,26 @@
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.1_topP-1_MAXPOOL-16_halfW-0.2 ----> test * accuracy: 
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.1_topP-1_MAXPOOL-16_halfW-0.3 ----> test * accuracy: 61.58%
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.1_topP-1_MAXPOOL-16_halfW-0.2 ----> test * accuracy: 54.43%
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.1_topP-1_MAXPOOL-16_halfW-0.3 ----> test * accuracy: 52.36%
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.1_topP-1_MAXPOOL-16_halfW-0.6 ----> test * accuracy: 59.40%
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.1_topP-1_MAXPOOL-16_halfW-0.7 ----> test * accuracy: 61.11%
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.1_topP-1_MAXPOOL-16_halfW-0.6 ----> test * accuracy: 52.42%
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.1_topP-1_MAXPOOL-16_halfW-0.7 ----> test * accuracy: 52.48%
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.2_topP-1_MAXPOOL-16_halfW-0.2 ----> test * accuracy: 59.22%
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.2_topP-1_MAXPOOL-16_halfW-0.3 ----> test * accuracy: 60.22%
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.2_topP-1_MAXPOOL-16_halfW-0.2 ----> test * accuracy: 54.26%
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.2_topP-1_MAXPOOL-16_halfW-0.3 ----> test * accuracy: 53.78%
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.2_topP-1_MAXPOOL-16_halfW-0.6 ----> test * accuracy: 62.35%
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.2_topP-1_MAXPOOL-16_halfW-0.7 ----> test * accuracy: 59.81%
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.2_topP-1_MAXPOOL-16_halfW-0.6 ----> test * accuracy: 52.78%
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.2_topP-1_MAXPOOL-16_halfW-0.7 ----> test * accuracy: 53.96%
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.1_topP-2_MAXPOOL-16_halfW-0.2 ----> test * accuracy: 61.52%
+----
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.1_topP-2_MAXPOOL-16_halfW-0.3 ----> test * accuracy: 60.22%
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.1_topP-2_MAXPOOL-16_halfW-0.2 ----> test * accuracy: 53.61% 
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.1_topP-2_MAXPOOL-16_halfW-0.3 ----> test * accuracy: 52.36%
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.1_topP-2_MAXPOOL-16_halfW-0.6 ----> test * accuracy: 58.57%
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.1_topP-2_MAXPOOL-16_halfW-0.7 ----> test * accuracy: 60.52%
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.2_topP-2_MAXPOOL-16_halfW-0.6 ----> test * accuracy: 55.32%
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.1_topP-2_MAXPOOL-16_halfW-0.6 ----> test * accuracy: 54.02%
+id: data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.1_loss-cc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.2_topP-2_MAXPOOL-16_halfW-0.2 ----> test * accuracy: 61.88%
