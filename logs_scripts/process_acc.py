@@ -62,6 +62,7 @@ def formatting_data(data_dict):
 #log_10.26-DEBUG_retest_rc_refine_ep100_improRefill&unc_1_ssdtd.txt -->三个改进（去掉pool cap的-1），需要与10.24的对比看是否有提升
 #log_10.28-test_cc_refine_ep100_ssdtd.txt --> 把10.28 final 版本的修改加到cc_refine上
 #log_10.29-test_rc&cav_refine_ep100_ssdtd.txt --> 做的修改见导图
+#log_10.30-test_rc&cav_refine_ep100_ssdtd.txt
 
 #cc_refine:
 #log_10.24-test_cc_refine_ep100_1refill_ssdtd.txt --> test cc_refine on dtd dataset (TopP=1,2,3,4) (old)
@@ -75,7 +76,7 @@ def formatting_data(data_dict):
 #log_10.28-test_rc&cav_refine_ep100_final_ssdtd.txt --> 做的修改见导图
 
 
-data_dict_new = extract_info('log_10.29-test_cc_refine_ep100_ssdtd.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
+data_dict_new = extract_info('log_10.30-test_cc_refine_ep100_1_ssdtd.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
 data_dict_new_hack = extract_info('log_10.25-retest_rc_refine_ep100_1refill_ssdtd--LastEpoch.txt')      
 data_dict_new1 = extract_info('log_10.26-DEBUG_retest_rc_refine_ep100_improRefill&unc__ssdtd--LastEpoch.txt')      
 data_dict_old = extract_info('log_10.24-retest_rc_refine_ep100_1refill_ssdtd--LastEpoch.txt')      
@@ -161,8 +162,8 @@ def generate_exp_id(row):
 #----------------------settings----------------------
 change_ = "(df['change']=='new')"
 loss_ = "(df['loss']=='cc refine')"
-
-select_condiction_ = loss_   +'&'+  change_  #+'&'+ loss #+'&'+ seed #+'&'+ topP 
+# seed_ = "(df['seed']=='1')"
+select_condiction_ = loss_   +'&'+  change_  #+'&'+ seed_
 #----------------------settings----------------------
 
 filtered_df = df[eval(select_condiction_)]
@@ -216,7 +217,7 @@ else:
 #----------------------settings----------------------
 
 # Group by Variables
-grouped_vars = ["cMomn", "halfW", "topP"]               
+grouped_vars = ["halfW", "cMomn", "topP"]               
 compar_var = 'accuracy'
 print("len(selected_rows) :", len(selected_rows))
 grouped_data = selected_rows.groupby(grouped_vars)[compar_var].mean().reset_index()

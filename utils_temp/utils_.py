@@ -308,6 +308,7 @@ def become_deterministic(seed=0):
 
     # https://pytorch.org/docs/stable/generated/torch.use_deterministic_algorithms.html
     os.environ['CUBLAS_WORKSPACE_CONFIG'] = ':16:8'
+    # torch.autograd.set_detect_anomaly(True)
 
     # avoiding nondeterministic algorithms (see https://pytorch.org/docs/stable/notes/randomness.html)
     torch.use_deterministic_algorithms(True)

@@ -385,6 +385,9 @@ class PLL_loss(nn.Module):
             elif conf_type_ == 'cc':
                 revised_conf = (current_val+max_val)/2 + (self.conf_momn * (1 - unc_norm * shrink_f))
                 revised_max_conf = (current_val+max_val)/2     
+                # if torch.isnan(self.conf[cur_pool.pool_idx, :]).any():
+                #     print(f'nan in conf, pool_id: {pool_id}')
+                #     print(f'current_val: {current_val}, max_val: {max_val}, unc_norm: {unc_norm}, revised_conf: {revised_conf}')
             else:
                 revised_conf = (current_val+max_val)/2 * (1 + self.conf_momn * (1 - unc_norm * shrink_f))
                 revised_max_conf = (current_val+max_val)/2 
