@@ -5,7 +5,7 @@ cd ..
 # custom config
 DATA=./data
 TRAINER=UPLTrainer
-exp_ID="10.30-test_rc&cav_refine_ep100"    #NOTE +time
+exp_ID="10.31-test_rc&cav_refine_ep100"    #NOTE +time
 # TODO: 
 #1. change oonf clean threshold and set safe factor and range
 #10.19-test_cc_refine_ep100_safe&clean2
@@ -91,23 +91,20 @@ POOL_INITRATIO=0.4
 # declare -a BETAS=(0.0 0.1 0.2 0.3)
 BETA=0.0
 # declare -a CONF_MOMNs=(0.55 0.60 0.70)      #NOTE for cav and rc it is different
-declare -a TOP_POOLs=(1 2 3)
-# declare -a MAX_POOLNUMs=(16 19)     
 declare -a DATASETs=('ssdtd')
 # declare -a SAFT_FACTORs=(2.5 3.0 4.0)
 declare -a SAFT_FACTORs=(0.0)
-declare -a HALF_USE_Ws=(0.2 0.3 0.7)
+# declare -a SHRINK_FACTORs=(0.5 0.3 0.7)
 
 if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
     declare -a MAX_POOLNUMs=(16)  
+    declare -a TOP_POOLs=(3 4)
 elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
-    declare -a MAX_POOLNUMs=(16 14)  
+    declare -a MAX_POOLNUMs=(16)  
+    declare -a TOP_POOLs=(1)
 else 
     echo "Invalid rate for MAX_POOLNUMs"
 fi
-
-
-# declare -a SHRINK_FACTORs=(0.5 0.3 0.7)
 
 
 for SEED in {1..3}
@@ -117,14 +114,22 @@ do
         LOG_FILE="logs_scripts/log_${TAG}_${DATASET}.txt"
         for loss_type in 'rc_refine' 'cav_refine'
         do
-            if [ "$loss_type" == "cav_refine" ]; then
+            if [ "$loss_type" == "cav_refine" ] && (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
                 declare -a CONF_MOMNs=(0.00)
+                declare -a HALF_USE_Ws=(0.5 0.6 0.8)
             fi
+            if [ "$loss_type" == "cav_refine" ] && (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
+                declare -a CONF_MOMNs=(0.00)
+                declare -a HALF_USE_Ws=(0.0 0.1 0.2)
+            fi
+
             if [ "$loss_type" == "rc_refine" ] && (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
-                declare -a CONF_MOMNs=(0.3 0.4 0.5)
+                declare -a CONF_MOMNs=(0.2 0.3 0.4)
+                declare -a HALF_USE_Ws=(0.2 0.3 0.4)
             fi
             if [ "$loss_type" == "rc_refine" ] && (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
-                declare -a CONF_MOMNs=(0.3 0.4 0.5)
+                declare -a CONF_MOMNs=(0.1 0.2 0.3)
+                declare -a HALF_USE_Ws=(0.1 0.2)
             fi
 
             for TOP_POOL in "${TOP_POOLs[@]}"

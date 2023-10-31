@@ -74,9 +74,9 @@ def formatting_data(data_dict):
 #log_10.28-test_rc&cav_refine_ep100_1_ssdtd.txt --> 做的修改见导图
 #log_10.28-test_rc&cav_refine_ep100_2_ssdtd.txt --> 做的修改见导图
 #log_10.28-test_rc&cav_refine_ep100_final_ssdtd.txt --> 做的修改见导图
+#log_10.30-test_cc_refine_ep100_1_ssdtd.txt
 
-
-data_dict_new = extract_info('log_10.30-test_cc_refine_ep100_1_ssdtd.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
+data_dict_new = extract_info('log_10.30-test_rc&cav_refine_ep100_ssdtd.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
 data_dict_new_hack = extract_info('log_10.25-retest_rc_refine_ep100_1refill_ssdtd--LastEpoch.txt')      
 data_dict_new1 = extract_info('log_10.26-DEBUG_retest_rc_refine_ep100_improRefill&unc__ssdtd--LastEpoch.txt')      
 data_dict_old = extract_info('log_10.24-retest_rc_refine_ep100_1refill_ssdtd--LastEpoch.txt')      
@@ -187,11 +187,11 @@ change = "(df['change']=='new')"
 # loss = "(df['loss']!='CE')"
 # loss = "(df['loss']=='cav refine')"
 # loss = "(df['loss']=='cav refine')"
-loss = "(df['loss']=='cc refine')"
+loss = "(df['loss']=='rc refine')"
 # loss = "(df['loss']=='rc rc') "
 # loss = "(df['loss']=='rc cav')"
 # beta = "(df['beta']=='0.0')"
-PLL_ratio = "(df['usePLLTrue']=='0.1')"
+PLL_ratio = "(df['usePLLTrue']=='0.3')"
 
 # 1. for test rc_refine: -- > grouped_vars = ["safeF", "halfW", "topP"]  
 MAXPOOL	= "(df['MAXPOOL']=='16')"

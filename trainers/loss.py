@@ -401,12 +401,18 @@ class PLL_loss(nn.Module):
             #             self.origin_labels[cur_pool.popped_idx[~safe_range], :]
             # safe_range_num += safe_range.sum().item()
             # clean_num += (~safe_range).sum().item()
-            # if conf_type_ == 'rc' or conf_type_ == 'cav' or conf_type_ == 'cc':       
+            # if conf_type_ == 'rc' or conf_type_ == 'cav' or conf_type_ == 'cc':  
+            unc_notinpool_min   = notinpool_uncs.min()
+            cern_norm = -(notinpool_uncs - unc_notinpool_min) / (notinpool_uncs.max() - unc_notinpool_min) + 1.0     
             if conf_type_ == 'cc':   
-                self.conf[notinpool_idxs, :] = self.origin_labels[notinpool_idxs, :]
-            unc_notinpool_min = notinpool_uncs.min()
-            cern_norm = -(notinpool_uncs - unc_notinpool_min) / (notinpool_uncs.max() - unc_notinpool_min) + 1.0
-            unsafe_feat_weight[notinpool_idxs] = cern_norm * self.cfg.HALF_USE_W 
+                sorted_cern_norm, sorted_indices = torch.sort(cern_norm)
+                num_select = int((1-self.cfg.HALF_USE_W) * notinpool_idxs.shape[0])
+                selected_indices = sorted_indices[:num_select:]
+                reduce_idxs = notinpool_idxs[selected_indices]
+                self.conf[reduce_idxs, :] = self.origin_labels[reduce_idxs, :]
+                # self.conf[notinpool_idxs, :] = self.origin_labels[notinpool_idxs, :]
+            else:
+                unsafe_feat_weight[notinpool_idxs] = cern_norm * self.cfg.HALF_USE_W 
             # popped_feat_weight.extend(unc_norm_.tolist())
             # popped_idxs_unsafe.extend(notinpool_idxs.tolist())
 
