@@ -5,7 +5,7 @@ cd ..
 # custom config
 DATA=./data
 TRAINER=UPLTrainer
-exp_ID="10.31-test_rc&cav_refine_ep100"    #NOTE +time
+exp_ID="10.31-test_rc&cav_refine_ep100"    #NOTE +time 共72+27=99次
 # TODO: 
 #1. change oonf clean threshold and set safe factor and range
 #10.19-test_cc_refine_ep100_safe&clean2
@@ -91,7 +91,7 @@ POOL_INITRATIO=0.4
 # declare -a BETAS=(0.0 0.1 0.2 0.3)
 BETA=0.0
 # declare -a CONF_MOMNs=(0.55 0.60 0.70)      #NOTE for cav and rc it is different
-declare -a DATASETs=('ssdtd')
+declare -a DATASETs=('ssucf101')
 # declare -a SAFT_FACTORs=(2.5 3.0 4.0)
 declare -a SAFT_FACTORs=(0.0)
 # declare -a SHRINK_FACTORs=(0.5 0.3 0.7)

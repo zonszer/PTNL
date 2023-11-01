@@ -16,7 +16,7 @@ def rc_loss(outputs, confidence, index):
     return average_loss
 
 
-def lws_loss(outputs, partialY, confidence, index, lw_weight, lw_weight0, epoch_ratio):
+def lws_loss(outputs, partialY, confidence, index, lw_weight, lw_weight0, epoch_ratio): 
     device = outputs.device
 
     onezero = torch.zeros(outputs.shape[0], outputs.shape[1])
@@ -44,7 +44,7 @@ def lws_loss(outputs, partialY, confidence, index, lw_weight, lw_weight0, epoch_
     average_loss = lw_weight0 * average_loss1 + lw_weight * average_loss2
     return average_loss, lw_weight0 * average_loss1, lw_weight * average_loss2
 
-def lwc_loss(outputs, partialY, confidence, index, lw_weight, lw_weight0, epoch_ratio):
+def lwc_loss(outputs, partialY, confidence, index, lw_weight, lw_weight0, epoch_ratio): #USE THIS for CE
     device = outputs.device
 
     onezero = torch.zeros(outputs.shape[0], outputs.shape[1])

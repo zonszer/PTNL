@@ -228,7 +228,7 @@ def prepare_cv_datasets(dataname, batch_size):
             root='~/datasets/fashion_mnist',
             train=True,
             transform=transforms.ToTensor(),
-            download=False)
+            download=False)  
         test_dataset = dsets.FashionMNIST(root='~/datasets/fashion_mnist',
                                           train=False,
                                           transform=transforms.ToTensor())
@@ -276,18 +276,18 @@ def prepare_cv_datasets_hyper(dataname, batch_size):
         ordinary_train_dataset = dsets.MNIST(root='~/datasets/mnist',
                                              train=True,
                                              transform=transforms.ToTensor(),
-                                             download=True)
+                                             download=False)
     elif dataname == 'kmnist':
         ordinary_train_dataset = dsets.KMNIST(root='~/datasets/kmnist',
                                               train=True,
                                               transform=transforms.ToTensor(),
-                                              download=True)
+                                              download=False)
     elif dataname == 'fashion':
         ordinary_train_dataset = dsets.FashionMNIST(
             root='~/datasets/fashion_mnist',
             train=True,
             transform=transforms.ToTensor(),
-            download=True)
+            download=False)
     elif dataname == 'cifar10':
         train_transform = transforms.Compose([
             transforms.ToTensor(
@@ -298,7 +298,7 @@ def prepare_cv_datasets_hyper(dataname, batch_size):
         ordinary_train_dataset = dsets.CIFAR10(root='~/datasets/cifar10',
                                                train=True,
                                                transform=train_transform,
-                                               download=True)
+                                               download=False)
 
     dataset_size = len(ordinary_train_dataset)
     valid_proportion = 0.1
