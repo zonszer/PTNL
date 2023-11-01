@@ -5,7 +5,7 @@ cd ..
 # custom config
 DATA=./data
 TRAINER=UPLTrainer
-exp_ID="10.26-DEBUG_test_cc_rc_ep100_normal"    #NOTE +time
+exp_ID="11.1_test_lw_ep100_normal"    #NOTE +time
 # TODO: 
 #1. change oonf clean threshold and set safe factor and range
 #10.19-test_cc_refine_ep100_safe&clean2
@@ -92,7 +92,7 @@ BETA=0.0
 declare -a CONF_MOMNs=(0.95)
 declare -a TOP_POOLs=(2)
 # declare -a MAX_POOLNUMs=(14 16)
-declare -a DATASETs=('ssoxford_flowers' 'ssdtd' 'ssucf101' 'ssfood101')
+declare -a DATASETs=('ssdtd' 'ssucf101' 'ssoxford_flowers' 'ssfood101')
 declare -a SAFT_FACTORs=(3.5 4.0 4.5 5.0)
 # declare -a SHRINK_FACTORs=(0.5 0.3 0.7)
 
@@ -110,7 +110,7 @@ do
     for DATASET in "${DATASETs[@]}"
     do
         LOG_FILE="logs_scripts/log_${TAG}_${DATASET}.txt"
-        for loss_type in 'rc_cav' 'cc' 'rc_rc'
+        for loss_type in 'lw_lw'                               #'rc_cav' 'cc' 'rc_rc'
         do
             for TOP_POOL in "${TOP_POOLs[@]}"
             do
@@ -140,7 +140,7 @@ do
                                 TRAINER.UPLTrainer.CLASS_TOKEN_POSITION ${CTP} \
                                 DATASET.NUM_SHOTS ${SHOTS} \
                                 DATASET.CLASS_EQULE ${CLASS_EQULE} \
-                                TEST.FINAL_MODEL best_val \
+                                TEST.FINAL_MODEL last_step \
                                 TRAINER.PLL.BETA ${BETA} \
                                 TRAINER.PLL.USE_REGULAR ${USE_REGULAR} \
                                 TRAINER.PLL.USE_PLL ${use_PLL} \

@@ -16,9 +16,9 @@
             "justMyCode": false,
             "args": [
               "-ds", "cifar10",
-              "-pr", "0.3",
+              "-pr", "03",
               "-mo", "cnn",
-              "-lo", "lws",
+              "-lo", "lwc",
               "-lw", "2",
               "-lr", "0.01",
               "-wd", "0.01",

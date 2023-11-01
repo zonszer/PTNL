@@ -9,7 +9,7 @@ from models.model_resnet import Resnet
 from utils.utils_data import prepare_cv_datasets
 from utils.utils_data import prepare_train_loaders_for_uniform_cv_candidate_labels
 from utils.utils_algo import accuracy_check, confidence_update, confidence_update_lw
-from utils.utils_loss import rc_loss, cc_loss, lws_loss
+from utils.utils_loss import rc_loss, cc_loss, lws_loss, lwc_loss
 
 parser = argparse.ArgumentParser()
 
@@ -30,7 +30,7 @@ parser.add_argument('-lo',
                     help='specify a loss function',
                     default='rc',
                     type=str,
-                    choices=['rc', 'cc', 'lws'],
+                    choices=['rc', 'cc', 'lws', 'lwc'],
                     required=False)
 parser.add_argument('-lw',
                     help='lw sigmoid loss weight',
@@ -84,6 +84,10 @@ elif args.lo in ['lws']:
     save_name = "Res-sgd_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv".format(
         args.ds, args.pr, args.mo, args.lo, args.lw0, args.lw, args.lr, args.wd,
         args.ldr, args.lds, args.ep, args.bs, args.seed)
+elif args.lo in ['lwc']:
+    save_name = "Res-sgd_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv".format(
+        args.ds, args.pr, args.mo, args.lo, args.lw0, args.lw, args.lr, args.wd,
+        args.ldr, args.lds, args.ep, args.bs, args.seed)
 save_path = os.path.join(save_dir, save_name)
 with open(save_path, 'a') as f:
     f.writelines("epoch,train_acc,test_acc\n")
@@ -117,6 +121,11 @@ elif args.lo == 'lws':
     confidence = torch.ones(n, c) / c
     confidence = confidence.to(device)
     loss_fn = lws_loss
+elif args.lo == 'lwc':
+    n, c = train_givenY.shape[0], train_givenY.shape[1]
+    confidence = torch.ones(n, c) / c
+    confidence = confidence.to(device)
+    loss_fn = lwc_loss
 
 if args.mo == 'mlp':
     model = Mlp(n_inputs=dim, n_outputs=K)
@@ -177,11 +186,14 @@ for epoch in range(args.ep):
         elif args.lo == 'lws':
             average_loss, _, _ = loss_fn(outputs, Y.float(), confidence, index,
                                          args.lw, args.lw0, None)
+        elif args.lo == 'lwc':
+            average_loss, _, _ = loss_fn(outputs, Y.float(), confidence, index,
+                                         args.lw, args.lw0, None)
         average_loss.backward()
         optimizer.step()
         if args.lo == 'rc':
             confidence = confidence_update(model, confidence, X, Y, index)
-        elif args.lo == 'lws':
+        elif args.lo == 'lws' or args.lo == 'lwc':
             confidence = confidence_update_lw(model, confidence, X, Y, index)
     model.eval()
     train_accuracy = accuracy_check(loader=train_loader,

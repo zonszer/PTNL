@@ -245,11 +245,11 @@ def prepare_cv_datasets(dataname, batch_size):
                                  (0.247, 0.243, 0.261))
         ])
         ordinary_train_dataset = dsets.CIFAR10(
-            root='~/datasets/cifar10',
+            root='./datasets/cifar10',
             train=True,
             transform=train_transform,
             download=False)
-        test_dataset = dsets.CIFAR10(root='~/datasets/cifar10',
+        test_dataset = dsets.CIFAR10(root='./datasets/cifar10',
                                      train=False,
                                      transform=test_transform)
 
