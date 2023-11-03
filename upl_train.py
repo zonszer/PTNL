@@ -125,6 +125,11 @@ def setup_cfg(args):
 
 
 def main(args):
+    if os.path.exists(args.output_dir):
+        print('==> output_dir already exists')
+        exit()
+    else:
+        os.makedirs(args.output_dir)
     cfg = setup_cfg(args)
     if cfg.SEED >= 0:
         print('Setting fixed seed: {}'.format(cfg.SEED))

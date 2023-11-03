@@ -38,8 +38,10 @@ def formatting_data(data_dict):
 
         new_key = new_key.replace('ssoxford_pets', 'ssoxfordpets')
         new_key = new_key.replace('loss-rc_cav', 'loss-rc cav')
+        new_key = new_key.replace('loss-lw_lw', 'loss-lw lw')
         new_key = new_key.replace('loss-rc_refine', 'loss-rc refine')
         new_key = new_key.replace('loss-cc_refine', 'loss-cc refine')
+        new_key = new_key.replace('loss-lw_refine', 'loss-lw refine')
         new_key = new_key.replace('loss-cav_refine', 'loss-cav refine')
         new_key = new_key.replace('loss-cc_rc', 'loss-cc rc')
         new_key = new_key.replace('loss-rc_rc', 'loss-rc rc')
@@ -63,6 +65,11 @@ def formatting_data(data_dict):
 #log_10.28-test_cc_refine_ep100_ssdtd.txt --> 把10.28 final 版本的修改加到cc_refine上
 #log_10.29-test_rc&cav_refine_ep100_ssdtd.txt --> 做的修改见导图
 #log_10.30-test_rc&cav_refine_ep100_ssdtd.txt
+#log_10.31-test_rc&cav_refine_ep100_ssdtd.txt
+#log_10.31-test_rc&cav_refine_ep100_ssucf101.txt --> 
+#log_11.1-test_lw_refine_ep100_ssdtd.txt
+#log_11.1-test_lw_refine_ep100_ssucf101.txt
+#log_11.2-test_lw&rc_refine_ep100_notuseClean_ssdtd.txt -->
 
 #cc_refine:
 #log_10.24-test_cc_refine_ep100_1refill_ssdtd.txt --> test cc_refine on dtd dataset (TopP=1,2,3,4) (old)
@@ -75,8 +82,10 @@ def formatting_data(data_dict):
 #log_10.28-test_rc&cav_refine_ep100_2_ssdtd.txt --> 做的修改见导图
 #log_10.28-test_rc&cav_refine_ep100_final_ssdtd.txt --> 做的修改见导图
 #log_10.30-test_cc_refine_ep100_1_ssdtd.txt
+#log_10.31-test_cc_refine_ep100_reduceLast_ssdtd.txt
+#log_10.31-test_cc_refine_ep100_reduceLast_ssucf101.txt
 
-data_dict_new = extract_info('log_10.30-test_rc&cav_refine_ep100_ssdtd.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
+data_dict_new = extract_info('log_10.31-test_rc&cav_refine_ep100_ssucf101.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
 data_dict_new_hack = extract_info('log_10.25-retest_rc_refine_ep100_1refill_ssdtd--LastEpoch.txt')      
 data_dict_new1 = extract_info('log_10.26-DEBUG_retest_rc_refine_ep100_improRefill&unc__ssdtd--LastEpoch.txt')      
 data_dict_old = extract_info('log_10.24-retest_rc_refine_ep100_1refill_ssdtd--LastEpoch.txt')      
@@ -150,9 +159,11 @@ def generate_exp_id(row):
     id_str = id_str.replace('rn50ep200', 'rn50_ep200')
     id_str = id_str.replace('ssoxfordpets', 'ssoxford_pets')
     id_str = id_str.replace('loss-rc cav', 'loss-rc_cav')
+    id_str = id_str.replace('loss-lw lw', 'loss-lw_lw')
     id_str = id_str.replace('loss-rc refine', 'loss-rc_refine')
     id_str = id_str.replace('loss-cav refine', 'loss-cav_refine')
     id_str = id_str.replace('loss-cc refine', 'loss-cc_refine')
+    id_str = id_str.replace('loss-lw refine', 'loss-lw_refine')
     id_str = id_str.replace('loss-cc rc', 'loss-cc_rc')
     id_str = id_str.replace('loss-rc rc', 'loss-rc_rc')
     return id_str
@@ -161,9 +172,11 @@ def generate_exp_id(row):
 # Filter the DataFrame
 #----------------------settings----------------------
 change_ = "(df['change']=='new')"
-loss_ = "(df['loss']=='cc refine')"
-# seed_ = "(df['seed']=='1')"
-select_condiction_ = loss_   +'&'+  change_  #+'&'+ seed_
+# loss_ = "(df['loss']=='cc refine')"
+seed_ = "(df['seed']=='2')"
+PLL_ratio_ = "(df['usePLLTrue']=='0.3')"
+
+select_condiction_ = PLL_ratio_   +'&'+  change_  +'&'+ seed_
 #----------------------settings----------------------
 
 filtered_df = df[eval(select_condiction_)]
@@ -185,13 +198,14 @@ import numpy as np
 # Select the rows where beta == 1.5 and bs == 32
 change = "(df['change']=='new')"
 # loss = "(df['loss']!='CE')"
-# loss = "(df['loss']=='cav refine')"
-# loss = "(df['loss']=='cav refine')"
-loss = "(df['loss']=='rc refine')"
+loss = "(df['loss']=='cav refine')"
+# loss = "(df['loss']=='cc refine')"
+# loss = "(df['loss']=='rc refine')"
+# loss = "(df['loss']=='lw refine')"
 # loss = "(df['loss']=='rc rc') "
 # loss = "(df['loss']=='rc cav')"
 # beta = "(df['beta']=='0.0')"
-PLL_ratio = "(df['usePLLTrue']=='0.3')"
+PLL_ratio = "(df['usePLLTrue']=='0.1')"
 
 # 1. for test rc_refine: -- > grouped_vars = ["safeF", "halfW", "topP"]  
 MAXPOOL	= "(df['MAXPOOL']=='16')"
@@ -217,7 +231,7 @@ else:
 #----------------------settings----------------------
 
 # Group by Variables
-grouped_vars = ["halfW", "cMomn", "topP"]               
+grouped_vars = [ "cMomn", "halfW", "topP"]               
 compar_var = 'accuracy'
 print("len(selected_rows) :", len(selected_rows))
 grouped_data = selected_rows.groupby(grouped_vars)[compar_var].mean().reset_index()
@@ -247,7 +261,7 @@ else:
     ax = None  # Set to None as there are multiple axes in FacetGrid
     # Add a legend and axis labels to each subplot
     for axes in g.axes.flat:
-        axes.legend(loc='upper right', title=color_axis_var, prop={'size': 6})
+        axes.legend(loc='upper left', title=color_axis_var, prop={'size': 6})
         axes.set_xlabel(x_axis_var)  # Set x-axis label
         axes.set_ylabel(compar_var)  # Set y-axis label
 
@@ -311,7 +325,6 @@ plt.suptitle(f'{compar_var} VS {grouped_vars} with {select_condiction}', y=1.02)
 plt.tight_layout()
 
 plt.show()
-
 
 # %%
 #conclusion for rugulizaion: 

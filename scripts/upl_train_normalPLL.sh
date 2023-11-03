@@ -90,9 +90,9 @@ USE_LABEL_FILTER=False
 # declare -a BETAS=(0.0 0.1 0.2 0.3)
 BETA=0.0
 declare -a CONF_MOMNs=(0.95)
-declare -a TOP_POOLs=(2)
+declare -a TOP_POOLs=(3)
 # declare -a MAX_POOLNUMs=(14 16)
-declare -a DATASETs=('ssdtd' 'ssucf101' 'ssoxford_flowers' 'ssfood101')
+declare -a DATASETs=('ssdtd' 'ssucf101')
 declare -a SAFT_FACTORs=(3.5 4.0 4.5 5.0)
 # declare -a SHRINK_FACTORs=(0.5 0.3 0.7)
 

@@ -308,7 +308,7 @@ _C.TRAINER.PLL.CONF_MOMN = 0.95 # momentum for updating confidence
 _C.TRAINER.PLL.MAX_POOLNUM = 16 # enlarge scale for pool
 _C.TRAINER.PLL.POOL_INITRATIO = 0.4 # enlarge scale for pool
 _C.TRAINER.PLL.TOP_POOLS = 1 # number of top pools to use
-_C.TRAINER.PLL.SAFE_FACTOR = 1.5 # number of top pools to use
+_C.TRAINER.PLL.SAFE_FACTOR = 3.0 # number of top pools to use
 _C.TRAINER.PLL.HALF_USE_W = 0.5 # the weight of half use eamples
 
 # loss:

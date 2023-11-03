@@ -24,7 +24,7 @@ class PLL_loss(nn.Module):
     gt_label_dict: dict = {}
 
     def __init__(self, type=None, PartialY=None,
-                 eps=1e-7, cfg=None):
+                 eps=1e-6, cfg=None):
         super(PLL_loss, self).__init__()
         self.eps = eps
         self.losstype = type
@@ -146,7 +146,7 @@ class PLL_loss(nn.Module):
         return loss     
 
     def forward_cc_plus(self, x, y, index):
-        logsm_outputs = F.softmax(x / self.T, dim=1)         #x is the model ouputs
+        logsm_outputs = F.softmax(x, dim=1)         #x is the model ouputs
         final_outputs = logsm_outputs * self.conf[index, :]
         loss = - torch.log((final_outputs).sum(dim=1))    #final_outputs=torch.Size([256, 10]) -> Q: why use negative? A:  
         # if torch.where(torch.isnan(final_outputs))[0].shape[0] > 0:
@@ -473,8 +473,9 @@ class PLL_loss(nn.Module):
             # safe_range_num += safe_range.sum().item()
             # clean_num += (~safe_range).sum().item()
             # if conf_type_ == 'rc' or conf_type_ == 'cav' or conf_type_ == 'cc':  
-            unc_notinpool_min   = notinpool_uncs.min()
+            unc_notinpool_min = notinpool_uncs.min()
             cern_norm = -(notinpool_uncs - unc_notinpool_min) / (notinpool_uncs.max() - unc_notinpool_min) + 1.0     
+            unsafe_feat_weight[notinpool_idxs] = cern_norm * self.cfg.HALF_USE_W 
             if conf_type_ == 'cc':   
                 sorted_cern_norm, sorted_indices = torch.sort(cern_norm)
                 num_select = int((1-self.cfg.HALF_USE_W) * notinpool_idxs.shape[0])
@@ -482,8 +483,6 @@ class PLL_loss(nn.Module):
                 reduce_idxs = notinpool_idxs[selected_indices]
                 conf_torevise[reduce_idxs, :] = self.origin_labels[reduce_idxs, :]
                 # conf_torevise[notinpool_idxs, :] = self.origin_labels[notinpool_idxs, :]
-            else:
-                unsafe_feat_weight[notinpool_idxs] = cern_norm * self.cfg.HALF_USE_W 
             # popped_feat_weight.extend(unc_norm_.tolist())
             # popped_idxs_unsafe.extend(notinpool_idxs.tolist())
 

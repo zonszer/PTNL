@@ -97,7 +97,7 @@ declare -a DATASETs=('ssdtd' 'ssucf101')
 
 if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
     declare -a MAX_POOLNUMs=(16)  
-    declare -a HALF_USE_Ws=(0.2 0.3 0.4)
+    declare -a HALF_USE_Ws=(0.3 0.4 0.5)
     declare -a CONF_MOMNs=(0.03 0.05)
     declare -a TOP_POOLs=(2 3)
 
