@@ -24,7 +24,7 @@ class PLL_loss(nn.Module):
     gt_label_dict: dict = {}
 
     def __init__(self, type=None, PartialY=None,
-                 eps=1e-6, cfg=None):
+                 eps=1e-7, cfg=None):
         super(PLL_loss, self).__init__()
         self.eps = eps
         self.losstype = type
