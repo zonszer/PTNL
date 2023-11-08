@@ -74,7 +74,7 @@ class ClassLabelPool:
         if next_capacity >= self.pool_max_capacity and next_capacity > self.baseline_capacity:
             self.pool_max_capacity = next_capacity
         else:
-            self.pool_max_capacity = max(round(self.pool_max_capacity * 0.8), self.baseline_capacity)
+            self.pool_max_capacity = max(round(self.pool_max_capacity * 0.75), self.baseline_capacity)
         return
 
     def freeze_stored_items(self):
