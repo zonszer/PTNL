@@ -73,6 +73,7 @@ def formatting_data(data_dict):
 # log_11.2-test_lw&rc_refine_ep100_All_ssucf101.txt
 #log_11.5-test_refine_ep100_All-0.8_ssucf101.txt
 #log_11.6-test_refine_ep100_All-0.6_ssucf101.txt
+#log_11.8-test_refine_ep100_All-0.75_ssdtd.txt
 
 #cc_refine:
 #log_10.24-test_cc_refine_ep100_1refill_ssdtd.txt --> test cc_refine on dtd dataset (TopP=1,2,3,4) (old)
@@ -88,7 +89,7 @@ def formatting_data(data_dict):
 #log_10.31-test_cc_refine_ep100_reduceLast_ssdtd.txt
 #log_10.31-test_cc_refine_ep100_reduceLast_ssucf101.txt
 
-data_dict_new = extract_info('log_11.6-test_refine_ep100_All-0.6_ssucf101.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
+data_dict_new = extract_info('log_11.8-test_refine_ep100_All-0.75_ssdtd.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
 data_dict_new_hack = extract_info('log_10.25-retest_rc_refine_ep100_1refill_ssdtd--LastEpoch.txt')      
 data_dict_new1 = extract_info('log_10.26-DEBUG_retest_rc_refine_ep100_improRefill&unc__ssdtd--LastEpoch.txt')      
 data_dict_old = extract_info('log_10.24-retest_rc_refine_ep100_1refill_ssdtd--LastEpoch.txt')      
@@ -208,7 +209,7 @@ loss = "(df['loss']=='cav refine')"
 # loss = "(df['loss']=='rc rc') "
 # loss = "(df['loss']=='rc cav')"
 # beta = "(df['beta']=='0.0')"
-PLL_ratio = "(df['usePLLTrue']=='0.1')"
+PLL_ratio = "(df['usePLLTrue']=='0.3')"
 init_R = "(df['initR']=='0.5')"
 
 # 1. for test rc_refine: -- > grouped_vars = ["safeF", "halfW", "topP"]  
