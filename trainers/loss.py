@@ -356,7 +356,7 @@ class PLL_loss(nn.Module):
             popped_uncs = torch.cat(popped_uncs, dim=0)
         else:
             popped_idxs = torch.tensor([], dtype=torch.long)
-            popped_uncs = torch.tensor([], dtype=torch.float16)
+            popped_uncs = torch.tensor([], dtype=torch.float16).to(self.device)
         return popped_idxs, pools_not_full, popped_uncs
 
 
