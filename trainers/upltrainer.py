@@ -1247,7 +1247,9 @@ class UPLTrainer(TrainerX):
                 pool_next_capacity = (self.cfg.TRAINER.PLL.MAX_POOLNUM - init_cap) * pool_certn_norm + init_cap
 
                 for cls_idx, pool in self.criterion.cls_pools_dict.items():
-                    pool.scale_pool(next_capacity=round(pool_next_capacity[cls_idx].item()))
+                    pool.scale_pool(next_capacity=min(round(pool_next_capacity[cls_idx].item()), 
+                                                      self.cfg.TRAINER.PLL.MAX_POOLNUM)
+                                    )
                     pool.reset()
                     
         if self.epoch > 0:            #self.epoch start from 0

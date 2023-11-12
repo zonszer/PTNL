@@ -71,10 +71,12 @@ class ClassLabelPool:
         Args:
             enlarge_factor (int): The enlarge factor.
         """
-        if next_capacity >= self.pool_max_capacity and next_capacity > self.baseline_capacity:
-            self.pool_max_capacity = next_capacity
+        if next_capacity > self.pool_max_capacity and next_capacity > self.baseline_capacity:
+            self.pool_max_capacity = self.pool_max_capacity + 1
+        elif next_capacity == self.pool_max_capacity:
+            self.pool_max_capacity = self.pool_max_capacity
         else:
-            self.pool_max_capacity = max(round(self.pool_max_capacity * 0.75), self.baseline_capacity)
+            self.pool_max_capacity = max(self.pool_max_capacity - 1, self.baseline_capacity)
         return
 
     def freeze_stored_items(self):
