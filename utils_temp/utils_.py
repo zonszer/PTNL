@@ -85,17 +85,17 @@ class ClassLabelPool:
         which means self.popped_idx.shape[0] is 0
         """
         assert self.popped_idx.shape[0] == 0
-        self.pool_unc_past = self.pool_unc
-        self.pool_idx_past = self.pool_idx
+        # self.pool_unc_past = self.pool_unc
+        # self.pool_idx_past = self.pool_idx
 
-        # reset the pool：
-        self.pool_idx = torch.LongTensor([])
-        self.pool_unc = torch.Tensor([]).type(self.unc_dtype).to(self.device)
-        self.popped_idx = torch.LongTensor([])
-        self.popped_unc = torch.Tensor([]).type(self.unc_dtype).to(self.device)
-        self.pool_max_capacity = self.pool_max_capacity - self.pool_capacity
-        self.pool_capacity = 0
-        self.unc_max = 1e-10
+        # # reset the pool：
+        # self.pool_idx = torch.LongTensor([])
+        # self.pool_unc = torch.Tensor([]).type(self.unc_dtype).to(self.device)
+        # self.popped_idx = torch.LongTensor([])
+        # self.popped_unc = torch.Tensor([]).type(self.unc_dtype).to(self.device)
+        # self.pool_max_capacity = self.pool_max_capacity - self.pool_capacity
+        # self.pool_capacity = 0
+        # self.unc_max = 1e-10
 
         self.is_freeze = True
     
@@ -105,12 +105,12 @@ class ClassLabelPool:
         which means self.popped_idx.shape[0] is 0
         """
         assert self.is_freeze == True   
-        self.pool_unc = torch.cat((self.pool_unc_past, self.pool_unc), dim=0)
-        self.pool_idx = torch.cat((self.pool_idx_past, self.pool_idx), dim=0)
+        # self.pool_unc = torch.cat((self.pool_unc_past, self.pool_unc), dim=0)
+        # self.pool_idx = torch.cat((self.pool_idx_past, self.pool_idx), dim=0)
 
-        # reset the pool：
-        self.pool_max_capacity = self.pool_max_capacity + self.pool_idx_past.shape[0]
-        self.pool_capacity = self.pool_idx.shape[0]
+        # # reset the pool：
+        # self.pool_max_capacity = self.pool_max_capacity + self.pool_idx_past.shape[0]
+        # self.pool_capacity = self.pool_idx.shape[0]
         self.unc_max = None
         self.pool_unc_past = None
         self.pool_idx_past = None
@@ -214,15 +214,25 @@ def find_elem_idx_BinA(A, B):
     
     Returns:
     torch.Tensor: A tensor containing the indices of the elements of b in a.
+    if b[i] is not in a, then return b[i] itself.
+    else return the index of b[i] in a.
     """
-    
     # Create a dictionary with elements of a as keys and their indices as values
     a_dict = {item.item(): i for i, item in enumerate(A)}
     
     # Map the elements of b to their corresponding indices in a using the dictionary
-    indices = torch.tensor([a_dict[item.item()] for item in B], dtype=torch.long)
+    idxs = []
+    not_found_elem_idxInB = []
+    for i, item in enumerate(B):
+        idx = a_dict.get(item.item(), False)
+        if idx == False:
+            not_found_elem_idxInB.append(i)
+        else:
+            idxs.append(idx)
+    indices = torch.tensor(idxs, dtype=torch.long)
+    not_found_elem_idxInB = torch.tensor(not_found_elem_idxInB, dtype=torch.long)
     
-    return indices
+    return indices, not_found_elem_idxInB
 
 
 

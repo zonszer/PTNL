@@ -785,7 +785,7 @@ class UPLTrainer(TrainerX):
         results = self.evaluator.evaluate()
         #0. save loged logits and conf: 
         # if True or log_conf == True:
-            # self.criterion.log_conf(all_logits=torch.cat(outputs_all, dim=0), all_labels=torch.cat(label_all, dim=0))
+        #     self.criterion.log_conf(all_logits=torch.cat(outputs_all, dim=0), all_labels=torch.cat(label_all, dim=0))
         if False and split == 'test':
             #1. save class_acc_sumlist and evalset_acc_sumlist:        #NOTE before uncomment remember to changed the name, otherwise the original file will be overwritten
             filename = f'analyze_result_temp/class_acc_sumlist/{self.cfg.DATASET.NAME}-{self.cfg.DATASET.NUM_SHOTS}-{self.cfg.TRAINER.UPLTrainer.NUM_FP}-{self.cfg.SEED}-PLL{self.cfg.TRAINER.PLL.PARTIAL_RATE}_{self.cfg.TRAINER.LOSS_TYPE}_beta{self.cfg.TRAINER.PLL.BETA}.json'
@@ -933,7 +933,9 @@ class UPLTrainer(TrainerX):
                 partialY = torch.cat(partialY_, dim=0)
 
         # Attributes:
-        self.partialY = partialY; self.labels_true = labels_true
+        self.partialY = partialY
+        if self.cfg.TRAINER.PLL.USE_PLL:
+            self.labels_true = labels_true
         return predict_label_dict 
 
     @torch.no_grad()

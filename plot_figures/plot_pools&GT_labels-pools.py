@@ -35,7 +35,6 @@ for file in pred_label_files:
     tensor = torch.load(file)    # Load tensor from file
     all_pred_labels.append(tensor)
 
-
 all_gt_labels = []
 for file in gt_label_files:
     tensor = torch.load(file)    # Load tensor from file
@@ -53,55 +52,55 @@ for file in pools_dict_files:
 print(f'all_gt_labels.shape is {len(all_gt_labels)}, {len(all_gt_labels[1])}')
 
 
-# def batch_convert_dict_kvs_to_hash(list_of_dicts):
-#     def convert_dict_keys_to_hash(my_dict):
-#         hashable_dict = {}
-#         for key, value in my_dict.items():
-#             try:
-#                 # Try hashing the key
-#                 hash(key)
-#                 if isinstance(key, torch.Tensor):
-#                     raise TypeError  # Hashing tensors is not supported
-#                 return my_dict  # If the key is hashable, return the original dict
-#             except:
-#                 # If key can't be hashed (i.e., is unhashable)
-#                 if len(key.shape) > 0:  # If tensor key is not a 0-dim tensor (scalar)
-#                     hashable_key = np.array2string(key.numpy())  # Convert tensor to string
-#                 else:
-#                     hashable_key = key.item()  # If scalar, convert to Python number
-#             hashable_dict[hashable_key] = value
-#         return hashable_dict
-#     def convert_dict_values_to_hash(my_dict):
-#         hashable_dict = {}
-#         for key, value in my_dict.items():
-#             try:
-#                 # Try hashing the value
-#                 hash(value)
-#                 if isinstance(value, torch.Tensor):
-#                     raise TypeError  # Hashing tensors is not supported
-#                 return my_dict  # If the value is hashable, return the original dict
-#             except:
-#                 # If value can't be hashed (i.e., is unhashable)
-#                 if hasattr(value, 'shape'):
-#                     len_ = value.dim()
-#                 else:
-#                     len_ = len(value)
-#                 if len_> 0:
-#                     if isinstance(value, torch.Tensor):
-#                         hashable_value = value.tolist()
-#                     elif isinstance(value, list):
-#                         for i in range(len(value)):
-#                             value[i] = value[i].item()
-#                         hashable_value = value
-#                     else:
-#                         raise TypeError
-#                 else:
-#                     hashable_value = value.item()
-#             hashable_dict[key] = hashable_value
-#         return hashable_dict
+def batch_convert_dict_kvs_to_hash(list_of_dicts):
+    def convert_dict_keys_to_hash(my_dict):
+        hashable_dict = {}
+        for key, value in my_dict.items():
+            try:
+                # Try hashing the key
+                hash(key)
+                if isinstance(key, torch.Tensor):
+                    raise TypeError  # Hashing tensors is not supported
+                return my_dict  # If the key is hashable, return the original dict
+            except:
+                # If key can't be hashed (i.e., is unhashable)
+                if len(key.shape) > 0:  # If tensor key is not a 0-dim tensor (scalar)
+                    hashable_key = np.array2string(key.numpy())  # Convert tensor to string
+                else:
+                    hashable_key = key.item()  # If scalar, convert to Python number
+            hashable_dict[hashable_key] = value
+        return hashable_dict
+    def convert_dict_values_to_hash(my_dict):
+        hashable_dict = {}
+        for key, value in my_dict.items():
+            try:
+                # Try hashing the value
+                hash(value)
+                if isinstance(value, torch.Tensor):
+                    raise TypeError  # Hashing tensors is not supported
+                return my_dict  # If the value is hashable, return the original dict
+            except:
+                # If value can't be hashed (i.e., is unhashable)
+                if hasattr(value, 'shape'):
+                    len_ = value.dim()
+                else:
+                    len_ = len(value)
+                if len_> 0:
+                    if isinstance(value, torch.Tensor):
+                        hashable_value = value.tolist()
+                    elif isinstance(value, list):
+                        for i in range(len(value)):
+                            value[i] = value[i].item()
+                        hashable_value = value
+                    else:
+                        raise TypeError
+                else:
+                    hashable_value = value.item()
+            hashable_dict[key] = hashable_value
+        return hashable_dict
 
-#     list_of_dicts = [convert_dict_keys_to_hash(my_dict) for my_dict in list_of_dicts]
-#     return [convert_dict_values_to_hash(my_dict) for my_dict in list_of_dicts]
+    list_of_dicts = [convert_dict_keys_to_hash(my_dict) for my_dict in list_of_dicts]
+    return [convert_dict_values_to_hash(my_dict) for my_dict in list_of_dicts]
 
 # all_gt_labels = batch_convert_dict_kvs_to_hash(all_gt_labels)
 # all_pred_labels = batch_convert_dict_kvs_to_hash(all_pred_labels)
@@ -322,8 +321,6 @@ def create_subplot_new(ax1, pred_labels_epoch, gt_labels_epoch, epoch_number, di
     ax1.grid(True)
     cbar1 = plt.colorbar(sc1, ax=ax1, ticks=np.linspace(0, 1, len(class_counts)), label='Class Index')
     cbar1.ax.tick_params(labelsize=7)  # Set the size of the legend text
-
-
 
 
 

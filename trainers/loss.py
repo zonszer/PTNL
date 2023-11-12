@@ -33,6 +33,7 @@ class PLL_loss(nn.Module):
         self.num = 0
         #PLL items: 
         self.T = self.cfg.TEMPERATURE
+        # self.origin_labels = self.init_confidence(PartialY)
         if '_' in type or '_' in self.cfg.CONF_LOSS_TYPE:   #means need to update conf
             self.conf = self.init_confidence(PartialY)
             self.conf_momn = self.cfg.CONF_MOMN
@@ -83,6 +84,7 @@ class PLL_loss(nn.Module):
         return loss
 
     def check_conf_update(self, images, y, index, output=None):
+        # self.origin_labels[index, :] = output.float()
         if '_' in self.cfg.CONF_LOSS_TYPE or '_' in self.losstype:
             if '_' in self.cfg.CONF_LOSS_TYPE:
                 conf_type = self.cfg.CONF_LOSS_TYPE.split('_')[-1]
@@ -323,9 +325,9 @@ class PLL_loss(nn.Module):
             if num_top_pools == 0 or (not_in_pool==False).all():
                 return 
             else:
-                popped_feat_idxs, _, _ = self.collect_popped_items(pool_range=pool_idxs.tolist(), 
+                popped_feat_idxs, _, popped_unc = self.collect_popped_items(pool_range=pool_idxs.tolist(), 
                                                                              retain=False)
-                popped_idxs = find_elem_idx_BinA(A=batch_idxs, B=popped_feat_idxs)
+                popped_idxs, not_found_idxs = find_elem_idx_BinA(A=batch_idxs, B=popped_feat_idxs)  #popped_feat_idxs[not_found_idxs]
                 not_in_pool[popped_idxs] = True
                 recursion(num_top_pools, output, cav_logits, not_in_pool)
         
@@ -380,7 +382,7 @@ class PLL_loss(nn.Module):
                                     top_pools=self.cfg.TOP_POOLS, 
                                     record_notinpool=True, 
                                     pool_idxs=not_full_idxs.to(conf_selected.device))
-        stillnotinpool_feat_idxs, _, _ = self.collect_popped_items(pool_range=not_full_idxs.tolist(), 
+        stillnotinpool_feat_idxs, _, stillnotinpool_uncs = self.collect_popped_items(pool_range=not_full_idxs.tolist(), 
                                                                    retain=False)
         
         for pool_id in not_full_idxs.tolist():
@@ -388,8 +390,11 @@ class PLL_loss(nn.Module):
             cur_pool.unfreeze_stored_items()
             cur_pool.recalculate_unc(logits_all=output_all[sort_idxs], criterion=self.cal_uncertainty) 
         
-        idxs = find_elem_idx_BinA(A=popped_idxs, B=stillnotinpool_feat_idxs)
-        return popped_idxs[idxs], popped_uncs[idxs]
+        idxs, not_found_idxs = find_elem_idx_BinA(A=popped_idxs, B=stillnotinpool_feat_idxs)
+        # stillnotinpool_uncs[not_found_idxs]
+        # stillnotinpool_feat_idxs[not_found_idxs]
+        return torch.cat([popped_idxs[idxs], stillnotinpool_feat_idxs[not_found_idxs]]), \
+               torch.cat([popped_uncs[idxs], stillnotinpool_uncs[not_found_idxs]])
 
 
     @torch.no_grad()
@@ -529,7 +534,7 @@ class PLL_loss(nn.Module):
         log_id = 'PLL' + str(self.cfg.PARTIAL_RATE)
         if self.num % 1 == 0 and self.num != 50:        #50 is the last epoch (test dataset)
             print(f'save logits -> losstype: {self.losstype}, save id: {self.num}')
-            if self.losstype == 'cc_refine' or 'epoch' in self.losstype:      # need to run 2 times for getting conf
+            if self.losstype == '_refine':      # need to run 2 times for getting conf
                 if not hasattr(self, 'save_type'):
                     self.save_type = f'cc_refine'
 
@@ -540,6 +545,13 @@ class PLL_loss(nn.Module):
                 self.pred_label_dict = defaultdict(list)
                 self.gt_label_dict = {}
 
+            elif True:
+                # assert self.losstype == 'rc_rc' or self.losstype == 'ce' or self.losstype == 'rc_refine'
+                all_logits = self.origin_labels
+                # labels_true = self.cls_pools_dict[0].labels_true
+                torch.save(all_logits,  f'analyze_result_temp/logits&labels_11.11_ssucf101/outputs_{self.losstype.upper()+self.cfg.CONF_LOSS_TYPE}_{log_id}-{self.num}.pt')
+                # torch.save(labels_true,  f'analyze_result_temp/logits&labels_11.11_ssucf101/labels_true_{self.losstype.upper()+self.cfg.CONF_LOSS_TYPE}_{log_id}-0.pt')
+       
             elif all_logits != None:
                 all_logits = F.softmax(all_logits, dim=1)    
                 all_labels = F.one_hot(all_labels)
