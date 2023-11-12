@@ -60,6 +60,7 @@ def get_classes_acc(path) -> np.ndarray:
 file_path = 'per_image_results_test_37.txt'
 acc_file_path = 'per_class_results_test_37.txt'
 acc_array = get_classes_acc(acc_file_path)
+acc_dict = {i: acc_array[i] for i in range(len(acc_array))}
 label2classname, pred_is_right, image_logits, image_labels = read_file(file_path)
 
 # %%
@@ -162,7 +163,7 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 import torch
 import torch.nn as nn
-dict_as_input_format = True
+dict_as_input_format = False
 
 if dict_as_input_format:
     pred_indices = np.array(list(pred_labels.values()))   # Predicted class labels
@@ -230,10 +231,12 @@ avg_ce_values = np.array(avg_ce_values)
 avg_ce_values_idx = np.argsort(avg_ce_values)
 
 # Create a single figure with subfigures
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 6))
+fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(25, 6))
 
 # Plot the first subfigure
 # Class Counts Plot
+#NOTE class_counts, acc_array, avg_ce_values are one-to-one correspondence by the class index(0~99) from coresponing dict
+# NOTE In all sub figures, all the 3 array idx is by x-axis array, from value small to large (because ordered_colors is from small to large)
 sc1 = ax1.scatter(class_counts[class_counts_idx], acc_array[class_counts_idx], c=ordered_colors, cmap=colormap, marker='o')
 ax1.set_title('Class Counts vs Class ACC')
 ax1.set_xlabel('Class Counts')
@@ -243,14 +246,26 @@ cbar1 = plt.colorbar(sc1, ax=ax1, ticks=np.linspace(0, 1, len(class_counts)), la
 cbar1.ax.tick_params(labelsize=7)  # Set the size of the legend text
 
 # Plot the second subfigure using the same colormap and class indices
-class_idx_order = ordered_colors[np.argsort(class_counts_idx)]
-sc2 = ax2.scatter(avg_ce_values[avg_ce_values_idx], acc_array[avg_ce_values_idx], c=class_idx_order[avg_ce_values_idx], cmap=colormap, marker='o')
+color_class_idx_order = ordered_colors[np.argsort(class_counts_idx)]
+sc2 = ax2.scatter(avg_ce_values[avg_ce_values_idx], acc_array[avg_ce_values_idx], c=color_class_idx_order[avg_ce_values_idx], cmap=colormap, marker='o')
 ax2.set_title('Avg CE vs Avg ACC, classes_collect_method: ' + method_name)
 ax2.set_xlabel('Avg CE')
 ax2.set_ylabel('Avg ACC')
 ax2.grid(True)
 cbar2 = plt.colorbar(sc2, ax=ax2, ticks=np.linspace(0, 1, len(class_counts)), label='Class Index')
 cbar2.ax.tick_params(labelsize=7)  # Set the size of the legend text
+
+# Plot the third subfigure using the same colormap and class indices
+# class_idx_order = ordered_colors[np.argsort(class_counts_idx)]
+# avg_ce_values[avg_ce_values_idx]
+CE_rank = [i for i in range(len(avg_ce_values))]
+sc3 = ax3.scatter(CE_rank, class_counts[avg_ce_values_idx], c=color_class_idx_order[avg_ce_values_idx], cmap=colormap, marker='o')
+ax3.set_title('Avg CE vs Avg ACC, classes_collect_method: ' + method_name)
+ax3.set_xlabel('Avg CE')
+ax3.set_ylabel('Class Counts')
+ax3.grid(True)
+cbar3 = plt.colorbar(sc3, ax=ax3, ticks=np.linspace(0, 1, len(class_counts)), label='Class Index')
+cbar3.ax.tick_params(labelsize=7)  # Set the size of the legend text
 
 plt.show()
 
