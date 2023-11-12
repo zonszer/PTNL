@@ -5,7 +5,7 @@ cd ..
 # custom config
 DATA=./data
 TRAINER=UPLTrainer
-exp_ID="11.12-test_refine_ep100_cancelFreeze"    #NOTE +time 共72+27=99次
+exp_ID="11.12-test_refine_ep100_CancelFreeze"    #NOTE +time 共72+27=99次
 # TODO: 
 #1. change oonf clean threshold and set safe factor and range
 #10.19-test_cc_refine_ep100_safe&clean2
@@ -128,10 +128,10 @@ for SEED in "${SEEDs[@]}"; do
 
                 if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
                     MAX_POOLNUMs=(16)
-                    TOP_POOLs=(1 3)
+                    TOP_POOLs=(3 1)
                 elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
                     MAX_POOLNUMs=(16)
-                    TOP_POOLs=(1 3)
+                    TOP_POOLs=(3 1)
                 else
                     echo "Invalid rate for MAX_POOLNUMs"
                     exit 1
