@@ -74,7 +74,8 @@ def formatting_data(data_dict):
 #log_11.5-test_refine_ep100_All-0.8_ssucf101.txt
 #log_11.6-test_refine_ep100_All-0.6_ssucf101.txt
 #log_11.8-test_refine_ep100_All-0.75_ssdtd.txt
-#log_11.11-All+1-1.txt
+#log_11.11-All+1-1.txt also == log_11.11-test_refine_ep100_All+1-1__ssdtd.txt
+#log_11.12-test_refine_ep100_cancelFree_ssdtd.txt
 
 #cc_refine:
 #log_10.24-test_cc_refine_ep100_1refill_ssdtd.txt --> test cc_refine on dtd dataset (TopP=1,2,3,4) (old)
@@ -90,15 +91,15 @@ def formatting_data(data_dict):
 #log_10.31-test_cc_refine_ep100_reduceLast_ssdtd.txt
 #log_10.31-test_cc_refine_ep100_reduceLast_ssucf101.txt
 
-data_dict_new = extract_info('log_11.11-All+1-1.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
-data_dict_new_hack = extract_info('log_10.25-retest_rc_refine_ep100_1refill_ssdtd--LastEpoch.txt')      
-data_dict_new1 = extract_info('log_10.26-DEBUG_retest_rc_refine_ep100_improRefill&unc__ssdtd--LastEpoch.txt')      
-data_dict_old = extract_info('log_10.24-retest_rc_refine_ep100_1refill_ssdtd--LastEpoch.txt')      
+data_dict_new = extract_info('log_11.12-test_refine_ep100_CancelFreeze_ssdtd.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
+# data_dict_new_hack = extract_info('log_10.25-retest_rc_refine_ep100_1refill_ssdtd--LastEpoch.txt')      
+# data_dict_new1 = extract_info('log_10.26-DEBUG_retest_rc_refine_ep100_improRefill&unc__ssdtd--LastEpoch.txt')      
+# data_dict_old = extract_info('log_10.24-retest_rc_refine_ep100_1refill_ssdtd--LastEpoch.txt')      
 
 data_dict_new = formatting_data(data_dict_new)
-data_dict_new1 = formatting_data(data_dict_new1)
-data_dict_new_hack = formatting_data(data_dict_new_hack)
-data_dict_old = formatting_data(data_dict_old)
+# data_dict_new1 = formatting_data(data_dict_new1)
+# data_dict_new_hack = formatting_data(data_dict_new_hack)
+# data_dict_old = formatting_data(data_dict_old)
 
 
 import pandas as pd
@@ -118,17 +119,18 @@ def parse2df(data_dict):
     return df
 
 df_new = parse2df(data_dict_new)
-df_new1 = parse2df(data_dict_new1)
-df_new_hack = parse2df(data_dict_new_hack)
-df_old = parse2df(data_dict_old)
+# df_new1 = parse2df(data_dict_new1)
+# df_new_hack = parse2df(data_dict_new_hack)
+# df_old = parse2df(data_dict_old)
 # merge two data dicts:
-df_old.loc[:, "change"] = 'old'
-df_new1.loc[:, "change"] = 'new has-1'
-df_new_hack.loc[:, "change"] = 'new_hack'
+# df_old.loc[:, "change"] = 'old'
+# df_new1.loc[:, "change"] = 'new has-1'
+# df_new_hack.loc[:, "change"] = 'new_hack'
 df_new.loc[:, "change"] = 'new'
 # df.loc[:, "UseWeightedbeta"] = 'False'
 # df_result = pd.concat([df_t, df])
-df = pd.concat([df_new, df_new1, df_new_hack, df_old])
+# df = pd.concat([df_new, df_new1, df_new_hack, df_old])
+df = pd.concat([df_new])
 print('len df:', len(df))
 
 #%% NOTE: check the lost experiment settings:
@@ -203,9 +205,9 @@ import numpy as np
 # Select the rows where beta == 1.5 and bs == 32
 change = "(df['change']=='new')"
 # loss = "(df['loss']!='CE')"
-loss = "(df['loss']=='cav refine')"
+# loss = "(df['loss']=='cav refine')"
 # loss = "(df['loss']=='cc refine')"
-# loss = "(df['loss']=='rc refine')"
+loss = "(df['loss']=='rc refine')"
 # loss = "(df['loss']=='lw refine')"
 # loss = "(df['loss']=='rc rc') "
 # loss = "(df['loss']=='rc cav')"

@@ -402,6 +402,7 @@ class PLL_loss(nn.Module):
         if hasattr(self, 'not_found_idxs_'):
             a = torch.cat([a, self.not_found_idxs_])
             b = torch.cat([b, self.not_found_uncs_])
+            del self.not_found_idxs_, self.not_found_uncs_
         return a, b
 
 
