@@ -214,25 +214,15 @@ def find_elem_idx_BinA(A, B):
     
     Returns:
     torch.Tensor: A tensor containing the indices of the elements of b in a.
-    if b[i] is not in a, then return b[i] itself.
-    else return the index of b[i] in a.
     """
+    
     # Create a dictionary with elements of a as keys and their indices as values
     a_dict = {item.item(): i for i, item in enumerate(A)}
     
     # Map the elements of b to their corresponding indices in a using the dictionary
-    idxs = []
-    not_found_elem_idxInB = []
-    for i, item in enumerate(B):
-        idx = a_dict.get(item.item(), False)
-        if idx == False:
-            not_found_elem_idxInB.append(i)
-        else:
-            idxs.append(idx)
-    indices = torch.tensor(idxs, dtype=torch.long)
-    not_found_elem_idxInB = torch.tensor(not_found_elem_idxInB, dtype=torch.long)
+    indices = torch.tensor([a_dict[item.item()] for item in B], dtype=torch.long)
     
-    return indices, not_found_elem_idxInB
+    return indices
 
 
 
