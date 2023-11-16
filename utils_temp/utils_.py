@@ -17,30 +17,65 @@ import torch
 
 class PoolsAggregation:
     """
-    Store the average and current values for uncertainty of each class samples and the max capacity of the pool.
+    Administer the pool of each class.
     """
 
-    def __init__(self, max_capacity: int, cls_id):
+    def __init__(self, cfg, class_ids, K, max_capacity_per_class=None):
         """
-        Initialize the ClassLabelPools for each pool.
+        Initialize the PoolsAggregation.
         Args:
-            max_capacity (int): The maximum capacity of the pool.
-            items_idx (torch.LongTensor): A tensor of item indices.
-            items_unc (torch.Tensor): A tensor of item uncertainties.
+            cfg (Config): The configuration object.
+            class_ids (torch.Tensor): Tensor of class ids.
+            K (int): Number of top samples to select per class.
+            max_capacity_per_class (dict): Maximum capacity per class. 
         """
-        self.pool_max_capacity = max_capacity
-        self.is_freeze = False
-        self.cls_id = cls_id
-        self.device = 'cuda'
-        self.unc_dtype = torch.float16
-        self.baseline_capacity = max_capacity
-        self.reset()
-        
-    def _update_pool_attr(self):
-        """
-        Update the pool attributes.
-        """
-        pass
+        self.cfg = cfg
+
+        # Initialize cls_pools_dict
+        self.cls_pools_dict = {}
+        if max_capacity_per_class is None:
+            max_capacity_per_class = {cls: K for cls in class_ids.tolist()}
+
+        # Convert max_capacity_per_class to a tensor for efficient computation
+        max_capacity_per_class = torch.LongTensor([max_capacity_per_class[cls.item()] for cls in class_ids])
+
+        # Loop through each unique class id
+        for i, cls in enumerate(class_ids):                                   
+            self.cls_pools_dict[cls.item()] = ClassLabelPool(max_capacity=max_capacity_per_class[i].item(), 
+                                                             cls_id=cls.item())
+
+
+    def scale_all_pools(self, scale_factors):
+        """Manipulate the scale of each pool in its government"""
+        init_cap = round(self.cfg.MAX_POOLNUM * self.cfg.POOL_INITRATIO)
+        pool_next_capacity = self.cfg.MAX_POOLNUM * scale_factors 
+
+        for cls_idx, pool in self.cls_pools_dict.items():
+            next_capacity = round(pool_next_capacity[cls_idx].item())
+            next_capacity = max(min(next_capacity, self.cfg.MAX_POOLNUM), init_cap)
+            pool.scale_pool(next_capacity=next_capacity)
+
+
+    def reset_all(self):
+        """Reset all pools in its government"""
+        for pool in self.cls_pools_dict.values():
+            pool.reset()
+
+    def cal_pool_sum_num(self):
+        sum_num = 0
+        for i, pool in enumerate(self.cls_pools_dict.values()):
+            sum_num += pool.pool_capacity
+            # print(f'pool_id: {i}, pool_capacity: {pool.pool_capacity}')
+        return sum_num
+
+    def cal_pool_ACC(self):
+        correct_num = 0
+        all_num = 0
+        for pool in self.cls_pools_dict.values():
+            correct = (pool.labels_true[pool.pool_idx] == torch.LongTensor([pool.cls_id])).sum()
+            correct_num += correct
+            all_num += pool.pool_capacity
+        print(f'====> overall pools ACC: {correct_num}/{all_num} = {correct_num/all_num}')
 
 
 class ClassLabelPool:

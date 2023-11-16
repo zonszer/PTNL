@@ -256,13 +256,9 @@ class PLL_loss(nn.Module):
                 conf_ = new_weight1         
             else:
                 raise ValueError('conf_type not supported')
-            if hasattr(self, 'cls_pools_dict'):
-            #     self.fill_pools(conf_, outputs, batch_idxs, max_iter_num=1, record_notinpool=True)
-            # Count occurrences for each class
-                # pred_labels = torch.argmax(outputs, dim=1)      #TODO herer
-                # class_counts = Counter(pred_labels) 
-                # self.class_counts = 
-                pass
+            # if hasattr(self, 'cls_pools_dict'):
+                # self.fill_pools(conf_, outputs, batch_idxs, max_iter_num=1, record_notinpool=True)
+
 
     @torch.no_grad()
     def cal_pred_conf(self, logits, PL_labels, conf_type, lw_return2=True):
@@ -293,22 +289,6 @@ class PLL_loss(nn.Module):
         return conf
 
 
-    def cal_pool_sum_num(self):
-        sum_num = 0
-        for pool_id, cur_pool in self.cls_pools_dict.items():
-            sum_num += cur_pool.pool_capacity
-        # print(f'pool_sum_num: {sum_num}')
-        return sum_num
-
-    def cal_pool_ACC(self):
-        corrcet_num = 0
-        all_num = 0
-        for pool_id, cur_pool in self.cls_pools_dict.items():
-            corrcet = (cur_pool.labels_true[cur_pool.pool_idx] == torch.LongTensor([cur_pool.cls_id])).sum()
-            corrcet_num += corrcet
-            all_num += cur_pool.pool_capacity
-        print(f'====> overall pools ACC: {corrcet_num}/{all_num} = {corrcet_num/all_num}')
-
     @torch.no_grad()
     def cal_uncertainty(self, output, label, index=None):
         """calculate uncertainty for each sample in batch"""
@@ -337,7 +317,7 @@ class PLL_loss(nn.Module):
                 this_loop_uncs = top_uncs[this_loop_idxs, quary_num[this_loop_idxs]]
                 this_loop_labels = top_labels[this_loop_idxs, quary_num[this_loop_idxs]]
                 quary_num[this_loop_idxs] += 1
-                assert labels.shape[0] == (this_loop_idxs.shape[0] + self.cal_pool_sum_num() + del_elems.sum()), "All_samples = not_in + in_pool + not_in_but_enough_iter"
+                assert labels.shape[0] == (this_loop_idxs.shape[0] + self.Pools.cal_pool_sum_num() + del_elems.sum()), "All_samples = not_in + in_pool + not_in_but_enough_iter"
                 # unc[mask] = torch.inf
                 this_loop_fill_num = 0
                 for i, (cls_id, idx) in enumerate(zip(this_loop_labels, this_loop_idxs)):
@@ -415,6 +395,15 @@ class PLL_loss(nn.Module):
         feat_idxs = indexs_all[sort_idxs]
         outputs = output_all[sort_idxs]
 
+        pred_labels = torch.argmax(outputs, dim=1)      #TODO check here
+        class_counts = Counter(pred_labels) 
+        # get the predicted class differet count number from class_id = 0:
+        self.class_counts = torch.zeros(self.conf.shape[1], dtype=torch.long)
+        for i in range(self.conf.shape[1]):
+            self.class_counts[i] = class_counts.get(i, 0)
+        # normalize the class_counts to [0, 1] by min max norm:
+        self.class_counts = (self.class_counts - self.class_counts.min()) / (self.class_counts.max() - self.class_counts.min())
+
         #prepare uncessay attrs for all items:
         labels, uncs = self.prepare_items_attrs(outputs, feat_idxs, 
                                                 max_num=self.cfg.TOP_POOLS)
@@ -441,7 +430,7 @@ class PLL_loss(nn.Module):
                     f'<{info_dict["safe_range_num"]}> samples are in safe range,'
                     f'<{info_dict["clean_num"]}> samples are cleaned')   
             
-        return pools_certainty_norm, info_dict
+        return pools_certainty_norm, info_dict, self.class_counts
 
     def update_conf_refine(self, notinpool_idxs, notinpool_uncs, shrink_f=0.5):
         not_inpool_num = 0
@@ -501,7 +490,7 @@ class PLL_loss(nn.Module):
             conf_torevise[cur_pool.pool_idx, max_idx] = revised_max_conf
             conf_torevise[cur_pool.pool_idx, pool_id] = revised_conf
 
-        self.cal_pool_ACC()
+        self.Pools.cal_pool_ACC()
         # 2. clean poped items which are not in safe range:
         is_inf = torch.isinf(notinpool_uncs)
         if notinpool_idxs.shape[0] - is_inf.sum() > 1:
