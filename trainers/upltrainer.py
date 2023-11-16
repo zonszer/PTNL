@@ -1226,15 +1226,17 @@ class UPLTrainer(TrainerX):
             self.set_model_mode("eval")
             self.model.eval()
             output_all = []; indexs_all = []
+            acc_all = []
 
             for batch_idx, batch in enumerate(self.dm.train_loader_sstrain_notfm):
                 summary = self.forward_get_conf(batch)
                 indexs_all.append(summary['index'])
                 output_all.append(summary['output'])
+                acc_all.append(summary['acc'])  
                 if (
                     batch_idx + 1
                 ) % self.cfg.TRAIN.PRINT_FREQ == 0 or self.num_batches < self.cfg.TRAIN.PRINT_FREQ:
-                    print(f'batch_idx: {batch_idx}, pred_acc: {summary["acc"]}')
+                    print(f'batch_idx: {batch_idx}, pred_acc so far: {sum(acc_all) / len(acc_all)}')
 
             indexs_all = torch.cat(indexs_all, dim=0)
             output_all = torch.cat(output_all, dim=0)

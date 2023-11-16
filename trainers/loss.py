@@ -395,14 +395,14 @@ class PLL_loss(nn.Module):
         feat_idxs = indexs_all[sort_idxs]
         outputs = output_all[sort_idxs]
 
-        pred_labels = torch.argmax(outputs, dim=1)      #TODO check here
-        class_counts = Counter(pred_labels) 
+        pred_labels = torch.argmax(outputs, dim=1)
+        # class_counts = Counter(pred_labels.cpu().numpy()) 
         # get the predicted class differet count number from class_id = 0:
-        self.class_counts = torch.zeros(self.conf.shape[1], dtype=torch.long)
-        for i in range(self.conf.shape[1]):
-            self.class_counts[i] = class_counts.get(i, 0)
-        # normalize the class_counts to [0, 1] by min max norm:
-        self.class_counts = (self.class_counts - self.class_counts.min()) / (self.class_counts.max() - self.class_counts.min())
+        self.class_counts = torch.ones(self.conf.shape[1], dtype=torch.long)
+        # for i in range(self.conf.shape[1]):
+        #     self.class_counts[i] = class_counts.get(i, 0)
+        # # normalize the class_counts to [0, 1] by min max norm:
+        # self.class_counts = (self.class_counts - self.class_counts.min()) / (self.class_counts.max() - self.class_counts.min())
 
         #prepare uncessay attrs for all items:
         labels, uncs = self.prepare_items_attrs(outputs, feat_idxs, 
