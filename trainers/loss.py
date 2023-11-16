@@ -520,6 +520,8 @@ class PLL_loss(nn.Module):
                 # conf_torevise[notinpool_idxs, :] = self.origin_labels[notinpool_idxs, :]
             # popped_feat_weight.extend(unc_norm_.tolist())
             # popped_idxs_unsafe.extend(notinpool_idxs.tolist())
+        else:
+            unsafe_feat_weight[notinpool_idxs] = 0.0
 
         pool_unc_avgs = torch.cat(pool_unc_avgs, dim=0)
         nan_mask = torch.isnan(pool_unc_avgs)

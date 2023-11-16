@@ -5,7 +5,7 @@ cd ..
 # custom config
 DATA=./data
 TRAINER=UPLTrainer
-exp_ID="11.16-test_refine_ep100_newRefill_uniform"    #NOTE +time 共72+27=99次
+exp_ID="11.16-test_refine_ep100_newRefill_uniform_1"    #NOTE +time 共72+27=99次
 # TODO: 
 #1. change oonf clean threshold and set safe factor and range
 #10.19-test_cc_refine_ep100_safe&clean2
@@ -67,8 +67,8 @@ USE_LABEL_FILTER=True
 BETA=0.0
 SEEDs=(1 2 3)
 declare -a DATASETs=('ssdtd')
-declare -a POOL_INITRATIOs=(0.3 0.4)
-declare -a loss_types=('lw_refine' 'rc_refine' 'cav_refine')
+declare -a POOL_INITRATIOs=(0.2 0.3)
+declare -a loss_types=('lw_refine' 'rc_refine' 'cav_refine', 'cc_refine')
 
 set_values() {
     local loss_type=$1
@@ -79,7 +79,7 @@ set_values() {
     if [ "$loss_type" == "cav_refine" ]; then
         if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
             CONF_MOMNs=(0.00)
-            HALF_USE_Ws=(0.3 0.4 0.5)
+            HALF_USE_Ws=(0.4 0.5 0.6)
         elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
             CONF_MOMNs=(0.00)
             HALF_USE_Ws=(0.1 0.2 0.3)
@@ -88,7 +88,7 @@ set_values() {
     elif [ "$loss_type" == "rc_refine" ]; then
         if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
             CONF_MOMNs=(0.3 0.4)
-            HALF_USE_Ws=(0.2 0.3 0.4)
+            HALF_USE_Ws=(0.3 0.4 0.5)
         elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
             CONF_MOMNs=(0.2 0.3)
             HALF_USE_Ws=(0.1 0.2 0.3)
@@ -97,7 +97,7 @@ set_values() {
     elif [ "$loss_type" == "lw_refine" ]; then
         if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
             CONF_MOMNs=(0.3 0.4)
-            HALF_USE_Ws=(0.2 0.3 0.4)
+            HALF_USE_Ws=(0.3 0.4 0.5)
         elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
             CONF_MOMNs=(0.2 0.3)
             HALF_USE_Ws=(0.1 0.2 0.3)
@@ -106,7 +106,7 @@ set_values() {
     elif [ "$loss_type" == "cc_refine" ]; then
         if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
             CONF_MOMNs=(0.03 0.05)
-            HALF_USE_Ws=(0.2 0.3 0.4)
+            HALF_USE_Ws=(0.3 0.4 0.5)
         elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
             CONF_MOMNs=(0.03 0.05)
             HALF_USE_Ws=(0.2 0.3 0.4)
@@ -127,11 +127,11 @@ for SEED in "${SEEDs[@]}"; do
             for PLL_partial_rate in "${PLL_partial_rates[@]}"; do
 
                 if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
-                    MAX_POOLNUMs=(12)
-                    TOP_POOLs=(5 1)
+                    MAX_POOLNUMs=(14 16)
+                    TOP_POOLs=(10 5)
                 elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
-                    MAX_POOLNUMs=(12)
-                    TOP_POOLs=(5 1)
+                    MAX_POOLNUMs=(14 16)
+                    TOP_POOLs=(10 5)
                 else
                     echo "Invalid rate for MAX_POOLNUMs"
                     exit 1

@@ -1215,7 +1215,7 @@ class UPLTrainer(TrainerX):
         if self.epoch == 0:            #self.epoch start from 0
             if 'refine' in self.criterion.losstype:
                 class_ids = torch.arange(0, len(self.lab2cname))
-                K = int(max(self.cfg.TRAINER.PLL.MAX_POOLNUM*self.cfg.TRAINER.PLL.POOL_INITRATIO, 3))
+                K = int(max(self.cfg.TRAINER.PLL.MAX_POOLNUM*self.cfg.TRAINER.PLL.POOL_INITRATIO, 1))
                 self.criterion.Pools = PoolsAggregation(cfg=self.cfg.TRAINER.PLL, class_ids=class_ids, K=K)
                 self.criterion.cls_pools_dict = self.criterion.Pools.cls_pools_dict
                 for cls_idx, pool in self.criterion.cls_pools_dict.items():

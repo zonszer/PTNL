@@ -238,7 +238,7 @@ class ClassLabelPool:
                     self.popped_idx = torch.cat((self.popped_idx, feat_idx.unsqueeze(0)))  # Interchanged positions
                     self.popped_unc = torch.cat((self.popped_unc, feat_unc.unsqueeze(0)))  # Interchanged positions
                 in_pool = False
-                self.not_in_num += 1
+                # self.not_in_num += 1
             else:
                 if record_popped:
                     self.popped_idx = torch.cat((self.popped_idx, self.pool_idx[self.unc_max_idx].unsqueeze(0)))  # Interchanged positions
@@ -250,7 +250,7 @@ class ClassLabelPool:
                 self.pool_unc[self.unc_max_idx] = feat_unc
                 # self.saved_logits[self.unc_max_idx] = feat_logit
                 in_pool = True
-                self.replace_num += 1
+                # self.replace_num += 1
                 
         if in_pool:
             self._update_pool_attr()
