@@ -5,7 +5,7 @@ cd ..
 # custom config
 DATA=./data
 TRAINER=UPLTrainer
-exp_ID="11.12-test_refine_ep100_CancelFreeze"    #NOTE +time 共72+27=99次
+exp_ID="11.15-test_refine_ep100_newRefill"    #NOTE +time 共72+27=99次
 # TODO: 
 #1. change oonf clean threshold and set safe factor and range
 #10.19-test_cc_refine_ep100_safe&clean2
@@ -67,8 +67,8 @@ USE_LABEL_FILTER=True
 BETA=0.0
 SEEDs=(1 2 3)
 declare -a DATASETs=('ssdtd')
-declare -a POOL_INITRATIOs=(0.3 0.4 0.5)
-declare -a loss_types=('lw_refine' 'rc_refine' 'cav_refine' 'cc_refine')
+declare -a POOL_INITRATIOs=(0.3 0.4)
+declare -a loss_types=('lw_refine' 'rc_refine' 'cav_refine')
 
 set_values() {
     local loss_type=$1

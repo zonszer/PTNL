@@ -15,6 +15,34 @@ import re
 
 import torch
 
+class PoolsAggregation:
+    """
+    Store the average and current values for uncertainty of each class samples and the max capacity of the pool.
+    """
+
+    def __init__(self, max_capacity: int, cls_id):
+        """
+        Initialize the ClassLabelPools for each pool.
+        Args:
+            max_capacity (int): The maximum capacity of the pool.
+            items_idx (torch.LongTensor): A tensor of item indices.
+            items_unc (torch.Tensor): A tensor of item uncertainties.
+        """
+        self.pool_max_capacity = max_capacity
+        self.is_freeze = False
+        self.cls_id = cls_id
+        self.device = 'cuda'
+        self.unc_dtype = torch.float16
+        self.baseline_capacity = max_capacity
+        self.reset()
+        
+    def _update_pool_attr(self):
+        """
+        Update the pool attributes.
+        """
+        pass
+
+
 class ClassLabelPool:
     """
     Store the average and current values for uncertainty of each class samples and the max capacity of the pool.
@@ -64,6 +92,8 @@ class ClassLabelPool:
         assert self.is_freeze == False
         self.pool_unc_past = None
         self.pool_idx_past = None
+        self.replace_num = 0
+        self.not_in_num = 0
 
     def scale_pool(self, next_capacity: int):
         """
@@ -173,6 +203,7 @@ class ClassLabelPool:
                     self.popped_idx = torch.cat((self.popped_idx, feat_idx.unsqueeze(0)))  # Interchanged positions
                     self.popped_unc = torch.cat((self.popped_unc, feat_unc.unsqueeze(0)))  # Interchanged positions
                 in_pool = False
+                self.not_in_num += 1
             else:
                 if record_popped:
                     self.popped_idx = torch.cat((self.popped_idx, self.pool_idx[self.unc_max_idx].unsqueeze(0)))  # Interchanged positions
@@ -184,6 +215,7 @@ class ClassLabelPool:
                 self.pool_unc[self.unc_max_idx] = feat_unc
                 # self.saved_logits[self.unc_max_idx] = feat_logit
                 in_pool = True
+                self.replace_num += 1
                 
         if in_pool:
             self._update_pool_attr()

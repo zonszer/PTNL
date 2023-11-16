@@ -5,6 +5,7 @@ import torch.nn as nn
 from collections import defaultdict
 from copy import deepcopy
 from utils_temp.utils_ import find_elem_idx_BinA
+from collections import Counter
 
 if torch.cuda.is_available():
     torch.backends.cudnn.benchmark = True
@@ -52,7 +53,7 @@ class PLL_loss(nn.Module):
             if 'refine' in type:
                 self.conf_true = torch.zeros(self.conf.shape, dtype=self.conf.dtype).to(self.device)
 
-    def init_confidence(self, PartialY):        #TODO: remove this init for convience
+    def init_confidence(self, PartialY):       
         tempY = PartialY.sum(dim=1, keepdim=True).repeat(1, PartialY.shape[1])   #repeat train_givenY.shape[1] times in dim 1
         confidence = (PartialY/tempY).float()
         confidence = confidence.to(self.device)
@@ -255,9 +256,13 @@ class PLL_loss(nn.Module):
                 conf_ = new_weight1         
             else:
                 raise ValueError('conf_type not supported')
-            # if hasattr(self, 'cls_pools_dict'):
+            if hasattr(self, 'cls_pools_dict'):
             #     self.fill_pools(conf_, outputs, batch_idxs, max_iter_num=1, record_notinpool=True)
-
+            # Count occurrences for each class
+                # pred_labels = torch.argmax(outputs, dim=1)      #TODO herer
+                # class_counts = Counter(pred_labels) 
+                # self.class_counts = 
+                pass
 
     @torch.no_grad()
     def cal_pred_conf(self, logits, PL_labels, conf_type, lw_return2=True):
@@ -288,6 +293,22 @@ class PLL_loss(nn.Module):
         return conf
 
 
+    def cal_pool_sum_num(self):
+        sum_num = 0
+        for pool_id, cur_pool in self.cls_pools_dict.items():
+            sum_num += cur_pool.pool_capacity
+        # print(f'pool_sum_num: {sum_num}')
+        return sum_num
+
+    def cal_pool_ACC(self):
+        corrcet_num = 0
+        all_num = 0
+        for pool_id, cur_pool in self.cls_pools_dict.items():
+            corrcet = (cur_pool.labels_true[cur_pool.pool_idx] == torch.LongTensor([cur_pool.cls_id])).sum()
+            corrcet_num += corrcet
+            all_num += cur_pool.pool_capacity
+        print(f'====> overall pools ACC: {corrcet_num}/{all_num} = {corrcet_num/all_num}')
+
     @torch.no_grad()
     def cal_uncertainty(self, output, label, index=None):
         """calculate uncertainty for each sample in batch"""
@@ -303,37 +324,44 @@ class PLL_loss(nn.Module):
             return 
         assert max_iter_num >= 1
         not_in_pool_init = torch.ones(labels.shape[0], dtype=torch.bool)
+        del_elems_init = torch.zeros(labels.shape[0], dtype=torch.bool)
         all_idxs = torch.arange(0, labels.shape[0])
         quary_num = torch.zeros(labels.shape[0], dtype=torch.long)
         
-        def recursion(top_uncs, top_labels, not_in_pool):
-            if (quary_num[not_in_pool] == max_iter_num).all() or (not_in_pool==False).all():
+        def recursion(top_uncs, top_labels, not_in_pool, del_elems):
+            in_itering = (not_in_pool & ~del_elems)
+            if (in_itering).sum() == 0 or (not_in_pool==False).all():
                 return 
             else:
-                this_loop_idxs = all_idxs[not_in_pool]        #torch.arange(0, output.shape[0])[not_in_pool]
+                this_loop_idxs = all_idxs[in_itering]        #torch.arange(0, output.shape[0])[not_in_pool]
                 this_loop_uncs = top_uncs[this_loop_idxs, quary_num[this_loop_idxs]]
                 this_loop_labels = top_labels[this_loop_idxs, quary_num[this_loop_idxs]]
                 quary_num[this_loop_idxs] += 1
+                assert labels.shape[0] == (this_loop_idxs.shape[0] + self.cal_pool_sum_num() + del_elems.sum()), "All_samples = not_in + in_pool + not_in_but_enough_iter"
                 # unc[mask] = torch.inf
+                this_loop_fill_num = 0
                 for i, (cls_id, idx) in enumerate(zip(this_loop_labels, this_loop_idxs)):
                     pool = self.cls_pools_dict[cls_id.item()]
                     in_pool = pool.update(feat_idx=feat_idxs[idx], feat_unc=this_loop_uncs[i], 
                                             record_popped = record_notinpool)
                     not_in_pool[idx] = not in_pool
+                    if in_pool:
+                        this_loop_fill_num += 1
                     # if in_pool.item():    #HACK： should change the position
                         # self.pred_label_dict.update({batch_idxs[i].item(): [cls_idx.cpu().item(), unc[i].cpu().item()]})
 
-                # top_labels[this_loop_idxs, max_idx] = -torch.inf
-                # num_top_pools = num_top_pools - 1
                 popped_feat_idxs, _, popped_unc = self.collect_popped_items(pool_range=pool_idxs.tolist(), 
                                                                              retain=False)
                 elem_idxs = find_elem_idx_BinA(A=feat_idxs, B=popped_feat_idxs)  
                 # not_found_idxs_.append(popped_feat_idxs[not_found_idxs]); not_found_uncs_.append(popped_unc[not_found_idxs])
                 not_in_pool[elem_idxs] = True
-                recursion(top_uncs, top_labels, not_in_pool)
+                del_elems = (quary_num[all_idxs] == max_iter_num) & (not_in_pool)
+                # del_elems = quary_num[all_idxs] == max_iter_num
+                # not_in_pool[del_elem_idxs] = False
+                recursion(top_uncs, top_labels, not_in_pool, del_elems)
         
         # call recursion:
-        recursion(uncs, labels, not_in_pool_init)
+        recursion(uncs, labels, not_in_pool_init, del_elems_init)
         return feat_idxs[not_in_pool_init], uncs[not_in_pool_init, :][:,0]    #get top 1 uncertainty for each sample
         
 
@@ -367,26 +395,27 @@ class PLL_loss(nn.Module):
         conf = self.cal_pred_conf(outputs, PL_labels,     #TODO we can norm pred_conf all in cal_pred_conf()
                                 conf_type=self.losstype.split('_')[0],
                                 lw_return2=False)  
-        labels = torch.empty((outputs.shape[0],), dtype=torch.long).to(self.device)
-        uncs = torch.empty((outputs.shape[0],), dtype=torch.float16).to(self.device)
+        labels_ = []; uncs_ = []
         for i in range(max_num):
-            max_val, max_idx = torch.max(conf, dim=1)       
+            max_val, max_idx = torch.max(conf, dim=1)       # get max val in each row
             mask = (max_val < self.eps)                     #TODO check deal with max val = zero 
             uncs = self.cal_uncertainty(outputs, max_idx)     #uncs is shape of (batch_size, max_num)
             uncs[mask] = torch.inf
-            conf[:, max_idx] = -torch.inf
+            conf[torch.arange(0, conf.shape[0]), max_idx] = -torch.inf
 
-            labels = torch.stack([labels, max_idx], dim=1)
-            uncs = torch.stack([uncs, uncs], dim=1)
+            labels_.append(max_idx.unsqueeze(1))
+            uncs_.append(uncs.unsqueeze(1))
+        labels_ = torch.cat(labels_, dim=1)
+        uncs_ = torch.cat(uncs_, dim=1)
 
-        return labels, uncs
+        return labels_, uncs_
 
     def refill_pools(self, indexs_all, output_all):
         sort_idxs = torch.argsort(indexs_all)       #output_all[sort_idxs] is the data original order
         feat_idxs = indexs_all[sort_idxs]
         outputs = output_all[sort_idxs]
 
-        #TODO prepare uncessay attrs for all items:
+        #prepare uncessay attrs for all items:
         labels, uncs = self.prepare_items_attrs(outputs, feat_idxs, 
                                                 max_num=self.cfg.TOP_POOLS)
         not_inpool_feat_idxs, notinpool_uncs = self.fill_pools(labels, uncs, feat_idxs, 
@@ -426,7 +455,7 @@ class PLL_loss(nn.Module):
             conf_torevise = self.conf_true
         else:
             conf_torevise = self.conf
-            
+
         for pool_id, cur_pool in self.cls_pools_dict.items():
             print(cur_pool)
             if cur_pool.pool_capacity == 0:
@@ -472,6 +501,7 @@ class PLL_loss(nn.Module):
             conf_torevise[cur_pool.pool_idx, max_idx] = revised_max_conf
             conf_torevise[cur_pool.pool_idx, pool_id] = revised_conf
 
+        self.cal_pool_ACC()
         # 2. clean poped items which are not in safe range:
         is_inf = torch.isinf(notinpool_uncs)
         if notinpool_idxs.shape[0] - is_inf.sum() > 1:
