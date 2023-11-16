@@ -15,6 +15,69 @@ import re
 
 import torch
 
+class PoolsAggregation:
+    """
+    Administer the pool of each class.
+    """
+
+    def __init__(self, cfg, class_ids, K, max_capacity_per_class=None):
+        """
+        Initialize the PoolsAggregation.
+        Args:
+            cfg (Config): The configuration object.
+            class_ids (torch.Tensor): Tensor of class ids.
+            K (int): Number of top samples to select per class.
+            max_capacity_per_class (dict): Maximum capacity per class. 
+        """
+        self.cfg = cfg
+
+        # Initialize cls_pools_dict
+        self.cls_pools_dict = {}
+        if max_capacity_per_class is None:
+            max_capacity_per_class = {cls: K for cls in class_ids.tolist()}
+
+        # Convert max_capacity_per_class to a tensor for efficient computation
+        max_capacity_per_class = torch.LongTensor([max_capacity_per_class[cls.item()] for cls in class_ids])
+
+        # Loop through each unique class id
+        for i, cls in enumerate(class_ids):                                   
+            self.cls_pools_dict[cls.item()] = ClassLabelPool(max_capacity=max_capacity_per_class[i].item(), 
+                                                             cls_id=cls.item())
+
+
+    def scale_all_pools(self, scale_factors):
+        """Manipulate the scale of each pool in its government"""
+        init_cap = round(self.cfg.MAX_POOLNUM * self.cfg.POOL_INITRATIO)
+        pool_next_capacity = self.cfg.MAX_POOLNUM * scale_factors 
+
+        for cls_idx, pool in self.cls_pools_dict.items():
+            next_capacity = round(pool_next_capacity[cls_idx].item())
+            next_capacity = max(min(next_capacity, self.cfg.MAX_POOLNUM), init_cap)
+            pool.scale_pool(next_capacity=next_capacity)
+
+
+    def reset_all(self):
+        """Reset all pools in its government"""
+        for pool in self.cls_pools_dict.values():
+            pool.reset()
+
+    def cal_pool_sum_num(self):
+        sum_num = 0
+        for i, pool in enumerate(self.cls_pools_dict.values()):
+            sum_num += pool.pool_capacity
+            # print(f'pool_id: {i}, pool_capacity: {pool.pool_capacity}')
+        return sum_num
+
+    def cal_pool_ACC(self):
+        correct_num = 0
+        all_num = 0
+        for pool in self.cls_pools_dict.values():
+            correct = (pool.labels_true[pool.pool_idx] == torch.LongTensor([pool.cls_id])).sum()
+            correct_num += correct
+            all_num += pool.pool_capacity
+        print(f'====> overall pools ACC: {correct_num}/{all_num} = {correct_num/all_num}')
+
+
 class ClassLabelPool:
     """
     Store the average and current values for uncertainty of each class samples and the max capacity of the pool.
@@ -64,6 +127,8 @@ class ClassLabelPool:
         assert self.is_freeze == False
         self.pool_unc_past = None
         self.pool_idx_past = None
+        self.replace_num = 0
+        self.not_in_num = 0
 
     def scale_pool(self, next_capacity: int):
         """
@@ -173,6 +238,7 @@ class ClassLabelPool:
                     self.popped_idx = torch.cat((self.popped_idx, feat_idx.unsqueeze(0)))  # Interchanged positions
                     self.popped_unc = torch.cat((self.popped_unc, feat_unc.unsqueeze(0)))  # Interchanged positions
                 in_pool = False
+                self.not_in_num += 1
             else:
                 if record_popped:
                     self.popped_idx = torch.cat((self.popped_idx, self.pool_idx[self.unc_max_idx].unsqueeze(0)))  # Interchanged positions
@@ -184,6 +250,7 @@ class ClassLabelPool:
                 self.pool_unc[self.unc_max_idx] = feat_unc
                 # self.saved_logits[self.unc_max_idx] = feat_logit
                 in_pool = True
+                self.replace_num += 1
                 
         if in_pool:
             self._update_pool_attr()
@@ -214,25 +281,15 @@ def find_elem_idx_BinA(A, B):
     
     Returns:
     torch.Tensor: A tensor containing the indices of the elements of b in a.
-    if b[i] is not in a, then return b[i] itself.
-    else return the index of b[i] in a.
     """
+    
     # Create a dictionary with elements of a as keys and their indices as values
     a_dict = {item.item(): i for i, item in enumerate(A)}
     
     # Map the elements of b to their corresponding indices in a using the dictionary
-    idxs = []
-    not_found_elem_idxInB = []
-    for i, item in enumerate(B):
-        idx = a_dict.get(item.item(), False)
-        if idx == False:
-            not_found_elem_idxInB.append(i)
-        else:
-            idxs.append(idx)
-    indices = torch.tensor(idxs, dtype=torch.long)
-    not_found_elem_idxInB = torch.tensor(not_found_elem_idxInB, dtype=torch.long)
+    indices = torch.tensor([a_dict[item.item()] for item in B], dtype=torch.long)
     
-    return indices, not_found_elem_idxInB
+    return indices
 
 
 

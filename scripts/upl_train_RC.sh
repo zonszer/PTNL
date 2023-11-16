@@ -5,7 +5,7 @@ cd ..
 # custom config
 DATA=./data
 TRAINER=UPLTrainer
-exp_ID="11.12-test_refine_ep100_CancelFreeze"    #NOTE +time 共72+27=99次
+exp_ID="11.16-test_refine_ep100_newRefill_uniform"    #NOTE +time 共72+27=99次
 # TODO: 
 #1. change oonf clean threshold and set safe factor and range
 #10.19-test_cc_refine_ep100_safe&clean2
@@ -67,8 +67,8 @@ USE_LABEL_FILTER=True
 BETA=0.0
 SEEDs=(1 2 3)
 declare -a DATASETs=('ssdtd')
-declare -a POOL_INITRATIOs=(0.3 0.4 0.5)
-declare -a loss_types=('lw_refine' 'rc_refine' 'cav_refine' 'cc_refine')
+declare -a POOL_INITRATIOs=(0.3 0.4)
+declare -a loss_types=('lw_refine' 'rc_refine' 'cav_refine')
 
 set_values() {
     local loss_type=$1
@@ -127,11 +127,11 @@ for SEED in "${SEEDs[@]}"; do
             for PLL_partial_rate in "${PLL_partial_rates[@]}"; do
 
                 if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
-                    MAX_POOLNUMs=(16)
-                    TOP_POOLs=(3 1)
+                    MAX_POOLNUMs=(12)
+                    TOP_POOLs=(5 1)
                 elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
-                    MAX_POOLNUMs=(16)
-                    TOP_POOLs=(3 1)
+                    MAX_POOLNUMs=(12)
+                    TOP_POOLs=(5 1)
                 else
                     echo "Invalid rate for MAX_POOLNUMs"
                     exit 1

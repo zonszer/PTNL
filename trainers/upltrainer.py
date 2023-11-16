@@ -39,7 +39,7 @@ add_partial_labels, generate_uniform_cv_candidate_labels,
 select_top_k_certainty_per_class,
 )
 
-from utils_temp.utils_ import dict_add, get_regular_weight
+from utils_temp.utils_ import dict_add, get_regular_weight, PoolsAggregation
 _tokenizer = _Tokenizer()
 from trainers.loss import GeneralizedCrossEntropy, PLL_loss
 
@@ -1214,7 +1214,10 @@ class UPLTrainer(TrainerX):
 
         if self.epoch == 0:            #self.epoch start from 0
             if 'refine' in self.criterion.losstype:
-                self.criterion.cls_pools_dict = self.init_cls_pools(split="train")
+                class_ids = torch.arange(0, len(self.lab2cname))
+                K = int(max(self.cfg.TRAINER.PLL.MAX_POOLNUM*self.cfg.TRAINER.PLL.POOL_INITRATIO, 3))
+                self.criterion.Pools = PoolsAggregation(cfg=self.cfg.TRAINER.PLL, class_ids=class_ids, K=K)
+                self.criterion.cls_pools_dict = self.criterion.Pools.cls_pools_dict
                 for cls_idx, pool in self.criterion.cls_pools_dict.items():
                     pool.labels_true = self.labels_true
 
@@ -1223,20 +1226,22 @@ class UPLTrainer(TrainerX):
             self.set_model_mode("eval")
             self.model.eval()
             output_all = []; indexs_all = []
+            acc_all = []
 
             for batch_idx, batch in enumerate(self.dm.train_loader_sstrain_notfm):
                 summary = self.forward_get_conf(batch)
                 indexs_all.append(summary['index'])
                 output_all.append(summary['output'])
+                acc_all.append(summary['acc'])  
                 if (
                     batch_idx + 1
                 ) % self.cfg.TRAIN.PRINT_FREQ == 0 or self.num_batches < self.cfg.TRAIN.PRINT_FREQ:
-                    print(f'batch_idx: {batch_idx}, pred_acc: {summary["acc"]}')
+                    print(f'batch_idx: {batch_idx}, pred_acc so far: {sum(acc_all) / len(acc_all)}')
 
             indexs_all = torch.cat(indexs_all, dim=0)
             output_all = torch.cat(output_all, dim=0)
 
-            pool_certn_norm, info_dict = self.criterion.update_conf_epochend(indexs_all, output_all)
+            pool_certn_norm, info_dict, cls_counts_norm = self.criterion.update_conf_epochend(indexs_all, output_all)
                                                                             
             self.pool_certn_norm = pool_certn_norm
             # self.feat_idxs_halfsafe = info_dict.get('popped_idxs_safe', {})
@@ -1245,26 +1250,13 @@ class UPLTrainer(TrainerX):
                                                                                  dtype=torch.float16, device=self.device))
 
             if hasattr(self.criterion, 'cls_pools_dict'):
-                init_cap = self.cfg.TRAINER.PLL.MAX_POOLNUM * self.cfg.TRAINER.PLL.POOL_INITRATIO
-                pool_next_capacity = (self.cfg.TRAINER.PLL.MAX_POOLNUM - init_cap) * pool_certn_norm + init_cap
-
-                for cls_idx, pool in self.criterion.cls_pools_dict.items():
-                    pool.scale_pool(next_capacity=min(round(pool_next_capacity[cls_idx].item()), 
-                                                      self.cfg.TRAINER.PLL.MAX_POOLNUM)
-                                    )
-                    pool.reset()
+                self.criterion.Pools.scale_all_pools(scale_factors=cls_counts_norm)
+                self.criterion.Pools.reset_all()
                     
         if self.epoch > 0:            #self.epoch start from 0
             if self.cfg.TRAINER.PLL.USE_PLL:
                 self.criterion.clean_conf()
 
-
-    @torch.no_grad()                           
-    def init_cls_pools(self, split="train"):
-        pools_dict = select_top_k_certainty_per_class(class_ids=torch.arange(0, len(self.lab2cname)), 
-                                                      K=int(max(self.cfg.TRAINER.PLL.MAX_POOLNUM*self.cfg.TRAINER.PLL.POOL_INITRATIO, 3)))     #选择每个类别visual emb和text emb最相似的K个样本，对每个样本取预测的vector，最后加到info dict中（k>=0时）。 对每个样本取预测的vector，然后加到所有训练样本的info dict中（k=-1时）
-        return pools_dict
-    
 
     def after_train(self, model_id):
         print("Finished training")
