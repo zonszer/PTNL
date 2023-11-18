@@ -68,7 +68,7 @@ BETA=0.0
 SEEDs=(1 2 3)
 declare -a DATASETs=('ssdtd')
 declare -a POOL_INITRATIOs=(0.2 0.3)
-declare -a loss_types=('lw_refine' 'rc_refine' 'cav_refine', 'cc_refine')
+declare -a loss_types=('lw_refine' 'rc_refine' 'cav_refine' 'cc_refine')
 
 set_values() {
     local loss_type=$1
@@ -128,10 +128,10 @@ for SEED in "${SEEDs[@]}"; do
 
                 if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
                     MAX_POOLNUMs=(14 16)
-                    TOP_POOLs=(10 5)
+                    TOP_POOLs=(10 5 1)
                 elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
                     MAX_POOLNUMs=(14 16)
-                    TOP_POOLs=(10 5)
+                    TOP_POOLs=(10 5 1)
                 else
                     echo "Invalid rate for MAX_POOLNUMs"
                     exit 1
