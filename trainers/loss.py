@@ -5,7 +5,7 @@ import torch.nn as nn
 from collections import defaultdict
 from copy import deepcopy
 from utils_temp.utils_ import find_elem_idx_BinA
-from collections import Counter
+from sklearn.mixture import GaussianMixture
 
 if torch.cuda.is_available():
     torch.backends.cudnn.benchmark = True
@@ -369,6 +369,63 @@ class PLL_loss(nn.Module):
             popped_uncs = torch.tensor([], dtype=torch.float16).to(self.device)
         return popped_idxs, pools_not_full, popped_uncs
 
+
+    def collect_uncs_byCls(self, outputs, indexs, min_num=1):
+        """collect uncs for all items by their PL_labels"""
+        sort_idxs = torch.argsort(indexs)       #output_all[sort_idxs] is the data original order
+        # feat_idxs = indexs_all[sort_idxs]
+        outputs = outputs[sort_idxs]
+
+        # get the idxs of where PL_labels > eps and collect the corresponding outputs by idx order:
+        items_collected = {}
+        idxs_collected = {}
+        PL_labels = self.conf > self.eps
+        idxs = torch.nonzero(PL_labels)     # idxs is shape of (num, 2), 2 means (batch_idx, class_idx)
+        self.conf_weight = deepcopy(self.conf)
+
+        for i in range(idxs.shape[0]):
+            cls = idxs[i][1].item()
+            if cls not in items_collected:
+                items_collected[cls] = []
+                idxs_collected[cls] = []
+            items_collected[cls].append(idxs[i][0].unsqueeze(0))
+            idxs_collected[cls].append(idxs[i].unsqueeze(0))
+        
+        inpool_num, notinpool_num = {}, {}
+        for cls in items_collected:
+            cls_feat_idxs = torch.cat(items_collected[cls], dim=0)
+            cls_origin_idxs = torch.cat(idxs_collected[cls], dim=0)
+            cls_outputs = outputs[cls_feat_idxs]
+            cls_labels = torch.full((cls_outputs.shape[0],), cls, dtype=torch.long).to(self.device)
+            cls_uncs = self.cal_uncertainty(cls_outputs, cls_labels)
+            in_pool, prob = self.fit_GMM(cls_uncs.cpu())
+            # order = torch.argsort(prob, descending=True)
+            # self.Pools.fill_assigned_pool(feat_idxs=cls_idxs[order], feat_unc=prob[order].to(self.device), 
+            #                               pool_id=items_collected[i])
+            self.conf_weight[cls_origin_idxs[:, 0], cls_origin_idxs[:, 1]] = prob.to(self.device)
+            inpool_num[cls] = in_pool.shape[0]
+            notinpool_num[cls] = prob.shape[0] - in_pool.shape[0]
+        # popped_feat_idxs, _, popped_unc = self.collect_popped_items(pool_range=items_collected.keys(), 
+        #                                                             retain=False)
+        return inpool_num, notinpool_num 
+
+    def fit_GMM(self, uncs, min_num=1):
+        """fit GMM for class items"""
+        # Normalize the losses
+        if uncs.shape[0] > 1:
+            uncs = (uncs - uncs.min()) / (uncs.max() - uncs.min())
+        input_uncs = uncs.reshape(-1, 1)  # Reshape for GMM fitting
+        # Fit a Gaussian Mixture Model (GMM) on the input losses
+        gmm = GaussianMixture(n_components=2, max_iter=10, tol=1e-2, reg_covar=5e-4)
+        gmm.fit(input_uncs)
+        prob = gmm.predict_proba(input_uncs)  # Predict the probabilities of the input being in one of the GMM components
+        prob = prob[:, gmm.means_.argmin()]  # Select the probabilities corresponding to the component with the smaller mean loss
+        pred_idx = (prob > 0.5).nonzero()[0]
+        # not_in_idxs = (prob < 0.5).nonzero()[0]        
+        prob = torch.from_numpy(prob).float()
+        return pred_idx, prob, #not_in_idxs
+
+
     def prepare_items_attrs(self, outputs, indexs, max_num):    #TODO max_num should adjust according to partial ratio
         """prepare labels and uncs for all items"""
         PL_labels = self.origin_labels[indexs, :]
@@ -378,7 +435,7 @@ class PLL_loss(nn.Module):
         labels_ = []; uncs_ = []
         for i in range(max_num):
             max_val, max_idx = torch.max(conf, dim=1)       # get max val in each row
-            mask = (max_val < self.eps)                     #TODO check deal with max val = zero 
+            mask = (max_val < self.eps)                     
             uncs = self.cal_uncertainty(outputs, max_idx)     #uncs is shape of (batch_size, max_num)
             uncs[mask] = torch.inf
             conf[torch.arange(0, conf.shape[0]), max_idx] = -torch.inf
@@ -421,18 +478,23 @@ class PLL_loss(nn.Module):
         if 'refine' in self.losstype and hasattr(self, 'cls_pools_dict'):
             print('-----------update conf_refine at epoch end:-----------')
             # pop items not in pools and fill the remained pools:
-            notinpool_idxs, notinpool_uncs = self.refill_pools(indexs_all, output_all)
+            # notinpool_idxs, notinpool_uncs = self.refill_pools(indexs_all, output_all)
+            inpool_num, notinpool_num  = self.collect_uncs_byCls(output_all, indexs_all)
             
             # clean pool and calculate conf increament:
-            (info_dict, pools_certainty_norm) = self.update_conf_refine(notinpool_idxs, notinpool_uncs)
+            # (info_dict, pools_certainty_norm) = self.update_conf_refine(notinpool_idxs, notinpool_uncs)
+            inpool_all, notin_all = 0, 0
+            for cls in sorted(inpool_num):
+                print(f'cls: {cls}, inpool_num: {inpool_num[cls]}, notinpool_num: {notinpool_num[cls]}')
+                inpool_all += inpool_num[cls]
+                notin_all += notinpool_num[cls]
             
-            print(f'<{info_dict["not_inpool_num"]}> samples are not in pool:,'
-                    f'<{info_dict["safe_range_num"]}> samples are in safe range,'
-                    f'<{info_dict["clean_num"]}> samples are cleaned')   
+            print(f'<sum {inpool_all}> samples are in pools,'
+                  f'<sum {notin_all}> samples are not in pools,')
             
-        return pools_certainty_norm, info_dict, self.class_counts
+        return pools_certainty_norm, info_dict, torch.ones(self.conf.shape[1], dtype=torch.long)
 
-    def update_conf_refine(self, notinpool_idxs, notinpool_uncs, shrink_f=0.5):
+    def update_conf_refine(self, notinpool_idxs, notinpool_uncs, shrink_f=1.0):
         not_inpool_num = 0
         safe_range_num = 0
         clean_num = 0
@@ -474,11 +536,11 @@ class PLL_loss(nn.Module):
                 revised_conf = 1.0
                 revised_max_conf = 0.           #self.conf_momn = 0.1 0.2
             elif conf_type_ == 'cc':
-                revised_conf = (current_val+max_val)/2 + (self.conf_momn * (1 - unc_norm * shrink_f))
+                revised_conf = (current_val+max_val)/2 + (self.conf_momn * (unc_norm * shrink_f))
                 revised_max_conf = (current_val+max_val)/2     
 
             elif conf_type_ in ['rc', 'lw']:
-                revised_conf = (current_val+max_val)/2 * (1 + self.conf_momn * (1 - unc_norm * shrink_f))
+                revised_conf = (current_val+max_val)/2 * (1 + self.conf_momn * (unc_norm * shrink_f))
                 revised_max_conf = (current_val+max_val)/2 
             else:
                 raise ValueError('conf_type_ not supported')
@@ -560,6 +622,7 @@ class PLL_loss(nn.Module):
                                         self.conf)
                 base_value = self.conf.sum(dim=1).unsqueeze(1).repeat(1, self.conf.shape[1])
                 self.conf = self.conf / base_value
+            self.conf = (1 - self.conf_momn)*self.conf + self.conf_momn*self.conf_weight        #TODO check here
 
 
     def log_conf(self, all_logits=None, all_labels=None):

@@ -61,6 +61,29 @@ class PoolsAggregation:
         for pool in self.cls_pools_dict.values():
             pool.reset()
 
+    def fill_assigned_pool(self, feat_idxs: torch.LongTensor, feat_unc: torch.Tensor, pool_id):
+        """
+        Fill the assigned pool with new values.
+        Args:
+            feat_idxs (torch.Tensor): A tensor of feature indices, better to be ascending order.
+            feat_unc (torch.Tensor): A tensor of feature uncertainties.
+            pool_id: the assigned_pool to fill all the items.
+        """
+        cur_pool = self.cls_pools_dict[pool_id]
+        assert cur_pool.pool_capacity == 0 
+        if cur_pool.pool_max_capacity >= feat_idxs.shape[0]:
+            cur_pool.pool_idx = feat_idxs
+            cur_pool.pool_unc = feat_unc
+            cur_pool.pool_capacity = feat_idxs.shape[0]
+        else:
+            cur_pool.pool_idx = feat_idxs[:cur_pool.pool_max_capacity]
+            cur_pool.pool_unc = feat_unc[:cur_pool.pool_max_capacity]
+            cur_pool.pool_capacity = cur_pool.pool_max_capacity
+            cur_pool.popped_idx = feat_idxs[cur_pool.pool_max_capacity:]
+            cur_pool.popped_unc = feat_unc[cur_pool.pool_max_capacity:]
+        cur_pool._update_pool_attr()
+
+
     def cal_pool_sum_num(self):
         sum_num = 0
         for i, pool in enumerate(self.cls_pools_dict.values()):
