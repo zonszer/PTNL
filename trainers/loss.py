@@ -386,7 +386,7 @@ class PLL_loss(nn.Module):
         for i in range(idxs.shape[0]):
             cls = idxs[i][1].item()
             if cls not in items_collected:
-                items_collected[cls] = []
+                items_collected[cls] = []                       #HACK if UPL and use CLIP as lable (not uniform) one cls may be zero
                 idxs_collected[cls] = []
             items_collected[cls].append(idxs[i][0].unsqueeze(0))
             idxs_collected[cls].append(idxs[i].unsqueeze(0))
@@ -399,10 +399,12 @@ class PLL_loss(nn.Module):
             cls_labels = torch.full((cls_outputs.shape[0],), cls, dtype=torch.long).to(self.device)
             cls_uncs = self.cal_uncertainty(cls_outputs, cls_labels)
             in_pool, prob = self.fit_GMM(cls_uncs.cpu())
+            base_value = prob.sum()
+            weight = prob / base_value  # use maticx for element-wise division
             # order = torch.argsort(prob, descending=True)
             # self.Pools.fill_assigned_pool(feat_idxs=cls_idxs[order], feat_unc=prob[order].to(self.device), 
             #                               pool_id=items_collected[i])
-            self.conf_weight[cls_origin_idxs[:, 0], cls_origin_idxs[:, 1]] = prob.to(self.device)
+            self.conf_weight[cls_origin_idxs[:, 0], cls_origin_idxs[:, 1]] = weight.to(self.device)
             inpool_num[cls] = in_pool.shape[0]
             notinpool_num[cls] = prob.shape[0] - in_pool.shape[0]
         # popped_feat_idxs, _, popped_unc = self.collect_popped_items(pool_range=items_collected.keys(), 
