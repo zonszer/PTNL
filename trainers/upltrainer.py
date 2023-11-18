@@ -1237,7 +1237,7 @@ class UPLTrainer(TrainerX):
                     batch_idx + 1
                 ) % self.cfg.TRAIN.PRINT_FREQ == 0 or self.num_batches < self.cfg.TRAIN.PRINT_FREQ:
                     print(f'batch_idx: {batch_idx}, pred_acc so far: {sum(acc_all) / len(acc_all)}')
-
+            print(f'pred_acc of ALL: {sum(acc_all) / len(acc_all)}')
             indexs_all = torch.cat(indexs_all, dim=0)
             output_all = torch.cat(output_all, dim=0)
 
