@@ -1,0 +1,1773 @@
+***************
+** Arguments **
+***************
+backbone: 
+config_file: configs/trainers/UPLTrainer/rn50_ep100.yaml
+dataset_config_file: configs/datasets/ssdtd.yaml
+eval_only: False
+head: 
+hh_config_file: 
+load_epoch: None
+loss_type: rc_refine
+model_dir: 
+no_train: False
+num_fp: 0
+opts: ['TRAINER.UPLTrainer.N_CTX', '16', 'TRAINER.UPLTrainer.CSC', 'False', 'TRAINER.UPLTrainer.CLASS_TOKEN_POSITION', 'end', 'DATASET.NUM_SHOTS', '16', 'DATASET.CLASS_EQULE', 'True', 'TEST.FINAL_MODEL', 'last_step', 'TRAINER.PLL.BETA', '0.0', 'TRAINER.PLL.USE_REGULAR', 'False', 'TRAINER.PLL.USE_PLL', 'True', 'TRAINER.PLL.PARTIAL_RATE', '0.3', 'TRAINER.PLL.USE_LABEL_FILTER', 'True', 'TRAINER.PLL.CONF_MOMN', '0.03', 'TRAINER.PLL.MAX_POOLNUM', '16', 'TRAINER.PLL.POOL_INITRATIO', '0.2', 'TRAINER.PLL.HALF_USE_W', '0.1', 'TRAINER.PLL.TOP_POOLS', '1']
+output_dir: ./output/ssdtd/UPLTrainer/rn50_ep100_16shots-11.18-test_refine_ep100_GMM_2/SEED1/data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.03_topP-1_MAXPOOL-16_initR-0.2_halfW-0.1
+resume: 
+root: ./data
+seed: 1
+source_domains: None
+target_domains: None
+trainer: UPLTrainer
+transforms: None
+************
+** Config **
+************
+DATALOADER:
+  K_TRANSFORMS: 1
+  NUM_WORKERS: 8
+  OPEN_SETTING: False
+  RETURN_IMG0: False
+  TEST:
+    BATCH_SIZE: 100
+    SAMPLER: SequentialSampler
+    SHUFFLE: False
+  TRAIN_U:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAME_AS_X: True
+    SAMPLER: RandomSampler
+  TRAIN_X:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAMPLER: RandomSampler
+    SHUFFLE: True
+  VAL:
+    BATCH_SIZE: 50
+    SHUFFLE: False
+DATASET:
+  ALL_AS_UNLABELED: False
+  CIFAR_C_LEVEL: 1
+  CIFAR_C_TYPE: 
+  CLASS_EQULE: True
+  CONF_THRESHOLD: 0.9
+  IGNORE_FILE: 
+  IGNORE_NUM: 0
+  NAME: SSDescribableTextures
+  NUM_LABELED: -1
+  NUM_SHOTS: 16
+  ROOT: ./data
+  SOURCE_DOMAINS: ()
+  STL10_FOLD: -1
+  TARGET_DOMAINS: ()
+  VAL_PERCENT: 0.1
+INPUT:
+  COLORJITTER_B: 0.4
+  COLORJITTER_C: 0.4
+  COLORJITTER_H: 0.1
+  COLORJITTER_S: 0.4
+  CROP_PADDING: 4
+  CUTOUT_LEN: 16
+  CUTOUT_N: 1
+  GB_K: 21
+  GB_P: 0.5
+  GN_MEAN: 0.0
+  GN_STD: 0.15
+  INTERPOLATION: bicubic
+  NO_TRANSFORM: False
+  PIXEL_MEAN: [0.48145466, 0.4578275, 0.40821073]
+  PIXEL_STD: [0.26862954, 0.26130258, 0.27577711]
+  RANDAUGMENT_M: 10
+  RANDAUGMENT_N: 2
+  RGS_P: 0.2
+  RRCROP_SCALE: (0.08, 1.0)
+  SIZE: (224, 224)
+  TRANSFORMS: ('random_resized_crop', 'random_flip', 'normalize')
+MODEL:
+  BACKBONE:
+    NAME: RN50
+    PRETRAINED: True
+  HEAD:
+    ACTIVATION: relu
+    BN: True
+    DROPOUT: 0.0
+    HIDDEN_LAYERS: ()
+    NAME: 
+  INIT_WEIGHTS: 
+  PSEUDO_LABEL_MODELS: ['RN50']
+OPTIM:
+  ADAM_BETA1: 0.9
+  ADAM_BETA2: 0.999
+  BASE_LR_MULT: 0.1
+  GAMMA: 0.1
+  LR: 0.002
+  LR_SCHEDULER: cosine
+  MAX_EPOCH: 100
+  MOMENTUM: 0.9
+  NAME: sgd
+  NEW_LAYERS: ()
+  RMSPROP_ALPHA: 0.99
+  SGD_DAMPNING: 0
+  SGD_NESTEROV: False
+  STAGED_LR: False
+  STEPSIZE: (-1,)
+  WARMUP_CONS_LR: 1e-05
+  WARMUP_EPOCH: 1
+  WARMUP_MIN_LR: 1e-05
+  WARMUP_RECOUNT: True
+  WARMUP_TYPE: constant
+  WEIGHT_DECAY: 0.0005
+OUTPUT_DIR: ./output/ssdtd/UPLTrainer/rn50_ep100_16shots-11.18-test_refine_ep100_GMM_2/SEED1/data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.03_topP-1_MAXPOOL-16_initR-0.2_halfW-0.1
+RESUME: 
+SEED: 1
+TEST:
+  Analyze_Result_Path: ./analysis_results_test/
+  COMPUTE_CMAT: False
+  EVALUATOR: UPLClassification
+  FINAL_MODEL: last_step
+  NO_TEST: False
+  PER_CLASS_RESULT: True
+  SPLIT: test
+TRAIN:
+  CHECKPOINT_FREQ: 0
+  COUNT_ITER: train_x
+  PRINT_FREQ: 5
+TRAINER:
+  CG:
+    ALPHA_D: 0.5
+    ALPHA_F: 0.5
+    EPS_D: 1.0
+    EPS_F: 1.0
+  DAEL:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DDAIG:
+    ALPHA: 0.5
+    CLAMP: False
+    CLAMP_MAX: 1.0
+    CLAMP_MIN: -1.0
+    G_ARCH: 
+    LMDA: 0.3
+    WARMUP: 0
+  ENSEMBLE_NUM: 1
+  ENTMIN:
+    LMDA: 0.001
+  FIXMATCH:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 1.0
+  LOSS_TYPE: rc_refine
+  M3SDA:
+    LMDA: 0.5
+    N_STEP_F: 4
+  MCD:
+    N_STEP_F: 4
+  MEANTEA:
+    EMA_ALPHA: 0.999
+    RAMPUP: 5
+    WEIGHT_U: 1.0
+  MIXMATCH:
+    MIXUP_BETA: 0.75
+    RAMPUP: 20000
+    TEMP: 2.0
+    WEIGHT_U: 100.0
+  MME:
+    LMDA: 0.1
+  NAME: UPLTrainer
+  PLL:
+    BETA: 0.0
+    CONF_LOSS_TYPE: 
+    CONF_MOMN: 0.03
+    HALF_USE_W: 0.1
+    MAX_POOLNUM: 16
+    PARTIAL_RATE: 0.3
+    POOL_INITRATIO: 0.2
+    SAFE_FACTOR: 3.0
+    TEMPERATURE: 1.0
+    TOP_POOLS: 1
+    USE_LABEL_FILTER: True
+    USE_PLL: True
+    USE_REGULAR: False
+  SE:
+    CONF_THRE: 0.95
+    EMA_ALPHA: 0.999
+    RAMPUP: 300
+  UPLTrainer:
+    CLASS_TOKEN_POSITION: end
+    CSC: False
+    CTX_INIT: 
+    NUM_FP: 0
+    N_CTX: 16
+    PREC: fp16
+USE_CUDA: True
+VERBOSE: True
+VERSION: 1
+Collecting env info ...
+** System info **
+PyTorch version: 1.12.1+cu113
+Is debug build: False
+CUDA used to build PyTorch: 11.3
+ROCM used to build PyTorch: N/A
+
+OS: Ubuntu 20.04.6 LTS (x86_64)
+GCC version: (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0
+Clang version: Could not collect
+CMake version: version 3.16.3
+Libc version: glibc-2.31
+
+Python version: 3.9.17 | packaged by conda-forge | (main, Aug 10 2023, 07:02:31)  [GCC 12.3.0] (64-bit runtime)
+Python platform: Linux-5.15.0-88-generic-x86_64-with-glibc2.31
+Is CUDA available: True
+CUDA runtime version: 10.1.243
+GPU models and configuration: 
+GPU 0: NVIDIA A100-PCIE-40GB
+GPU 1: Tesla V100-PCIE-16GB
+GPU 2: Tesla V100-PCIE-16GB
+
+Nvidia driver version: Could not collect
+cuDNN version: Could not collect
+HIP runtime version: N/A
+MIOpen runtime version: N/A
+Is XNNPACK available: True
+
+Versions of relevant libraries:
+[pip3] numpy==1.24.3
+[pip3] torch==1.12.1+cu113
+[pip3] torch-tb-profiler==0.2.0
+[pip3] torchaudio==0.12.1+cu113
+[pip3] torchvision==0.13.1+cu113
+[conda] numpy                     1.24.3                   pypi_0    pypi
+[conda] torch                     1.12.1+cu113             pypi_0    pypi
+[conda] torch-tb-profiler         0.2.0                    pypi_0    pypi
+[conda] torchaudio                0.12.1+cu113             pypi_0    pypi
+[conda] torchvision               0.13.1+cu113             pypi_0    pypi
+        Pillow (10.0.0)
+
+Loading trainer: UPLTrainer
+Loading dataset: SSDescribableTextures
+Reading split from /media/zjh/本地磁盘/zjh/projects7.12/PTNL/data/dtd/split_zhou_DescribableTextures.json
+Reading split from /media/zjh/本地磁盘/zjh/projects7.12/PTNL/data/dtd/split_zhou_DescribableTextures.json
+* Using custom transform for testing
+Building transform_train
++ random resized crop (size=(224, 224), scale=(0.08, 1.0))
++ random flip
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+---------  ---------------------
+Dataset    SSDescribableTextures
+# classes  47
+# train_x  2,820
+# val      1,128
+# test     1,692
+---------  ---------------------
+Loading CLIP (backbone: RN50)
+Building custom CLIP
+Initializing a generic context
+Initial context: "X X X X X X X X X X X X X X X X"
+Number of context words (tokens): 16
+Turning off gradients in both the image and the text encoder
+Loading evaluator: UPLClassification
+Loaded training GT labels from /media/zjh/本地磁盘/zjh/projects7.12/PTNL/data/dtd/SSDescribableTextures_GTlabels.json
+--- 0
+['./data/dtd/images/banded/banded_0154.jpg'
+ './data/dtd/images/banded/banded_0124.jpg'
+ './data/dtd/images/banded/banded_0138.jpg'
+ './data/dtd/images/banded/banded_0123.jpg'
+ './data/dtd/images/banded/banded_0078.jpg'
+ './data/dtd/images/banded/banded_0113.jpg'
+ './data/dtd/images/banded/banded_0081.jpg'
+ './data/dtd/images/banded/banded_0055.jpg'
+ './data/dtd/images/banded/banded_0133.jpg'
+ './data/dtd/images/banded/banded_0041.jpg'
+ './data/dtd/images/banded/banded_0036.jpg'
+ './data/dtd/images/banded/banded_0077.jpg'
+ './data/dtd/images/banded/banded_0059.jpg'
+ './data/dtd/images/banded/banded_0117.jpg'
+ './data/dtd/images/banded/banded_0141.jpg'
+ './data/dtd/images/banded/banded_0074.jpg']
+--- 1
+['./data/dtd/images/blotchy/blotchy_0060.jpg'
+ './data/dtd/images/blotchy/blotchy_0084.jpg'
+ './data/dtd/images/blotchy/blotchy_0133.jpg'
+ './data/dtd/images/blotchy/blotchy_0140.jpg'
+ './data/dtd/images/blotchy/blotchy_0025.jpg'
+ './data/dtd/images/blotchy/blotchy_0063.jpg'
+ './data/dtd/images/blotchy/blotchy_0105.jpg'
+ './data/dtd/images/blotchy/blotchy_0104.jpg'
+ './data/dtd/images/blotchy/blotchy_0028.jpg'
+ './data/dtd/images/blotchy/blotchy_0093.jpg'
+ './data/dtd/images/blotchy/blotchy_0081.jpg'
+ './data/dtd/images/blotchy/blotchy_0057.jpg'
+ './data/dtd/images/blotchy/blotchy_0040.jpg'
+ './data/dtd/images/blotchy/blotchy_0027.jpg'
+ './data/dtd/images/blotchy/blotchy_0089.jpg'
+ './data/dtd/images/blotchy/blotchy_0111.jpg']
+--- 2
+['./data/dtd/images/braided/braided_0101.jpg'
+ './data/dtd/images/braided/braided_0184.jpg'
+ './data/dtd/images/braided/braided_0196.jpg'
+ './data/dtd/images/braided/braided_0155.jpg'
+ './data/dtd/images/braided/braided_0074.jpg'
+ './data/dtd/images/braided/braided_0178.jpg'
+ './data/dtd/images/braided/braided_0042.jpg'
+ './data/dtd/images/braided/braided_0145.jpg'
+ './data/dtd/images/braided/braided_0177.jpg'
+ './data/dtd/images/braided/braided_0174.jpg'
+ './data/dtd/images/braided/braided_0190.jpg'
+ './data/dtd/images/braided/braided_0105.jpg'
+ './data/dtd/images/braided/braided_0169.jpg'
+ './data/dtd/images/braided/braided_0179.jpg'
+ './data/dtd/images/braided/braided_0137.jpg'
+ './data/dtd/images/braided/braided_0151.jpg']
+--- 3
+['./data/dtd/images/bubbly/bubbly_0140.jpg'
+ './data/dtd/images/bubbly/bubbly_0125.jpg'
+ './data/dtd/images/bubbly/bubbly_0159.jpg'
+ './data/dtd/images/bubbly/bubbly_0164.jpg'
+ './data/dtd/images/bubbly/bubbly_0048.jpg'
+ './data/dtd/images/bubbly/bubbly_0083.jpg'
+ './data/dtd/images/bubbly/bubbly_0101.jpg'
+ './data/dtd/images/bubbly/bubbly_0129.jpg'
+ './data/dtd/images/bubbly/bubbly_0077.jpg'
+ './data/dtd/images/bubbly/bubbly_0145.jpg'
+ './data/dtd/images/bubbly/bubbly_0122.jpg'
+ './data/dtd/images/bubbly/bubbly_0139.jpg'
+ './data/dtd/images/bubbly/bubbly_0114.jpg'
+ './data/dtd/images/bubbly/bubbly_0102.jpg'
+ './data/dtd/images/bubbly/bubbly_0093.jpg'
+ './data/dtd/images/bubbly/bubbly_0045.jpg']
+--- 4
+['./data/dtd/images/bumpy/bumpy_0092.jpg'
+ './data/dtd/images/bumpy/bumpy_0170.jpg'
+ './data/dtd/images/bumpy/bumpy_0119.jpg'
+ './data/dtd/images/bumpy/bumpy_0077.jpg'
+ './data/dtd/images/bumpy/bumpy_0111.jpg'
+ './data/dtd/images/bumpy/bumpy_0156.jpg'
+ './data/dtd/images/bumpy/bumpy_0105.jpg'
+ './data/dtd/images/bumpy/bumpy_0129.jpg'
+ './data/dtd/images/bumpy/bumpy_0168.jpg'
+ './data/dtd/images/bumpy/bumpy_0188.jpg'
+ './data/dtd/images/bumpy/bumpy_0158.jpg'
+ './data/dtd/images/bumpy/bumpy_0140.jpg'
+ './data/dtd/images/bumpy/bumpy_0173.jpg'
+ './data/dtd/images/bumpy/bumpy_0181.jpg'
+ './data/dtd/images/bumpy/bumpy_0178.jpg'
+ './data/dtd/images/bumpy/bumpy_0123.jpg']
+--- 5
+['./data/dtd/images/chequered/chequered_0120.jpg'
+ './data/dtd/images/chequered/chequered_0199.jpg'
+ './data/dtd/images/chequered/chequered_0107.jpg'
+ './data/dtd/images/chequered/chequered_0196.jpg'
+ './data/dtd/images/chequered/chequered_0215.jpg'
+ './data/dtd/images/chequered/chequered_0119.jpg'
+ './data/dtd/images/chequered/chequered_0123.jpg'
+ './data/dtd/images/chequered/chequered_0063.jpg'
+ './data/dtd/images/chequered/chequered_0183.jpg'
+ './data/dtd/images/chequered/chequered_0064.jpg'
+ './data/dtd/images/chequered/chequered_0133.jpg'
+ './data/dtd/images/chequered/chequered_0124.jpg'
+ './data/dtd/images/chequered/chequered_0212.jpg'
+ './data/dtd/images/chequered/chequered_0050.jpg'
+ './data/dtd/images/chequered/chequered_0046.jpg'
+ './data/dtd/images/chequered/chequered_0093.jpg']
+--- 6
+['./data/dtd/images/cobwebbed/cobwebbed_0161.jpg'
+ './data/dtd/images/cobwebbed/cobwebbed_0158.jpg'
+ './data/dtd/images/cobwebbed/cobwebbed_0159.jpg'
+ './data/dtd/images/cobwebbed/cobwebbed_0119.jpg'
+ './data/dtd/images/cobwebbed/cobwebbed_0085.jpg'
+ './data/dtd/images/cobwebbed/cobwebbed_0137.jpg'
+ './data/dtd/images/cobwebbed/cobwebbed_0133.jpg'
+ './data/dtd/images/cobwebbed/cobwebbed_0123.jpg'
+ './data/dtd/images/cobwebbed/cobwebbed_0106.jpg'
+ './data/dtd/images/cobwebbed/cobwebbed_0075.jpg'
+ './data/dtd/images/cobwebbed/cobwebbed_0070.jpg'
+ './data/dtd/images/cobwebbed/cobwebbed_0138.jpg'
+ './data/dtd/images/cobwebbed/cobwebbed_0125.jpg'
+ './data/dtd/images/cobwebbed/cobwebbed_0048.jpg'
+ './data/dtd/images/cobwebbed/cobwebbed_0065.jpg'
+ './data/dtd/images/cobwebbed/cobwebbed_0088.jpg']
+--- 7
+['./data/dtd/images/cracked/cracked_0095.jpg'
+ './data/dtd/images/cracked/cracked_0137.jpg'
+ './data/dtd/images/cracked/cracked_0077.jpg'
+ './data/dtd/images/cracked/cracked_0129.jpg'
+ './data/dtd/images/cracked/cracked_0107.jpg'
+ './data/dtd/images/cracked/cracked_0100.jpg'
+ './data/dtd/images/cracked/cracked_0114.jpg'
+ './data/dtd/images/cracked/cracked_0050.jpg'
+ './data/dtd/images/cracked/cracked_0056.jpg'
+ './data/dtd/images/cracked/cracked_0061.jpg'
+ './data/dtd/images/cracked/cracked_0053.jpg'
+ './data/dtd/images/cracked/cracked_0164.jpg'
+ './data/dtd/images/cracked/cracked_0090.jpg'
+ './data/dtd/images/cracked/cracked_0106.jpg'
+ './data/dtd/images/cracked/cracked_0084.jpg'
+ './data/dtd/images/cracked/cracked_0093.jpg']
+--- 8
+['./data/dtd/images/crosshatched/crosshatched_0171.jpg'
+ './data/dtd/images/crosshatched/crosshatched_0057.jpg'
+ './data/dtd/images/crosshatched/crosshatched_0164.jpg'
+ './data/dtd/images/crosshatched/crosshatched_0131.jpg'
+ './data/dtd/images/crosshatched/crosshatched_0112.jpg'
+ './data/dtd/images/crosshatched/crosshatched_0098.jpg'
+ './data/dtd/images/crosshatched/crosshatched_0124.jpg'
+ './data/dtd/images/crosshatched/crosshatched_0135.jpg'
+ './data/dtd/images/crosshatched/crosshatched_0010.jpg'
+ './data/dtd/images/crosshatched/crosshatched_0097.jpg'
+ './data/dtd/images/crosshatched/crosshatched_0078.jpg'
+ './data/dtd/images/crosshatched/crosshatched_0051.jpg'
+ './data/dtd/images/crosshatched/crosshatched_0048.jpg'
+ './data/dtd/images/crosshatched/crosshatched_0105.jpg'
+ './data/dtd/images/crosshatched/crosshatched_0118.jpg'
+ './data/dtd/images/crosshatched/crosshatched_0153.jpg']
+--- 9
+['./data/dtd/images/crystalline/crystalline_0214.jpg'
+ './data/dtd/images/crystalline/crystalline_0191.jpg'
+ './data/dtd/images/crystalline/crystalline_0134.jpg'
+ './data/dtd/images/crystalline/crystalline_0147.jpg'
+ './data/dtd/images/crystalline/crystalline_0178.jpg'
+ './data/dtd/images/crystalline/crystalline_0181.jpg'
+ './data/dtd/images/crystalline/crystalline_0218.jpg'
+ './data/dtd/images/crystalline/crystalline_0192.jpg'
+ './data/dtd/images/crystalline/crystalline_0115.jpg'
+ './data/dtd/images/crystalline/crystalline_0184.jpg'
+ './data/dtd/images/crystalline/crystalline_0155.jpg'
+ './data/dtd/images/crystalline/crystalline_0161.jpg'
+ './data/dtd/images/crystalline/crystalline_0138.jpg'
+ './data/dtd/images/crystalline/crystalline_0195.jpg'
+ './data/dtd/images/crystalline/crystalline_0177.jpg'
+ './data/dtd/images/crystalline/crystalline_0196.jpg']
+--- 10
+['./data/dtd/images/dotted/dotted_0115.jpg'
+ './data/dtd/images/dotted/dotted_0186.jpg'
+ './data/dtd/images/dotted/dotted_0141.jpg'
+ './data/dtd/images/dotted/dotted_0171.jpg'
+ './data/dtd/images/dotted/dotted_0123.jpg'
+ './data/dtd/images/dotted/dotted_0110.jpg'
+ './data/dtd/images/dotted/dotted_0157.jpg'
+ './data/dtd/images/dotted/dotted_0191.jpg'
+ './data/dtd/images/dotted/dotted_0127.jpg'
+ './data/dtd/images/dotted/dotted_0128.jpg'
+ './data/dtd/images/dotted/dotted_0133.jpg'
+ './data/dtd/images/dotted/dotted_0116.jpg'
+ './data/dtd/images/dotted/dotted_0056.jpg'
+ './data/dtd/images/dotted/dotted_0102.jpg'
+ './data/dtd/images/dotted/dotted_0001.jpg'
+ './data/dtd/images/dotted/dotted_0118.jpg']
+--- 11
+['./data/dtd/images/fibrous/fibrous_0095.jpg'
+ './data/dtd/images/fibrous/fibrous_0161.jpg'
+ './data/dtd/images/fibrous/fibrous_0146.jpg'
+ './data/dtd/images/fibrous/fibrous_0185.jpg'
+ './data/dtd/images/fibrous/fibrous_0167.jpg'
+ './data/dtd/images/fibrous/fibrous_0132.jpg'
+ './data/dtd/images/fibrous/fibrous_0123.jpg'
+ './data/dtd/images/fibrous/fibrous_0192.jpg'
+ './data/dtd/images/fibrous/fibrous_0139.jpg'
+ './data/dtd/images/fibrous/fibrous_0153.jpg'
+ './data/dtd/images/fibrous/fibrous_0177.jpg'
+ './data/dtd/images/fibrous/fibrous_0119.jpg'
+ './data/dtd/images/fibrous/fibrous_0160.jpg'
+ './data/dtd/images/fibrous/fibrous_0205.jpg'
+ './data/dtd/images/fibrous/fibrous_0175.jpg'
+ './data/dtd/images/fibrous/fibrous_0107.jpg']
+--- 12
+['./data/dtd/images/flecked/flecked_0042.jpg'
+ './data/dtd/images/flecked/flecked_0120.jpg'
+ './data/dtd/images/flecked/flecked_0084.jpg'
+ './data/dtd/images/flecked/flecked_0074.jpg'
+ './data/dtd/images/flecked/flecked_0114.jpg'
+ './data/dtd/images/flecked/flecked_0126.jpg'
+ './data/dtd/images/flecked/flecked_0062.jpg'
+ './data/dtd/images/flecked/flecked_0144.jpg'
+ './data/dtd/images/flecked/flecked_0141.jpg'
+ './data/dtd/images/flecked/flecked_0048.jpg'
+ './data/dtd/images/flecked/flecked_0106.jpg'
+ './data/dtd/images/flecked/flecked_0060.jpg'
+ './data/dtd/images/flecked/flecked_0129.jpg'
+ './data/dtd/images/flecked/flecked_0132.jpg'
+ './data/dtd/images/flecked/flecked_0169.jpg'
+ './data/dtd/images/flecked/flecked_0111.jpg']
+--- 13
+['./data/dtd/images/freckled/freckled_0178.jpg'
+ './data/dtd/images/freckled/freckled_0048.jpg'
+ './data/dtd/images/freckled/freckled_0122.jpg'
+ './data/dtd/images/freckled/freckled_0133.jpg'
+ './data/dtd/images/freckled/freckled_0131.jpg'
+ './data/dtd/images/freckled/freckled_0076.jpg'
+ './data/dtd/images/freckled/freckled_0154.jpg'
+ './data/dtd/images/freckled/freckled_0117.jpg'
+ './data/dtd/images/freckled/freckled_0065.jpg'
+ './data/dtd/images/freckled/freckled_0090.jpg'
+ './data/dtd/images/freckled/freckled_0061.jpg'
+ './data/dtd/images/freckled/freckled_0071.jpg'
+ './data/dtd/images/freckled/freckled_0084.jpg'
+ './data/dtd/images/freckled/freckled_0070.jpg'
+ './data/dtd/images/freckled/freckled_0085.jpg'
+ './data/dtd/images/freckled/freckled_0128.jpg']
+--- 14
+['./data/dtd/images/frilly/frilly_0015.jpg'
+ './data/dtd/images/frilly/frilly_0064.jpg'
+ './data/dtd/images/frilly/frilly_0045.jpg'
+ './data/dtd/images/frilly/frilly_0104.jpg'
+ './data/dtd/images/frilly/frilly_0067.jpg'
+ './data/dtd/images/frilly/frilly_0108.jpg'
+ './data/dtd/images/frilly/frilly_0050.jpg'
+ './data/dtd/images/frilly/frilly_0032.jpg'
+ './data/dtd/images/frilly/frilly_0123.jpg'
+ './data/dtd/images/frilly/frilly_0081.jpg'
+ './data/dtd/images/frilly/frilly_0077.jpg'
+ './data/dtd/images/frilly/frilly_0091.jpg'
+ './data/dtd/images/frilly/frilly_0049.jpg'
+ './data/dtd/images/frilly/frilly_0112.jpg'
+ './data/dtd/images/frilly/frilly_0007.jpg'
+ './data/dtd/images/frilly/frilly_0023.jpg']
+--- 15
+['./data/dtd/images/gauzy/gauzy_0112.jpg'
+ './data/dtd/images/gauzy/gauzy_0120.jpg'
+ './data/dtd/images/gauzy/gauzy_0162.jpg'
+ './data/dtd/images/gauzy/gauzy_0188.jpg'
+ './data/dtd/images/gauzy/gauzy_0105.jpg'
+ './data/dtd/images/gauzy/gauzy_0196.jpg'
+ './data/dtd/images/gauzy/gauzy_0095.jpg'
+ './data/dtd/images/gauzy/gauzy_0153.jpg'
+ './data/dtd/images/gauzy/gauzy_0151.jpg'
+ './data/dtd/images/gauzy/gauzy_0193.jpg'
+ './data/dtd/images/gauzy/gauzy_0200.jpg'
+ './data/dtd/images/gauzy/gauzy_0125.jpg'
+ './data/dtd/images/gauzy/gauzy_0148.jpg'
+ './data/dtd/images/gauzy/gauzy_0089.jpg'
+ './data/dtd/images/gauzy/gauzy_0129.jpg'
+ './data/dtd/images/gauzy/gauzy_0130.jpg']
+--- 16
+['./data/dtd/images/grid/grid_0090.jpg'
+ './data/dtd/images/grid/grid_0068.jpg'
+ './data/dtd/images/grid/grid_0089.jpg'
+ './data/dtd/images/grid/grid_0042.jpg'
+ './data/dtd/images/grid/grid_0081.jpg'
+ './data/dtd/images/grid/grid_0065.jpg'
+ './data/dtd/images/grid/grid_0031.jpg'
+ './data/dtd/images/grid/grid_0078.jpg'
+ './data/dtd/images/grid/grid_0040.jpg'
+ './data/dtd/images/grid/grid_0106.jpg'
+ './data/dtd/images/grid/grid_0114.jpg'
+ './data/dtd/images/grid/grid_0051.jpg'
+ './data/dtd/images/grid/grid_0022.jpg'
+ './data/dtd/images/grid/grid_0122.jpg'
+ './data/dtd/images/grid/grid_0041.jpg'
+ './data/dtd/images/grid/grid_0053.jpg']
+--- 17
+['./data/dtd/images/grooved/grooved_0123.jpg'
+ './data/dtd/images/grooved/grooved_0083.jpg'
+ './data/dtd/images/grooved/grooved_0102.jpg'
+ './data/dtd/images/grooved/grooved_0136.jpg'
+ './data/dtd/images/grooved/grooved_0097.jpg'
+ './data/dtd/images/grooved/grooved_0075.jpg'
+ './data/dtd/images/grooved/grooved_0131.jpg'
+ './data/dtd/images/grooved/grooved_0155.jpg'
+ './data/dtd/images/grooved/grooved_0152.jpg'
+ './data/dtd/images/grooved/grooved_0138.jpg'
+ './data/dtd/images/grooved/grooved_0137.jpg'
+ './data/dtd/images/grooved/grooved_0061.jpg'
+ './data/dtd/images/grooved/grooved_0130.jpg'
+ './data/dtd/images/grooved/grooved_0162.jpg'
+ './data/dtd/images/grooved/grooved_0160.jpg'
+ './data/dtd/images/grooved/grooved_0168.jpg']
+--- 18
+['./data/dtd/images/honeycombed/honeycombed_0120.jpg'
+ './data/dtd/images/honeycombed/honeycombed_0108.jpg'
+ './data/dtd/images/honeycombed/honeycombed_0061.jpg'
+ './data/dtd/images/honeycombed/honeycombed_0073.jpg'
+ './data/dtd/images/honeycombed/honeycombed_0067.jpg'
+ './data/dtd/images/honeycombed/honeycombed_0059.jpg'
+ './data/dtd/images/honeycombed/honeycombed_0081.jpg'
+ './data/dtd/images/honeycombed/honeycombed_0052.jpg'
+ './data/dtd/images/honeycombed/honeycombed_0115.jpg'
+ './data/dtd/images/honeycombed/honeycombed_0084.jpg'
+ './data/dtd/images/honeycombed/honeycombed_0083.jpg'
+ './data/dtd/images/honeycombed/honeycombed_0128.jpg'
+ './data/dtd/images/honeycombed/honeycombed_0102.jpg'
+ './data/dtd/images/honeycombed/honeycombed_0167.jpg'
+ './data/dtd/images/honeycombed/honeycombed_0122.jpg'
+ './data/dtd/images/honeycombed/honeycombed_0123.jpg']
+--- 19
+['./data/dtd/images/interlaced/interlaced_0125.jpg'
+ './data/dtd/images/interlaced/interlaced_0201.jpg'
+ './data/dtd/images/interlaced/interlaced_0150.jpg'
+ './data/dtd/images/interlaced/interlaced_0130.jpg'
+ './data/dtd/images/interlaced/interlaced_0069.jpg'
+ './data/dtd/images/interlaced/interlaced_0167.jpg'
+ './data/dtd/images/interlaced/interlaced_0129.jpg'
+ './data/dtd/images/interlaced/interlaced_0058.jpg'
+ './data/dtd/images/interlaced/interlaced_0121.jpg'
+ './data/dtd/images/interlaced/interlaced_0181.jpg'
+ './data/dtd/images/interlaced/interlaced_0187.jpg'
+ './data/dtd/images/interlaced/interlaced_0124.jpg'
+ './data/dtd/images/interlaced/interlaced_0060.jpg'
+ './data/dtd/images/interlaced/interlaced_0179.jpg'
+ './data/dtd/images/interlaced/interlaced_0067.jpg'
+ './data/dtd/images/interlaced/interlaced_0114.jpg']
+--- 20
+['./data/dtd/images/knitted/knitted_0102.jpg'
+ './data/dtd/images/knitted/knitted_0135.jpg'
+ './data/dtd/images/knitted/knitted_0192.jpg'
+ './data/dtd/images/knitted/knitted_0140.jpg'
+ './data/dtd/images/knitted/knitted_0107.jpg'
+ './data/dtd/images/knitted/knitted_0150.jpg'
+ './data/dtd/images/knitted/knitted_0171.jpg'
+ './data/dtd/images/knitted/knitted_0083.jpg'
+ './data/dtd/images/knitted/knitted_0162.jpg'
+ './data/dtd/images/knitted/knitted_0112.jpg'
+ './data/dtd/images/knitted/knitted_0104.jpg'
+ './data/dtd/images/knitted/knitted_0196.jpg'
+ './data/dtd/images/knitted/knitted_0072.jpg'
+ './data/dtd/images/knitted/knitted_0184.jpg'
+ './data/dtd/images/knitted/knitted_0134.jpg'
+ './data/dtd/images/knitted/knitted_0164.jpg']
+--- 21
+['./data/dtd/images/lacelike/lacelike_0062.jpg'
+ './data/dtd/images/lacelike/lacelike_0075.jpg'
+ './data/dtd/images/lacelike/lacelike_0006.jpg'
+ './data/dtd/images/lacelike/lacelike_0001.jpg'
+ './data/dtd/images/lacelike/lacelike_0004.jpg'
+ './data/dtd/images/lacelike/lacelike_0012.jpg'
+ './data/dtd/images/lacelike/lacelike_0073.jpg'
+ './data/dtd/images/lacelike/lacelike_0074.jpg'
+ './data/dtd/images/lacelike/lacelike_0089.jpg'
+ './data/dtd/images/lacelike/lacelike_0102.jpg'
+ './data/dtd/images/lacelike/lacelike_0078.jpg'
+ './data/dtd/images/lacelike/lacelike_0011.jpg'
+ './data/dtd/images/lacelike/lacelike_0060.jpg'
+ './data/dtd/images/lacelike/lacelike_0101.jpg'
+ './data/dtd/images/lacelike/lacelike_0083.jpg'
+ './data/dtd/images/lacelike/lacelike_0013.jpg']
+--- 22
+['./data/dtd/images/lined/lined_0146.jpg'
+ './data/dtd/images/lined/lined_0129.jpg'
+ './data/dtd/images/lined/lined_0036.jpg'
+ './data/dtd/images/lined/lined_0128.jpg'
+ './data/dtd/images/lined/lined_0071.jpg'
+ './data/dtd/images/lined/lined_0173.jpg'
+ './data/dtd/images/lined/lined_0041.jpg'
+ './data/dtd/images/lined/lined_0158.jpg'
+ './data/dtd/images/lined/lined_0134.jpg'
+ './data/dtd/images/lined/lined_0124.jpg'
+ './data/dtd/images/lined/lined_0168.jpg'
+ './data/dtd/images/lined/lined_0138.jpg'
+ './data/dtd/images/lined/lined_0166.jpg'
+ './data/dtd/images/lined/lined_0074.jpg'
+ './data/dtd/images/lined/lined_0067.jpg'
+ './data/dtd/images/lined/lined_0085.jpg']
+--- 23
+['./data/dtd/images/marbled/marbled_0178.jpg'
+ './data/dtd/images/marbled/marbled_0179.jpg'
+ './data/dtd/images/marbled/marbled_0100.jpg'
+ './data/dtd/images/marbled/marbled_0183.jpg'
+ './data/dtd/images/marbled/marbled_0171.jpg'
+ './data/dtd/images/marbled/marbled_0165.jpg'
+ './data/dtd/images/marbled/marbled_0148.jpg'
+ './data/dtd/images/marbled/marbled_0177.jpg'
+ './data/dtd/images/marbled/marbled_0121.jpg'
+ './data/dtd/images/marbled/marbled_0134.jpg'
+ './data/dtd/images/marbled/marbled_0136.jpg'
+ './data/dtd/images/marbled/marbled_0087.jpg'
+ './data/dtd/images/marbled/marbled_0120.jpg'
+ './data/dtd/images/marbled/marbled_0151.jpg'
+ './data/dtd/images/marbled/marbled_0156.jpg'
+ './data/dtd/images/marbled/marbled_0078.jpg']
+--- 24
+['./data/dtd/images/matted/matted_0065.jpg'
+ './data/dtd/images/matted/matted_0128.jpg'
+ './data/dtd/images/matted/matted_0085.jpg'
+ './data/dtd/images/matted/matted_0049.jpg'
+ './data/dtd/images/matted/matted_0026.jpg'
+ './data/dtd/images/matted/matted_0110.jpg'
+ './data/dtd/images/matted/matted_0051.jpg'
+ './data/dtd/images/matted/matted_0063.jpg'
+ './data/dtd/images/matted/matted_0040.jpg'
+ './data/dtd/images/matted/matted_0143.jpg'
+ './data/dtd/images/matted/matted_0113.jpg'
+ './data/dtd/images/matted/matted_0028.jpg'
+ './data/dtd/images/matted/matted_0131.jpg'
+ './data/dtd/images/matted/matted_0072.jpg'
+ './data/dtd/images/matted/matted_0137.jpg'
+ './data/dtd/images/matted/matted_0157.jpg']
+--- 25
+['./data/dtd/images/meshed/meshed_0161.jpg'
+ './data/dtd/images/meshed/meshed_0150.jpg'
+ './data/dtd/images/meshed/meshed_0153.jpg'
+ './data/dtd/images/meshed/meshed_0154.jpg'
+ './data/dtd/images/meshed/meshed_0135.jpg'
+ './data/dtd/images/meshed/meshed_0138.jpg'
+ './data/dtd/images/meshed/meshed_0190.jpg'
+ './data/dtd/images/meshed/meshed_0133.jpg'
+ './data/dtd/images/meshed/meshed_0151.jpg'
+ './data/dtd/images/meshed/meshed_0185.jpg'
+ './data/dtd/images/meshed/meshed_0156.jpg'
+ './data/dtd/images/meshed/meshed_0149.jpg'
+ './data/dtd/images/meshed/meshed_0125.jpg'
+ './data/dtd/images/meshed/meshed_0053.jpg'
+ './data/dtd/images/meshed/meshed_0107.jpg'
+ './data/dtd/images/meshed/meshed_0124.jpg']
+--- 26
+['./data/dtd/images/paisley/paisley_0069.jpg'
+ './data/dtd/images/paisley/paisley_0026.jpg'
+ './data/dtd/images/paisley/paisley_0048.jpg'
+ './data/dtd/images/paisley/paisley_0037.jpg'
+ './data/dtd/images/paisley/paisley_0064.jpg'
+ './data/dtd/images/paisley/paisley_0008.jpg'
+ './data/dtd/images/paisley/paisley_0112.jpg'
+ './data/dtd/images/paisley/paisley_0082.jpg'
+ './data/dtd/images/paisley/paisley_0028.jpg'
+ './data/dtd/images/paisley/paisley_0072.jpg'
+ './data/dtd/images/paisley/paisley_0077.jpg'
+ './data/dtd/images/paisley/paisley_0046.jpg'
+ './data/dtd/images/paisley/paisley_0063.jpg'
+ './data/dtd/images/paisley/paisley_0052.jpg'
+ './data/dtd/images/paisley/paisley_0100.jpg'
+ './data/dtd/images/paisley/paisley_0078.jpg']
+--- 27
+['./data/dtd/images/perforated/perforated_0169.jpg'
+ './data/dtd/images/perforated/perforated_0155.jpg'
+ './data/dtd/images/perforated/perforated_0046.jpg'
+ './data/dtd/images/perforated/perforated_0106.jpg'
+ './data/dtd/images/perforated/perforated_0156.jpg'
+ './data/dtd/images/perforated/perforated_0024.jpg'
+ './data/dtd/images/perforated/perforated_0085.jpg'
+ './data/dtd/images/perforated/perforated_0103.jpg'
+ './data/dtd/images/perforated/perforated_0126.jpg'
+ './data/dtd/images/perforated/perforated_0013.jpg'
+ './data/dtd/images/perforated/perforated_0123.jpg'
+ './data/dtd/images/perforated/perforated_0105.jpg'
+ './data/dtd/images/perforated/perforated_0163.jpg'
+ './data/dtd/images/perforated/perforated_0114.jpg'
+ './data/dtd/images/perforated/perforated_0069.jpg'
+ './data/dtd/images/perforated/perforated_0117.jpg']
+--- 28
+['./data/dtd/images/pitted/pitted_0008.jpg'
+ './data/dtd/images/pitted/pitted_0034.jpg'
+ './data/dtd/images/pitted/pitted_0156.jpg'
+ './data/dtd/images/pitted/pitted_0073.jpg'
+ './data/dtd/images/pitted/pitted_0133.jpg'
+ './data/dtd/images/pitted/pitted_0155.jpg'
+ './data/dtd/images/pitted/pitted_0158.jpg'
+ './data/dtd/images/pitted/pitted_0051.jpg'
+ './data/dtd/images/pitted/pitted_0105.jpg'
+ './data/dtd/images/pitted/pitted_0030.jpg'
+ './data/dtd/images/pitted/pitted_0094.jpg'
+ './data/dtd/images/pitted/pitted_0010.jpg'
+ './data/dtd/images/pitted/pitted_0048.jpg'
+ './data/dtd/images/pitted/pitted_0078.jpg'
+ './data/dtd/images/pitted/pitted_0007.jpg'
+ './data/dtd/images/pitted/pitted_0076.jpg']
+--- 29
+['./data/dtd/images/pleated/pleated_0146.jpg'
+ './data/dtd/images/pleated/pleated_0073.jpg'
+ './data/dtd/images/pleated/pleated_0151.jpg'
+ './data/dtd/images/pleated/pleated_0169.jpg'
+ './data/dtd/images/pleated/pleated_0164.jpg'
+ './data/dtd/images/pleated/pleated_0105.jpg'
+ './data/dtd/images/pleated/pleated_0062.jpg'
+ './data/dtd/images/pleated/pleated_0053.jpg'
+ './data/dtd/images/pleated/pleated_0056.jpg'
+ './data/dtd/images/pleated/pleated_0167.jpg'
+ './data/dtd/images/pleated/pleated_0132.jpg'
+ './data/dtd/images/pleated/pleated_0126.jpg'
+ './data/dtd/images/pleated/pleated_0138.jpg'
+ './data/dtd/images/pleated/pleated_0045.jpg'
+ './data/dtd/images/pleated/pleated_0155.jpg'
+ './data/dtd/images/pleated/pleated_0157.jpg']
+--- 30
+['./data/dtd/images/polka-dotted/polka-dotted_0186.jpg'
+ './data/dtd/images/polka-dotted/polka-dotted_0152.jpg'
+ './data/dtd/images/polka-dotted/polka-dotted_0221.jpg'
+ './data/dtd/images/polka-dotted/polka-dotted_0122.jpg'
+ './data/dtd/images/polka-dotted/polka-dotted_0146.jpg'
+ './data/dtd/images/polka-dotted/polka-dotted_0129.jpg'
+ './data/dtd/images/polka-dotted/polka-dotted_0096.jpg'
+ './data/dtd/images/polka-dotted/polka-dotted_0140.jpg'
+ './data/dtd/images/polka-dotted/polka-dotted_0068.jpg'
+ './data/dtd/images/polka-dotted/polka-dotted_0130.jpg'
+ './data/dtd/images/polka-dotted/polka-dotted_0222.jpg'
+ './data/dtd/images/polka-dotted/polka-dotted_0138.jpg'
+ './data/dtd/images/polka-dotted/polka-dotted_0188.jpg'
+ './data/dtd/images/polka-dotted/polka-dotted_0102.jpg'
+ './data/dtd/images/polka-dotted/polka-dotted_0135.jpg'
+ './data/dtd/images/polka-dotted/polka-dotted_0200.jpg']
+--- 31
+['./data/dtd/images/porous/porous_0082.jpg'
+ './data/dtd/images/porous/porous_0166.jpg'
+ './data/dtd/images/porous/porous_0080.jpg'
+ './data/dtd/images/porous/porous_0110.jpg'
+ './data/dtd/images/porous/porous_0149.jpg'
+ './data/dtd/images/porous/porous_0055.jpg'
+ './data/dtd/images/porous/porous_0099.jpg'
+ './data/dtd/images/porous/porous_0044.jpg'
+ './data/dtd/images/porous/porous_0142.jpg'
+ './data/dtd/images/porous/porous_0136.jpg'
+ './data/dtd/images/porous/porous_0104.jpg'
+ './data/dtd/images/porous/porous_0089.jpg'
+ './data/dtd/images/porous/porous_0053.jpg'
+ './data/dtd/images/porous/porous_0094.jpg'
+ './data/dtd/images/porous/porous_0120.jpg'
+ './data/dtd/images/porous/porous_0123.jpg']
+--- 32
+['./data/dtd/images/potholed/potholed_0123.jpg'
+ './data/dtd/images/potholed/potholed_0080.jpg'
+ './data/dtd/images/potholed/potholed_0042.jpg'
+ './data/dtd/images/potholed/potholed_0142.jpg'
+ './data/dtd/images/potholed/potholed_0097.jpg'
+ './data/dtd/images/potholed/potholed_0129.jpg'
+ './data/dtd/images/potholed/potholed_0053.jpg'
+ './data/dtd/images/potholed/potholed_0127.jpg'
+ './data/dtd/images/potholed/potholed_0163.jpg'
+ './data/dtd/images/potholed/potholed_0002.jpg'
+ './data/dtd/images/potholed/potholed_0056.jpg'
+ './data/dtd/images/potholed/potholed_0165.jpg'
+ './data/dtd/images/potholed/potholed_0050.jpg'
+ './data/dtd/images/potholed/potholed_0145.jpg'
+ './data/dtd/images/potholed/potholed_0070.jpg'
+ './data/dtd/images/potholed/potholed_0088.jpg']
+--- 33
+['./data/dtd/images/scaly/scaly_0132.jpg'
+ './data/dtd/images/scaly/scaly_0158.jpg'
+ './data/dtd/images/scaly/scaly_0181.jpg'
+ './data/dtd/images/scaly/scaly_0146.jpg'
+ './data/dtd/images/scaly/scaly_0149.jpg'
+ './data/dtd/images/scaly/scaly_0081.jpg'
+ './data/dtd/images/scaly/scaly_0161.jpg'
+ './data/dtd/images/scaly/scaly_0151.jpg'
+ './data/dtd/images/scaly/scaly_0200.jpg'
+ './data/dtd/images/scaly/scaly_0162.jpg'
+ './data/dtd/images/scaly/scaly_0222.jpg'
+ './data/dtd/images/scaly/scaly_0126.jpg'
+ './data/dtd/images/scaly/scaly_0131.jpg'
+ './data/dtd/images/scaly/scaly_0115.jpg'
+ './data/dtd/images/scaly/scaly_0129.jpg'
+ './data/dtd/images/scaly/scaly_0194.jpg']
+--- 34
+['./data/dtd/images/smeared/smeared_0081.jpg'
+ './data/dtd/images/smeared/smeared_0056.jpg'
+ './data/dtd/images/smeared/smeared_0103.jpg'
+ './data/dtd/images/smeared/smeared_0043.jpg'
+ './data/dtd/images/smeared/smeared_0093.jpg'
+ './data/dtd/images/smeared/smeared_0042.jpg'
+ './data/dtd/images/smeared/smeared_0095.jpg'
+ './data/dtd/images/smeared/smeared_0146.jpg'
+ './data/dtd/images/smeared/smeared_0130.jpg'
+ './data/dtd/images/smeared/smeared_0135.jpg'
+ './data/dtd/images/smeared/smeared_0065.jpg'
+ './data/dtd/images/smeared/smeared_0073.jpg'
+ './data/dtd/images/smeared/smeared_0066.jpg'
+ './data/dtd/images/smeared/smeared_0110.jpg'
+ './data/dtd/images/smeared/smeared_0131.jpg'
+ './data/dtd/images/smeared/smeared_0075.jpg']
+--- 35
+['./data/dtd/images/spiralled/spiralled_0134.jpg'
+ './data/dtd/images/spiralled/spiralled_0028.jpg'
+ './data/dtd/images/spiralled/spiralled_0125.jpg'
+ './data/dtd/images/spiralled/spiralled_0104.jpg'
+ './data/dtd/images/spiralled/spiralled_0039.jpg'
+ './data/dtd/images/spiralled/spiralled_0073.jpg'
+ './data/dtd/images/spiralled/spiralled_0129.jpg'
+ './data/dtd/images/spiralled/spiralled_0109.jpg'
+ './data/dtd/images/spiralled/spiralled_0090.jpg'
+ './data/dtd/images/spiralled/spiralled_0015.jpg'
+ './data/dtd/images/spiralled/spiralled_0074.jpg'
+ './data/dtd/images/spiralled/spiralled_0106.jpg'
+ './data/dtd/images/spiralled/spiralled_0018.jpg'
+ './data/dtd/images/spiralled/spiralled_0042.jpg'
+ './data/dtd/images/spiralled/spiralled_0081.jpg'
+ './data/dtd/images/spiralled/spiralled_0057.jpg']
+--- 36
+['./data/dtd/images/sprinkled/sprinkled_0061.jpg'
+ './data/dtd/images/sprinkled/sprinkled_0135.jpg'
+ './data/dtd/images/sprinkled/sprinkled_0106.jpg'
+ './data/dtd/images/sprinkled/sprinkled_0133.jpg'
+ './data/dtd/images/sprinkled/sprinkled_0134.jpg'
+ './data/dtd/images/sprinkled/sprinkled_0126.jpg'
+ './data/dtd/images/sprinkled/sprinkled_0013.jpg'
+ './data/dtd/images/sprinkled/sprinkled_0116.jpg'
+ './data/dtd/images/sprinkled/sprinkled_0140.jpg'
+ './data/dtd/images/sprinkled/sprinkled_0055.jpg'
+ './data/dtd/images/sprinkled/sprinkled_0097.jpg'
+ './data/dtd/images/sprinkled/sprinkled_0084.jpg'
+ './data/dtd/images/sprinkled/sprinkled_0131.jpg'
+ './data/dtd/images/sprinkled/sprinkled_0142.jpg'
+ './data/dtd/images/sprinkled/sprinkled_0143.jpg'
+ './data/dtd/images/sprinkled/sprinkled_0048.jpg']
+--- 37
+['./data/dtd/images/stained/stained_0048.jpg'
+ './data/dtd/images/stained/stained_0032.jpg'
+ './data/dtd/images/stained/stained_0117.jpg'
+ './data/dtd/images/stained/stained_0040.jpg'
+ './data/dtd/images/stained/stained_0127.jpg'
+ './data/dtd/images/stained/stained_0099.jpg'
+ './data/dtd/images/stained/stained_0101.jpg'
+ './data/dtd/images/stained/stained_0055.jpg'
+ './data/dtd/images/stained/stained_0046.jpg'
+ './data/dtd/images/stained/stained_0052.jpg'
+ './data/dtd/images/stained/stained_0078.jpg'
+ './data/dtd/images/stained/stained_0074.jpg'
+ './data/dtd/images/stained/stained_0079.jpg'
+ './data/dtd/images/stained/stained_0045.jpg'
+ './data/dtd/images/stained/stained_0126.jpg'
+ './data/dtd/images/stained/stained_0118.jpg']
+--- 38
+['./data/dtd/images/stratified/stratified_0027.jpg'
+ './data/dtd/images/stratified/stratified_0091.jpg'
+ './data/dtd/images/stratified/stratified_0111.jpg'
+ './data/dtd/images/stratified/stratified_0163.jpg'
+ './data/dtd/images/stratified/stratified_0152.jpg'
+ './data/dtd/images/stratified/stratified_0157.jpg'
+ './data/dtd/images/stratified/stratified_0073.jpg'
+ './data/dtd/images/stratified/stratified_0060.jpg'
+ './data/dtd/images/stratified/stratified_0043.jpg'
+ './data/dtd/images/stratified/stratified_0135.jpg'
+ './data/dtd/images/stratified/stratified_0085.jpg'
+ './data/dtd/images/stratified/stratified_0119.jpg'
+ './data/dtd/images/stratified/stratified_0042.jpg'
+ './data/dtd/images/stratified/stratified_0123.jpg'
+ './data/dtd/images/stratified/stratified_0165.jpg'
+ './data/dtd/images/stratified/stratified_0106.jpg']
+--- 39
+['./data/dtd/images/striped/striped_0072.jpg'
+ './data/dtd/images/striped/striped_0061.jpg'
+ './data/dtd/images/striped/striped_0106.jpg'
+ './data/dtd/images/striped/striped_0105.jpg'
+ './data/dtd/images/striped/striped_0019.jpg'
+ './data/dtd/images/striped/striped_0076.jpg'
+ './data/dtd/images/striped/striped_0064.jpg'
+ './data/dtd/images/striped/striped_0098.jpg'
+ './data/dtd/images/striped/striped_0024.jpg'
+ './data/dtd/images/striped/striped_0035.jpg'
+ './data/dtd/images/striped/striped_0033.jpg'
+ './data/dtd/images/striped/striped_0027.jpg'
+ './data/dtd/images/striped/striped_0093.jpg'
+ './data/dtd/images/striped/striped_0046.jpg'
+ './data/dtd/images/striped/striped_0115.jpg'
+ './data/dtd/images/striped/striped_0101.jpg']
+--- 40
+['./data/dtd/images/studded/studded_0187.jpg'
+ './data/dtd/images/studded/studded_0007.jpg'
+ './data/dtd/images/studded/studded_0189.jpg'
+ './data/dtd/images/studded/studded_0036.jpg'
+ './data/dtd/images/studded/studded_0126.jpg'
+ './data/dtd/images/studded/studded_0127.jpg'
+ './data/dtd/images/studded/studded_0020.jpg'
+ './data/dtd/images/studded/studded_0017.jpg'
+ './data/dtd/images/studded/studded_0128.jpg'
+ './data/dtd/images/studded/studded_0185.jpg'
+ './data/dtd/images/studded/studded_0065.jpg'
+ './data/dtd/images/studded/studded_0027.jpg'
+ './data/dtd/images/studded/studded_0216.jpg'
+ './data/dtd/images/studded/studded_0194.jpg'
+ './data/dtd/images/studded/studded_0199.jpg'
+ './data/dtd/images/studded/studded_0210.jpg']
+--- 41
+['./data/dtd/images/swirly/swirly_0107.jpg'
+ './data/dtd/images/swirly/swirly_0169.jpg'
+ './data/dtd/images/swirly/swirly_0085.jpg'
+ './data/dtd/images/swirly/swirly_0178.jpg'
+ './data/dtd/images/swirly/swirly_0103.jpg'
+ './data/dtd/images/swirly/swirly_0145.jpg'
+ './data/dtd/images/swirly/swirly_0118.jpg'
+ './data/dtd/images/swirly/swirly_0136.jpg'
+ './data/dtd/images/swirly/swirly_0091.jpg'
+ './data/dtd/images/swirly/swirly_0167.jpg'
+ './data/dtd/images/swirly/swirly_0102.jpg'
+ './data/dtd/images/swirly/swirly_0152.jpg'
+ './data/dtd/images/swirly/swirly_0093.jpg'
+ './data/dtd/images/swirly/swirly_0094.jpg'
+ './data/dtd/images/swirly/swirly_0098.jpg'
+ './data/dtd/images/swirly/swirly_0005.jpg']
+--- 42
+['./data/dtd/images/veined/veined_0147.jpg'
+ './data/dtd/images/veined/veined_0071.jpg'
+ './data/dtd/images/veined/veined_0137.jpg'
+ './data/dtd/images/veined/veined_0106.jpg'
+ './data/dtd/images/veined/veined_0113.jpg'
+ './data/dtd/images/veined/veined_0102.jpg'
+ './data/dtd/images/veined/veined_0094.jpg'
+ './data/dtd/images/veined/veined_0125.jpg'
+ './data/dtd/images/veined/veined_0067.jpg'
+ './data/dtd/images/veined/veined_0178.jpg'
+ './data/dtd/images/veined/veined_0173.jpg'
+ './data/dtd/images/veined/veined_0121.jpg'
+ './data/dtd/images/veined/veined_0105.jpg'
+ './data/dtd/images/veined/veined_0086.jpg'
+ './data/dtd/images/veined/veined_0138.jpg'
+ './data/dtd/images/veined/veined_0104.jpg']
+--- 43
+['./data/dtd/images/waffled/waffled_0109.jpg'
+ './data/dtd/images/waffled/waffled_0108.jpg'
+ './data/dtd/images/waffled/waffled_0200.jpg'
+ './data/dtd/images/waffled/waffled_0105.jpg'
+ './data/dtd/images/waffled/waffled_0057.jpg'
+ './data/dtd/images/waffled/waffled_0070.jpg'
+ './data/dtd/images/waffled/waffled_0204.jpg'
+ './data/dtd/images/waffled/waffled_0180.jpg'
+ './data/dtd/images/waffled/waffled_0149.jpg'
+ './data/dtd/images/waffled/waffled_0157.jpg'
+ './data/dtd/images/waffled/waffled_0133.jpg'
+ './data/dtd/images/waffled/waffled_0185.jpg'
+ './data/dtd/images/waffled/waffled_0125.jpg'
+ './data/dtd/images/waffled/waffled_0112.jpg'
+ './data/dtd/images/waffled/waffled_0106.jpg'
+ './data/dtd/images/waffled/waffled_0186.jpg']
+--- 44
+['./data/dtd/images/woven/woven_0047.jpg'
+ './data/dtd/images/woven/woven_0043.jpg'
+ './data/dtd/images/woven/woven_0079.jpg'
+ './data/dtd/images/woven/woven_0071.jpg'
+ './data/dtd/images/woven/woven_0070.jpg'
+ './data/dtd/images/woven/woven_0108.jpg'
+ './data/dtd/images/woven/woven_0105.jpg'
+ './data/dtd/images/woven/woven_0066.jpg'
+ './data/dtd/images/woven/woven_0114.jpg'
+ './data/dtd/images/woven/woven_0082.jpg'
+ './data/dtd/images/woven/woven_0127.jpg'
+ './data/dtd/images/woven/woven_0045.jpg'
+ './data/dtd/images/woven/woven_0056.jpg'
+ './data/dtd/images/woven/woven_0130.jpg'
+ './data/dtd/images/woven/woven_0111.jpg'
+ './data/dtd/images/woven/woven_0027.jpg']
+--- 45
+['./data/dtd/images/wrinkled/wrinkled_0143.jpg'
+ './data/dtd/images/wrinkled/wrinkled_0052.jpg'
+ './data/dtd/images/wrinkled/wrinkled_0094.jpg'
+ './data/dtd/images/wrinkled/wrinkled_0101.jpg'
+ './data/dtd/images/wrinkled/wrinkled_0079.jpg'
+ './data/dtd/images/wrinkled/wrinkled_0041.jpg'
+ './data/dtd/images/wrinkled/wrinkled_0037.jpg'
+ './data/dtd/images/wrinkled/wrinkled_0012.jpg'
+ './data/dtd/images/wrinkled/wrinkled_0028.jpg'
+ './data/dtd/images/wrinkled/wrinkled_0141.jpg'
+ './data/dtd/images/wrinkled/wrinkled_0129.jpg'
+ './data/dtd/images/wrinkled/wrinkled_0086.jpg'
+ './data/dtd/images/wrinkled/wrinkled_0040.jpg'
+ './data/dtd/images/wrinkled/wrinkled_0038.jpg'
+ './data/dtd/images/wrinkled/wrinkled_0128.jpg'
+ './data/dtd/images/wrinkled/wrinkled_0085.jpg']
+--- 46
+['./data/dtd/images/zigzagged/zigzagged_0055.jpg'
+ './data/dtd/images/zigzagged/zigzagged_0070.jpg'
+ './data/dtd/images/zigzagged/zigzagged_0110.jpg'
+ './data/dtd/images/zigzagged/zigzagged_0085.jpg'
+ './data/dtd/images/zigzagged/zigzagged_0125.jpg'
+ './data/dtd/images/zigzagged/zigzagged_0019.jpg'
+ './data/dtd/images/zigzagged/zigzagged_0015.jpg'
+ './data/dtd/images/zigzagged/zigzagged_0091.jpg'
+ './data/dtd/images/zigzagged/zigzagged_0054.jpg'
+ './data/dtd/images/zigzagged/zigzagged_0050.jpg'
+ './data/dtd/images/zigzagged/zigzagged_0098.jpg'
+ './data/dtd/images/zigzagged/zigzagged_0080.jpg'
+ './data/dtd/images/zigzagged/zigzagged_0114.jpg'
+ './data/dtd/images/zigzagged/zigzagged_0069.jpg'
+ './data/dtd/images/zigzagged/zigzagged_0067.jpg'
+ './data/dtd/images/zigzagged/zigzagged_0101.jpg']
+* class: 0, Acc Rate 100.00%
+* class: 1, Acc Rate 100.00%
+* class: 2, Acc Rate 100.00%
+* class: 3, Acc Rate 100.00%
+* class: 4, Acc Rate 100.00%
+* class: 5, Acc Rate 100.00%
+* class: 6, Acc Rate 100.00%
+* class: 7, Acc Rate 100.00%
+* class: 8, Acc Rate 100.00%
+* class: 9, Acc Rate 100.00%
+* class: 10, Acc Rate 100.00%
+* class: 11, Acc Rate 100.00%
+* class: 12, Acc Rate 100.00%
+* class: 13, Acc Rate 100.00%
+* class: 14, Acc Rate 100.00%
+* class: 15, Acc Rate 100.00%
+* class: 16, Acc Rate 100.00%
+* class: 17, Acc Rate 100.00%
+* class: 18, Acc Rate 100.00%
+* class: 19, Acc Rate 100.00%
+* class: 20, Acc Rate 100.00%
+* class: 21, Acc Rate 100.00%
+* class: 22, Acc Rate 100.00%
+* class: 23, Acc Rate 100.00%
+* class: 24, Acc Rate 100.00%
+* class: 25, Acc Rate 100.00%
+* class: 26, Acc Rate 100.00%
+* class: 27, Acc Rate 100.00%
+* class: 28, Acc Rate 100.00%
+* class: 29, Acc Rate 100.00%
+* class: 30, Acc Rate 100.00%
+* class: 31, Acc Rate 100.00%
+* class: 32, Acc Rate 100.00%
+* class: 33, Acc Rate 100.00%
+* class: 34, Acc Rate 100.00%
+* class: 35, Acc Rate 100.00%
+* class: 36, Acc Rate 100.00%
+* class: 37, Acc Rate 100.00%
+* class: 38, Acc Rate 100.00%
+* class: 39, Acc Rate 100.00%
+* class: 40, Acc Rate 100.00%
+* class: 41, Acc Rate 100.00%
+* class: 42, Acc Rate 100.00%
+* class: 43, Acc Rate 100.00%
+* class: 44, Acc Rate 100.00%
+* class: 45, Acc Rate 100.00%
+* class: 46, Acc Rate 100.00%
+* average: 100.00%
+[[1.  0.3 0.3 ... 0.3 0.3 0.3]
+ [0.3 1.  0.3 ... 0.3 0.3 0.3]
+ [0.3 0.3 1.  ... 0.3 0.3 0.3]
+ ...
+ [0.3 0.3 0.3 ... 1.  0.3 0.3]
+ [0.3 0.3 0.3 ... 0.3 1.  0.3]
+ [0.3 0.3 0.3 ... 0.3 0.3 1. ]]
+Finish Generating Candidate Label Sets!
+
+SSDescribableTextures
+Reading split from /media/zjh/本地磁盘/zjh/projects7.12/PTNL/data/dtd/split_zhou_DescribableTextures.json
+sstrain 752
+No checkpoint found, train from scratch
+Initialize tensorboard (log_dir=./output/ssdtd/UPLTrainer/rn50_ep100_16shots-11.18-test_refine_ep100_GMM_2/SEED1/data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.03_topP-1_MAXPOOL-16_initR-0.2_halfW-0.1/tensorboard)
+epoch [1/100][5/24]	time 0.066 (1.312)	data 0.001 (0.218)	eta 0:52:21	loss 4.1319 (4.1195) acc 25.0000 (17.5000)	lr 1.000000e-05
+epoch [1/100][10/24]	time 0.095 (0.698)	data 0.001 (0.109)	eta 0:27:48	loss 4.0076 (4.0808) acc 18.7500 (18.4375)	lr 1.000000e-05
+epoch [1/100][15/24]	time 0.064 (0.487)	data 0.001 (0.073)	eta 0:19:20	loss 3.9284 (4.0455) acc 12.5000 (17.2917)	lr 1.000000e-05
+epoch [1/100][20/24]	time 0.070 (0.382)	data 0.000 (0.055)	eta 0:15:09	loss 3.8959 (4.0120) acc 12.5000 (17.1875)	lr 1.000000e-05
+batch_idx: 4, pred_acc so far: 15.625
+batch_idx: 9, pred_acc so far: 16.875
+batch_idx: 14, pred_acc so far: 19.583333333333332
+batch_idx: 19, pred_acc so far: 19.375
+pred_acc of ALL: 19.661458333333332
+-----------update conf_refine at epoch end:-----------
+cls: 0, inpool_num: 93, notinpool_num: 158
+cls: 1, inpool_num: 126, notinpool_num: 115
+cls: 2, inpool_num: 49, notinpool_num: 190
+cls: 3, inpool_num: 94, notinpool_num: 151
+cls: 4, inpool_num: 113, notinpool_num: 136
+cls: 5, inpool_num: 61, notinpool_num: 166
+cls: 6, inpool_num: 152, notinpool_num: 94
+cls: 7, inpool_num: 36, notinpool_num: 203
+cls: 8, inpool_num: 42, notinpool_num: 214
+cls: 9, inpool_num: 25, notinpool_num: 212
+cls: 10, inpool_num: 114, notinpool_num: 114
+cls: 11, inpool_num: 109, notinpool_num: 135
+cls: 12, inpool_num: 147, notinpool_num: 94
+cls: 13, inpool_num: 70, notinpool_num: 185
+cls: 14, inpool_num: 53, notinpool_num: 195
+cls: 15, inpool_num: 104, notinpool_num: 125
+cls: 16, inpool_num: 87, notinpool_num: 147
+cls: 17, inpool_num: 119, notinpool_num: 139
+cls: 18, inpool_num: 52, notinpool_num: 177
+cls: 19, inpool_num: 70, notinpool_num: 166
+cls: 20, inpool_num: 27, notinpool_num: 209
+cls: 21, inpool_num: 88, notinpool_num: 120
+cls: 22, inpool_num: 133, notinpool_num: 92
+cls: 23, inpool_num: 77, notinpool_num: 158
+cls: 24, inpool_num: 121, notinpool_num: 116
+cls: 25, inpool_num: 162, notinpool_num: 72
+cls: 26, inpool_num: 44, notinpool_num: 195
+cls: 27, inpool_num: 107, notinpool_num: 141
+cls: 28, inpool_num: 128, notinpool_num: 96
+cls: 29, inpool_num: 117, notinpool_num: 117
+cls: 30, inpool_num: 70, notinpool_num: 168
+cls: 31, inpool_num: 108, notinpool_num: 113
+cls: 32, inpool_num: 76, notinpool_num: 140
+cls: 33, inpool_num: 45, notinpool_num: 199
+cls: 34, inpool_num: 132, notinpool_num: 142
+cls: 35, inpool_num: 125, notinpool_num: 113
+cls: 36, inpool_num: 117, notinpool_num: 120
+cls: 37, inpool_num: 99, notinpool_num: 147
+cls: 38, inpool_num: 146, notinpool_num: 97
+cls: 39, inpool_num: 59, notinpool_num: 182
+cls: 40, inpool_num: 149, notinpool_num: 89
+cls: 41, inpool_num: 75, notinpool_num: 164
+cls: 42, inpool_num: 154, notinpool_num: 76
+cls: 43, inpool_num: 12, notinpool_num: 236
+cls: 44, inpool_num: 91, notinpool_num: 153
+cls: 45, inpool_num: 106, notinpool_num: 125
+cls: 46, inpool_num: 176, notinpool_num: 63
+<sum 4460> samples are in pools,<sum 6759> samples are not in pools,
+epoch [2/100][5/24]	time 0.082 (0.359)	data 0.001 (0.237)	eta 0:14:11	loss 4.2545 (4.3146) acc 12.5000 (14.3750)	lr 2.000000e-03
+epoch [2/100][10/24]	time 0.082 (0.236)	data 0.000 (0.119)	eta 0:09:17	loss 4.2974 (4.2801) acc 12.5000 (18.7500)	lr 2.000000e-03
+epoch [2/100][15/24]	time 0.081 (0.184)	data 0.001 (0.080)	eta 0:07:13	loss 4.3587 (4.2891) acc 37.5000 (21.8750)	lr 2.000000e-03
+epoch [2/100][20/24]	time 0.081 (0.162)	data 0.001 (0.060)	eta 0:06:20	loss 4.3126 (4.2754) acc 18.7500 (23.5938)	lr 2.000000e-03
+batch_idx: 4, pred_acc so far: 23.75
+batch_idx: 9, pred_acc so far: 25.3125
+batch_idx: 14, pred_acc so far: 26.458333333333332
+batch_idx: 19, pred_acc so far: 29.21875
+pred_acc of ALL: 29.557291666666668
+-----------update conf_refine at epoch end:-----------
+cls: 0, inpool_num: 199, notinpool_num: 52
+cls: 1, inpool_num: 181, notinpool_num: 60
+cls: 2, inpool_num: 45, notinpool_num: 194
+cls: 3, inpool_num: 27, notinpool_num: 218
+cls: 4, inpool_num: 218, notinpool_num: 31
+cls: 5, inpool_num: 55, notinpool_num: 172
+cls: 6, inpool_num: 184, notinpool_num: 62
+cls: 7, inpool_num: 153, notinpool_num: 86
+cls: 8, inpool_num: 84, notinpool_num: 172
+cls: 9, inpool_num: 26, notinpool_num: 211
+cls: 10, inpool_num: 183, notinpool_num: 45
+cls: 11, inpool_num: 221, notinpool_num: 23
+cls: 12, inpool_num: 157, notinpool_num: 84
+cls: 13, inpool_num: 36, notinpool_num: 219
+cls: 14, inpool_num: 28, notinpool_num: 220
+cls: 15, inpool_num: 213, notinpool_num: 16
+cls: 16, inpool_num: 88, notinpool_num: 146
+cls: 17, inpool_num: 206, notinpool_num: 52
+cls: 18, inpool_num: 66, notinpool_num: 163
+cls: 19, inpool_num: 88, notinpool_num: 148
+cls: 20, inpool_num: 25, notinpool_num: 211
+cls: 21, inpool_num: 113, notinpool_num: 95
+cls: 22, inpool_num: 190, notinpool_num: 35
+cls: 23, inpool_num: 135, notinpool_num: 100
+cls: 24, inpool_num: 126, notinpool_num: 111
+cls: 25, inpool_num: 195, notinpool_num: 39
+cls: 26, inpool_num: 24, notinpool_num: 215
+cls: 27, inpool_num: 172, notinpool_num: 76
+cls: 28, inpool_num: 115, notinpool_num: 109
+cls: 29, inpool_num: 97, notinpool_num: 137
+cls: 30, inpool_num: 63, notinpool_num: 175
+cls: 31, inpool_num: 149, notinpool_num: 72
+cls: 32, inpool_num: 119, notinpool_num: 97
+cls: 33, inpool_num: 113, notinpool_num: 131
+cls: 34, inpool_num: 179, notinpool_num: 95
+cls: 35, inpool_num: 143, notinpool_num: 95
+cls: 36, inpool_num: 22, notinpool_num: 215
+cls: 37, inpool_num: 87, notinpool_num: 159
+cls: 38, inpool_num: 175, notinpool_num: 68
+cls: 39, inpool_num: 65, notinpool_num: 176
+cls: 40, inpool_num: 9, notinpool_num: 229
+cls: 41, inpool_num: 62, notinpool_num: 177
+cls: 42, inpool_num: 215, notinpool_num: 15
+cls: 43, inpool_num: 14, notinpool_num: 234
+cls: 44, inpool_num: 121, notinpool_num: 123
+cls: 45, inpool_num: 127, notinpool_num: 104
+cls: 46, inpool_num: 206, notinpool_num: 33
+<sum 5519> samples are in pools,<sum 5700> samples are not in pools,
+epoch [3/100][5/24]	time 0.111 (0.379)	data 0.001 (0.267)	eta 0:14:49	loss 4.3674 (4.2057) acc 31.2500 (27.5000)	lr 1.999507e-03
+epoch [3/100][10/24]	time 0.110 (0.240)	data 0.001 (0.134)	eta 0:09:21	loss 3.8423 (4.1326) acc 34.3750 (27.5000)	lr 1.999507e-03
+epoch [3/100][15/24]	time 0.084 (0.188)	data 0.001 (0.089)	eta 0:07:18	loss 4.1235 (4.1013) acc 21.8750 (28.5417)	lr 1.999507e-03
+epoch [3/100][20/24]	time 0.083 (0.165)	data 0.001 (0.067)	eta 0:06:25	loss 4.1406 (4.0614) acc 25.0000 (30.1562)	lr 1.999507e-03
+batch_idx: 4, pred_acc so far: 35.625
+batch_idx: 9, pred_acc so far: 33.4375
+batch_idx: 14, pred_acc so far: 34.583333333333336
+batch_idx: 19, pred_acc so far: 34.0625
+pred_acc of ALL: 32.942708333333336
+-----------update conf_refine at epoch end:-----------
+cls: 0, inpool_num: 205, notinpool_num: 46
+cls: 1, inpool_num: 229, notinpool_num: 12
+cls: 2, inpool_num: 42, notinpool_num: 197
+cls: 3, inpool_num: 19, notinpool_num: 226
+cls: 4, inpool_num: 233, notinpool_num: 16
+cls: 5, inpool_num: 43, notinpool_num: 184
+cls: 6, inpool_num: 212, notinpool_num: 34
+cls: 7, inpool_num: 170, notinpool_num: 69
+cls: 8, inpool_num: 217, notinpool_num: 39
+cls: 9, inpool_num: 40, notinpool_num: 197
+cls: 10, inpool_num: 187, notinpool_num: 41
+cls: 11, inpool_num: 230, notinpool_num: 14
+cls: 12, inpool_num: 173, notinpool_num: 68
+cls: 13, inpool_num: 28, notinpool_num: 227
+cls: 14, inpool_num: 36, notinpool_num: 212
+cls: 15, inpool_num: 211, notinpool_num: 18
+cls: 16, inpool_num: 76, notinpool_num: 158
+cls: 17, inpool_num: 238, notinpool_num: 20
+cls: 18, inpool_num: 101, notinpool_num: 128
+cls: 19, inpool_num: 185, notinpool_num: 51
+cls: 20, inpool_num: 23, notinpool_num: 213
+cls: 21, inpool_num: 176, notinpool_num: 32
+cls: 22, inpool_num: 216, notinpool_num: 9
+cls: 23, inpool_num: 208, notinpool_num: 27
+cls: 24, inpool_num: 186, notinpool_num: 51
+cls: 25, inpool_num: 205, notinpool_num: 29
+cls: 26, inpool_num: 26, notinpool_num: 213
+cls: 27, inpool_num: 99, notinpool_num: 149
+cls: 28, inpool_num: 158, notinpool_num: 66
+cls: 29, inpool_num: 167, notinpool_num: 67
+cls: 30, inpool_num: 64, notinpool_num: 174
+cls: 31, inpool_num: 141, notinpool_num: 80
+cls: 32, inpool_num: 149, notinpool_num: 67
+cls: 33, inpool_num: 54, notinpool_num: 190
+cls: 34, inpool_num: 202, notinpool_num: 72
+cls: 35, inpool_num: 169, notinpool_num: 69
+cls: 36, inpool_num: 29, notinpool_num: 208
+cls: 37, inpool_num: 124, notinpool_num: 122
+cls: 38, inpool_num: 199, notinpool_num: 44
+cls: 39, inpool_num: 57, notinpool_num: 184
+cls: 40, inpool_num: 10, notinpool_num: 228
+cls: 41, inpool_num: 46, notinpool_num: 193
+cls: 42, inpool_num: 211, notinpool_num: 19
+cls: 43, inpool_num: 17, notinpool_num: 231
+cls: 44, inpool_num: 127, notinpool_num: 117
+cls: 45, inpool_num: 179, notinpool_num: 52
+cls: 46, inpool_num: 217, notinpool_num: 22
+<sum 6334> samples are in pools,<sum 4885> samples are not in pools,
+epoch [4/100][5/24]	time 0.131 (0.431)	data 0.001 (0.260)	eta 0:16:41	loss 4.2070 (3.9380) acc 21.8750 (30.6250)	lr 1.998027e-03
+epoch [4/100][10/24]	time 0.104 (0.277)	data 0.001 (0.131)	eta 0:10:41	loss 3.8579 (3.9323) acc 40.6250 (32.8125)	lr 1.998027e-03
+epoch [4/100][15/24]	time 0.055 (0.208)	data 0.001 (0.087)	eta 0:08:00	loss 3.8211 (3.9176) acc 40.6250 (35.0000)	lr 1.998027e-03
+epoch [4/100][20/24]	time 0.068 (0.175)	data 0.000 (0.066)	eta 0:06:43	loss 4.2354 (3.8991) acc 18.7500 (35.7812)	lr 1.998027e-03
+batch_idx: 4, pred_acc so far: 36.875
+batch_idx: 9, pred_acc so far: 34.6875
+batch_idx: 14, pred_acc so far: 35.833333333333336
+batch_idx: 19, pred_acc so far: 37.5
+pred_acc of ALL: 37.760416666666664
+-----------update conf_refine at epoch end:-----------
+cls: 0, inpool_num: 228, notinpool_num: 23
+cls: 1, inpool_num: 219, notinpool_num: 22
+cls: 2, inpool_num: 112, notinpool_num: 127
+cls: 3, inpool_num: 32, notinpool_num: 213
+cls: 4, inpool_num: 230, notinpool_num: 19
+cls: 5, inpool_num: 61, notinpool_num: 166
+cls: 6, inpool_num: 191, notinpool_num: 55
+cls: 7, inpool_num: 141, notinpool_num: 98
+cls: 8, inpool_num: 219, notinpool_num: 37
+cls: 9, inpool_num: 41, notinpool_num: 196
+cls: 10, inpool_num: 212, notinpool_num: 16
+cls: 11, inpool_num: 210, notinpool_num: 34
+cls: 12, inpool_num: 173, notinpool_num: 68
+cls: 13, inpool_num: 38, notinpool_num: 217
+cls: 14, inpool_num: 33, notinpool_num: 215
+cls: 15, inpool_num: 209, notinpool_num: 20
+cls: 16, inpool_num: 91, notinpool_num: 143
+cls: 17, inpool_num: 220, notinpool_num: 38
+cls: 18, inpool_num: 57, notinpool_num: 172
+cls: 19, inpool_num: 192, notinpool_num: 44
+cls: 20, inpool_num: 24, notinpool_num: 212
+cls: 21, inpool_num: 184, notinpool_num: 24
+cls: 22, inpool_num: 214, notinpool_num: 11
+cls: 23, inpool_num: 215, notinpool_num: 20
+cls: 24, inpool_num: 172, notinpool_num: 65
+cls: 25, inpool_num: 177, notinpool_num: 57
+cls: 26, inpool_num: 26, notinpool_num: 213
+cls: 27, inpool_num: 153, notinpool_num: 95
+cls: 28, inpool_num: 164, notinpool_num: 60
+cls: 29, inpool_num: 129, notinpool_num: 105
+cls: 30, inpool_num: 48, notinpool_num: 190
+cls: 31, inpool_num: 124, notinpool_num: 97
+cls: 32, inpool_num: 140, notinpool_num: 76
+cls: 33, inpool_num: 71, notinpool_num: 173
+cls: 34, inpool_num: 212, notinpool_num: 62
+cls: 35, inpool_num: 192, notinpool_num: 46
+cls: 36, inpool_num: 35, notinpool_num: 202
+cls: 37, inpool_num: 151, notinpool_num: 95
+cls: 38, inpool_num: 199, notinpool_num: 44
+cls: 39, inpool_num: 52, notinpool_num: 189
+cls: 40, inpool_num: 22, notinpool_num: 216
+cls: 41, inpool_num: 41, notinpool_num: 198
+cls: 42, inpool_num: 220, notinpool_num: 10
+cls: 43, inpool_num: 15, notinpool_num: 233
+cls: 44, inpool_num: 161, notinpool_num: 83
+cls: 45, inpool_num: 182, notinpool_num: 49
+cls: 46, inpool_num: 218, notinpool_num: 21
+<sum 6450> samples are in pools,<sum 4769> samples are not in pools,
+epoch [5/100][5/24]	time 0.101 (0.385)	data 0.001 (0.254)	eta 0:14:44	loss 3.6102 (3.7855) acc 34.3750 (25.6250)	lr 1.995562e-03
+epoch [5/100][10/24]	time 0.085 (0.245)	data 0.001 (0.127)	eta 0:09:22	loss 4.0833 (3.8386) acc 31.2500 (32.5000)	lr 1.995562e-03
+epoch [5/100][15/24]	time 0.099 (0.191)	data 0.001 (0.085)	eta 0:07:16	loss 3.6532 (3.7887) acc 34.3750 (34.7917)	lr 1.995562e-03
+epoch [5/100][20/24]	time 0.165 (0.170)	data 0.001 (0.064)	eta 0:06:28	loss 3.7588 (3.7484) acc 43.7500 (36.8750)	lr 1.995562e-03
+batch_idx: 4, pred_acc so far: 41.25
+batch_idx: 9, pred_acc so far: 41.5625
+batch_idx: 14, pred_acc so far: 41.041666666666664
+batch_idx: 19, pred_acc so far: 42.1875
+pred_acc of ALL: 43.359375
+-----------update conf_refine at epoch end:-----------
+cls: 0, inpool_num: 217, notinpool_num: 34
+cls: 1, inpool_num: 207, notinpool_num: 34
+cls: 2, inpool_num: 178, notinpool_num: 61
+cls: 3, inpool_num: 34, notinpool_num: 211
+cls: 4, inpool_num: 223, notinpool_num: 26
+cls: 5, inpool_num: 87, notinpool_num: 140
+cls: 6, inpool_num: 135, notinpool_num: 111
+cls: 7, inpool_num: 126, notinpool_num: 113
+cls: 8, inpool_num: 224, notinpool_num: 32
+cls: 9, inpool_num: 54, notinpool_num: 183
+cls: 10, inpool_num: 131, notinpool_num: 97
+cls: 11, inpool_num: 205, notinpool_num: 39
+cls: 12, inpool_num: 168, notinpool_num: 73
+cls: 13, inpool_num: 56, notinpool_num: 199
+cls: 14, inpool_num: 61, notinpool_num: 187
+cls: 15, inpool_num: 199, notinpool_num: 30
+cls: 16, inpool_num: 100, notinpool_num: 134
+cls: 17, inpool_num: 218, notinpool_num: 40
+cls: 18, inpool_num: 58, notinpool_num: 171
+cls: 19, inpool_num: 189, notinpool_num: 47
+cls: 20, inpool_num: 32, notinpool_num: 204
+cls: 21, inpool_num: 182, notinpool_num: 26
+cls: 22, inpool_num: 200, notinpool_num: 25
+cls: 23, inpool_num: 215, notinpool_num: 20
+cls: 24, inpool_num: 199, notinpool_num: 38
+cls: 25, inpool_num: 207, notinpool_num: 27
+cls: 26, inpool_num: 26, notinpool_num: 213
+cls: 27, inpool_num: 135, notinpool_num: 113
+cls: 28, inpool_num: 180, notinpool_num: 44
+cls: 29, inpool_num: 142, notinpool_num: 92
+cls: 30, inpool_num: 70, notinpool_num: 168
+cls: 31, inpool_num: 80, notinpool_num: 141
+cls: 32, inpool_num: 143, notinpool_num: 73
+cls: 33, inpool_num: 69, notinpool_num: 175
+cls: 34, inpool_num: 214, notinpool_num: 60
+cls: 35, inpool_num: 92, notinpool_num: 146
+cls: 36, inpool_num: 57, notinpool_num: 180
+cls: 37, inpool_num: 126, notinpool_num: 120
+cls: 38, inpool_num: 135, notinpool_num: 108
+cls: 39, inpool_num: 59, notinpool_num: 182
+cls: 40, inpool_num: 31, notinpool_num: 207
+cls: 41, inpool_num: 86, notinpool_num: 153
+cls: 42, inpool_num: 216, notinpool_num: 14
+cls: 43, inpool_num: 11, notinpool_num: 237
+cls: 44, inpool_num: 153, notinpool_num: 91
+cls: 45, inpool_num: 168, notinpool_num: 63
+cls: 46, inpool_num: 208, notinpool_num: 31
+<sum 6306> samples are in pools,<sum 4913> samples are not in pools,
+epoch [6/100][5/24]	time 0.090 (0.365)	data 0.001 (0.249)	eta 0:13:49	loss 3.2131 (3.5917) acc 50.0000 (37.5000)	lr 1.992115e-03
+epoch [6/100][10/24]	time 0.143 (0.241)	data 0.001 (0.125)	eta 0:09:06	loss 3.0416 (3.4935) acc 50.0000 (40.9375)	lr 1.992115e-03
+epoch [6/100][15/24]	time 0.145 (0.196)	data 0.001 (0.084)	eta 0:07:24	loss 3.9739 (3.4474) acc 28.1250 (40.4167)	lr 1.992115e-03
+epoch [6/100][20/24]	time 0.085 (0.171)	data 0.001 (0.063)	eta 0:06:26	loss 3.3333 (3.4635) acc 53.1250 (40.6250)	lr 1.992115e-03
+batch_idx: 4, pred_acc so far: 46.875
+batch_idx: 9, pred_acc so far: 45.0
+batch_idx: 14, pred_acc so far: 44.375
+batch_idx: 19, pred_acc so far: 46.875
+pred_acc of ALL: 46.484375
+-----------update conf_refine at epoch end:-----------
+cls: 0, inpool_num: 229, notinpool_num: 22
+cls: 1, inpool_num: 219, notinpool_num: 22
+cls: 2, inpool_num: 166, notinpool_num: 73
+cls: 3, inpool_num: 33, notinpool_num: 212
+cls: 4, inpool_num: 234, notinpool_num: 15
+cls: 5, inpool_num: 74, notinpool_num: 153
+cls: 6, inpool_num: 128, notinpool_num: 118
+cls: 7, inpool_num: 93, notinpool_num: 146
+cls: 8, inpool_num: 228, notinpool_num: 28
+cls: 9, inpool_num: 43, notinpool_num: 194
+cls: 10, inpool_num: 133, notinpool_num: 95
+cls: 11, inpool_num: 224, notinpool_num: 20
+cls: 12, inpool_num: 163, notinpool_num: 78
+cls: 13, inpool_num: 46, notinpool_num: 209
+cls: 14, inpool_num: 43, notinpool_num: 205
+cls: 15, inpool_num: 197, notinpool_num: 32
+cls: 16, inpool_num: 89, notinpool_num: 145
+cls: 17, inpool_num: 227, notinpool_num: 31
+cls: 18, inpool_num: 58, notinpool_num: 171
+cls: 19, inpool_num: 189, notinpool_num: 47
+cls: 20, inpool_num: 30, notinpool_num: 206
+cls: 21, inpool_num: 183, notinpool_num: 25
+cls: 22, inpool_num: 206, notinpool_num: 19
+cls: 23, inpool_num: 215, notinpool_num: 20
+cls: 24, inpool_num: 194, notinpool_num: 43
+cls: 25, inpool_num: 207, notinpool_num: 27
+cls: 26, inpool_num: 27, notinpool_num: 212
+cls: 27, inpool_num: 130, notinpool_num: 118
+cls: 28, inpool_num: 195, notinpool_num: 29
+cls: 29, inpool_num: 137, notinpool_num: 97
+cls: 30, inpool_num: 77, notinpool_num: 161
+cls: 31, inpool_num: 109, notinpool_num: 112
+cls: 32, inpool_num: 142, notinpool_num: 74
+cls: 33, inpool_num: 162, notinpool_num: 82
+cls: 34, inpool_num: 236, notinpool_num: 38
+cls: 35, inpool_num: 72, notinpool_num: 166
+cls: 36, inpool_num: 78, notinpool_num: 159
+cls: 37, inpool_num: 148, notinpool_num: 98
+cls: 38, inpool_num: 150, notinpool_num: 93
+cls: 39, inpool_num: 100, notinpool_num: 141
+cls: 40, inpool_num: 33, notinpool_num: 205
+cls: 41, inpool_num: 88, notinpool_num: 151
+cls: 42, inpool_num: 216, notinpool_num: 14
+cls: 43, inpool_num: 34, notinpool_num: 214
+cls: 44, inpool_num: 142, notinpool_num: 102
+cls: 45, inpool_num: 198, notinpool_num: 33
+cls: 46, inpool_num: 217, notinpool_num: 22
+<sum 6542> samples are in pools,<sum 4677> samples are not in pools,
+epoch [7/100][5/24]	time 0.091 (0.485)	data 0.001 (0.394)	eta 0:18:11	loss 2.9232 (3.3470) acc 65.6250 (44.3750)	lr 1.987688e-03
+epoch [7/100][10/24]	time 0.086 (0.315)	data 0.000 (0.225)	eta 0:11:48	loss 2.9533 (3.3505) acc 53.1250 (44.6875)	lr 1.987688e-03
+epoch [7/100][15/24]	time 0.100 (0.242)	data 0.001 (0.150)	eta 0:09:02	loss 3.1769 (3.3303) acc 50.0000 (43.9583)	lr 1.987688e-03
+epoch [7/100][20/24]	time 0.067 (0.215)	data 0.001 (0.126)	eta 0:08:00	loss 3.4292 (3.3606) acc 46.8750 (43.9062)	lr 1.987688e-03
+batch_idx: 4, pred_acc so far: 41.875
+batch_idx: 9, pred_acc so far: 45.0
+batch_idx: 14, pred_acc so far: 48.541666666666664
+batch_idx: 19, pred_acc so far: 50.0
+pred_acc of ALL: 48.697916666666664
+-----------update conf_refine at epoch end:-----------
+cls: 0, inpool_num: 231, notinpool_num: 20
+cls: 1, inpool_num: 215, notinpool_num: 26
+cls: 2, inpool_num: 165, notinpool_num: 74
+cls: 3, inpool_num: 26, notinpool_num: 219
+cls: 4, inpool_num: 235, notinpool_num: 14
+cls: 5, inpool_num: 72, notinpool_num: 155
+cls: 6, inpool_num: 126, notinpool_num: 120
+cls: 7, inpool_num: 97, notinpool_num: 142
+cls: 8, inpool_num: 218, notinpool_num: 38
+cls: 9, inpool_num: 39, notinpool_num: 198
+cls: 10, inpool_num: 31, notinpool_num: 197
+cls: 11, inpool_num: 218, notinpool_num: 26
+cls: 12, inpool_num: 193, notinpool_num: 48
+cls: 13, inpool_num: 73, notinpool_num: 182
+cls: 14, inpool_num: 49, notinpool_num: 199
+cls: 15, inpool_num: 197, notinpool_num: 32
+cls: 16, inpool_num: 76, notinpool_num: 158
+cls: 17, inpool_num: 228, notinpool_num: 30
+cls: 18, inpool_num: 49, notinpool_num: 180
+cls: 19, inpool_num: 178, notinpool_num: 58
+cls: 20, inpool_num: 30, notinpool_num: 206
+cls: 21, inpool_num: 185, notinpool_num: 23
+cls: 22, inpool_num: 205, notinpool_num: 20
+cls: 23, inpool_num: 219, notinpool_num: 16
+cls: 24, inpool_num: 179, notinpool_num: 58
+cls: 25, inpool_num: 202, notinpool_num: 32
+cls: 26, inpool_num: 28, notinpool_num: 211
+cls: 27, inpool_num: 123, notinpool_num: 125
+cls: 28, inpool_num: 197, notinpool_num: 27
+cls: 29, inpool_num: 161, notinpool_num: 73
+cls: 30, inpool_num: 77, notinpool_num: 161
+cls: 31, inpool_num: 88, notinpool_num: 133
+cls: 32, inpool_num: 199, notinpool_num: 17
+cls: 33, inpool_num: 78, notinpool_num: 166
+cls: 34, inpool_num: 236, notinpool_num: 38
+cls: 35, inpool_num: 69, notinpool_num: 169
+cls: 36, inpool_num: 71, notinpool_num: 166
+cls: 37, inpool_num: 162, notinpool_num: 84
+cls: 38, inpool_num: 127, notinpool_num: 116
+cls: 39, inpool_num: 72, notinpool_num: 169
+cls: 40, inpool_num: 42, notinpool_num: 196
+cls: 41, inpool_num: 82, notinpool_num: 157
+cls: 42, inpool_num: 217, notinpool_num: 13
+cls: 43, inpool_num: 42, notinpool_num: 206
+cls: 44, inpool_num: 136, notinpool_num: 108
+cls: 45, inpool_num: 186, notinpool_num: 45
+cls: 46, inpool_num: 216, notinpool_num: 23
+<sum 6345> samples are in pools,<sum 4874> samples are not in pools,
+epoch [8/100][5/24]	time 0.111 (0.469)	data 0.001 (0.335)	eta 0:17:24	loss 3.1776 (3.2525) acc 34.3750 (42.5000)	lr 1.982287e-03
+epoch [8/100][10/24]	time 0.097 (0.292)	data 0.001 (0.168)	eta 0:10:47	loss 3.2039 (3.1408) acc 43.7500 (46.8750)	lr 1.982287e-03
+epoch [8/100][15/24]	time 0.079 (0.223)	data 0.001 (0.112)	eta 0:08:15	loss 3.3929 (3.2272) acc 34.3750 (42.9167)	lr 1.982287e-03
+epoch [8/100][20/24]	time 0.077 (0.191)	data 0.001 (0.084)	eta 0:07:02	loss 3.3211 (3.2321) acc 46.8750 (45.0000)	lr 1.982287e-03
+batch_idx: 4, pred_acc so far: 46.875
+batch_idx: 9, pred_acc so far: 49.0625
+batch_idx: 14, pred_acc so far: 50.0
+batch_idx: 19, pred_acc so far: 53.28125
+pred_acc of ALL: 51.432291666666664
+-----------update conf_refine at epoch end:-----------
+cls: 0, inpool_num: 189, notinpool_num: 62
+cls: 1, inpool_num: 212, notinpool_num: 29
+cls: 2, inpool_num: 200, notinpool_num: 39
+cls: 3, inpool_num: 44, notinpool_num: 201
+cls: 4, inpool_num: 230, notinpool_num: 19
+cls: 5, inpool_num: 66, notinpool_num: 161
+cls: 6, inpool_num: 105, notinpool_num: 141
+cls: 7, inpool_num: 95, notinpool_num: 144
+cls: 8, inpool_num: 212, notinpool_num: 44
+cls: 9, inpool_num: 35, notinpool_num: 202
+cls: 10, inpool_num: 115, notinpool_num: 113
+cls: 11, inpool_num: 207, notinpool_num: 37
+cls: 12, inpool_num: 192, notinpool_num: 49
+cls: 13, inpool_num: 77, notinpool_num: 178
+cls: 14, inpool_num: 92, notinpool_num: 156
+cls: 15, inpool_num: 156, notinpool_num: 73
+cls: 16, inpool_num: 79, notinpool_num: 155
+cls: 17, inpool_num: 220, notinpool_num: 38
+cls: 18, inpool_num: 60, notinpool_num: 169
+cls: 19, inpool_num: 173, notinpool_num: 63
+cls: 20, inpool_num: 30, notinpool_num: 206
+cls: 21, inpool_num: 176, notinpool_num: 32
+cls: 22, inpool_num: 205, notinpool_num: 20
+cls: 23, inpool_num: 210, notinpool_num: 25
+cls: 24, inpool_num: 86, notinpool_num: 151
+cls: 25, inpool_num: 187, notinpool_num: 47
+cls: 26, inpool_num: 27, notinpool_num: 212
+cls: 27, inpool_num: 124, notinpool_num: 124
+cls: 28, inpool_num: 190, notinpool_num: 34
+cls: 29, inpool_num: 140, notinpool_num: 94
+cls: 30, inpool_num: 75, notinpool_num: 163
+cls: 31, inpool_num: 60, notinpool_num: 161
+cls: 32, inpool_num: 181, notinpool_num: 35
+cls: 33, inpool_num: 201, notinpool_num: 43
+cls: 34, inpool_num: 218, notinpool_num: 56
+cls: 35, inpool_num: 44, notinpool_num: 194
+cls: 36, inpool_num: 81, notinpool_num: 156
+cls: 37, inpool_num: 88, notinpool_num: 158
+cls: 38, inpool_num: 115, notinpool_num: 128
+cls: 39, inpool_num: 65, notinpool_num: 176
+cls: 40, inpool_num: 42, notinpool_num: 196
+cls: 41, inpool_num: 85, notinpool_num: 154
+cls: 42, inpool_num: 206, notinpool_num: 24
+cls: 43, inpool_num: 55, notinpool_num: 193
+cls: 44, inpool_num: 144, notinpool_num: 100
+cls: 45, inpool_num: 178, notinpool_num: 53
+cls: 46, inpool_num: 214, notinpool_num: 25
+<sum 6186> samples are in pools,<sum 5033> samples are not in pools,
+epoch [9/100][5/24]	time 0.068 (0.370)	data 0.000 (0.258)	eta 0:13:34	loss 3.1211 (3.2601) acc 53.1250 (44.3750)	lr 1.975917e-03
+epoch [9/100][10/24]	time 0.091 (0.232)	data 0.001 (0.130)	eta 0:08:30	loss 3.3479 (3.2527) acc 50.0000 (45.0000)	lr 1.975917e-03
+epoch [9/100][15/24]	time 0.094 (0.185)	data 0.001 (0.087)	eta 0:06:46	loss 3.4705 (3.2093) acc 46.8750 (46.6667)	lr 1.975917e-03
+epoch [9/100][20/24]	time 0.093 (0.165)	data 0.001 (0.065)	eta 0:06:02	loss 3.0434 (3.1913) acc 56.2500 (47.1875)	lr 1.975917e-03
+batch_idx: 4, pred_acc so far: 49.375
+batch_idx: 9, pred_acc so far: 51.5625
+batch_idx: 14, pred_acc so far: 53.541666666666664
+batch_idx: 19, pred_acc so far: 54.21875
+pred_acc of ALL: 53.776041666666664
+-----------update conf_refine at epoch end:-----------
+cls: 0, inpool_num: 165, notinpool_num: 86
+cls: 1, inpool_num: 210, notinpool_num: 31
+cls: 2, inpool_num: 198, notinpool_num: 41
+cls: 3, inpool_num: 37, notinpool_num: 208
+cls: 4, inpool_num: 229, notinpool_num: 20
+cls: 5, inpool_num: 52, notinpool_num: 175
+cls: 6, inpool_num: 91, notinpool_num: 155
+cls: 7, inpool_num: 116, notinpool_num: 123
+cls: 8, inpool_num: 228, notinpool_num: 28
+cls: 9, inpool_num: 33, notinpool_num: 204
+cls: 10, inpool_num: 129, notinpool_num: 99
+cls: 11, inpool_num: 205, notinpool_num: 39
+cls: 12, inpool_num: 188, notinpool_num: 53
+cls: 13, inpool_num: 71, notinpool_num: 184
+cls: 14, inpool_num: 62, notinpool_num: 186
+cls: 15, inpool_num: 152, notinpool_num: 77
+cls: 16, inpool_num: 94, notinpool_num: 140
+cls: 17, inpool_num: 225, notinpool_num: 33
+cls: 18, inpool_num: 57, notinpool_num: 172
+cls: 19, inpool_num: 173, notinpool_num: 63
+cls: 20, inpool_num: 40, notinpool_num: 196
+cls: 21, inpool_num: 174, notinpool_num: 34
+cls: 22, inpool_num: 202, notinpool_num: 23
+cls: 23, inpool_num: 202, notinpool_num: 33
+cls: 24, inpool_num: 60, notinpool_num: 177
+cls: 25, inpool_num: 150, notinpool_num: 84
+cls: 26, inpool_num: 28, notinpool_num: 209
+cls: 27, inpool_num: 123, notinpool_num: 125
+cls: 28, inpool_num: 188, notinpool_num: 36
+cls: 29, inpool_num: 146, notinpool_num: 88
+cls: 30, inpool_num: 99, notinpool_num: 139
+cls: 31, inpool_num: 47, notinpool_num: 174
+cls: 32, inpool_num: 176, notinpool_num: 40
+cls: 33, inpool_num: 153, notinpool_num: 91
+cls: 34, inpool_num: 213, notinpool_num: 61
+cls: 35, inpool_num: 55, notinpool_num: 183
+cls: 36, inpool_num: 88, notinpool_num: 149
+cls: 37, inpool_num: 104, notinpool_num: 142
+cls: 38, inpool_num: 118, notinpool_num: 125
+cls: 39, inpool_num: 70, notinpool_num: 171
+cls: 40, inpool_num: 67, notinpool_num: 171
+cls: 41, inpool_num: 84, notinpool_num: 155
+cls: 42, inpool_num: 208, notinpool_num: 22
+cls: 43, inpool_num: 50, notinpool_num: 198
+cls: 44, inpool_num: 144, notinpool_num: 100
+cls: 45, inpool_num: 184, notinpool_num: 47
+cls: 46, inpool_num: 214, notinpool_num: 25
+<sum 6102> samples are in pools,<sum 5115> samples are not in pools,
+epoch [10/100][5/24]	time 0.093 (0.387)	data 0.001 (0.255)	eta 0:14:03	loss 3.4145 (3.1218) acc 37.5000 (44.3750)	lr 1.968583e-03
+epoch [10/100][10/24]	time 0.130 (0.259)	data 0.001 (0.129)	eta 0:09:23	loss 2.5254 (2.9789) acc 53.1250 (47.5000)	lr 1.968583e-03
+epoch [10/100][15/24]	time 0.086 (0.203)	data 0.001 (0.086)	eta 0:07:19	loss 3.0575 (3.0546) acc 43.7500 (45.8333)	lr 1.968583e-03
+epoch [10/100][20/24]	time 0.071 (0.174)	data 0.001 (0.065)	eta 0:06:16	loss 2.7500 (3.0114) acc 56.2500 (47.9688)	lr 1.968583e-03
+batch_idx: 4, pred_acc so far: 54.375
+batch_idx: 9, pred_acc so far: 52.8125
+batch_idx: 14, pred_acc so far: 54.791666666666664
+batch_idx: 19, pred_acc so far: 55.46875
+pred_acc of ALL: 54.6875
+-----------update conf_refine at epoch end:-----------
+cls: 0, inpool_num: 226, notinpool_num: 25
+cls: 1, inpool_num: 213, notinpool_num: 28
+cls: 2, inpool_num: 159, notinpool_num: 80
+cls: 3, inpool_num: 48, notinpool_num: 197
+cls: 4, inpool_num: 226, notinpool_num: 23
+cls: 5, inpool_num: 68, notinpool_num: 159
+cls: 6, inpool_num: 66, notinpool_num: 180
+cls: 7, inpool_num: 107, notinpool_num: 132
+cls: 8, inpool_num: 213, notinpool_num: 43
+cls: 9, inpool_num: 36, notinpool_num: 201
+cls: 10, inpool_num: 125, notinpool_num: 103
+cls: 11, inpool_num: 205, notinpool_num: 39
+cls: 12, inpool_num: 198, notinpool_num: 43
+cls: 13, inpool_num: 70, notinpool_num: 185
+cls: 14, inpool_num: 51, notinpool_num: 197
+cls: 15, inpool_num: 150, notinpool_num: 79
+cls: 16, inpool_num: 78, notinpool_num: 156
+cls: 17, inpool_num: 222, notinpool_num: 36
+cls: 18, inpool_num: 48, notinpool_num: 181
+cls: 19, inpool_num: 168, notinpool_num: 68
+cls: 20, inpool_num: 44, notinpool_num: 192
+cls: 21, inpool_num: 177, notinpool_num: 31
+cls: 22, inpool_num: 201, notinpool_num: 24
+cls: 23, inpool_num: 198, notinpool_num: 37
+cls: 24, inpool_num: 37, notinpool_num: 200
+cls: 25, inpool_num: 157, notinpool_num: 77
+cls: 26, inpool_num: 29, notinpool_num: 209
+cls: 27, inpool_num: 126, notinpool_num: 122
+cls: 28, inpool_num: 184, notinpool_num: 40
+cls: 29, inpool_num: 138, notinpool_num: 96
+cls: 30, inpool_num: 89, notinpool_num: 149
+cls: 31, inpool_num: 79, notinpool_num: 142
+cls: 32, inpool_num: 181, notinpool_num: 35
+cls: 33, inpool_num: 113, notinpool_num: 131
+cls: 34, inpool_num: 211, notinpool_num: 63
+cls: 35, inpool_num: 58, notinpool_num: 180
+cls: 36, inpool_num: 77, notinpool_num: 160
+cls: 37, inpool_num: 132, notinpool_num: 114
+cls: 38, inpool_num: 98, notinpool_num: 145
+cls: 39, inpool_num: 70, notinpool_num: 171
+cls: 40, inpool_num: 59, notinpool_num: 179
+cls: 41, inpool_num: 87, notinpool_num: 152
+cls: 42, inpool_num: 213, notinpool_num: 17
+cls: 43, inpool_num: 58, notinpool_num: 190
+cls: 44, inpool_num: 149, notinpool_num: 95
+cls: 45, inpool_num: 191, notinpool_num: 40
+cls: 46, inpool_num: 211, notinpool_num: 28
+<sum 6044> samples are in pools,<sum 5174> samples are not in pools,
+epoch [11/100][5/24]	time 0.124 (0.456)	data 0.001 (0.291)	eta 0:16:22	loss 2.8505 (2.8018) acc 46.8750 (56.8750)	lr 1.960294e-03
+epoch [11/100][10/24]	time 0.073 (0.277)	data 0.000 (0.146)	eta 0:09:55	loss 2.6331 (2.9530) acc 65.6250 (51.5625)	lr 1.960294e-03
+epoch [11/100][15/24]	time 0.068 (0.216)	data 0.000 (0.098)	eta 0:07:42	loss 2.7861 (3.0310) acc 53.1250 (49.1667)	lr 1.960294e-03
+epoch [11/100][20/24]	time 0.064 (0.178)	data 0.001 (0.073)	eta 0:06:20	loss 3.3377 (3.0130) acc 46.8750 (50.0000)	lr 1.960294e-03
+batch_idx: 4, pred_acc so far: 55.625
+batch_idx: 9, pred_acc so far: 54.6875
+batch_idx: 14, pred_acc so far: 57.5
+batch_idx: 19, pred_acc so far: 57.03125
+pred_acc of ALL: 56.25
+-----------update conf_refine at epoch end:-----------
+cls: 0, inpool_num: 209, notinpool_num: 42
+cls: 1, inpool_num: 210, notinpool_num: 31
+cls: 2, inpool_num: 176, notinpool_num: 63
+cls: 3, inpool_num: 41, notinpool_num: 204
+cls: 4, inpool_num: 220, notinpool_num: 29
+cls: 5, inpool_num: 58, notinpool_num: 169
+cls: 6, inpool_num: 94, notinpool_num: 152
+cls: 7, inpool_num: 109, notinpool_num: 130
+cls: 8, inpool_num: 221, notinpool_num: 35
+cls: 9, inpool_num: 35, notinpool_num: 202
+cls: 10, inpool_num: 133, notinpool_num: 95
+cls: 11, inpool_num: 203, notinpool_num: 41
+cls: 12, inpool_num: 187, notinpool_num: 54
+cls: 13, inpool_num: 69, notinpool_num: 186
+cls: 14, inpool_num: 118, notinpool_num: 130
+cls: 15, inpool_num: 120, notinpool_num: 109
+cls: 16, inpool_num: 86, notinpool_num: 148
+cls: 17, inpool_num: 224, notinpool_num: 34
+cls: 18, inpool_num: 86, notinpool_num: 143
+cls: 19, inpool_num: 170, notinpool_num: 66
+cls: 20, inpool_num: 50, notinpool_num: 186
+cls: 21, inpool_num: 172, notinpool_num: 36
+cls: 22, inpool_num: 190, notinpool_num: 35
+cls: 23, inpool_num: 211, notinpool_num: 24
+cls: 24, inpool_num: 61, notinpool_num: 176
+cls: 25, inpool_num: 163, notinpool_num: 71
+cls: 26, inpool_num: 27, notinpool_num: 210
+cls: 27, inpool_num: 121, notinpool_num: 127
+cls: 28, inpool_num: 189, notinpool_num: 35
+cls: 29, inpool_num: 140, notinpool_num: 93
+cls: 30, inpool_num: 107, notinpool_num: 131
+cls: 31, inpool_num: 52, notinpool_num: 169
+cls: 32, inpool_num: 138, notinpool_num: 78
+cls: 33, inpool_num: 182, notinpool_num: 62
+cls: 34, inpool_num: 209, notinpool_num: 65
+cls: 35, inpool_num: 134, notinpool_num: 104
+cls: 36, inpool_num: 96, notinpool_num: 141
+cls: 37, inpool_num: 95, notinpool_num: 151
+cls: 38, inpool_num: 112, notinpool_num: 131
+cls: 39, inpool_num: 129, notinpool_num: 112
+cls: 40, inpool_num: 80, notinpool_num: 158
+cls: 41, inpool_num: 99, notinpool_num: 140
+cls: 42, inpool_num: 202, notinpool_num: 28
+cls: 43, inpool_num: 91, notinpool_num: 157
+cls: 44, inpool_num: 163, notinpool_num: 81
+cls: 45, inpool_num: 201, notinpool_num: 30
+cls: 46, inpool_num: 205, notinpool_num: 34
+<sum 6388> samples are in pools,<sum 4828> samples are not in pools,

@@ -1249,9 +1249,9 @@ class UPLTrainer(TrainerX):
             self.feat_weight = info_dict.get('unsafe_feat_weight', torch.ones(len(self.train_loader_sstrain.dataset), 
                                                                                  dtype=torch.float16, device=self.device))
 
-            if hasattr(self.criterion, 'cls_pools_dict'):
-                self.criterion.Pools.scale_all_pools(scale_factors=cls_counts_norm)
-                self.criterion.Pools.reset_all()
+            # if hasattr(self.criterion, 'cls_pools_dict'):
+            #     self.criterion.Pools.scale_all_pools(scale_factors=cls_counts_norm)
+            #     self.criterion.Pools.reset_all()
                     
         if self.epoch > 0:            #self.epoch start from 0
             if self.cfg.TRAINER.PLL.USE_PLL:

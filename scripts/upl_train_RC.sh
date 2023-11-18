@@ -5,7 +5,7 @@ cd ..
 # custom config
 DATA=./data
 TRAINER=UPLTrainer
-exp_ID="11.16-test_refine_ep100_newRefill_uniform_1"    #NOTE +time 共72+27=99次
+exp_ID="11.18-test_refine_ep100_GMM_2"    #NOTE +time 共72+27=99次
 # TODO: 
 #1. change oonf clean threshold and set safe factor and range
 #10.19-test_cc_refine_ep100_safe&clean2
@@ -79,19 +79,19 @@ set_values() {
     if [ "$loss_type" == "cav_refine" ]; then
         if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
             CONF_MOMNs=(0.00)
-            HALF_USE_Ws=(0.4 0.5 0.6)
+            HALF_USE_Ws=(0.4 0.5)
         elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
             CONF_MOMNs=(0.00)
-            HALF_USE_Ws=(0.1 0.2 0.3)
+            HALF_USE_Ws=(0.1 0.2)
         fi
 
     elif [ "$loss_type" == "rc_refine" ]; then
         if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
-            CONF_MOMNs=(0.3 0.4)
-            HALF_USE_Ws=(0.3 0.4 0.5)
+            CONF_MOMNs=(0.03 0.05 0.1)
+            HALF_USE_Ws=(0.3 0.4)
         elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
-            CONF_MOMNs=(0.2 0.3)
-            HALF_USE_Ws=(0.1 0.2 0.3)
+            CONF_MOMNs=(0.03 0.05 0.1)
+            HALF_USE_Ws=(0.1 0.2)
         fi
 
     elif [ "$loss_type" == "lw_refine" ]; then
@@ -127,11 +127,11 @@ for SEED in "${SEEDs[@]}"; do
             for PLL_partial_rate in "${PLL_partial_rates[@]}"; do
 
                 if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
-                    MAX_POOLNUMs=(14 16)
-                    TOP_POOLs=(10 5 1)
+                    MAX_POOLNUMs=(16)
+                    TOP_POOLs=(1)
                 elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
-                    MAX_POOLNUMs=(14 16)
-                    TOP_POOLs=(10 5 1)
+                    MAX_POOLNUMs=(16 14)
+                    TOP_POOLs=(1)
                 else
                     echo "Invalid rate for MAX_POOLNUMs"
                     exit 1

@@ -1,0 +1,209 @@
+***************
+** Arguments **
+***************
+backbone: 
+config_file: configs/trainers/UPLTrainer/rn50_ep100.yaml
+dataset_config_file: configs/datasets/ssdtd.yaml
+eval_only: False
+head: 
+hh_config_file: 
+load_epoch: None
+loss_type: rc_refine
+model_dir: 
+no_train: False
+num_fp: 0
+opts: ['TRAINER.UPLTrainer.N_CTX', '16', 'TRAINER.UPLTrainer.CSC', 'False', 'TRAINER.UPLTrainer.CLASS_TOKEN_POSITION', 'end', 'DATASET.NUM_SHOTS', '16', 'DATASET.CLASS_EQULE', 'True', 'TEST.FINAL_MODEL', 'last_step', 'TRAINER.PLL.BETA', '0.0', 'TRAINER.PLL.USE_REGULAR', 'False', 'TRAINER.PLL.USE_PLL', 'True', 'TRAINER.PLL.PARTIAL_RATE', '0.3', 'TRAINER.PLL.USE_LABEL_FILTER', 'True', 'TRAINER.PLL.CONF_MOMN', '0.2', 'TRAINER.PLL.MAX_POOLNUM', '14', 'TRAINER.PLL.POOL_INITRATIO', '0.2', 'TRAINER.PLL.HALF_USE_W', '0.2', 'TRAINER.PLL.TOP_POOLS', '1']
+output_dir: ./output/ssdtd/UPLTrainer/rn50_ep100_16shots-11.18-test_refine_ep100_GMM_1/SEED1/data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.2_topP-1_MAXPOOL-14_initR-0.2_halfW-0.2
+resume: 
+root: ./data
+seed: 1
+source_domains: None
+target_domains: None
+trainer: UPLTrainer
+transforms: None
+************
+** Config **
+************
+DATALOADER:
+  K_TRANSFORMS: 1
+  NUM_WORKERS: 8
+  OPEN_SETTING: False
+  RETURN_IMG0: False
+  TEST:
+    BATCH_SIZE: 100
+    SAMPLER: SequentialSampler
+    SHUFFLE: False
+  TRAIN_U:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAME_AS_X: True
+    SAMPLER: RandomSampler
+  TRAIN_X:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAMPLER: RandomSampler
+    SHUFFLE: True
+  VAL:
+    BATCH_SIZE: 50
+    SHUFFLE: False
+DATASET:
+  ALL_AS_UNLABELED: False
+  CIFAR_C_LEVEL: 1
+  CIFAR_C_TYPE: 
+  CLASS_EQULE: True
+  CONF_THRESHOLD: 0.9
+  IGNORE_FILE: 
+  IGNORE_NUM: 0
+  NAME: SSDescribableTextures
+  NUM_LABELED: -1
+  NUM_SHOTS: 16
+  ROOT: ./data
+  SOURCE_DOMAINS: ()
+  STL10_FOLD: -1
+  TARGET_DOMAINS: ()
+  VAL_PERCENT: 0.1
+INPUT:
+  COLORJITTER_B: 0.4
+  COLORJITTER_C: 0.4
+  COLORJITTER_H: 0.1
+  COLORJITTER_S: 0.4
+  CROP_PADDING: 4
+  CUTOUT_LEN: 16
+  CUTOUT_N: 1
+  GB_K: 21
+  GB_P: 0.5
+  GN_MEAN: 0.0
+  GN_STD: 0.15
+  INTERPOLATION: bicubic
+  NO_TRANSFORM: False
+  PIXEL_MEAN: [0.48145466, 0.4578275, 0.40821073]
+  PIXEL_STD: [0.26862954, 0.26130258, 0.27577711]
+  RANDAUGMENT_M: 10
+  RANDAUGMENT_N: 2
+  RGS_P: 0.2
+  RRCROP_SCALE: (0.08, 1.0)
+  SIZE: (224, 224)
+  TRANSFORMS: ('random_resized_crop', 'random_flip', 'normalize')
+MODEL:
+  BACKBONE:
+    NAME: RN50
+    PRETRAINED: True
+  HEAD:
+    ACTIVATION: relu
+    BN: True
+    DROPOUT: 0.0
+    HIDDEN_LAYERS: ()
+    NAME: 
+  INIT_WEIGHTS: 
+  PSEUDO_LABEL_MODELS: ['RN50']
+OPTIM:
+  ADAM_BETA1: 0.9
+  ADAM_BETA2: 0.999
+  BASE_LR_MULT: 0.1
+  GAMMA: 0.1
+  LR: 0.002
+  LR_SCHEDULER: cosine
+  MAX_EPOCH: 100
+  MOMENTUM: 0.9
+  NAME: sgd
+  NEW_LAYERS: ()
+  RMSPROP_ALPHA: 0.99
+  SGD_DAMPNING: 0
+  SGD_NESTEROV: False
+  STAGED_LR: False
+  STEPSIZE: (-1,)
+  WARMUP_CONS_LR: 1e-05
+  WARMUP_EPOCH: 1
+  WARMUP_MIN_LR: 1e-05
+  WARMUP_RECOUNT: True
+  WARMUP_TYPE: constant
+  WEIGHT_DECAY: 0.0005
+OUTPUT_DIR: ./output/ssdtd/UPLTrainer/rn50_ep100_16shots-11.18-test_refine_ep100_GMM_1/SEED1/data-ssdtd_model-rn50_ep100_shots-16_nctx-16_ctp-end_fp-0_usePLLTrue-0.3_loss-rc_refine_seed-1_beta-0.0_FILT-True_cMomn-0.2_topP-1_MAXPOOL-14_initR-0.2_halfW-0.2
+RESUME: 
+SEED: 1
+TEST:
+  Analyze_Result_Path: ./analysis_results_test/
+  COMPUTE_CMAT: False
+  EVALUATOR: UPLClassification
+  FINAL_MODEL: last_step
+  NO_TEST: False
+  PER_CLASS_RESULT: True
+  SPLIT: test
+TRAIN:
+  CHECKPOINT_FREQ: 0
+  COUNT_ITER: train_x
+  PRINT_FREQ: 5
+TRAINER:
+  CG:
+    ALPHA_D: 0.5
+    ALPHA_F: 0.5
+    EPS_D: 1.0
+    EPS_F: 1.0
+  DAEL:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DDAIG:
+    ALPHA: 0.5
+    CLAMP: False
+    CLAMP_MAX: 1.0
+    CLAMP_MIN: -1.0
+    G_ARCH: 
+    LMDA: 0.3
+    WARMUP: 0
+  ENSEMBLE_NUM: 1
+  ENTMIN:
+    LMDA: 0.001
+  FIXMATCH:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 1.0
+  LOSS_TYPE: rc_refine
+  M3SDA:
+    LMDA: 0.5
+    N_STEP_F: 4
+  MCD:
+    N_STEP_F: 4
+  MEANTEA:
+    EMA_ALPHA: 0.999
+    RAMPUP: 5
+    WEIGHT_U: 1.0
+  MIXMATCH:
+    MIXUP_BETA: 0.75
+    RAMPUP: 20000
+    TEMP: 2.0
+    WEIGHT_U: 100.0
+  MME:
+    LMDA: 0.1
+  NAME: UPLTrainer
+  PLL:
+    BETA: 0.0
+    CONF_LOSS_TYPE: 
+    CONF_MOMN: 0.2
+    HALF_USE_W: 0.2
+    MAX_POOLNUM: 14
+    PARTIAL_RATE: 0.3
+    POOL_INITRATIO: 0.2
+    SAFE_FACTOR: 3.0
+    TEMPERATURE: 1.0
+    TOP_POOLS: 1
+    USE_LABEL_FILTER: True
+    USE_PLL: True
+    USE_REGULAR: False
+  SE:
+    CONF_THRE: 0.95
+    EMA_ALPHA: 0.999
+    RAMPUP: 300
+  UPLTrainer:
+    CLASS_TOKEN_POSITION: end
+    CSC: False
+    CTX_INIT: 
+    NUM_FP: 0
+    N_CTX: 16
+    PREC: fp16
+USE_CUDA: True
+VERBOSE: True
+VERSION: 1
+Collecting env info ...
