@@ -5,7 +5,7 @@ cd ..
 # custom config
 DATA=./data
 TRAINER=UPLTrainer
-exp_ID="11.18-test_refine_ep100_GMM_2"    #NOTE +time 共72+27=99次
+exp_ID="11.18-test_refine_ep100_GMM_wConfine"    #NOTE +time 共72+27=99次
 # TODO: 
 #1. change oonf clean threshold and set safe factor and range
 #10.19-test_cc_refine_ep100_safe&clean2
@@ -68,7 +68,7 @@ BETA=0.0
 SEEDs=(1 2 3)
 declare -a DATASETs=('ssdtd')
 declare -a POOL_INITRATIOs=(0.2 0.3)
-declare -a loss_types=('lw_refine' 'rc_refine' 'cav_refine' 'cc_refine')
+declare -a loss_types=('rc_refine' 'cav_refine')
 
 set_values() {
     local loss_type=$1
@@ -78,20 +78,20 @@ set_values() {
 
     if [ "$loss_type" == "cav_refine" ]; then
         if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
-            CONF_MOMNs=(0.00)
-            HALF_USE_Ws=(0.4 0.5)
+            CONF_MOMNs=(0.05 0.1 0.15)
+            HALF_USE_Ws=(0.3 0.4 0.5)
         elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
-            CONF_MOMNs=(0.00)
-            HALF_USE_Ws=(0.1 0.2)
+            CONF_MOMNs=(0.05 0.1 0.15)
+            HALF_USE_Ws=(0.1 0.2 0.3)
         fi
 
     elif [ "$loss_type" == "rc_refine" ]; then
         if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
-            CONF_MOMNs=(0.03 0.05 0.1)
-            HALF_USE_Ws=(0.3 0.4)
+            CONF_MOMNs=(0.05 0.1 0.15)
+            HALF_USE_Ws=(0.3 0.4 0.5)
         elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
-            CONF_MOMNs=(0.03 0.05 0.1)
-            HALF_USE_Ws=(0.1 0.2)
+            CONF_MOMNs=(0.05 0.1 0.15)
+            HALF_USE_Ws=(0.1 0.2 0.3)
         fi
 
     elif [ "$loss_type" == "lw_refine" ]; then
@@ -130,7 +130,7 @@ for SEED in "${SEEDs[@]}"; do
                     MAX_POOLNUMs=(16)
                     TOP_POOLs=(1)
                 elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
-                    MAX_POOLNUMs=(16 14)
+                    MAX_POOLNUMs=(16)
                     TOP_POOLs=(1)
                 else
                     echo "Invalid rate for MAX_POOLNUMs"

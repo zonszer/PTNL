@@ -100,6 +100,10 @@ class PoolsAggregation:
             all_num += pool.pool_capacity
         print(f'====> overall pools ACC: {correct_num}/{all_num} = {correct_num/all_num}')
 
+    def print(self):
+        for pool_id, cur_pool in self.cls_pools_dict.items():
+            print(cur_pool)
+
 
 class ClassLabelPool:
     """
