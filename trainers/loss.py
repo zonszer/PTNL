@@ -373,9 +373,8 @@ class PLL_loss(nn.Module):
     def collect_uncs_byCls(self, outputs, indexs, min_num=1):
         """collect uncs for all items by their PL_labels"""
         sort_idxs = torch.argsort(indexs)       #output_all[sort_idxs] is the data original order
-        # feat_idxs = indexs_all[sort_idxs]
+        feat_idxs = indexs[sort_idxs]
         outputs = outputs[sort_idxs]
-
         # get the idxs of where PL_labels > eps and collect the corresponding outputs by idx order:
         items_collected = {}
         idxs_collected = {}
@@ -400,16 +399,18 @@ class PLL_loss(nn.Module):
             cls_uncs = self.cal_uncertainty(cls_outputs, cls_labels)
             in_pool, prob = self.fit_GMM(cls_uncs.cpu())
             base_value = prob.sum()
-            weight = prob / base_value  # use maticx for element-wise division
-            # order = torch.argsort(prob, descending=True)
-            # self.Pools.fill_assigned_pool(feat_idxs=cls_idxs[order], feat_unc=prob[order].to(self.device), 
-            #                               pool_id=items_collected[i])
-            self.conf_weight[cls_origin_idxs[:, 0], cls_origin_idxs[:, 1]] = weight.to(self.device)
+            weight = (prob / base_value).to(self.device)  # use maticx for element-wise division
+
+            self.conf_weight[cls_origin_idxs[:, 0], cls_origin_idxs[:, 1]] = weight
             inpool_num[cls] = in_pool.shape[0]
             notinpool_num[cls] = prob.shape[0] - in_pool.shape[0]
-        # popped_feat_idxs, _, popped_unc = self.collect_popped_items(pool_range=items_collected.keys(), 
-        #                                                             retain=False)
-        return inpool_num, notinpool_num 
+
+        labels, uncs = self.prepare_items_attrs(outputs, feat_idxs, 
+                                                max_num=1)
+        not_inpool_feat_idxs, notinpool_uncs = self.fill_pools(labels, uncs, feat_idxs, 
+                                                        max_iter_num=1,
+                                                        record_notinpool=True)
+        return inpool_num, notinpool_num, not_inpool_feat_idxs, notinpool_uncs
 
     def fit_GMM(self, uncs, min_num=1):
         """fit GMM for class items"""
@@ -481,16 +482,18 @@ class PLL_loss(nn.Module):
             print('-----------update conf_refine at epoch end:-----------')
             # pop items not in pools and fill the remained pools:
             # notinpool_idxs, notinpool_uncs = self.refill_pools(indexs_all, output_all)
-            inpool_num, notinpool_num  = self.collect_uncs_byCls(output_all, indexs_all)
+            (inpool_num, notinpool_num, notinpool_idxs, notinpool_idxs,
+             ) = self.collect_uncs_byCls(output_all, indexs_all)
             
-            # clean pool and calculate conf increament:
-            # (info_dict, pools_certainty_norm) = self.update_conf_refine(notinpool_idxs, notinpool_uncs)
+            #clean pool and calculate conf increament:
+            info_dict = self.update_conf_refine(notinpool_idxs, notinpool_idxs)
+
+            # print info:
             inpool_all, notin_all = 0, 0
             for cls in sorted(inpool_num):
                 print(f'cls: {cls}, inpool_num: {inpool_num[cls]}, notinpool_num: {notinpool_num[cls]}')
                 inpool_all += inpool_num[cls]
                 notin_all += notinpool_num[cls]
-            
             print(f'<sum {inpool_all}> samples are in pools,'
                   f'<sum {notin_all}> samples are not in pools,')
             
@@ -501,7 +504,6 @@ class PLL_loss(nn.Module):
         safe_range_num = 0
         clean_num = 0
         pool_unc_avgs = []
-        popped_idxs_unsafe = []; popped_feat_weight = []
         unsafe_feat_weight = torch.ones(self.conf.shape[0], dtype=torch.float16, device=self.device)
         conf_type_ = self.losstype.split('_')[0]
         if conf_type_ == 'lw':
@@ -511,48 +513,48 @@ class PLL_loss(nn.Module):
 
         for pool_id, cur_pool in self.cls_pools_dict.items():
             print(cur_pool)
-            if cur_pool.pool_capacity == 0:
-                pool_unc_avgs.append(torch.full((1,), torch.nan, dtype=torch.float16))
-                continue
-            elif cur_pool.pool_capacity <= self.cfg.MAX_POOLNUM * self.cfg.POOL_INITRATIO: 
-                unc_norm = 0
-            else:
-                unc_min = cur_pool.pool_unc.min()
-                unc_norm = (cur_pool.pool_unc - unc_min) / (cur_pool.unc_max - unc_min)
-            # if isinstance(unc_norm, torch.Tensor) and (torch.isnan(unc_norm)).any():
+            # if cur_pool.pool_capacity == 0:
+            #     pool_unc_avgs.append(torch.full((1,), torch.nan, dtype=torch.float16))
+            #     continue
+            # elif cur_pool.pool_capacity <= self.cfg.MAX_POOLNUM * self.cfg.POOL_INITRATIO: 
             #     unc_norm = 0
-            pool_unc_avgs.append(cur_pool.pool_unc.mean().unsqueeze(0).cpu())
+            # else:
+            #     unc_min = cur_pool.pool_unc.min()
+            #     unc_norm = (cur_pool.pool_unc - unc_min) / (cur_pool.unc_max - unc_min)
+            # # if isinstance(unc_norm, torch.Tensor) and (torch.isnan(unc_norm)).any():
+            # #     unc_norm = 0
+            # pool_unc_avgs.append(cur_pool.pool_unc.mean().unsqueeze(0).cpu())
             
-            # 1. cal increament and update conf:
-            # if conf_type_ == 'cc':
-            #     pred_conf_value = conf_torevise[cur_pool.pool_idx, pool_id]       
-            #     conf_increment = (1 - self.conf_momn) * (1 - unc_norm * shrink_f)       #(1-unc_norm) is cern norm
-            #     pred_conf_value_ = pred_conf_value * self.conf_momn + conf_increment
-            #     base_value = pred_conf_value_ - pred_conf_value + 1
-            #     # assert (base_value >= 1).all(), 'base_value should larger than 1'    
-            #     conf_torevise[cur_pool.pool_idx, pool_id] = pred_conf_value_
-            max_val, max_idx = torch.max(conf_torevise[cur_pool.pool_idx, :], dim=1)
-            current_val = conf_torevise[cur_pool.pool_idx, pool_id]
-            # assert (current_val > self.eps).all(), 'current_val should not be 0'
-            if conf_type_ == 'cav':
-                revised_conf = 1.0
-                revised_max_conf = 0.           #self.conf_momn = 0.1 0.2
-            elif conf_type_ == 'cc':
-                revised_conf = (current_val+max_val)/2 + (self.conf_momn * (unc_norm * shrink_f))
-                revised_max_conf = (current_val+max_val)/2     
+            # # 1. cal increament and update conf:
+            # # if conf_type_ == 'cc':
+            # #     pred_conf_value = conf_torevise[cur_pool.pool_idx, pool_id]       
+            # #     conf_increment = (1 - self.conf_momn) * (1 - unc_norm * shrink_f)       #(1-unc_norm) is cern norm
+            # #     pred_conf_value_ = pred_conf_value * self.conf_momn + conf_increment
+            # #     base_value = pred_conf_value_ - pred_conf_value + 1
+            # #     # assert (base_value >= 1).all(), 'base_value should larger than 1'    
+            # #     conf_torevise[cur_pool.pool_idx, pool_id] = pred_conf_value_
+            # max_val, max_idx = torch.max(conf_torevise[cur_pool.pool_idx, :], dim=1)
+            # current_val = conf_torevise[cur_pool.pool_idx, pool_id]
+            # # assert (current_val > self.eps).all(), 'current_val should not be 0'
+            # if conf_type_ == 'cav':
+            #     revised_conf = 1.0
+            #     revised_max_conf = 0.           #self.conf_momn = 0.1 0.2
+            # elif conf_type_ == 'cc':
+            #     revised_conf = (current_val+max_val)/2 + (self.conf_momn * (unc_norm * shrink_f))
+            #     revised_max_conf = (current_val+max_val)/2     
 
-            elif conf_type_ in ['rc', 'lw']:
-                revised_conf = (current_val+max_val)/2 * (1 + self.conf_momn * (unc_norm * shrink_f))
-                revised_max_conf = (current_val+max_val)/2 
-            else:
-                raise ValueError('conf_type_ not supported')
-            # if torch.isnan(conf_torevise[cur_pool.pool_idx, :]).any():
-            #     print(f'nan in conf, pool_id: {pool_id}')
-            #     print(f'current_val: {current_val}, max_val: {max_val}, unc_norm: {unc_norm}, revised_conf: {revised_conf}')
-            #     print(f'conf_torevise[cur_pool.pool_idx, :]: {conf_torevise[cur_pool.pool_idx, :]}')
-            #     raise ValueError('nan in conf')
-            conf_torevise[cur_pool.pool_idx, max_idx] = revised_max_conf
-            conf_torevise[cur_pool.pool_idx, pool_id] = revised_conf
+            # elif conf_type_ in ['rc', 'lw']:
+            #     revised_conf = (current_val+max_val)/2 * (1 + self.conf_momn * (unc_norm * shrink_f)) #NOTE remember change back here
+            #     revised_max_conf = (current_val+max_val)/2 
+            # else:
+            #     raise ValueError('conf_type_ not supported')
+            # # if torch.isnan(conf_torevise[cur_pool.pool_idx, :]).any():
+            # #     print(f'nan in conf, pool_id: {pool_id}')
+            # #     print(f'current_val: {current_val}, max_val: {max_val}, unc_norm: {unc_norm}, revised_conf: {revised_conf}')
+            # #     print(f'conf_torevise[cur_pool.pool_idx, :]: {conf_torevise[cur_pool.pool_idx, :]}')
+            # #     raise ValueError('nan in conf')
+            # conf_torevise[cur_pool.pool_idx, max_idx] = revised_max_conf
+            # conf_torevise[cur_pool.pool_idx, pool_id] = revised_conf
 
         self.Pools.cal_pool_ACC()
         # 2. clean poped items which are not in safe range:
@@ -567,7 +569,7 @@ class PLL_loss(nn.Module):
             unc_notinpool_min = notinpool_uncs.min()
             unc_notinpool_max = notinpool_uncs[~is_inf].max()
             notinpool_uncs[is_inf] = unc_notinpool_max
-            cern_norm = -(notinpool_uncs - unc_notinpool_min) / (unc_notinpool_max - unc_notinpool_min) + 1.0        #TOorg: 0/torch.inf == 0
+            cern_norm = (notinpool_uncs - unc_notinpool_min) / (unc_notinpool_max - unc_notinpool_min)        #TOorg: 0/torch.inf == 0 NOTE change back here
             # if torch.isnan(cern_norm).any() or torch.isinf(cern_norm).any():
             #     print(f'notinpool_uncs: {notinpool_uncs}')
             #     print(f'unc_notinpool_min: {unc_notinpool_min}, unc_notinpool_max: {notinpool_uncs.max()}')
@@ -582,8 +584,6 @@ class PLL_loss(nn.Module):
                 reduce_idxs = notinpool_idxs[selected_indices]
                 conf_torevise[reduce_idxs, :] = self.origin_labels[reduce_idxs, :]
                 # conf_torevise[notinpool_idxs, :] = self.origin_labels[notinpool_idxs, :]
-            # popped_feat_weight.extend(unc_norm_.tolist())
-            # popped_idxs_unsafe.extend(notinpool_idxs.tolist())
         else:
             unsafe_feat_weight[notinpool_idxs] = 0.0
 
@@ -592,26 +592,24 @@ class PLL_loss(nn.Module):
         idx = torch.nonzero(nan_mask)
         pool_unc_avgs[idx] = pool_unc_avgs[~nan_mask].max()
 
-        max_unc = pool_unc_avgs.max()
-        min_unc = pool_unc_avgs.min()
-        pool_unc_norm =  - (pool_unc_avgs - min_unc) / (max_unc - min_unc) + 1.0
+        # max_unc = pool_unc_avgs.max()
+        # min_unc = pool_unc_avgs.min()
+        # pool_unc_norm =  - (pool_unc_avgs - min_unc) / (max_unc - min_unc) + 1.0
 
         not_inpool_num = len(notinpool_idxs) #safe_range_num + clean_num
         info = {
             'not_inpool_num': not_inpool_num,
             'safe_range_num': safe_range_num,
             'clean_num': clean_num,
-            # 'popped_idxs_weight': {idx: True for idx in popped_feat_weight} if len(popped_feat_weight) > 0 else {}, 
-            # 'popped_idxs_unsafe': {idx: True for idx in popped_idxs_unsafe} if len(popped_idxs_unsafe) > 0 else {},
             'unsafe_feat_weight': unsafe_feat_weight,
         }
-        return info, pool_unc_norm, 
+        return info, #pool_unc_norm
 
 
     def clean_conf(self):
         if hasattr(self, 'conf') and 'refine' in self.losstype:
             if self.losstype.split('_')[0] == 'lw':
-                mask = ((0 < self.conf_true) & (self.conf_true < 1/self.conf_true.shape[1]))
+                mask = ((0 < self.conf_true) & (self.conf_true < 1/self.conf_true.shape[1]))        # TODO change the position of clean conf and make it correct with self.conf_weight
                 self.conf_true = torch.where(mask, 
                                             torch.zeros_like(self.conf_true), 
                                             self.conf_true)
@@ -624,7 +622,10 @@ class PLL_loss(nn.Module):
                                         self.conf)
                 base_value = self.conf.sum(dim=1).unsqueeze(1).repeat(1, self.conf.shape[1])
                 self.conf = self.conf / base_value
-            self.conf = (1 - self.conf_momn)*self.conf + self.conf_momn*self.conf_weight        #TODO check here
+            base_value = self.conf_weight.sum(dim=1).unsqueeze(1).repeat(1, self.conf.shape[1])
+            self.conf_weight = self.conf_weight / base_value
+            
+            self.conf = (1 - self.conf_momn)*self.conf + self.conf_momn*self.conf_weight        #TODO check here, and lw_loss may be hacked
 
 
     def log_conf(self, all_logits=None, all_labels=None):
