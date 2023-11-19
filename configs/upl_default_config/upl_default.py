@@ -305,11 +305,13 @@ _C.TRAINER.PLL.USE_REGULAR = False	# whether to use regular term in loss
 _C.TRAINER.PLL.USE_LABEL_FILTER = False	# whether to use regular term in loss
 _C.TRAINER.PLL.TEMPERATURE = 1.0  # temperature for sharpening the probability
 _C.TRAINER.PLL.CONF_MOMN = 0.95 # momentum for updating confidence
-_C.TRAINER.PLL.MAX_POOLNUM = 16 # enlarge scale for pool
-_C.TRAINER.PLL.POOL_INITRATIO = 0.4 # enlarge scale for pool
+# _C.TRAINER.PLL.MAX_POOLNUM = 10000 # enlarge scale for pool
+_C.TRAINER.PLL.POOL_INITNUM = 3 # enlarge scale for pool
 _C.TRAINER.PLL.TOP_POOLS = 1 # number of top pools to use
 _C.TRAINER.PLL.SAFE_FACTOR = 3.0 # number of top pools to use
 _C.TRAINER.PLL.HALF_USE_W = 0.5 # the weight of half use eamples
+_C.TRAINER.PLL.ALPHA = 3 # the value to generate Beta(α,β=α)
+_C.TRAINER.PLL.REVISE_FACTOR = 1.0
 
 # loss:
 _C.TRAINER.LOSS_TYPE = 'CE'

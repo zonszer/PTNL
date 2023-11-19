@@ -5,7 +5,7 @@ cd ..
 # custom config
 DATA=./data
 TRAINER=UPLTrainer
-exp_ID="11.18-test_refine_ep100_GMM_wConfine"    #NOTE +time 共72+27=99次
+exp_ID="11.19-test_refine_ep100_newRefill_sFactor_2"    #NOTE +time 共72+27=99次
 # TODO: 
 #1. change oonf clean threshold and set safe factor and range
 #10.19-test_cc_refine_ep100_safe&clean2
@@ -56,8 +56,8 @@ run_job() {
     TRAINER.PLL.PARTIAL_RATE ${PLL_partial_rate} \
     TRAINER.PLL.USE_LABEL_FILTER ${USE_LABEL_FILTER} \
     TRAINER.PLL.CONF_MOMN ${CONF_MOMN} \
-    TRAINER.PLL.MAX_POOLNUM ${MAX_POOLNUM} \
-    TRAINER.PLL.POOL_INITRATIO ${POOL_INITRATIO} \
+    TRAINER.PLL.REVISE_FACTOR ${REVISE_FACTOR} \
+    TRAINER.PLL.POOL_INITNUM ${POOL_INITNUM} \
     TRAINER.PLL.HALF_USE_W ${HALF_USE_W} \
     TRAINER.PLL.TOP_POOLS ${TOP_POOL}
 }
@@ -67,8 +67,8 @@ USE_LABEL_FILTER=True
 BETA=0.0
 SEEDs=(1 2 3)
 declare -a DATASETs=('ssdtd')
-declare -a POOL_INITRATIOs=(0.2 0.3)
-declare -a loss_types=('rc_refine' 'cav_refine')
+declare -a POOL_INITNUMs=(3)
+declare -a loss_types=('cav_refine' 'lw_refine' 'rc_refine' 'cc_refine')
 
 set_values() {
     local loss_type=$1
@@ -78,19 +78,19 @@ set_values() {
 
     if [ "$loss_type" == "cav_refine" ]; then
         if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
-            CONF_MOMNs=(0.05 0.1 0.15)
-            HALF_USE_Ws=(0.3 0.4 0.5)
+            CONF_MOMNs=(0.00)
+            HALF_USE_Ws=(0.4 0.5 0.6)
         elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
-            CONF_MOMNs=(0.05 0.1 0.15)
+            CONF_MOMNs=(0.00)
             HALF_USE_Ws=(0.1 0.2 0.3)
         fi
 
     elif [ "$loss_type" == "rc_refine" ]; then
         if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
-            CONF_MOMNs=(0.05 0.1 0.15)
+            CONF_MOMNs=(0.3 0.4)
             HALF_USE_Ws=(0.3 0.4 0.5)
         elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
-            CONF_MOMNs=(0.05 0.1 0.15)
+            CONF_MOMNs=(0.2 0.3)
             HALF_USE_Ws=(0.1 0.2 0.3)
         fi
 
@@ -127,13 +127,13 @@ for SEED in "${SEEDs[@]}"; do
             for PLL_partial_rate in "${PLL_partial_rates[@]}"; do
 
                 if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
-                    MAX_POOLNUMs=(16)
-                    TOP_POOLs=(1)
+                    REVISE_FACTORs=(0.4 0.5 0.7)
+                    TOP_POOLs=(6 3 1)
                 elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
-                    MAX_POOLNUMs=(16)
-                    TOP_POOLs=(1)
+                    REVISE_FACTORs=(0.4 0.5 0.7)
+                    TOP_POOLs=(6 3 1)
                 else
-                    echo "Invalid rate for MAX_POOLNUMs"
+                    echo "Invalid rate for REVISE_FACTORs"
                     exit 1
                 fi
                 
@@ -147,13 +147,13 @@ for SEED in "${SEEDs[@]}"; do
 
                 for TOP_POOL in "${TOP_POOLs[@]}"; do
                     for CONF_MOMN in "${CONF_MOMNs[@]}"; do
-                        for POOL_INITRATIO in "${POOL_INITRATIOs[@]}"; do
-                            for MAX_POOLNUM in "${MAX_POOLNUMs[@]}"; do
+                        for POOL_INITNUM in "${POOL_INITNUMs[@]}"; do
+                            for REVISE_FACTOR in "${REVISE_FACTORs[@]}"; do
                                 for HALF_USE_W in "${HALF_USE_Ws[@]}"; do
-                                    total_iterations=$((${#SEEDs[@]} * ${#DATASETs[@]} * ${#loss_types[@]} * ${#PLL_partial_rates[@]} * ${#TOP_POOLs[@]} * ${#CONF_MOMNs[@]} * ${#POOL_INITRATIOs[@]} * ${#MAX_POOLNUMs[@]} * ${#HALF_USE_Ws[@]}))
+                                    total_iterations=$((${#SEEDs[@]} * ${#DATASETs[@]} * ${#loss_types[@]} * ${#PLL_partial_rates[@]} * ${#TOP_POOLs[@]} * ${#CONF_MOMNs[@]} * ${#POOL_INITNUMs[@]} * ${#REVISE_FACTORs[@]} * ${#HALF_USE_Ws[@]}))
                                     echo "The loop will iterate $total_iterations times."
 
-                                    common_id="data-${DATASET}_model-${CFG}_shots-${SHOTS}_nctx-${NCTX}_ctp-${CTP}_fp-${FP}_usePLL${use_PLL}-${PLL_partial_rate}_loss-${loss_type}_seed-${SEED}_beta-${BETA}_FILT-${USE_LABEL_FILTER}_cMomn-${CONF_MOMN}_topP-${TOP_POOL}_MAXPOOL-${MAX_POOLNUM}_initR-${POOL_INITRATIO}_halfW-${HALF_USE_W}"
+                                    common_id="data-${DATASET}_model-${CFG}_shots-${SHOTS}_nctx-${NCTX}_ctp-${CTP}_fp-${FP}_usePLL${use_PLL}-${PLL_partial_rate}_loss-${loss_type}_seed-${SEED}_beta-${BETA}_FILT-${USE_LABEL_FILTER}_cMomn-${CONF_MOMN}_topP-${TOP_POOL}_reviseF-${REVISE_FACTOR}_initNUM-${POOL_INITNUM}_halfW-${HALF_USE_W}"
                                     DIR=./output/${DATASET}/${TRAINER}/${CFG}_${SHOTS}shots-${TAG}/SEED${SEED}/${common_id}
                                     
                                     if [ -d "$DIR" ]; then
@@ -227,13 +227,13 @@ done
 #             do
 #                 for CONF_MOMN in "${CONF_MOMNs[@]}"
 #                 do
-#                     for POOL_INITRATIO in "${POOL_INITRATIOs[@]}"
+#                     for POOL_INITNUM in "${POOL_INITNUMs[@]}"
 #                     do
 #                         for MAX_POOLNUM in "${MAX_POOLNUMs[@]}"
 #                         do
 #                             for HALF_USE_W in "${HALF_USE_Ws[@]}"
 #                             do
-#                                 common_id="data-${DATASET}_model-${CFG}_shots-${SHOTS}_nctx-${NCTX}_ctp-${CTP}_fp-${FP}_usePLL${use_PLL}-${PLL_partial_rate}_loss-${loss_type}_seed-${SEED}_beta-${BETA}_FILT-${USE_LABEL_FILTER}_cMomn-${CONF_MOMN}_topP-${TOP_POOL}_MAXPOOL-${MAX_POOLNUM}_initR-${POOL_INITRATIO}_halfW-${HALF_USE_W}"
+#                                 common_id="data-${DATASET}_model-${CFG}_shots-${SHOTS}_nctx-${NCTX}_ctp-${CTP}_fp-${FP}_usePLL${use_PLL}-${PLL_partial_rate}_loss-${loss_type}_seed-${SEED}_beta-${BETA}_FILT-${USE_LABEL_FILTER}_cMomn-${CONF_MOMN}_topP-${TOP_POOL}_MAXPOOL-${MAX_POOLNUM}_initR-${POOL_INITNUM}_halfW-${HALF_USE_W}"
 #                                 DIR=./output/${DATASET}/${TRAINER}/${CFG}_${SHOTS}shots-${TAG}/SEED${SEED}/${common_id}
 #                                 if [ -d "$DIR" ]; then
 #                                     echo "------------Results are available in ${DIR}. Skip this job"
@@ -261,7 +261,7 @@ done
 #                                     TRAINER.PLL.USE_LABEL_FILTER ${USE_LABEL_FILTER} \
 #                                     TRAINER.PLL.CONF_MOMN ${CONF_MOMN} \
 #                                     TRAINER.PLL.MAX_POOLNUM ${MAX_POOLNUM} \
-#                                     TRAINER.PLL.POOL_INITRATIO ${POOL_INITRATIO} \
+#                                     TRAINER.PLL.POOL_INITNUM ${POOL_INITNUM} \
 #                                     TRAINER.PLL.SAFE_FACTOR ${SAFT_FACTOR} \
 #                                     TRAINER.PLL.HALF_USE_W ${HALF_USE_W} \
 #                                     TRAINER.PLL.TOP_POOLS ${TOP_POOL}

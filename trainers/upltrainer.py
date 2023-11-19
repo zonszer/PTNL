@@ -1215,7 +1215,7 @@ class UPLTrainer(TrainerX):
         if self.epoch == 0:            #self.epoch start from 0
             if 'refine' in self.criterion.losstype:
                 class_ids = torch.arange(0, len(self.lab2cname))
-                K = int(max(self.cfg.TRAINER.PLL.MAX_POOLNUM*self.cfg.TRAINER.PLL.POOL_INITRATIO, 1))
+                K = self.cfg.TRAINER.PLL.POOL_INITNUM
                 self.criterion.Pools = PoolsAggregation(cfg=self.cfg.TRAINER.PLL, class_ids=class_ids, K=K)
                 self.criterion.cls_pools_dict = self.criterion.Pools.cls_pools_dict
                 for cls_idx, pool in self.criterion.cls_pools_dict.items():
@@ -1244,13 +1244,10 @@ class UPLTrainer(TrainerX):
             pool_certn_norm, info_dict, cls_counts_norm = self.criterion.update_conf_epochend(indexs_all, output_all)
                                                                             
             self.pool_certn_norm = pool_certn_norm
-            # self.feat_idxs_halfsafe = info_dict.get('popped_idxs_safe', {})
-            # self.feat_idxs_unsafe = info_dict.get('popped_idxs_unsafe', {})
             self.feat_weight = info_dict.get('unsafe_feat_weight', torch.ones(len(self.train_loader_sstrain.dataset), 
                                                                                  dtype=torch.float16, device=self.device))
 
             if hasattr(self.criterion, 'cls_pools_dict'):
-                self.criterion.Pools.scale_all_pools(scale_factors=cls_counts_norm)
                 self.criterion.Pools.reset_all()
                     
         if self.epoch > 0:            #self.epoch start from 0

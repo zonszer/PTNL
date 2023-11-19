@@ -45,14 +45,13 @@ class PoolsAggregation:
                                                              cls_id=cls.item())
 
 
-    def scale_all_pools(self, scale_factors):
+    def scale_all_pools(self, scale_nums):
         """Manipulate the scale of each pool in its government"""
-        init_cap = round(self.cfg.MAX_POOLNUM * self.cfg.POOL_INITRATIO)
-        pool_next_capacity = self.cfg.MAX_POOLNUM * scale_factors 
+        init_cap = self.cfg.POOL_INITNUM
 
         for cls_idx, pool in self.cls_pools_dict.items():
-            next_capacity = round(pool_next_capacity[cls_idx].item())
-            next_capacity = max(min(next_capacity, self.cfg.MAX_POOLNUM), init_cap)
+            next_capacity = scale_nums[cls_idx].item()
+            next_capacity = max(next_capacity, init_cap)
             pool.scale_pool(next_capacity=next_capacity)
 
 
@@ -163,12 +162,13 @@ class ClassLabelPool:
         Args:
             enlarge_factor (int): The enlarge factor.
         """
-        if next_capacity > self.pool_max_capacity and next_capacity > self.baseline_capacity:
-            self.pool_max_capacity = self.pool_max_capacity + 1
-        elif next_capacity == self.pool_max_capacity:
-            self.pool_max_capacity = self.pool_max_capacity
-        else:
-            self.pool_max_capacity = max(self.pool_max_capacity - 1, self.baseline_capacity)
+        # if next_capacity > self.pool_max_capacity and next_capacity > self.baseline_capacity:
+        #     self.pool_max_capacity = self.pool_max_capacity + 1
+        # elif next_capacity == self.pool_max_capacity:
+        #     self.pool_max_capacity = self.pool_max_capacity
+        # else:
+        #     self.pool_max_capacity = max(self.pool_max_capacity - 1, self.baseline_capacity)
+        self.pool_max_capacity = next_capacity
         return
 
     def freeze_stored_items(self):

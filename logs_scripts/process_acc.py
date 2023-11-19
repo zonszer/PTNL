@@ -77,6 +77,11 @@ def formatting_data(data_dict):
 #log_11.11-All+1-1.txt also == log_11.11-test_refine_ep100_All+1-1__ssdtd.txt
 #log_11.12-test_refine_ep100_cancelFree_ssdtd.txt
 #log_11.16-test_refine_ep100_newRefill_uniform_ssdtd.txt
+#log_11.15-test_refine_ep100_newRefill_ssdtd.txt
+#log_11.17-test_refine_ep100_newRefill_uniform_P16&14_ssdtd.txt
+#log_11.17-test_refine_ep100_newRefill_uniform_P16_ssdtd.txt
+#log_11.18-test_refine_ep100_GMM_wConfine_ssdtd.txt
+#log_11.16-test_refine_ep100_newRefill_uniform_1_ssdtd.txt
 
 #cc_refine:
 #log_10.24-test_cc_refine_ep100_1refill_ssdtd.txt --> test cc_refine on dtd dataset (TopP=1,2,3,4) (old)
@@ -92,7 +97,7 @@ def formatting_data(data_dict):
 #log_10.31-test_cc_refine_ep100_reduceLast_ssdtd.txt
 #log_10.31-test_cc_refine_ep100_reduceLast_ssucf101.txt
 
-data_dict_new = extract_info('log_11.16-test_refine_ep100_newRefill_uniform_ssdtd.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
+data_dict_new = extract_info('log_11.16-test_refine_ep100_newRefill_uniform_1_ssdtd.txt')    #log_10-04_17-35-26_sscaltech101.txt log_10-04_17-35-17_ssucf101.txt  log_10-04_14-06-35_ssucf101.txt
 # data_dict_new_hack = extract_info('log_10.25-retest_rc_refine_ep100_1refill_ssdtd--LastEpoch.txt')      
 # data_dict_new1 = extract_info('log_10.26-DEBUG_retest_rc_refine_ep100_improRefill&unc__ssdtd--LastEpoch.txt')      
 # data_dict_old = extract_info('log_10.24-retest_rc_refine_ep100_1refill_ssdtd--LastEpoch.txt')      
@@ -207,17 +212,17 @@ import numpy as np
 change = "(df['change']=='new')"
 # loss = "(df['loss']!='CE')"
 # loss = "(df['loss']=='cav refine')"
-loss = "(df['loss']=='cc refine')"
+# loss = "(df['loss']=='cc refine')"
+loss = "(df['loss']=='lw refine')"
 # loss = "(df['loss']=='rc refine')"
-# loss = "(df['loss']=='lw refine')"
 # loss = "(df['loss']=='rc rc') "
 # loss = "(df['loss']=='rc cav')"
 # beta = "(df['beta']=='0.0')"
 PLL_ratio = "(df['usePLLTrue']=='0.1')"
-init_R = "(df['initR']=='0.3')" #0.4
+initR = "(df['initR']=='0.3')" #0.4
 
 # 1. for test rc_refine: -- > grouped_vars = ["safeF", "halfW", "topP"]  
-MAXPOOL	= "(df['MAXPOOL']=='12')"
+MAXPOOL	= "(df['MAXPOOL']=='16')"
 # topP = "(df['topP']=='2')"
 
 # 2. for test cc_refine: --> grouped_vars =  ["safeF", "cMomn", "topP"]     
@@ -231,7 +236,7 @@ MAXPOOL	= "(df['MAXPOOL']=='12')"
 # Iepoch = "(df['Iepoch']=='1') | (df['Iepoch'].isna())" 
 # seed = "(~((df['seed']=='3') & (df['loss']=='rc cav') & (df['usePLLTrue']=='0.3')))"
 # seed = "(df['seed']=='1')"
-select_condiction = PLL_ratio   +'&'+  change  +'&'+ loss  +'&'+ MAXPOOL +'&'+ init_R 
+select_condiction = PLL_ratio   +'&'+  change  +'&'+ loss   +'&'+ initR +'&'+ MAXPOOL
 
 if select_condiction == 'None':
     selected_rows = df
@@ -250,6 +255,7 @@ color_axis_var = grouped_vars[1]
 sub_fig_var = grouped_vars[2]
 grouped_data[x_axis_var] = pd.Categorical(grouped_data[x_axis_var], categories=sorted(grouped_data[x_axis_var].unique()), ordered=True)     #TOorg: 
 grouped_data[color_axis_var] = pd.Categorical(grouped_data[color_axis_var], categories=sorted(grouped_data[color_axis_var].unique()), ordered=True) 
+grouped_data[sub_fig_var] = pd.Categorical(grouped_data[sub_fig_var], categories=sorted(grouped_data[sub_fig_var].unique()), ordered=True) 
 
 # Plotting
 if len(grouped_vars) == 1:
