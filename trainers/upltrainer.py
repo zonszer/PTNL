@@ -933,10 +933,21 @@ class UPLTrainer(TrainerX):
                 partialY = torch.cat(partialY_, dim=0)
 
         # Attributes:
-        self.partialY = partialY
         if self.cfg.TRAINER.PLL.USE_PLL:
+            self.partialY = partialY
             self.labels_true = labels_true
+            self.check_acc(self.partialY, self.labels_true, top=5)
         return predict_label_dict 
+
+    def check_acc(self, partialY, labels_true, top=1):
+        '''check acc of partialY'''
+        _, pred = partialY.topk(top, dim=1, largest=True, sorted=True)
+        pred = pred.t()
+        correct = pred.eq(labels_true.view(1, -1).expand_as(pred))
+        correct_k = correct[:top].reshape(-1).float().sum(0, keepdim=True)
+        acc = correct_k.mul_(100.0 / partialY.size(0))
+        print('Acc@{}: {:.3f}'.format(top, acc.item()))
+        return acc.item()
 
     @torch.no_grad()
     def zero_shot_predict(self, trainer_list=None):
