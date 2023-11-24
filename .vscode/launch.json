@@ -83,7 +83,7 @@
             "TRAINER.PLL.USE_PLL",
             "True",
             "TRAINER.PLL.PARTIAL_RATE",
-            "0.9999",
+            "0.3",
             "TEST.FINAL_MODEL",
             "last_step",
             "TRAINER.PLL.USE_LABEL_FILTER",

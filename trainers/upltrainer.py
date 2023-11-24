@@ -943,7 +943,7 @@ class UPLTrainer(TrainerX):
         if self.cfg.TRAINER.PLL.USE_PLL:
             self.partialY = partialY
             self.labels_true = labels_true
-            partialY = self.get_top_pred(partialY, self.labels_true, top=5)
+            partialY = self.get_top_pred(partialY, self.labels_true, top=-1)
             self.partialY = partialY
 
         return predict_label_dict 
