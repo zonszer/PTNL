@@ -68,7 +68,7 @@ BETA=0.0
 SEEDs=(1 2 3)
 declare -a DATASETs=('ssucf101')
 declare -a POOL_INITNUMs=(3)
-declare -a loss_types=('cav_refine' 'lw_refine' 'rc_refine' 'cc_refine')
+declare -a loss_types=('cav_refine' 'rc_refine')
 
 set_values() {
     local loss_type=$1
