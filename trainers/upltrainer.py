@@ -868,7 +868,7 @@ class UPLTrainer(TrainerX):
         # text_features = torch.cat(text_features, axis=0)
         print('image_features', image_features.shape)
         print('text_features', text_features.shape)             #↓ outputs, img_paths, K=1, image_features=None, is_softmax=True
-        predict_label_dict, _ = select_top_k_similarity_per_class(sstrain_outputs, sstrain_img_paths, -1, image_features, True)     #选择每个类别visual emb和text emb最相似的K个样本，对每个样本取预测的vector，最后加到info dict中（k>=0时）。 对每个样本取预测的vector，然后加到所有训练样本的info dict中（k=-1时）
+        predict_label_dict, _ = select_top_k_similarity_per_class(sstrain_outputs, sstrain_img_paths, -1, image_features, is_softmax=False)     #选择每个类别visual emb和text emb最相似的K个样本，对每个样本取预测的vector，最后加到info dict中（k>=0时）。 对每个样本取预测的vector，然后加到所有训练样本的info dict中（k=-1时）
         if data_loader is self.train_loader_sstrain:
             save_outputs(self.train_loader_x, self, predict_label_dict, self.cfg.DATASET.NAME, text_features, backbone_name=self.cfg.MODEL.BACKBONE.NAME)
         # caculate_noise_rate_analyze(predict_label_dict, train_loader=self.test_loader, trainer=self)
@@ -916,11 +916,18 @@ class UPLTrainer(TrainerX):
             if self.cfg.TRAINER.PLL.USE_PLL:
                 predict_label_dict, partialY, labels_true = add_partial_labels(label_dict=predict_label_dict,
                                                         partial_rate=self.cfg.TRAINER.PLL.PARTIAL_RATE)
+            # true_labels_dict = {} #for save all logits in traing dataset
+            # for gt_label in info.keys():
+            #     for ip in info[gt_label].keys():
+            #         true_labels_dict[info[gt_label][ip][0]] = gt_label  
+            # true_labels = torch.tensor([eval(label) for idx, label in sorted(true_labels_dict.items())])
+            # torch.save(true_labels, os.path.join(file_path, f'true_labels_all_{self.cfg.DATASET.NAME}.pt'))
+            # torch.save(logits, os.path.join(file_path, f'logits_all_{self.cfg.DATASET.NAME}s.pt'))
 
             if self.cfg.TRAINER.PLL.USE_LABEL_FILTER:
                 partialY_ = []; T = 1                       #TODO change T and do Label Smoothing
                 for i, (ip, label_pl) in enumerate(predict_label_dict.items()):
-                    labels_dict = info[str(labels_true[i].item())]
+                    labels_dict = info[str(labels_true[i].item())]  #labels_dict is {ip: [idx, visual distance, confidence, predicted label]}
                     sequential_idx = labels_dict[ip][0]             #assert ip in labels_dict.keys()
                     zeroshot_label_plb = F.softmax(logits[sequential_idx].float() / T, dim=-1) * label_pl
                     base_value = zeroshot_label_plb.sum(dim=0)           #base_value can use for sth
@@ -933,10 +940,21 @@ class UPLTrainer(TrainerX):
                 partialY = torch.cat(partialY_, dim=0)
 
         # Attributes:
-        self.partialY = partialY
         if self.cfg.TRAINER.PLL.USE_PLL:
+            self.partialY = partialY
             self.labels_true = labels_true
+            self.check_acc(self.partialY, self.labels_true, top=5)
         return predict_label_dict 
+
+    def check_acc(self, partialY, labels_true, top=1):
+        '''check acc of partialY'''
+        _, pred = partialY.topk(top, dim=1, largest=True, sorted=True)
+        pred = pred.t()
+        correct = pred.eq(labels_true.view(1, -1).expand_as(pred))
+        correct_k = correct[:top].reshape(-1).float().sum(0, keepdim=True)
+        acc = correct_k.mul_(100.0 / partialY.size(0))
+        print('Acc@{}: {:.3f}'.format(top, acc.item()))
+        return acc.item()
 
     @torch.no_grad()
     def zero_shot_predict(self, trainer_list=None):

@@ -70,15 +70,16 @@ import torch
 import math
 import matplotlib.ticker as ticker
 from collections import Counter
+import numpy as np
 
 def plot_logitsDistri(output_teacher_batch, labels_batch, do_softmax=True, max_num_plots=32):
     num_plots = min(len(output_teacher_batch), max_num_plots)  # Limit the number of plots
-    num_cols = 8
+    num_cols = 6
     num_rows = math.ceil(num_plots / num_cols)  # Calculate the number of rows needed
-    fig, axs = plt.subplots(nrows=num_rows, ncols=num_cols, figsize=(32, 15))
+    fig, axs = plt.subplots(nrows=num_rows, ncols=num_cols, figsize=(35, 15))
 
     if do_softmax:
-        output_teacher_batch = torch.nn.functional.softmax(torch.tensor(output_teacher_batch) / 2.0, dim=1)
+        output_teacher_batch = torch.nn.functional.softmax(torch.tensor(output_teacher_batch) / 0.1, dim=1)
     if isinstance(output_teacher_batch, torch.Tensor):
         output_teacher_batch = output_teacher_batch.numpy()
     if isinstance(labels_batch, torch.Tensor):
@@ -88,8 +89,8 @@ def plot_logitsDistri(output_teacher_batch, labels_batch, do_softmax=True, max_n
 
     wrong_pred_list = []
     for i, logits in enumerate(output_teacher_batch[:num_plots-1]):  # Limit the number of plots
-        row = i // 8
-        col = i % 8
+        row = i // num_cols
+        col = i % num_cols
         max_index = np.argmax(logits)
         if max_index == labels_batch[i]:
             color = 'green' 
@@ -98,9 +99,9 @@ def plot_logitsDistri(output_teacher_batch, labels_batch, do_softmax=True, max_n
             wrong_pred_list.append(max_index)
 
         axs[row, col].bar(np.arange(len(logits)), logits, color=color)  # arguments are passed to np.histogram
-        axs[row, col].set_title(f"{label2classname[labels_batch[i]]} logits distribution", fontsize=9)
+        axs[row, col].set_title(f"Class: {label2classname[labels_batch[i]]} logits distribution", fontsize=9)
         # axs[row, col].set_xlabel("Logits")
-        axs[row, col].set_ylabel("Value")
+        axs[row, col].set_ylabel("Prob")
         axs[row, col].axvline(x=labels_batch[i], color='red')  # add a vertical line at the position of the label
         axs[row, col].axvline(x=max_index, color='orange')       # add a vertical line at the position of the max
         axs[row, col].text(max_index, np.max(logits), f'max label: {max_index}', ha='center', va='bottom')
@@ -123,7 +124,7 @@ def plot_logitsDistri(output_teacher_batch, labels_batch, do_softmax=True, max_n
     bars = axs[-1, -1].bar(classes, counts, color='green')
     for bar, class_, count_ in zip(bars, classes, counts):
         height = bar.get_height()
-        axs[-1, -1].text(bar.get_x() + bar.get_width() / 2, height, f'Class: {class_}->{count_}', ha='center', va='bottom', fontsize=10)
+        axs[-1, -1].text(bar.get_x() + bar.get_width() / 2, height, f'Class: {class_}\nnum: {count_}', ha='center', va='bottom', fontsize=10)
     axs[-1, -1].set_title("Top 5 wrong predictions")
     axs[-1, -1].set_xlabel("Classes")
     axs[-1, -1].set_ylabel("Count")
@@ -138,14 +139,34 @@ def plot_logitsDistri(output_teacher_batch, labels_batch, do_softmax=True, max_n
     # plt.tight_layout()
     plt.show()
 
+# index_cls_worst = np.argsort(acc_array)[:10]
+# index_cls_worst = np.argsort(acc_array)[:10]
+# index_cls_best = np.argsort(acc_array)[-10:]
 
-index_cls_worst = np.argsort(acc_array)[:10]
-index_cls_worst = np.argsort(acc_array)[:10]
-index_cls_best = np.argsort(acc_array)[-10:]
+# for item_idx in index_cls_worst:
+#     print(label2classname[item_idx], f'acc: {acc_array[item_idx]}')
 
-for item_idx in index_cls_worst:
-    print(label2classname[item_idx], f'acc: {acc_array[item_idx]}')
+def cal_ACC(logits, labels):
+    pred = np.argmax(logits, axis=1)
+    acc = np.sum(pred==labels) / len(labels)
+    return acc
 
+def cal_ACC_foreach_cls(logits, labels):
+    pred = np.argmax(logits, axis=1)
+    acc_dict = {}
+    for class_idx in range(logits.shape[1]):
+        class_indices = (labels == class_idx)
+        acc_dict[class_idx] = np.sum(pred[class_indices]==labels[class_indices]) / len(labels[class_indices])
+    return acc_dict
+
+image_labels = torch.load('zero_shot_labels_true_dtd.pt').numpy()    # (bs, )
+image_logits = torch.load('zero_shot_logits_dtd.pt').numpy()   # (bs, 47)
+acc_array = cal_ACC_foreach_cls(image_logits, image_labels)
+# overall_acc = cal_ACC(logits, image_labels)
+
+index_cls_worst = np.argsort(list(acc_array.values()))[:10]
+index_cls_best = np.argsort(list(acc_array.values()))[-10:]
+label2classname = {i: i for i in range(image_logits.shape[1])}
 for j, label in enumerate(index_cls_worst):
     if j == 0:
         pass
