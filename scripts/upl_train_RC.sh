@@ -5,7 +5,7 @@ cd ..
 # custom config
 DATA=./data
 TRAINER=UPLTrainer
-exp_ID="11.20-test_refine_ep100_newRefill_sFactor_2"    #NOTE +time 共72+27=99次
+exp_ID="11.22-test_refine_ep100_Topk-pred"    #NOTE +time 共72+27=99次
 # TODO: 
 #1. change oonf clean threshold and set safe factor and range
 #10.19-test_cc_refine_ep100_safe&clean2
@@ -53,12 +53,13 @@ run_job() {
     TRAINER.PLL.BETA ${BETA} \
     TRAINER.PLL.USE_REGULAR ${USE_REGULAR} \
     TRAINER.PLL.USE_PLL ${use_PLL} \
-    TRAINER.PLL.PARTIAL_RATE ${PLL_partial_rate} \
+    TRAINER.PLL.PARTIAL_RATE 0.99999 \
     TRAINER.PLL.USE_LABEL_FILTER ${USE_LABEL_FILTER} \
     TRAINER.PLL.CONF_MOMN ${CONF_MOMN} \
     TRAINER.PLL.REVISE_FACTOR ${REVISE_FACTOR} \
     TRAINER.PLL.POOL_INITNUM ${POOL_INITNUM} \
     TRAINER.PLL.HALF_USE_W ${HALF_USE_W} \
+    TRAINER.PLL.SAFE_FACTOR ${SAFT_FACTOR} \
     TRAINER.PLL.TOP_POOLS ${TOP_POOL}
 }
 
@@ -66,9 +67,9 @@ USE_REGULAR=False
 USE_LABEL_FILTER=True
 BETA=0.0
 SEEDs=(1 2 3)
-declare -a DATASETs=('ssucf101')
+declare -a DATASETs=('ssdtd')
 declare -a POOL_INITNUMs=(3)
-declare -a loss_types=('cav_refine' 'rc_refine')
+declare -a loss_types=('cav_refine' 'rc_refine' 'cc_refine' 'lw_refine')
 
 set_values() {
     local loss_type=$1
@@ -80,7 +81,7 @@ set_values() {
         if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
             CONF_MOMNs=(0.00)
             HALF_USE_Ws=(0.4 0.5 0.6)
-        elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
+        elif (( $(echo "$PLL_partial_rate >= 0.3" | bc -l) )); then
             CONF_MOMNs=(0.00)
             HALF_USE_Ws=(0.1 0.2 0.3)
         fi
@@ -89,7 +90,7 @@ set_values() {
         if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
             CONF_MOMNs=(0.3 0.4)
             HALF_USE_Ws=(0.3 0.4 0.5)
-        elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
+        elif (( $(echo "$PLL_partial_rate >= 0.3" | bc -l) )); then
             CONF_MOMNs=(0.2 0.3)
             HALF_USE_Ws=(0.1 0.2 0.3)
         fi
@@ -98,7 +99,7 @@ set_values() {
         if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
             CONF_MOMNs=(0.3 0.4)
             HALF_USE_Ws=(0.3 0.4 0.5)
-        elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
+        elif (( $(echo "$PLL_partial_rate >= 0.3" | bc -l) )); then
             CONF_MOMNs=(0.2 0.3)
             HALF_USE_Ws=(0.1 0.2 0.3)
         fi
@@ -107,7 +108,7 @@ set_values() {
         if (( $(echo "$PLL_partial_rate == 0.1" | bc -l) )); then
             CONF_MOMNs=(0.03 0.05)
             HALF_USE_Ws=(0.3 0.4 0.5)
-        elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
+        elif (( $(echo "$PLL_partial_rate >= 0.3" | bc -l) )); then
             CONF_MOMNs=(0.03 0.05)
             HALF_USE_Ws=(0.2 0.3 0.4)
         fi
@@ -132,6 +133,14 @@ for SEED in "${SEEDs[@]}"; do
                 elif (( $(echo "$PLL_partial_rate == 0.3" | bc -l) )); then
                     REVISE_FACTORs=(0.4 0.5 0.7)
                     TOP_POOLs=(6 3 1)
+                elif (( $(echo "$PLL_partial_rate == 0.6" | bc -l) )); then
+                    REVISE_FACTORs=(0.4 0.5 0.7)
+                    TOP_POOLs=(6 3 1)
+                    SAFT_FACTOR=6
+                elif (( $(echo "$PLL_partial_rate == 1.0" | bc -l) )); then
+                    REVISE_FACTORs=(0.4 0.5 0.7)
+                    TOP_POOLs=(6 3 1)
+                    SAFT_FACTOR=10
                 else
                     echo "Invalid rate for REVISE_FACTORs"
                     exit 1
@@ -153,7 +162,7 @@ for SEED in "${SEEDs[@]}"; do
                                     total_iterations=$((${#SEEDs[@]} * ${#DATASETs[@]} * ${#loss_types[@]} * ${#PLL_partial_rates[@]} * ${#TOP_POOLs[@]} * ${#CONF_MOMNs[@]} * ${#POOL_INITNUMs[@]} * ${#REVISE_FACTORs[@]} * ${#HALF_USE_Ws[@]}))
                                     echo "The loop will iterate $total_iterations times."
 
-                                    common_id="data-${DATASET}_model-${CFG}_shots-${SHOTS}_nctx-${NCTX}_ctp-${CTP}_fp-${FP}_usePLL${use_PLL}-${PLL_partial_rate}_loss-${loss_type}_seed-${SEED}_beta-${BETA}_FILT-${USE_LABEL_FILTER}_cMomn-${CONF_MOMN}_topP-${TOP_POOL}_reviseF-${REVISE_FACTOR}_initNUM-${POOL_INITNUM}_halfW-${HALF_USE_W}"
+                                    common_id="data-${DATASET}_model-${CFG}_shots-${SHOTS}_nctx-${NCTX}_ctp-${CTP}_fp-${FP}_usePLL${use_PLL}-${PLL_partial_rate}_loss-${loss_type}_seed-${SEED}_beta-${BETA}_FILT-${USE_LABEL_FILTER}_cMomn-${CONF_MOMN}_topP-${TOP_POOL}_reviseF-${REVISE_FACTOR}_halfW-${HALF_USE_W}_safeF-${SAFT_FACTOR}"
                                     DIR=./output/${DATASET}/${TRAINER}/${CFG}_${SHOTS}shots-${TAG}/SEED${SEED}/${common_id}
                                     
                                     if [ -d "$DIR" ]; then

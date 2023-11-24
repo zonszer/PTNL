@@ -308,9 +308,9 @@ _C.TRAINER.PLL.CONF_MOMN = 0.95 # momentum for updating confidence
 # _C.TRAINER.PLL.MAX_POOLNUM = 10000 # enlarge scale for pool
 _C.TRAINER.PLL.POOL_INITNUM = 3 # enlarge scale for pool
 _C.TRAINER.PLL.TOP_POOLS = 1 # number of top pools to use
-_C.TRAINER.PLL.SAFE_FACTOR = 3.0 # number of top pools to use
+_C.TRAINER.PLL.SAFE_FACTOR = -1 # number of top pools to use （11.21 used for topk pred to gen partialY)
 _C.TRAINER.PLL.HALF_USE_W = 0.5 # the weight of half use eamples
-_C.TRAINER.PLL.ALPHA = 3 # the value to generate Beta(α,β=α)
+_C.TRAINER.PLL.ALPHA = 4 # the value to generate Beta(α,β=α)
 _C.TRAINER.PLL.REVISE_FACTOR = 1.0
 
 # loss:

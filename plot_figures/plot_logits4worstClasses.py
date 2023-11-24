@@ -70,15 +70,19 @@ import torch
 import math
 import matplotlib.ticker as ticker
 from collections import Counter
+import numpy as np
+import sys
+sys.path.append('..')
+from trainers.loss import PLL_loss
 
 def plot_logitsDistri(output_teacher_batch, labels_batch, do_softmax=True, max_num_plots=32):
     num_plots = min(len(output_teacher_batch), max_num_plots)  # Limit the number of plots
-    num_cols = 8
+    num_cols = 6
     num_rows = math.ceil(num_plots / num_cols)  # Calculate the number of rows needed
     fig, axs = plt.subplots(nrows=num_rows, ncols=num_cols, figsize=(32, 15))
 
     if do_softmax:
-        output_teacher_batch = torch.nn.functional.softmax(torch.tensor(output_teacher_batch) / 2.0, dim=1)
+        output_teacher_batch = torch.nn.functional.softmax(torch.tensor(output_teacher_batch) / 1.0, dim=1)
     if isinstance(output_teacher_batch, torch.Tensor):
         output_teacher_batch = output_teacher_batch.numpy()
     if isinstance(labels_batch, torch.Tensor):
@@ -88,8 +92,8 @@ def plot_logitsDistri(output_teacher_batch, labels_batch, do_softmax=True, max_n
 
     wrong_pred_list = []
     for i, logits in enumerate(output_teacher_batch[:num_plots-1]):  # Limit the number of plots
-        row = i // 8
-        col = i % 8
+        row = i // num_cols
+        col = i % num_cols
         max_index = np.argmax(logits)
         if max_index == labels_batch[i]:
             color = 'green' 
@@ -138,14 +142,35 @@ def plot_logitsDistri(output_teacher_batch, labels_batch, do_softmax=True, max_n
     # plt.tight_layout()
     plt.show()
 
+# index_cls_worst = np.argsort(acc_array)[:10]
+# index_cls_worst = np.argsort(acc_array)[:10]
+# index_cls_best = np.argsort(acc_array)[-10:]
 
-index_cls_worst = np.argsort(acc_array)[:10]
-index_cls_worst = np.argsort(acc_array)[:10]
-index_cls_best = np.argsort(acc_array)[-10:]
+# for item_idx in index_cls_worst:
+#     print(label2classname[item_idx], f'acc: {acc_array[item_idx]}')
 
-for item_idx in index_cls_worst:
-    print(label2classname[item_idx], f'acc: {acc_array[item_idx]}')
+def cal_ACC(logits, labels):
+    pred = np.argmax(logits, axis=1)
+    acc = np.sum(pred==labels) / len(labels)
+    return acc
 
+def cal_ACC_foreach_cls(logits, labels):
+    pred = np.argmax(logits, axis=1)
+    acc_dict = {}
+    for class_idx in range(logits.shape[1]):
+        class_indices = (labels == class_idx)
+        acc_dict[class_idx] = np.sum(pred[class_indices]==labels[class_indices]) / len(labels[class_indices])
+    return acc_dict
+
+
+image_labels = torch.load('true_labels_all_SSDescribableTextures.pt').numpy()    # (bs, )
+image_logits = torch.load('logits_all_SSDescribableTexturess.pt').float().numpy()   # (bs, 47)
+acc_array = cal_ACC_foreach_cls(image_logits, image_labels)
+# overall_acc = cal_ACC(logits, image_labels)
+
+index_cls_worst = np.argsort(list(acc_array.values()))[:10]
+index_cls_best = np.argsort(list(acc_array.values()))[-10:]
+label2classname = {i: i for i in range(image_logits.shape[1])}
 for j, label in enumerate(index_cls_worst):
     if j == 0:
         pass
@@ -155,6 +180,273 @@ for j, label in enumerate(index_cls_worst):
     idxs = np.where(image_labels==label)
     plot_logitsDistri(image_logits[idxs], label.repeat(len(idxs[0])), do_softmax=True)
 
+# %%
+import matplotlib.pyplot as plt
+import torch
+import math
+import matplotlib.ticker as ticker
+import numpy as np
+from sklearn.mixture import GaussianMixture
+from torch.nn.functional import softmax
+from scipy.stats import norm
+
+def collect_uncs_byCls(outputs, indexs=None, eps=0):
+    items_collected = {}
+    idxs_collected = {}
+    PL_labels = outputs > eps
+    idxs = torch.nonzero(PL_labels)
+
+    for i in range(idxs.shape[0]):
+        cls = idxs[i][1].item()
+        if cls not in items_collected:
+            items_collected[cls] = []
+            idxs_collected[cls] = []
+        items_collected[cls].append(idxs[i][0].unsqueeze(0))
+        idxs_collected[cls].append(idxs[i].unsqueeze(0))
+    return items_collected
+
+def fit_GMM(uncs):
+    input_uncs = uncs.reshape(-1, 1)
+    gmm = GaussianMixture(n_components=2, max_iter=15, tol=1e-2, reg_covar=5e-4)
+    gmm.fit(input_uncs)
+    prob = gmm.predict_proba(input_uncs)
+    prob_ = prob[:, gmm.means_.argmin()]
+    # pred_idx = (prob_ > 0.5).nonzero()[0]
+    not_in_idxs = (prob_ < 0.5).nonzero()[0]        
+    prob_ = torch.from_numpy(prob_).float()
+    return prob_, gmm, not_in_idxs 
+
+def plot_GMM(uncs, prob, gmm, ax, cls, larger_idxs):
+    x = np.linspace(uncs.min(), uncs.max(), 1000)
+
+    # Calculate bin edges and histogram data
+    bins = 60
+    bin_edges = np.linspace(uncs.min(), uncs.max(), bins + 1)
+    hist, _ = np.histogram(uncs, bins=bin_edges, density=True)
+
+    # Determine bins for larger_idxs
+    larger_uncs = uncs[larger_idxs]
+    larger_bin_indices = np.digitize(larger_uncs, bin_edges) - 1
+
+    # Plot each bin individually with appropriate color
+    for i in range(bins):
+        bin_width = bin_edges[i+1] - bin_edges[i]
+        bin_height = hist[i]
+        bin_color = 'b' if i in larger_bin_indices else 'g'
+        ax.bar(bin_edges[i], bin_height, width=bin_width, color=bin_color, edgecolor='black', align='edge', alpha=0.3)
+
+    # Rest of your existing code for binning and plotting histogram
+    cluster_details = []
+    for i, (mean, covar, weight) in enumerate(zip(gmm.means_, gmm.covariances_, gmm.weights_)):
+        if i % 2 == 0:
+            color = 'orange'
+        else:
+            color = 'purple'
+        pdf = weight * norm.pdf(x, mean, np.sqrt(covar))
+        ax.plot(x, pdf.reshape(-1), linewidth=2, color=color)      
+
+        # Calculate number of samples in each cluster
+        labels = gmm.predict(uncs.reshape(-1, 1))       
+        cluster_count = np.sum(labels == i)
+
+        # Print and store cluster details
+        cluster_info = f"Component {i+1}: Mean = {mean[0]:.2f}, Variance = {covar[0][0]:.2f}, Count = {cluster_count}"
+        print(f'Class {cls}: {cluster_info}')
+        cluster_details.append(cluster_info)
+
+    # Set title and add text annotations
+    ax.set_title(f'GMM for class: {cls}; Lrgr Uncs Num: {len(larger_idxs)}')
+    for i, detail in enumerate(cluster_details):
+        ax.text(0.05, 0.95 - i*0.05, detail, transform=ax.transAxes, fontsize=10, verticalalignment='top')
+
+    ax.set_title(f'GMM for class: {cls}; Lrgr Uncs Num: {len(larger_idxs)}')
+    ax.grid(True)
+    ax.set_ylabel('Density')
+    ax.yaxis.set_major_locator(ticker.MaxNLocator(10))
+    ax.yaxis.set_minor_locator(ticker.MaxNLocator(50))
+    ax.set_ylim(0, max(hist.max(), pdf.max()))  #max(hist.max(), pdf.max())
+
+
+##============set params:========================
+image_labels = torch.load('true_labels_all_SSDescribableTextures.pt')   # (bs, )
+image_logits = torch.load('logits_all_SSDescribableTexturess.pt')   # (bs, 47)
+# image_logits = image_logits/100
+
+num_plots = image_logits.shape[1] # the number of plots is equal to the number of classes
+num_cols = 6 # number of columns for subplot grid
+num_rows = math.ceil(num_plots / num_cols)  # Calculate the number of rows needed
+
+fig, axs = plt.subplots(nrows=num_rows, ncols=num_cols, figsize=(32, 20))
+max_plot_num = 50
+##============set params:========================
+
+# softmax_output = softmax(image_logits, dim=1)
+items_collected = collect_uncs_byCls(image_logits)
+for idx, cls in enumerate(items_collected):
+    if idx >= max_plot_num:    # Only plot the first plot_num classes
+        break
+    row = idx // num_cols
+    col = idx % num_cols
+
+    cls_items = items_collected[cls]
+    cls_uncs = image_logits[torch.cat(cls_items, dim=0), cls]
+
+    # do normalization for cls_uncs for fitting GMM:    TOorg: remember to normalize the uncs before fitting GMM
+    if cls_uncs.shape[0] > 1:
+        cls_uncs = (cls_uncs - cls_uncs.min()) / (cls_uncs.max() - cls_uncs.min())
+
+    prob, gmm, larger_idxs = fit_GMM(cls_uncs)
+
+    # Use the larger_idxs to gather the corresponding uncs from cls_uncs
+    # larger_unscs = cls_uncs[larger_idxs].detach().numpy()
+    plot_GMM(cls_uncs.detach().numpy(), prob.detach().numpy(), gmm, axs[row, col], cls, larger_idxs)
+
+plt.tight_layout()
+plt.show()
+
+# %%
+from collections import Counter
+from collections import defaultdict
+
+def calculate_gmm_accuracy(gmm_predictions, image_labels):
+    # Process GMM predictions
+    final_gmm_predictions = {}
+    for item, cls, pred, prob in gmm_predictions:
+        if item not in final_gmm_predictions:
+            final_gmm_predictions[item] = (cls, prob)
+        else:
+            # If higher probability, update the predicted class
+            if prob > final_gmm_predictions[item][1]:
+                final_gmm_predictions[item] = (cls, prob)
+
+    # Compare GMM predictions with image_labels
+    print(f'final_gmm_predictions len: {len(final_gmm_predictions)}, image_labels len: {len(image_labels)}')
+    correct_predictions = 0
+    not_classified = []
+    for item, (pred_cls, _) in final_gmm_predictions.items():
+        true_label = image_labels[item].item()
+        if pred_cls == true_label:
+            correct_predictions += 1
+        if pred_cls == -1:
+            not_classified.append([item, true_label])
+
+    accuracy = correct_predictions / len(final_gmm_predictions)
+    print(f'not_classified len: {len(not_classified)}')
+    print(f"GMM Classification Accuracy: {accuracy:.4f}")
+    return final_gmm_predictions, not_classified,   #final_gmm_predictions is {item_idx: (pred_cls, prob)}
+
+##============set params:========================
+# items_collected = collect_uncs_byCls(image_logits)
+gmm_predictions = []  # Store GMM predictions for each example
+
+for jj, cls in enumerate(items_collected):
+    cls_items = items_collected[cls]
+    cls_uncs = image_logits[torch.cat(cls_items, dim=0), cls]
+
+    if cls_uncs.shape[0] > 1:
+        cls_uncs = (cls_uncs - cls_uncs.min()) / (cls_uncs.max() - cls_uncs.min())
+    prob, gmm, larger_idxs = fit_GMM(cls_uncs)
+
+    # # Collect GMM predictions
+    gmm_pred = gmm.predict(cls_uncs.detach().numpy().reshape(-1, 1))
+    gmm_prob = gmm.predict_proba(cls_uncs.detach().numpy().reshape(-1, 1))
+
+    # # Check which component has a larger mean
+    larger_component = np.argmax(gmm.means_)
+    smaller_component = np.argmin(gmm.means_)
+
+    for i, item in enumerate(cls_items):
+        if gmm_pred[i] == larger_component:
+            gmm_pred_cls = cls
+            # gmm_prob = 
+        else:
+            gmm_pred_cls = -1  # Representing a non-classified or other class
+        gmm_predictions.append((item.item(), cls, gmm_pred_cls, gmm_prob[i][larger_component]))   #
+
+# Calculate GMM Prediction Accuracy
+final_gmm_predictions, not_classified = calculate_gmm_accuracy(gmm_predictions, image_labels)
+first_elements = [v[0] for v in final_gmm_predictions.values()]
+count_pred_cls = Counter(first_elements)
+# %%
+# --------------------------plot top-k selected sample ACC in each class:-----------------------
+def get_top_k_indices_by_class(final_gmm_predictions, k):
+    # Group by class with probabilities and feature indices
+    class_groups = defaultdict(list)
+    for feat_idx, (cls, value) in final_gmm_predictions.items():
+        class_groups[cls].append((feat_idx, value.item()))  # Convert tensor to float
+
+    # Sort by probability and select top-k for each class
+    top_k_by_class = {}
+    for cls, feat_idx_values in class_groups.items():
+        # Sort by the probability value in descending order
+        sorted_by_value = sorted(feat_idx_values, key=lambda x: x[1], reverse=True)
+        # Select top-k
+        top_k_by_class[cls] = [feat_idx for feat_idx, _ in sorted_by_value[:k]]
+
+    return top_k_by_class
+
+def get_top_k_conf_idxs_per_class(image_logits, k):
+    # Get the top-k confidence indices for each class
+    prob = torch.nn.functional.softmax(image_logits.float() / 1.0, dim=1)
+    prob_cls_dict = {}
+    for i in range(prob.shape[0]):
+        val, idx = torch.max(prob[i], dim=0)
+        prob_cls_dict[i] = ( idx.item(), val )
+
+    top_k_conf_idxs_per_class = get_top_k_indices_by_class(prob_cls_dict, k=k)   #prob_cls_dict is {item_idx: (pred_cls, prob)}
+
+    return top_k_conf_idxs_per_class
+
+# Example usage:
+k = 8  # Replace with the number of top-k values you want
+top_k_indices = get_top_k_conf_idxs_per_class(image_logits, k)
+# top_k_indices = get_top_k_indices_by_class(final_gmm_predictions, k)
+
+# Print or process the top-k indices as needed
+# for cls, indices in top_k_indices.items():
+#     cls_acc = (image_labels[indices] == cls).sum() / len(indices)
+#     print(f"Class {cls}: Top-{k}, CLS count: {count_pred_cls[cls]}, "
+#            f"feature indices: {indices}, ACC: {cls_acc }")
+# Calculate accuracy for each class and store it along with other info
+class_info = []
+for cls, indices in top_k_indices.items():
+    cls_acc = (image_labels[indices] == cls).float().mean().item()  # Calculate accuracy
+    cls_count = count_pred_cls[cls]  # Count of predictions for this class
+    class_info.append((cls, cls_acc, cls_count, indices))
+
+# Sort classes by accuracy
+class_info.sort(key=lambda x: x[1], reverse=True)  # Sort by accuracy in descending order
+
+# Prepare data for plotting
+classes = [info[0] for info in class_info]
+accuracies = [info[1] for info in class_info]
+counts = [info[2] for info in class_info]
+
+# Pair counts and accuracies, sort by counts, then unzip
+paired = sorted(zip(counts, accuracies))
+counts_sorted, accuracies_sorted = zip(*paired)
+
+# Create the line plot
+fig, ax = plt.subplots(figsize=(15, 7))
+line = ax.plot(counts_sorted, accuracies_sorted, color='skyblue', marker='o')
+
+# Add counts as annotations on the points
+for i, (cls, acc, count, indices) in enumerate(class_info):
+    ax.annotate(f'Class: {cls}',
+                xy=(count, acc),
+                xytext=(0, 3),  # 3 points vertical offset
+                textcoords="offset points",
+                ha='center', va='bottom', fontsize=8)
+
+# Set the labels and title
+ax.set_xlabel('Class Count')
+ax.set_ylabel('Accuracy')
+ax.set_title(f'Top-{k} Feature Indices and Accuracy by Class Count')
+
+# Show the plot
+ax.grid(True)
+plt.tight_layout()  # Adjust layout to fit all labels
+plt.show()
 # %%
 # --------------------------plot the relationship between classes acc and CE loss and pre_num:-----------------
 import numpy as np

@@ -922,9 +922,7 @@ class UPLTrainer(TrainerX):
                 for i, (ip, label_pl) in enumerate(predict_label_dict.items()):
                     labels_dict = info[str(labels_true[i].item())]
                     sequential_idx = labels_dict[ip][0]             #assert ip in labels_dict.keys()
-                    zeroshot_label_plb = F.softmax(logits[sequential_idx].float() / T, dim=-1) * label_pl
-                    base_value = zeroshot_label_plb.sum(dim=0)           #base_value can use for sth
-                    zeroshot_label_plb = zeroshot_label_plb/base_value    
+                    zeroshot_label_plb = F.softmax(logits[sequential_idx].float() / T, dim=-1) * label_pl  
 
                     #assign attributes:
                     predict_label_dict[ip] = zeroshot_label_plb
@@ -935,23 +933,26 @@ class UPLTrainer(TrainerX):
         # Attributes:
         if self.cfg.TRAINER.PLL.USE_PLL:
             self.labels_true = labels_true
-            partialY = self.get_top_pred(partialY, self.labels_true, top=5)
+            # self.criterion.collect_uncs_byCls(outputs=partialY)
+            partialY = self.get_top_pred(partialY, self.labels_true, top=self.cfg.TRAINER.PLL.SAFE_FACTOR)
+            base_value = partialY.sum(dim=0)           #base_value can use for sth
+            partialY = partialY/base_value  
             self.partialY = partialY
 
         return predict_label_dict 
 
     def get_top_pred(self, partialY, labels_true, top=-1):
         '''check acc of partialY, and get its topk pred labels (and remove other labels in partialY)''' 
-        idxs, pred = partialY.topk(top, dim=1, largest=True, sorted=True)  #pred is shape of (bs, topk), idxs is shape of (bs, topk)
-        pred = pred.t()
-        correct = pred.eq(labels_true.view(1, -1).expand_as(pred))
+        values, pred = partialY.topk(top, dim=1, largest=True, sorted=True)  #pred is shape of (bs, topk)
+        pred_t = pred.t()
+        correct = pred_t.eq(labels_true.view(1, -1).expand_as(pred_t))
         correct_k = correct[:top].reshape(-1).float().sum(0, keepdim=True)
         acc = correct_k.mul_(100.0 / partialY.size(0))
         print('----> Acc@{}: {:.3f}'.format(top, acc.item()))
         if top != -1:
             print('----> Use top {} pred as partialY'.format(top))
             partialY_ = torch.zeros_like(partialY)
-            for i, idx in enumerate(idxs):
+            for i, idx in enumerate(pred):
                 partialY_[i][idx] = partialY[i][idx]
         else:
             print('----> use all pred as partialY')

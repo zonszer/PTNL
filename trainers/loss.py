@@ -34,6 +34,8 @@ class PLL_loss(nn.Module):
         self.cfg = cfg
         self.num = 0
         #PLL items: 
+        if cfg == None:
+            return
         self.T = self.cfg.TEMPERATURE
         # self.origin_labels = self.init_confidence(PartialY)
         if '_' in type or '_' in self.cfg.CONF_LOSS_TYPE:   #means need to update conf
@@ -45,7 +47,6 @@ class PLL_loss(nn.Module):
         if 'refine' in self.losstype:
             self.origin_labels = deepcopy(self.conf)
             # self.cls_pools_dict = {}
-            self.safe_f = self.cfg.SAFE_FACTOR
 
         if 'gce' in type or 'gce' in self.cfg.CONF_LOSS_TYPE:
             self.q = 0.7
@@ -369,65 +370,6 @@ class PLL_loss(nn.Module):
             popped_idxs = torch.tensor([], dtype=torch.long)
             popped_uncs = torch.tensor([], dtype=torch.float16).to(self.device)
         return popped_idxs, pools_not_full, popped_uncs
-
-
-    def collect_uncs_byCls(self, outputs, indexs, min_num=1):
-        """collect uncs for all items by their PL_labels"""
-        sort_idxs = torch.argsort(indexs)       #output_all[sort_idxs] is the data original order
-        feat_idxs = indexs[sort_idxs]
-        outputs = outputs[sort_idxs]
-        # get the idxs of where PL_labels > eps and collect the corresponding outputs by idx order:
-        items_collected = {}
-        idxs_collected = {}
-        PL_labels = self.conf > self.eps
-        idxs = torch.nonzero(PL_labels)     # idxs is shape of (num, 2), 2 means (batch_idx, class_idx)
-        self.conf_weight = deepcopy(self.conf)
-
-        for i in range(idxs.shape[0]):
-            cls = idxs[i][1].item()
-            if cls not in items_collected:
-                items_collected[cls] = []                       #HACK if UPL and use CLIP as lable (not uniform) one cls may be zero
-                idxs_collected[cls] = []
-            items_collected[cls].append(idxs[i][0].unsqueeze(0))
-            idxs_collected[cls].append(idxs[i].unsqueeze(0))
-        
-        inpool_num, notinpool_num = {}, {}
-        for cls in items_collected:
-            cls_feat_idxs = torch.cat(items_collected[cls], dim=0)
-            cls_origin_idxs = torch.cat(idxs_collected[cls], dim=0)
-            cls_outputs = outputs[cls_feat_idxs]
-            cls_labels = torch.full((cls_outputs.shape[0],), cls, dtype=torch.long).to(self.device)
-            cls_uncs = self.cal_uncertainty(cls_outputs, cls_labels)
-            in_pool, prob = self.fit_GMM(cls_uncs.cpu())
-            base_value = prob.sum()
-            weight = (prob / base_value).to(self.device)  # use maticx for element-wise division
-
-            self.conf_weight[cls_origin_idxs[:, 0], cls_origin_idxs[:, 1]] = weight
-            inpool_num[cls] = in_pool.shape[0]
-            notinpool_num[cls] = prob.shape[0] - in_pool.shape[0]
-
-        labels, uncs = self.prepare_items_attrs(outputs, feat_idxs, 
-                                                max_num=1)
-        not_inpool_feat_idxs, notinpool_uncs = self.fill_pools(labels, uncs, feat_idxs, 
-                                                        max_iter_num=1,
-                                                        record_notinpool=True)
-        return inpool_num, notinpool_num, not_inpool_feat_idxs, notinpool_uncs
-
-    def fit_GMM(self, uncs, min_num=1):
-        """fit GMM for class items"""
-        # Normalize the losses
-        if uncs.shape[0] > 1:
-            uncs = (uncs - uncs.min()) / (uncs.max() - uncs.min())
-        input_uncs = uncs.reshape(-1, 1)  # Reshape for GMM fitting
-        # Fit a Gaussian Mixture Model (GMM) on the input losses
-        gmm = GaussianMixture(n_components=2, max_iter=10, tol=1e-2, reg_covar=5e-4)
-        gmm.fit(input_uncs)
-        prob = gmm.predict_proba(input_uncs)  # Predict the probabilities of the input being in one of the GMM components
-        prob = prob[:, gmm.means_.argmin()]  # Select the probabilities corresponding to the component with the smaller mean loss
-        pred_idx = (prob > 0.5).nonzero()[0]
-        # not_in_idxs = (prob < 0.5).nonzero()[0]        
-        prob = torch.from_numpy(prob).float()
-        return pred_idx, prob, #not_in_idxs
 
 
     def prepare_items_attrs(self, outputs, indexs, max_num):    #TODO max_num should adjust according to partial ratio
