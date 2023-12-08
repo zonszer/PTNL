@@ -1,0 +1,3 @@
+[submodule "enhanceCLIPwithCLIP"]
+	path = enhanceCLIPwithCLIP
+	url = https://github.com/zonszer/menghini-neurips23-code

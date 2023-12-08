@@ -793,9 +793,52 @@
           "DATASET.CLASS_EQULE",
           "True"
         ]
-      }
+      },
+
+      // for ENHANCE_CLIP: 
+      {
+        "name": "====main_CLIP.py",
+        "type": "python",
+        "request": "launch",
+        "program": "enhanceCLIPwithCLIP/run_main_clip.py",
+        "console": "integratedTerminal",
+        "justMyCode": false,
+        "env": {
+          "CUDA_VISIBLE_DEVICES": "0",
+          "OPTIM_SEED": "1",
+          "VIS_ENCODER": "ViT-B/32",
+          "DATASET_NAME": "DTD",
+          "SPLIT_SEED": "500",
+          "MODEL": "clip",
+          "DATASET_DIR": "enhanceCLIPwithCLIP/data_",
+        },
+        "args": [
+          "--model_config=clip_config.yml",
+          "--learning_paradigm=ul" 
+        ]
+      },
       
-        
+      {
+        "name": "====run_main_ul.py",
+        "type": "python",
+        "request": "launch",
+        "program": "enhanceCLIPwithCLIP/run_main_ul.py",
+        "console": "integratedTerminal",
+        "justMyCode": false,
+        "env": {
+          "CUDA_VISIBLE_DEVICES": "0",
+          "OPTIM_SEED": "1",
+          "VIS_ENCODER": "ViT-B/32",
+          "DATASET_NAME": "DTD",
+          "SPLIT_SEED": "500",
+          "MODEL": "textual_fpl",
+          "DATASET_DIR": "enhanceCLIPwithCLIP/data_"
+        },
+        "args": [
+          "--model_config=textual_fpl_config.yml",
+          "--learning_paradigm=ul"
+        ]
+      }
         
   ]
 }
