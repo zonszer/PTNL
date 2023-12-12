@@ -73,14 +73,17 @@ from collections import Counter
 import numpy as np
 import sys
 sys.path.append('..')
-from trainers.loss import PLL_loss
 
-def plot_logitsDistri(output_teacher_batch, labels_batch, do_softmax=True, max_num_plots=32):
+def plot_logitsDistri(output_teacher_batch, labels_batch, do_softmax=True, max_num_plots=32, plot_summary=True):
     num_plots = min(len(output_teacher_batch), max_num_plots)  # Limit the number of plots
     num_cols = 6
+    sharex = True; sharey = True
     num_rows = math.ceil(num_plots / num_cols)  # Calculate the number of rows needed
-    fig, axs = plt.subplots(nrows=num_rows, ncols=num_cols, figsize=(32, 15))
-
+    fig, axs = plt.subplots(nrows=num_rows, ncols=num_cols, figsize=(32, 15), 
+                            sharex=sharex, 
+                            sharey=sharey, 
+                            gridspec_kw={'hspace': 0.4},
+    )
     if do_softmax:
         output_teacher_batch = torch.nn.functional.softmax(torch.tensor(output_teacher_batch) / 1.0, dim=1)
     if isinstance(output_teacher_batch, torch.Tensor):
@@ -102,11 +105,12 @@ def plot_logitsDistri(output_teacher_batch, labels_batch, do_softmax=True, max_n
             wrong_pred_list.append(max_index)
 
         axs[row, col].bar(np.arange(len(logits)), logits, color=color)  # arguments are passed to np.histogram
-        axs[row, col].set_title(f"{label2classname[labels_batch[i]]} logits distribution", fontsize=9)
+        axs[row, col].set_title(f"class <{label2classname[labels_batch[i]]}> logits distribution, (cls ACC:{acc_array[labels_batch[i]]:.2f})", fontsize=9) 
         # axs[row, col].set_xlabel("Logits")
         axs[row, col].set_ylabel("Value")
         axs[row, col].axvline(x=labels_batch[i], color='red')  # add a vertical line at the position of the label
         axs[row, col].axvline(x=max_index, color='orange')       # add a vertical line at the position of the max
+        # Adjust y-coordinate of the text annotation
         axs[row, col].text(max_index, np.max(logits), f'max label: {max_index}', ha='center', va='bottom')
         
         # Add grid
@@ -117,27 +121,29 @@ def plot_logitsDistri(output_teacher_batch, labels_batch, do_softmax=True, max_n
         axs[row, col].yaxis.set_minor_locator(ticker.MaxNLocator(50))
         
         # Adjust y-axis limits
-        axs[row, col].set_ylim(np.min(logits) - abs(np.min(logits))*(0.01), np.max(logits) + abs(np.max(logits))*(0.01))
+        if not sharex and not sharey:
+            axs[row, col].set_ylim(np.min(logits) - abs(np.min(logits))*(0.01), np.max(logits) + abs(np.max(logits))*(0.01))
 
     # 2. Calculate the count of wrong predictions
-    counter = Counter(wrong_pred_list)
-    most_common_classes = counter.most_common(5)
-    classes, counts = zip(*most_common_classes)  # unzip the list of tuples
-    # Add a subfigure at the end
-    bars = axs[-1, -1].bar(classes, counts, color='green')
-    for bar, class_, count_ in zip(bars, classes, counts):
-        height = bar.get_height()
-        axs[-1, -1].text(bar.get_x() + bar.get_width() / 2, height, f'Class: {class_}->{count_}', ha='center', va='bottom', fontsize=10)
-    axs[-1, -1].set_title("Top 5 wrong predictions")
-    axs[-1, -1].set_xlabel("Classes")
-    axs[-1, -1].set_ylabel("Count")
-    # Add grid
-    axs[-1, -1].grid(True)
-    # Set the number of major and minor ticks on the y-axis
-    axs[-1, -1].yaxis.set_major_locator(ticker.MaxNLocator(10))
-    axs[-1, -1].yaxis.set_minor_locator(ticker.MaxNLocator(50))
-    # Adjust y-axis limits
-    axs[-1, -1].set_ylim(0, max(counts) + max(counts)*(0.01))
+    if plot_summary:
+        counter = Counter(wrong_pred_list)
+        most_common_classes = counter.most_common(5)
+        classes, counts = zip(*most_common_classes)  # unzip the list of tuples
+        # Add a subfigure at the end
+        bars = axs[-1, -1].bar(classes, counts, color='green')
+        for bar, class_, count_ in zip(bars, classes, counts):
+            height = bar.get_height()
+            axs[-1, -1].text(bar.get_x() + bar.get_width() / 2, height, f'Class: {class_}->{count_}', ha='center', va='bottom', fontsize=10)
+        axs[-1, -1].set_title("Top 5 wrong predictions")
+        axs[-1, -1].set_xlabel("Classes")
+        axs[-1, -1].set_ylabel("Count")
+        # Add grid
+        axs[-1, -1].grid(True)
+        # Set the number of major and minor ticks on the y-axis
+        axs[-1, -1].yaxis.set_major_locator(ticker.MaxNLocator(10))
+        axs[-1, -1].yaxis.set_minor_locator(ticker.MaxNLocator(50))
+        # Adjust y-axis limits
+        axs[-1, -1].set_ylim(0, max(counts) + max(counts)*(0.01))
 
     # plt.tight_layout()
     plt.show()
@@ -163,22 +169,44 @@ def cal_ACC_foreach_cls(logits, labels):
     return acc_dict
 
 
-image_labels = torch.load('true_labels_all_SSDescribableTextures.pt').numpy()    # (bs, )
+image_labels = torch.load('true_labels_all_SSDescribableTextures.pt').numpy()    # (bs, )   #true_labels_all_SSDescribableTextures.pt is zero-shot result
 image_logits = torch.load('logits_all_SSDescribableTexturess.pt').float().numpy()   # (bs, 47)
 acc_array = cal_ACC_foreach_cls(image_logits, image_labels)
-# overall_acc = cal_ACC(logits, image_labels)
-
-index_cls_worst = np.argsort(list(acc_array.values()))[:10]
-index_cls_best = np.argsort(list(acc_array.values()))[-10:]
 label2classname = {i: i for i in range(image_logits.shape[1])}
-for j, label in enumerate(index_cls_worst):
-    if j == 0:
-        pass
-    else:
-        label = input(f'press any labe(num) to continue plot the logits distribution of next class, current deault is "{label}"')
-        label = np.array(eval(label))
-    idxs = np.where(image_labels==label)
-    plot_logitsDistri(image_logits[idxs], label.repeat(len(idxs[0])), do_softmax=True)
+
+# overall_acc = cal_ACC(logits, image_labels)
+# 1. visualize the worst class distri by idx:
+# index_cls_worst = np.argsort(list(acc_array.values()))[:10]
+# index_cls_best = np.argsort(list(acc_array.values()))[-10:]
+# for j, label in enumerate(index_cls_worst):
+#     if j == 0:
+#         pass
+#     else:
+#         label = input(f'press any labe(num) to continue plot the logits distribution of next class, current deault is "{label}"')
+#         label = np.array(eval(label))
+#     idxs = np.where(image_labels==label)
+#     plot_logitsDistri(image_logits[idxs], label.repeat(len(idxs[0])), do_softmax=True)
+
+# 2. visualize each class avg dstri by the true label:
+# cls_distri = []
+# for label in range(len(acc_array)):
+#     idxs = np.where(image_labels==label)
+#     prob = torch.nn.functional.softmax(torch.tensor(image_logits[idxs]) / 1.0, dim=1)
+#     prob_avg = prob.mean(dim=0)
+#     cls_distri.append(prob_avg)
+# plot_logitsDistri(np.array(cls_distri), np.arange(len(cls_distri)), do_softmax=False, 
+#                   plot_summary=False, max_num_plots=50)
+
+# 3. visualize each class by the predicted label:
+cls_distri = []
+for label in range(len(acc_array)):
+    predicted_label = np.argmax(image_logits, axis=1)
+    idxs = np.where(predicted_label==label)
+    prob = torch.nn.functional.softmax(torch.tensor(image_logits[idxs]) / 1.0, dim=1)
+    prob_avg = prob.mean(dim=0)
+    cls_distri.append(prob_avg)
+plot_logitsDistri(np.array(cls_distri), np.arange(len(cls_distri)), do_softmax=False,
+                  plot_summary=False, max_num_plots=50)
 
 # %%
 import matplotlib.pyplot as plt
